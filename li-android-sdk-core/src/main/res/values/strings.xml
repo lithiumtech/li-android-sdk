@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LithiumAndroidsdk</string>
+    <string name="li_login_in_progress">Logging in&#8230;</string>
+    <string name="li_openingLoginPage">Please wait&#8230;</string>
+    <string name="li_message_kudo_notif_content_text">%s thinks your post is awesome and just gave you kudos!</string>
+    <string name="li_message_kudo_notif_alert_text">Kudo Alert!</string>
+    <string name="li_message_solution_notif_content_text">%s accepted your message as a solution.</string>
+    <string name="li_message_solution_notif_alert_text">Solution Alert!</string>
+    <string name="li_message_messages_notif_content_text">%s replied to your message.</string>
+    <string name="li_message_messages_notif_alert_text">Message Alert!</string>
+    <string name="li_login_complete_broadcast_intent">lithium.sdk.auth.HANDLE_AUTHORIZATION_RESPONSE</string>
+    <string-array name="li_supported_image_formats">
+        <item>jpeg</item>
+        <item>jpg</item>
+        <item>png</item>
+        <item>gif</item>
+    </string-array>
+</resources>

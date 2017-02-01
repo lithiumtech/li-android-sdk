@@ -1,0 +1,240 @@
+/*
+ * LiBaseClient.java
+ * Created on Dec 27, 2016
+ *
+ * Copyright 2016 Lithium Technologies, Inc.
+ * San Francisco, California, U.S.A.  All Rights Reserved.
+ *
+ * This software is the  confidential and proprietary information
+ * of  Lithium  Technologies,  Inc.  ("Confidential Information")
+ * You shall not disclose such Confidential Information and shall
+ * use  it  only in  accordance  with  the terms of  the  license
+ * agreement you entered into with Lithium.
+ */
+
+package lithium.community.android.sdk.api;
+
+import com.google.gson.Gson;
+
+import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.model.LiBaseModel;
+import lithium.community.android.sdk.queryutil.LiQueryOrdering;
+import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
+import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
+import lithium.community.android.sdk.rest.LiBaseResponse;
+import lithium.community.android.sdk.rest.LiBaseRestRequest;
+import lithium.community.android.sdk.rest.LiClientResponse;
+import lithium.community.android.sdk.rest.LiGetClientResponse;
+import lithium.community.android.sdk.rest.LiPostClientResponse;
+import lithium.community.android.sdk.rest.LiRestV2Request;
+import lithium.community.android.sdk.rest.LiRestv2Client;
+
+/**
+ * Abstract Client class which provide implementation to basic methods of {@link LiClient}.
+ * All clients must extend this class to get implementation of standard methods.
+ * Created by kunal.shrivastava on 11/2/16.
+ */
+
+abstract class LiBaseClient implements LiClient {
+
+    private final LiRestv2Client liRestv2Client;
+    private final Class<? extends LiBaseModel> responseClass;
+    protected final String type;
+
+    private String imagePath;
+    private String imageName;
+
+    protected String querySettingsType;
+    protected LiRestV2Request liRestV2Request;
+    protected String basePath;
+    protected RequestType requestType;
+    protected LiQueryOrdering liQueryOrdering;
+    protected LiQueryRequestParams liQueryRequestParams;
+
+    public LiBaseClient(String type, Class<? extends LiBaseModel> responseClass) {
+        this.type = type;
+        this.responseClass = responseClass;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+    }
+
+    public LiBaseClient(String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+        this.type = type;
+        this.querySettingsType = querySettingsType;
+        this.basePath = basePath;
+        this.responseClass = responseClass;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+        this.requestType = requestType;
+    }
+
+
+    public LiBaseClient(String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+        this.type = type;
+        this.querySettingsType = querySettingsType;
+        this.basePath = String.format("community/2.0/%s/search", LiClientManager.getInstance().getLiAuthManager().getTenant());
+        this.responseClass = responseClass;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+        this.requestType = requestType;
+    }
+
+    public LiBaseClient(String basePath, RequestType requestType) {
+        this.type = null;
+        this.querySettingsType = null;
+        this.basePath = basePath;
+        this.responseClass = null;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+        this.requestType = requestType;
+    }
+
+    public LiBaseClient(String basePath, RequestType requestType, String imagePath, String imageName) {
+        this.type = null;
+        this.querySettingsType = null;
+        this.basePath = basePath;
+        this.responseClass = null;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+        this.requestType = requestType;
+        this.imagePath = imagePath;
+        this.imageName = imageName;
+    }
+
+    /**
+     * Abstract method to set LiRestV2Request which will be passed as parameter in {@link LiRestv2Client#processSync(LiBaseRestRequest)} and
+     * {@link LiRestv2Client#processAsync(LiBaseRestRequest, LiAsyncRequestCallback)} call.
+     */
+    public abstract void setLiRestV2Request();
+
+    public abstract String getRequestBody();
+
+    /**
+     * This method is for making an async network call.
+     * {@link LiClient#processAsync(LiAsyncRequestCallback)}
+     */
+    @Override
+    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback) throws LiRestResponseException {
+
+        try {
+            setLiRestV2Request();
+            this.liRestV2Request.setPath(basePath);
+            final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
+                @Override
+                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
+                    if (null != response) {
+                        if (requestType.equals(RequestType.GET)) {
+                            liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                        } else {
+                            liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    liAsyncRequestCallback.onError(e);
+                }
+            };
+            liRestv2Client.processAsync(liRestV2Request, callback);
+        } catch (RuntimeException e) {
+            throw LiRestResponseException.runtimeError(e.getMessage());
+        }
+    }
+
+    /**
+     * This method is for making a sync network call.
+     * {@link LiClient#processSync()}
+     */
+    @Override
+    public LiClientResponse processSync() throws LiRestResponseException {
+        try {
+            setLiRestV2Request();
+            this.liRestV2Request.setPath(basePath);
+            LiBaseResponse response = liRestv2Client.processSync(liRestV2Request);
+            if (null != response) {
+                if (requestType.equals(RequestType.GET)) {
+                    return new LiGetClientResponse(response, type, responseClass, getGson());
+                } else {
+                    return new LiPostClientResponse(response);
+                }
+            } else {
+                return null;
+            }
+        } catch (RuntimeException e) {
+            throw LiRestResponseException.runtimeError(e.getMessage());
+        }
+    }
+
+    /**
+     * processSync call to upload files
+     *
+     * @param liAsyncRequestCallback {@link LiAsyncRequestCallback}
+     * @param imagePath this is the absolute path of the image.
+     * @param imageName this is the name of the image file.
+     */
+    @Override
+    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath, final String imageName) throws LiRestResponseException {
+        try {
+            setLiRestV2Request();
+            this.liRestV2Request.setPath(basePath);
+            String requestBody = getRequestBody();
+            final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
+                @Override
+                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
+                    if (null != response) {
+                        if (requestType.equals(RequestType.GET)) {
+                            liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                        } else {
+                            liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    liAsyncRequestCallback.onError(e);
+                }
+            };
+            liRestv2Client.uploadProcessAsync(liRestV2Request, callback, imagePath, imageName, requestBody);
+        } catch (RuntimeException e) {
+            throw LiRestResponseException.runtimeError(e.getMessage());
+        }
+    }
+
+    /**
+     * Fetches Gson from {@link LiRestv2Client}
+     * {@link LiClient#getGson()}
+     */
+    @Override
+    public Gson getGson() {
+        if (liRestv2Client != null) {
+            return liRestv2Client.getGson();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns type i.e whether message, image, kudo etc..
+     */
+    public String getType() {
+        return type;
+    }
+
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    /**
+     * Enum to classify Request Type
+     */
+
+    protected enum RequestType {
+        GET, POST, DELETE, PUT;
+    }
+
+    /**
+     * Use to set liQueryOrdering in LIQL if any
+     */
+    public LiClient setOrdering(LiQueryOrdering liQueryOrdering) {
+        this.liQueryOrdering = liQueryOrdering;
+        return this;
+    }
+}
