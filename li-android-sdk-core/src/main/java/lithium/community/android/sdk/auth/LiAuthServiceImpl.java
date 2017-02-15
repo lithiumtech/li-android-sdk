@@ -17,13 +17,10 @@ package lithium.community.android.sdk.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
-import android.util.TypedValue;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -111,20 +108,6 @@ public class LiAuthServiceImpl implements LiAuthService {
     }
 
     /**
-     * Use to create intent for using chrome Custom Tabs for Authorization.
-     * @return {@link CustomTabsIntent}
-     */
-    private CustomTabsIntent createCustomTabsIntent() {
-        checkIfDisposed();
-        TypedValue typedValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(R.attr.li_theme_loginTabCloseIcon, typedValue, true);
-        return new CustomTabsIntent.Builder(null)
-                .setToolbarColor(LiCoreSDKUtils.getThemePrimaryColor(mContext))
-                .setCloseButtonIcon(BitmapFactory.decodeResource(
-                        mContext.getResources(), typedValue.resourceId)).build();
-    }
-
-    /**
      * Performs Authorization (Non SSO flow).
      * @param request {@link LiSSOAuthorizationRequest}
      */
@@ -134,18 +117,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         Uri requestUri = request.toUri();
         Intent intent;
         LiAuthRequestStore.getInstance().addAuthRequest(request);
-        if (mContext.getResources().getBoolean(R.bool.li_useWebViewForLogin)) {
-            intent = new Intent(mContext, LiLoginActivity.class);
-        }
-        else {
-            CustomTabsIntent customTabsIntent = createCustomTabsIntent();
-            checkIfDisposed();
-            intent = customTabsIntent.intent;
-            Log.d(LOG_TAG, String.format("Using %s as browser for auth", intent.getPackage()));
-            intent.putExtra(CustomTabsIntent.EXTRA_TITLE_VISIBILITY_STATE, CustomTabsIntent.NO_TITLE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
+        intent = new Intent(mContext, LiLoginActivity.class);
         intent.setData(requestUri);
         mContext.startActivity(intent);
         dispose();
