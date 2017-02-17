@@ -24,6 +24,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -451,5 +453,16 @@ public class LiCoreSDKUtils {
         }
         defaultJsonString = byteArrayOutputStream.toString();
         return defaultJsonString;
+    }
+
+    public static boolean isFireBaseIntegrated() {
+        try {
+            FirebaseInstanceId.getInstance().getToken();
+            return true;
+        }
+        catch (IllegalStateException e) {
+            Log.e(LiSDKConstants.LI_LOG_TAG, "FireBase not integrated.");
+        }
+        return false;
     }
 }

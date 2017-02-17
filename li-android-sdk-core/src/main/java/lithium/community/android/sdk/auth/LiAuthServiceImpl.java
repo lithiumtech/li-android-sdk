@@ -259,8 +259,10 @@ public class LiAuthServiceImpl implements LiAuthService {
      */
     public void getSDKSettings(final LoginCompleteCallBack loginCompleteCallBack) {
         try {
-            new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
-                    LiPushNotificationProvider.FIREBASE);
+            if (LiCoreSDKUtils.isFireBaseIntegrated()) {
+                new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
+                        LiPushNotificationProvider.FIREBASE);
+            }
 
             LiClient settingsClient = LiClientManager.getInstance().getSdkSettingsClient(
                     LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
