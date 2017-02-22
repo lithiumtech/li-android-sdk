@@ -275,6 +275,16 @@ public class LiClientManagerTest {
     }
 
     @Test
+    public void testGetMarkAbuseClient() throws LiRestResponseException {
+        LiClientManager instance = liClientManger.getInstance();
+        LiClient liClient = instance.getMarkAbuseClient("test", "test", "test");
+        liClient.processSync();
+        PowerMockito.verifyStatic();
+        Assert.assertEquals(null, liClient.getType());
+        Assert.assertEquals(POST, ""+liClient.getRequestType());
+    }
+
+    @Test
     public void testGenericPostClient() throws LiRestResponseException {
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("test_v", "test_p");
