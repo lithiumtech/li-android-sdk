@@ -70,6 +70,7 @@ public class LiQueryConstant {
     public static final String LI_FLOATED_MESSAGE_QUERYSETTINGS_TYPE = "floated_message";
     public static final String LI_SDK_SETTINGS_QUERYSETTINGS_TYPE = "app_sdk_setting";
     public static final String LI_GENERIC_TYPE = "generic_get";
+    public static final String LI_MARK_ABUSE_TYPE = "abuse_report";
 
     public static final String LI_MARK_AS_READ = "&api.mark_read=true";
 

@@ -228,6 +228,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Gson gson = new Gson();
                         LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
                         tokenResponse.setJsonString(String.valueOf(response.getData().get("response").getAsJsonObject().get("data")));
+                        tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
                         LiClientManager.getInstance().getLiAuthManager()
                                 .persistAuthState(LiSDKManager.getInstance().getContext(), tokenResponse);
                         Log.i(LOG_TAG, String.format(
