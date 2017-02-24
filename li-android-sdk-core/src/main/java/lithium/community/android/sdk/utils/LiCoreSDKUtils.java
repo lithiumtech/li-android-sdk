@@ -465,4 +465,8 @@ public class LiCoreSDKUtils {
         }
         return false;
     }
+
+    public static Long getTime(Long time){
+        return (time != null ? (time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
+    }
 }
