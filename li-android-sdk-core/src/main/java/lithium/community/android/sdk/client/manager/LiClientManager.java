@@ -35,14 +35,7 @@ import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.LiBoard;
-import lithium.community.android.sdk.model.post.LiAcceptSolution;
-import lithium.community.android.sdk.model.post.LiGenericPostModel;
-import lithium.community.android.sdk.model.post.LiPostKudoModel;
-import lithium.community.android.sdk.model.post.LiPostMessageModel;
-import lithium.community.android.sdk.model.post.LiReplyMessageModel;
-import lithium.community.android.sdk.model.post.LiUploadImageModel;
-import lithium.community.android.sdk.model.post.LiUserDeviceData;
-import lithium.community.android.sdk.model.post.LiUserDeviceIdUpdate;
+import lithium.community.android.sdk.model.post.*;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiBrowse;
 import lithium.community.android.sdk.model.response.LiFloatedMessageModel;
@@ -442,7 +435,32 @@ public class LiClientManager {
         uploadImageModel.setVisibility("public");
         liBasePostClient.postModel = uploadImageModel;
         return liBasePostClient;
+    }
 
+    /**
+     * This client is used to report abuse a message.
+     * @param messageId The id of message which is to be marked as abusive.
+     * @param userId The id of the user marking the message as abusive.
+     * @param body The body of the message
+     * @return {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public LiClient getMarkAbuseClient(String messageId, String userId, String body) throws LiRestResponseException {
+
+        LiBasePostClient liBasePostClient = new LiBasePostClient(String.format("/community/2.0/%s/abuse_reports", LiClientManager.getInstance().getLiAuthManager().getTenant()));
+        LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
+        liMarkAbuseModel.setType(LiQueryConstant.LI_MARK_ABUSE_TYPE);
+        LiMessage liMessage = new LiMessage();
+        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
+        liInt.setValue(Long.valueOf(messageId));
+        liMessage.setId(liInt);
+        LiUser liUser = new LiUser();
+        liUser.setId(Long.valueOf(userId));
+        liMarkAbuseModel.setMessage(liMessage);
+        liMarkAbuseModel.setReporter(liUser);
+        liMarkAbuseModel.setBody(body);
+        liBasePostClient.postModel = liMarkAbuseModel;
+        return liBasePostClient;
     }
 
     /**

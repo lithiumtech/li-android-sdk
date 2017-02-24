@@ -80,15 +80,14 @@ public class LiTokenResponse {
 
     public void setExpiresIn(Long expiresIn) {
         this.expiresIn = expiresIn;
-        expiresAt = (expiresIn != null ? (expiresIn * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
     }
 
     public Long getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Long time) {
-        this.expiresAt = time;
+    public void setExpiresAt(Long expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public String getUserId() {

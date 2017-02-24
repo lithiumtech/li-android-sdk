@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -65,7 +64,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Activity.class,LiAuthService.class,LiAuthServiceImpl.class,CustomTabsIntent.class,LiAuthRestClient.class,OkHttpClient.class,Response.class,Gson.class,JsonObject.class,JsonElement.class,LiSystemClock.class,LiRestv2Client.class,LiBaseGetClient.class,LiRestV2Request.class})
+@PrepareForTest({Activity.class,LiAuthService.class,LiAuthServiceImpl.class,LiAuthRestClient.class,OkHttpClient.class,Response.class,Gson.class,JsonObject.class,JsonElement.class,LiSystemClock.class,LiRestv2Client.class,LiBaseGetClient.class,LiRestV2Request.class})
 public class LiAuthServiceTest {
 
     public static final String COMMUNITY_URI = "http://testuri.com";
@@ -215,10 +214,10 @@ public class LiAuthServiceTest {
 
         liAuthService = spy(liAuthService);
         doNothing().when(liAuthService).dispose();
-        when(resource.getBoolean(anyInt())).thenReturn(false);
-        CustomTabsIntent customTabsIntent=new CustomTabsIntent.Builder(null).build();
-        PowerMockito.doReturn(customTabsIntent).when(liAuthService,
-                "createCustomTabsIntent");
+        when(resource.getBoolean(anyInt())).thenReturn(true);
+//        CustomTabsIntent customTabsIntent=new CustomTabsIntent.Builder(null).build();
+//        PowerMockito.doReturn(customTabsIntent).when(liAuthService,
+//                "createCustomTabsIntent");
         doNothing().when(liAuthService,
                 "checkIfDisposed");
         liAuthService.startLoginFlow();

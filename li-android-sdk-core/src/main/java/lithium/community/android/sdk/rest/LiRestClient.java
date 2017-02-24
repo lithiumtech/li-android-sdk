@@ -122,7 +122,7 @@ public abstract class LiRestClient {
         });
         gson = gsonBuilder.create();
         ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                .tlsVersions(TlsVersion.TLS_1_1, TlsVersion.TLS_1_2, TlsVersion.TLS_1_0, TlsVersion.SSL_3_0, TlsVersion.TLS_1_3)
+                .tlsVersions(TlsVersion.TLS_1_1, TlsVersion.TLS_1_2, TlsVersion.TLS_1_0, TlsVersion.SSL_3_0)
                 .build();
 
         try {

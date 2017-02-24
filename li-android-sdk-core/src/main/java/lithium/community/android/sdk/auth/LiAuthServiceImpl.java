@@ -17,17 +17,16 @@ package lithium.community.android.sdk.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
-import android.util.TypedValue;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.UUID;
 
@@ -111,20 +110,6 @@ public class LiAuthServiceImpl implements LiAuthService {
     }
 
     /**
-     * Use to create intent for using chrome Custom Tabs for Authorization.
-     * @return {@link CustomTabsIntent}
-     */
-    private CustomTabsIntent createCustomTabsIntent() {
-        checkIfDisposed();
-        TypedValue typedValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(R.attr.li_theme_loginTabCloseIcon, typedValue, true);
-        return new CustomTabsIntent.Builder(null)
-                .setToolbarColor(LiCoreSDKUtils.getThemePrimaryColor(mContext))
-                .setCloseButtonIcon(BitmapFactory.decodeResource(
-                        mContext.getResources(), typedValue.resourceId)).build();
-    }
-
-    /**
      * Performs Authorization (Non SSO flow).
      * @param request {@link LiSSOAuthorizationRequest}
      */
@@ -134,18 +119,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         Uri requestUri = request.toUri();
         Intent intent;
         LiAuthRequestStore.getInstance().addAuthRequest(request);
-        if (mContext.getResources().getBoolean(R.bool.li_useWebViewForLogin)) {
-            intent = new Intent(mContext, LiLoginActivity.class);
-        }
-        else {
-            CustomTabsIntent customTabsIntent = createCustomTabsIntent();
-            checkIfDisposed();
-            intent = customTabsIntent.intent;
-            Log.d(LOG_TAG, String.format("Using %s as browser for auth", intent.getPackage()));
-            intent.putExtra(CustomTabsIntent.EXTRA_TITLE_VISIBILITY_STATE, CustomTabsIntent.NO_TITLE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
+        intent = new Intent(mContext, LiLoginActivity.class);
         intent.setData(requestUri);
         mContext.startActivity(intent);
         dispose();
@@ -255,7 +229,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                         System.out.println(response);
                         Gson gson = new Gson();
                         LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                        tokenResponse.setJsonString(String.valueOf(response.getData().get("response").getAsJsonObject().get("data")));
+                        tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                        JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+                        obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+                        tokenResponse.setJsonString(String.valueOf(obj));
                         LiClientManager.getInstance().getLiAuthManager()
                                 .persistAuthState(LiSDKManager.getInstance().getContext(), tokenResponse);
                         Log.i(LOG_TAG, String.format(
@@ -287,8 +264,10 @@ public class LiAuthServiceImpl implements LiAuthService {
      */
     public void getSDKSettings(final LoginCompleteCallBack loginCompleteCallBack) {
         try {
-            new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
-                    LiPushNotificationProvider.FIREBASE);
+            if (LiCoreSDKUtils.isFireBaseIntegrated()) {
+                new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
+                        LiPushNotificationProvider.FIREBASE);
+            }
 
             LiClient settingsClient = LiClientManager.getInstance().getSdkSettingsClient(
                     LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
@@ -386,8 +365,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                     System.out.println(response);
                     Gson gson = new Gson();
                     LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                    tokenResponse.setJsonString(String.valueOf(response.getData().get("response").getAsJsonObject().get("data")));
-                    tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+                    tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                    JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+                    obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+                    tokenResponse.setJsonString(String.valueOf(obj));
                     Log.i(LOG_TAG, String.format(
                             "Token Response [ Access Token: %s ]",
                             tokenResponse.getAccessToken()));
@@ -428,8 +409,10 @@ public class LiAuthServiceImpl implements LiAuthService {
             System.out.println(resp);
             Gson gson = new Gson();
             LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-            tokenResponse.setJsonString(String.valueOf(resp.getData().get("response").getAsJsonObject().get("data")));
-            tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+            JsonObject obj = resp.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+            obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+            tokenResponse.setJsonString(String.valueOf(obj));
             Log.i(LOG_TAG, String.format(
                     "Token Response [ Access Token: %s ]",
                     tokenResponse.getAccessToken()));
