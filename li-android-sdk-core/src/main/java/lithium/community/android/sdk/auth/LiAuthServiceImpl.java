@@ -25,6 +25,8 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.UUID;
 
@@ -227,8 +229,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                         System.out.println(response);
                         Gson gson = new Gson();
                         LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                        tokenResponse.setJsonString(String.valueOf(response.getData().get("response").getAsJsonObject().get("data")));
-                        tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+                        tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                        JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+                        obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+                        tokenResponse.setJsonString(String.valueOf(obj));
                         LiClientManager.getInstance().getLiAuthManager()
                                 .persistAuthState(LiSDKManager.getInstance().getContext(), tokenResponse);
                         Log.i(LOG_TAG, String.format(
@@ -361,8 +365,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                     System.out.println(response);
                     Gson gson = new Gson();
                     LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                    tokenResponse.setJsonString(String.valueOf(response.getData().get("response").getAsJsonObject().get("data")));
-                    tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+                    tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                    JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+                    obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+                    tokenResponse.setJsonString(String.valueOf(obj));
                     Log.i(LOG_TAG, String.format(
                             "Token Response [ Access Token: %s ]",
                             tokenResponse.getAccessToken()));
@@ -403,8 +409,10 @@ public class LiAuthServiceImpl implements LiAuthService {
             System.out.println(resp);
             Gson gson = new Gson();
             LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-            tokenResponse.setJsonString(String.valueOf(resp.getData().get("response").getAsJsonObject().get("data")));
-            tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+            JsonObject obj = resp.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
+            obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
+            tokenResponse.setJsonString(String.valueOf(obj));
             Log.i(LOG_TAG, String.format(
                     "Token Response [ Access Token: %s ]",
                     tokenResponse.getAccessToken()));
