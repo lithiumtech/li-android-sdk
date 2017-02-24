@@ -21,6 +21,7 @@ import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.model.response.LiUser;
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static org.mockito.Mockito.when;
@@ -217,6 +218,7 @@ public class LiAuthStateTest {
         liTokenResponse.setRefreshToken(NEW_REFRESH_TOKEN);
         liTokenResponse.setLithiumUserId(LITHIUM_USER_ID);
         liTokenResponse.setExpiresIn(EXPIRES_IN);
+        liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(EXPIRES_IN));
 
         String json=gson.toJson(liTokenResponse);
         liTokenResponse.setJsonString(json);
