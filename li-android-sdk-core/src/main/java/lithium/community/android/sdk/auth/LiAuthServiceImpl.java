@@ -229,7 +229,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                         System.out.println(response);
                         Gson gson = new Gson();
                         LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                        tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+                        tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
                         JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
                         obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
                         tokenResponse.setJsonString(String.valueOf(obj));
@@ -365,7 +365,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                     System.out.println(response);
                     Gson gson = new Gson();
                     LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                    tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+                    tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
                     JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
                     obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
                     tokenResponse.setJsonString(String.valueOf(obj));
@@ -409,7 +409,7 @@ public class LiAuthServiceImpl implements LiAuthService {
             System.out.println(resp);
             Gson gson = new Gson();
             LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-            tokenResponse.setExpiresAt(tokenResponse.getExpiresIn());
+            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
             JsonObject obj = resp.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
             obj.addProperty("expiresAt",tokenResponse.getExpiresAt());
             tokenResponse.setJsonString(String.valueOf(obj));
