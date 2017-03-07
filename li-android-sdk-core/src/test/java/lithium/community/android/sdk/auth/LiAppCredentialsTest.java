@@ -24,27 +24,17 @@ public class LiAppCredentialsTest {
 
     @Test
     public void getParamsTest() throws MalformedURLException {
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder(ssoToken)
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder()
                 .setClientKey(clientKey)
                 .setClientSecret(clientSecret)
                 .setCommunityUri(communityUri)
                 .setDeferredLogin(deferredLogin)
                 .build();
-        Assert.assertEquals(ssoToken, liAppCredentials.getSsoToken());
         Assert.assertEquals(clientKey, liAppCredentials.getClientKey());
         Assert.assertEquals(clientSecret, liAppCredentials.getClientSecret());
         Assert.assertEquals(Uri.parse(communityUri), liAppCredentials.getCommunityUri());
-        Assert.assertEquals(deferredLogin, liAppCredentials.isDeferredLogin());
         Assert.assertEquals(ssoAuthorizeUri, liAppCredentials.getSsoAuthorizeUri());
         Assert.assertEquals(Uri.parse(communityUri).buildUpon().path("auth/oauth2/authorize").build(), liAppCredentials.getAuthorizeUri());
         Assert.assertEquals(LiUriUtils.reverseDomainName(Uri.parse(communityUri)) + "://oauth2callback", liAppCredentials.getRedirectUri());
-
-        LiAppCredentials liAppCredentials2 = new LiAppCredentials.Builder(ssoToken)
-                .setClientKey(clientKey)
-                .setClientSecret(clientSecret)
-                .setCommunityUri(communityUri)
-                .setDeferredLogin(deferredLogin)
-                .build();
-        Assert.assertTrue(liAppCredentials.equals(liAppCredentials2));
     }
 }

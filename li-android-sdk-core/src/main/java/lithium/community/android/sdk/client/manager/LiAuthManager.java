@@ -34,10 +34,10 @@ import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.response.LiUser;
-import lithium.community.android.sdk.utils.LiSDKConstants;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_AUTH_STATE;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
  * This class also manages
@@ -111,9 +111,8 @@ public class LiAuthManager implements LiAuthTokenProvider {
      * @param context {@link Context}
      * @throws URISyntaxException
      */
-    public void initLoginFlow(Context context) throws URISyntaxException {
+    public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
         if (!isUserLoggedIn()) {
-            String ssoToken = LiSDKManager.getInstance().getLiAppCredentials().getSsoToken();
             if (!TextUtils.isEmpty(ssoToken)) {
                 new LiAuthServiceImpl(context, ssoToken).startLoginFlow();
             }
@@ -129,7 +128,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
      * @return SharedPreferences
      */
     private SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(LiSDKConstants.LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     /**

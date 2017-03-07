@@ -37,8 +37,8 @@ import lithium.community.android.sdk.rest.LiGetClientResponse;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUUIDUtils;
 
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
  * Interface to Lithium community SDK. Provides entry point into community rest api v2 using
@@ -95,12 +95,6 @@ public final class LiSDKManager {
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
-        // try loggin in right away If SSO token is avaialable or check if deferred login is false
-        if (!authManager.isUserLoggedIn()
-                && (liAppCredentials.getSsoToken() != null
-                || !liAppCredentials.isDeferredLogin())) {
-            authManager.initLoginFlow(context);
-        }
         try {
             String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
             LiClientManager.getInstance().getSdkSettingsClient(clientId).processAsync(
@@ -167,9 +161,5 @@ public final class LiSDKManager {
     /**
      * Checks if it is deferred login.
      */
-    public boolean isDeferredLogin() {
-        return liAppCredentials.isDeferredLogin();
-    }
-
 }
 

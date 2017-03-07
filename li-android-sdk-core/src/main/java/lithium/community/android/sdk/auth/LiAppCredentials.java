@@ -28,8 +28,6 @@ import lithium.community.android.sdk.utils.LiUriUtils;
  */
 public final class LiAppCredentials {
 
-    private final String ssoToken;
-
     @NonNull
     private final String clientKey;
     @NonNull
@@ -39,8 +37,6 @@ public final class LiAppCredentials {
 
     @NonNull
     private final Uri authorizeUri;
-
-    private final boolean deferredLogin;
 
     @NonNull
     private final String redirectUri;
@@ -53,19 +49,16 @@ public final class LiAppCredentials {
      * @param clientSecret This is client secret.
      * @param communityURL This is the URL of the community.
      * @param deferredLogin Parameter to suggest if deferred login is enabled.
-     * @param ssoToken This is SSO Token.
-     * @throws MalformedURLException
+     * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
     private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret, @NonNull String communityURL,
-                             boolean deferredLogin, String ssoToken) throws MalformedURLException {
+                             boolean deferredLogin) throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
         this.clientKey = clientKey;
-        this.ssoToken = ssoToken;
         this.clientSecret = clientSecret;
         this.communityUri = Uri.parse(communityURL);
-        this.deferredLogin = deferredLogin;
         this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL.toString()+"api/2.0/auth/authorize";
@@ -73,10 +66,6 @@ public final class LiAppCredentials {
 
     private static String buildRedirectUri(Uri communityUri) {
         return LiUriUtils.reverseDomainName(communityUri) + "://oauth2callback";
-    }
-
-    public String getSsoToken() {
-        return ssoToken;
     }
 
     public String getClientKey() {
@@ -89,10 +78,6 @@ public final class LiAppCredentials {
 
     public Uri getCommunityUri() {
         return communityUri;
-    }
-
-    public boolean isDeferredLogin() {
-        return deferredLogin;
     }
 
     public Uri getAuthorizeUri() {
@@ -117,9 +102,6 @@ public final class LiAppCredentials {
 
         LiAppCredentials that = (LiAppCredentials) o;
 
-        if (deferredLogin != that.deferredLogin) {
-            return false;
-        }
         if (!clientKey.equals(that.clientKey)) {
             return false;
         }
@@ -142,7 +124,6 @@ public final class LiAppCredentials {
         result = 31 * result + clientSecret.hashCode();
         result = 31 * result + communityUri.hashCode();
         result = 31 * result + authorizeUri.hashCode();
-        result = 31 * result + (deferredLogin ? 1 : 0);
         result = 31 * result + redirectUri.hashCode();
         return result;
     }
@@ -154,15 +135,9 @@ public final class LiAppCredentials {
         private String clientKey;
         private String clientSecret;
         private String communityUri;
-        private String ssoToken;
         private boolean deferredLogin;
 
         public Builder() {
-            this.ssoToken = null;
-        }
-
-        public Builder(String ssoToken) {
-            this.ssoToken = ssoToken;
         }
 
         @NonNull
@@ -189,7 +164,7 @@ public final class LiAppCredentials {
         }
 
         public LiAppCredentials build() throws MalformedURLException {
-            return new LiAppCredentials(clientKey, clientSecret, communityUri, deferredLogin, ssoToken);
+            return new LiAppCredentials(clientKey, clientSecret, communityUri, deferredLogin);
         }
     }
 }

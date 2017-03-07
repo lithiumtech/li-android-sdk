@@ -29,10 +29,10 @@ import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiPostClientResponse;
 
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_LOG_TAG;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_RECEIVER_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
  * This class is used to update device id corresponding to 'id' in the community side when onIdRefresh is called.
