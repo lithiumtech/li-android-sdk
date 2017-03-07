@@ -12,6 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Field;
 
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +56,7 @@ public class LiTokenResponseTest {
     @Test
     public void getExpiresAtTest() {
         liTokenResponse = new LiTokenResponse();
-        liTokenResponse.setExpiresIn(2L);
+        liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(2L));
         assertNotEquals(null, liTokenResponse.getExpiresAt());
         assertEquals(Long.valueOf(2001), liTokenResponse.getExpiresAt());
     }

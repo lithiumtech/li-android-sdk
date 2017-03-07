@@ -105,6 +105,15 @@ public class LiRestResponseException extends Exception {
     }
 
     /**
+     * wrapping json syntax error
+     * @param errorDescription Description for json syntax error.
+     * @return jsonSyntaxError wrapped into LiRestResponseException.
+     */
+    public static LiRestResponseException jsonSyntaxError(@Nullable String errorDescription) {
+        return new LiRestResponseException(500, errorDescription, LiSDKErrorCodes.JSON_SYNTAX_ERROR);
+    }
+
+    /**
      * Exceptions are considered to be equal if their {@link #httpCode type} and {@link #liErrorCode code}
      * are the same
      */
