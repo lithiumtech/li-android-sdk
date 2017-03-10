@@ -277,7 +277,7 @@ public class LiClientManagerTest {
     @Test
     public void testGetMarkAbuseClient() throws LiRestResponseException {
         LiClientManager instance = liClientManger.getInstance();
-        LiClient liClient = instance.getMarkAbuseClient("test", "test", "test");
+        LiClient liClient = instance.getMarkAbuseClient("1", "1", "test");
         liClient.processSync();
         PowerMockito.verifyStatic();
         Assert.assertEquals(null, liClient.getType());
