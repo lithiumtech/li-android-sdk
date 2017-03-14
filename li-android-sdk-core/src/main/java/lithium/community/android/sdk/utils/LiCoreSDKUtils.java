@@ -14,7 +14,6 @@
 
 package lithium.community.android.sdk.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -461,7 +460,7 @@ public class LiCoreSDKUtils {
             return true;
         }
         catch (IllegalStateException e) {
-            Log.e(LiSDKConstants.LI_LOG_TAG, "FireBase not integrated.");
+            Log.e(LiCoreSDKConstants.LI_LOG_TAG, "FireBase not integrated.");
         }
         return false;
     }

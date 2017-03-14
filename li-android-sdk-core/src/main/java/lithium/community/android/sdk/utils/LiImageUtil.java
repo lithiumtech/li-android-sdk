@@ -17,12 +17,10 @@ package lithium.community.android.sdk.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import static lithium.community.android.sdk.utils.LiSDKConstants.MAX_IMAGE_UPLOAD_SIZE;
 
 /**
  * Utility class to compress image to be uploaded to community. This is to allow

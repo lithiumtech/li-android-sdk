@@ -116,13 +116,4 @@ public class LiSDKManagerTest {
         assertEquals(liAppCredentials, instance.getLiAppCredentials());
         assertEquals(liAppCredentials.getClientSecret(), instance.getLiAppCredentials().getClientSecret());
     }
-
-    @Test
-    public void testIsDefferedLogin() throws MalformedURLException, URISyntaxException {
-        LiSDKManager liSDKManager = LiSDKManager.init(mContext,
-                TestHelper.getTestAppCredentials());
-        LiSDKManager instance = liSDKManager.getInstance();
-        LiAppCredentials liAppCredentials = instance.getLiAppCredentials();
-        assertEquals(instance.isDeferredLogin(), Boolean.TRUE);
-    }
 }

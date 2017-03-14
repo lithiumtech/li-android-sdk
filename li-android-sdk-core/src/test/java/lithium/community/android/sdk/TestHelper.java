@@ -78,7 +78,6 @@ public class TestHelper {
     public static final String TEST_COMMUNITY_URL = "http://community.lithium.com";
 
     public static final String TEST_EMAIL_ADDRESS = "test@example.com";
-    private static final String SSO_TOKEN = "sso_token";
 
     public static final String DEFAULT_QUERY_SETTINGS = "{\n" +
             "\t\"article\": {\n" +
@@ -289,7 +288,7 @@ public class TestHelper {
     }
 
     public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
-        return new LiAppCredentials.Builder(SSO_TOKEN).setClientKey(TEST_CLIENT_ID)
+        return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
                 .setCommunityUri(TEST_COMMUNITY_URL)
                 .setDeferredLogin(true).build();
