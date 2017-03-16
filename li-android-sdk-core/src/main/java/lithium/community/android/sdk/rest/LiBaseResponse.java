@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModel;
 import okhttp3.Response;
@@ -62,7 +62,7 @@ public class LiBaseResponse {
         String responseStr = response.body().string();
         if (httpCode != 500) {
             try {
-                data = LiClientManager.getInstance().getRestClient().getGson().fromJson(responseStr, JsonObject.class);
+                data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
             }
             catch(JsonSyntaxException ex){
                 throw LiRestResponseException.jsonSyntaxError("Improper Json syntax received in response");

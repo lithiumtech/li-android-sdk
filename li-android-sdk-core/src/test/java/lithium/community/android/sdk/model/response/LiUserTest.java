@@ -10,10 +10,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import lithium.community.android.sdk.model.LiAvatar;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiImage;
-import lithium.community.android.sdk.model.LiRanking;
+import lithium.community.android.sdk.model.helpers.LiImage;
+import lithium.community.android.sdk.model.helpers.LiRanking;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

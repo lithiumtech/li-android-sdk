@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.notification;
 
+import android.content.Context;
+
 import lithium.community.android.sdk.exception.LiRestResponseException;
 
 /**
@@ -30,5 +32,5 @@ public interface LiNotificationProvider {
      * @param liPushNotificationProvider {@link LiPushNotificationProvider}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    void onIdRefresh(String deviceId, LiPushNotificationProvider liPushNotificationProvider) throws LiRestResponseException;
+    void onIdRefresh(String deviceId, LiPushNotificationProvider liPushNotificationProvider, Context context) throws LiRestResponseException;
 }

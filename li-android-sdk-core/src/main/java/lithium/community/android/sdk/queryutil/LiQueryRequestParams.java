@@ -16,7 +16,7 @@ package lithium.community.android.sdk.queryutil;
 
 import java.util.ArrayList;
 
-import lithium.community.android.sdk.client.manager.LiClientManager.Client;
+import lithium.community.android.sdk.manager.LiClientManager.Client;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.DEFAULT_LIQL_QUERY_LIMIT;
 

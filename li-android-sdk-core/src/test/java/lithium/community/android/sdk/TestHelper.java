@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 
 /**
  * Contains common test values which are useful across all tests.
@@ -294,9 +294,9 @@ public class TestHelper {
                 .setDeferredLogin(true).build();
     }
 
-    public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
+    /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
         LiClientManager liClientManger = LiClientManager.init(context);
         LiClientManager instance = liClientManger.getInstance();
         return instance;
-    }
+    }*/
 }

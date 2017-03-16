@@ -16,7 +16,7 @@ package lithium.community.android.sdk.queryutil;
 
 import java.util.ArrayList;
 
-import lithium.community.android.sdk.client.manager.LiClientManager.Client;
+import lithium.community.android.sdk.manager.LiClientManager.Client;
 
 /**
  * Use to set fields for where clause for different clients.
@@ -308,7 +308,7 @@ public class LiQueryWhereClause {
     }
 
     /**
-     * Specifies fields for where clause for LI_FLOATED_MESSAGE_CLIENT.
+     * Specifies fields for where clause for LI_FLOATED_MESSAGES_CLIENT.
      */
     public enum FloatedMessage implements ClientWhereKeyColumn {
 
@@ -325,10 +325,10 @@ public class LiQueryWhereClause {
             return this.value;
         }
         public Boolean isVaild(Client client) {
-            return Client.LI_FLOATED_MESSAGE_CLIENT.equals(client);
+            return Client.LI_FLOATED_MESSAGES_CLIENT.equals(client);
         }
         public String getClient() {
-            return Client.LI_FLOATED_MESSAGE_CLIENT.name();
+            return Client.LI_FLOATED_MESSAGES_CLIENT.name();
         }
     }
 

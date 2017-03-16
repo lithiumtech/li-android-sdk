@@ -5,9 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiImage;
-import lithium.community.android.sdk.model.LiRankingDisplay;
+import lithium.community.android.sdk.model.helpers.LiImage;
+import lithium.community.android.sdk.model.helpers.LiRankingDisplay;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

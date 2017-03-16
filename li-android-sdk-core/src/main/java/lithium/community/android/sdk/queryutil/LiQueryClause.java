@@ -14,7 +14,7 @@
 
 package lithium.community.android.sdk.queryutil;
 
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 
 /**
  * This class is used to set parameters for the where clause in the LIQL.

@@ -12,10 +12,11 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk;
+package lithium.community.android.sdk.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.util.NoSuchPropertyException;
 
@@ -23,12 +24,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
-import lithium.community.android.sdk.client.manager.LiAuthManager;
-import lithium.community.android.sdk.client.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
@@ -44,43 +45,36 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_P
  * Interface to Lithium community SDK. Provides entry point into community rest api v2 using
  * OAuth2 implementation.
  */
-public final class LiSDKManager {
+public final class LiSDKManager extends LiAuthManager {
 
+    private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager _sdkInstance;
     private final LiAppCredentials liAppCredentials;
-    private final Context context;
 
     /**
      * Protected constructor.
-     * @param context {@link Context}
+     *
+     * @param context          {@link Context}
      * @param liAppCredentials {@link LiAppCredentials}
      * @throws URISyntaxException {@link URISyntaxException}
      */
     private LiSDKManager(Context context, LiAppCredentials liAppCredentials) throws URISyntaxException {
+        super(context);
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         this.liAppCredentials = liAppCredentials;
-        this.context = context;
     }
 
     public static boolean isEnvironmentInitialized() {
-        if (_sdkInstance == null) {
-            return false;
+        if (isInitialized.get() && _sdkInstance != null) {
+            return true;
         }
-        if (_sdkInstance.getLiAppCredentials() == null) {
-            return false;
-        }
-        if (LiClientManager.getInstance() == null) {
-            return false;
-        }
-        if (LiClientManager.getInstance().getLiAuthManager() == null) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     /**
      * Initializing liSDKManager class and initiates login flow. Also fetches SDK settings after login.
-     * @param context {@link Context}
+     *
+     * @param context          {@link Context}
      * @param liAppCredentials {@link LiAppCredentials}
      * @return Instance of LiSDKManager
      * @throws URISyntaxException {@link URISyntaxException}
@@ -88,35 +82,33 @@ public final class LiSDKManager {
     public static synchronized LiSDKManager init(final Context context, final LiAppCredentials liAppCredentials)
             throws URISyntaxException {
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        if (_sdkInstance == null) {
-            LiClientManager.init(context);
+        if (isInitialized.compareAndSet(false, true)) {
             LiDefaultQueryHelper.initHelper(context);
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
         try {
             String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
-            LiClientManager.getInstance().getSdkSettingsClient(clientId).processAsync(
-                    new LiAsyncRequestCallback<LiGetClientResponse>(){
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
+            LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
+                    new LiAsyncRequestCallback<LiGetClientResponse>() {
 
                         @Override
                         public void onSuccess(LiBaseRestRequest request,
                                               LiGetClientResponse response)
                                 throws LiRestResponseException {
-                            if (response.getHttpCode()==200) {
+                            if (response.getHttpCode() == 200) {
                                 Gson gson = new Gson();
                                 JsonArray items = response.getJsonObject().get("data")
                                         .getAsJsonObject().get("items").getAsJsonArray();
-                                if (!items.isJsonNull() && items.size()>0) {
+                                if (!items.isJsonNull() && items.size() > 0) {
                                     LiAppSdkSettings liAppSdkSettings =
                                             gson.fromJson(items.get(0), LiAppSdkSettings.class);
                                     if (liAppSdkSettings != null) {
-                                        SharedPreferences prefs = context.getSharedPreferences(
+                                        SharedPreferences sharedPreferences = context.getSharedPreferences(
                                                 LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                                        prefs.edit().putString(LI_DEFAULT_SDK_SETTINGS,
+                                        sharedPreferences.edit().putString(LI_DEFAULT_SDK_SETTINGS,
                                                 liAppSdkSettings.getAdditionalInformation()).commit();
-                 //                       LiClientManager.getInstance().setSettingFromServer(liAppSdkSettings.getAdditionalInformation());
                                     }
                                 }
                             }
@@ -144,11 +136,10 @@ public final class LiSDKManager {
     }
 
     /**
-     * Returns context.
-     * @return Android context
+     * Returns community URI.
      */
-    public Context getContext() {
-        return context;
+    public Uri getCommunityUrl() {
+        return liAppCredentials.getCommunityUri();
     }
 
     /**

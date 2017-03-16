@@ -1,7 +1,11 @@
 package lithium.community.android.sdk.rest;
 
+import android.app.Activity;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,6 +14,8 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by shoureya.kant on 12/10/16.
@@ -24,14 +30,27 @@ public class LiBaseRestRequestTest {
     private boolean isAuthenticatedRequest = false;
     private LiBaseRestRequest liBaseRestRequest;
 
+    @Mock
+    private Activity mContext;
+
+
+    public void setUpTest() throws Exception {
+        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
+        // inject the mocks in the test the initMocks method needs to be called.
+        MockitoAnnotations.initMocks(this);
+
+        mContext = mock(Activity.class);
+    }
+
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         method = LiBaseRestRequest.RestMethod.POST;
         requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
-                return  MediaType.parse("application/json; charset=utf-8");
+                return MediaType.parse("application/json; charset=utf-8");
             }
+
             @Override
             public void writeTo(BufferedSink sink) throws IOException {
 
@@ -40,7 +59,7 @@ public class LiBaseRestRequestTest {
         additionalHttpHeaders = new HashMap<>();
         additionalHttpHeaders.put("test", "test");
         path = "path";
-        liBaseRestRequest = new LiBaseRestRequest(method, path, requestBody, additionalHttpHeaders, isAuthenticatedRequest);
+        liBaseRestRequest = new LiBaseRestRequest(mContext, method, path, requestBody, additionalHttpHeaders, isAuthenticatedRequest);
         liBaseRestRequest.addQueryParam("param", "param");
         Assert.assertEquals(method, liBaseRestRequest.getMethod());
         Assert.assertEquals(requestBody, liBaseRestRequest.getRequestBody());

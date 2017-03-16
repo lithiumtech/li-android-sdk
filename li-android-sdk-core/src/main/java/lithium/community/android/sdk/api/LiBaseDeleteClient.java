@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.api;
 
+import android.content.Context;
+
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 
@@ -24,13 +26,15 @@ import lithium.community.android.sdk.rest.LiRestV2Request;
 
 public class LiBaseDeleteClient extends LiBaseClient {
 
-    public LiBaseDeleteClient(String basePath) throws LiRestResponseException {
-        super(basePath, RequestType.DELETE);
+    public LiBaseDeleteClient(Context context, String basePath) throws LiRestResponseException {
+        super(context, basePath, RequestType.DELETE);
     }
+
     @Override
     public void setLiRestV2Request() {
-        this.liRestV2Request = new LiRestV2Request();
+        this.liRestV2Request = new LiRestV2Request(context);
     }
+
     @Override
     public String getRequestBody() {
         return null;

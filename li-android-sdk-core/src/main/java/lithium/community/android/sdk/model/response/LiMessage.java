@@ -17,12 +17,12 @@ package lithium.community.android.sdk.model.response;
 import com.google.gson.annotations.SerializedName;
 
 import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiBoard;
-import lithium.community.android.sdk.model.LiConversation;
-import lithium.community.android.sdk.model.LiKudoMetrics;
-import lithium.community.android.sdk.model.LiMessageMetrics;
-import lithium.community.android.sdk.model.LiModerationStatus;
-import lithium.community.android.sdk.model.LiUserContext;
+import lithium.community.android.sdk.model.helpers.LiBoard;
+import lithium.community.android.sdk.model.helpers.LiConversation;
+import lithium.community.android.sdk.model.helpers.LiKudoMetrics;
+import lithium.community.android.sdk.model.helpers.LiMessageMetrics;
+import lithium.community.android.sdk.model.helpers.LiModerationStatus;
+import lithium.community.android.sdk.model.helpers.LiUserContext;
 
 /**
  * A message represents any kind of post made to the community using one of the Lithium conversation styles.
