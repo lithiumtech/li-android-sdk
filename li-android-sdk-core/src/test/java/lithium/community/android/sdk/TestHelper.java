@@ -14,14 +14,11 @@
 
 package lithium.community.android.sdk;
 
-import android.app.Activity;
 import android.net.Uri;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.manager.LiClientManager;
 
 /**
  * Contains common test values which are useful across all tests.
@@ -283,15 +280,13 @@ public class TestHelper {
     public static LiAppCredentials getTestAppCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL)
-                .setDeferredLogin(true).build();
+                .setCommunityUri(TEST_COMMUNITY_URL).build();
     }
 
     public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL)
-                .setDeferredLogin(true).build();
+                .setCommunityUri(TEST_COMMUNITY_URL).build();
     }
 
     /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {

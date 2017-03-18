@@ -60,12 +60,16 @@ public class LiBaseResponse {
 
         httpCode = response.code();
         String responseStr = response.body().string();
-        if (httpCode != 500) {
-            try {
-                data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
-            }
-            catch(JsonSyntaxException ex){
-                throw LiRestResponseException.jsonSyntaxError("Improper Json syntax received in response");
+        try {
+            data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
+        }
+        catch(JsonSyntaxException ex){
+            throw LiRestResponseException.jsonSyntaxError("Improper Json syntax received in response");
+        }
+
+        if (httpCode == 500) {
+            if (data.has("statusCode")) {
+                httpCode = data.get("statusCode").getAsInt();
             }
         }
         status = response.isSuccessful() ? "success" : "error";

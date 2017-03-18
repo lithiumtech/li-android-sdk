@@ -28,7 +28,6 @@ public class LiAppCredentialsTest {
                 .setClientKey(clientKey)
                 .setClientSecret(clientSecret)
                 .setCommunityUri(communityUri)
-                .setDeferredLogin(deferredLogin)
                 .build();
         Assert.assertEquals(clientKey, liAppCredentials.getClientKey());
         Assert.assertEquals(clientSecret, liAppCredentials.getClientSecret());

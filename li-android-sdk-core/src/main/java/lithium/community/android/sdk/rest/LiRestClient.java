@@ -27,6 +27,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +52,11 @@ import javax.net.ssl.X509TrustManager;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiImageUtil;
 import lithium.community.android.sdk.utils.LiUriUtils;
@@ -502,23 +505,37 @@ public abstract class LiRestClient {
                 if (response == null) {
                     proceed = true;
                 } else if (response.code() == 500 || response.code() == 501) {
+                    int httpCode = 500;
+                    JsonObject data;
+                    String responseStr = response.body().string();
                     try {
-                        LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
-                                context).performSyncRefreshTokenRequest();
-                        LiSDKManager.getInstance().persistAuthState(
-                                context, liTokenResponse);
+                        data = new Gson().fromJson(responseStr, JsonObject.class);
+                        if (data.has("statusCode")) {
+                            httpCode = data.get("statusCode").getAsInt();
+                        }
+                    }
+                    catch(JsonSyntaxException ex){
 
-                        LiSDKManager.getInstance().persistAuthState(
-                                context, liTokenResponse);
+                    }
+                    if (httpCode == 401) {
+                        try {
+                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
+                                    context).performSyncRefreshTokenRequest();
+                            LiSDKManager.getInstance().persistAuthState(
+                                    context, liTokenResponse);
 
-                        request = request.newBuilder().removeHeader(
-                                LiAuthConstants.AUTHORIZATION).build();
+                            LiSDKManager.getInstance().persistAuthState(
+                                    context, liTokenResponse);
 
-                        request = request.newBuilder().addHeader(
-                                LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                                        LiSDKManager.getInstance().getNewAuthToken()).build();
-                    } catch (LiRestResponseException e) {
-                        Log.e(LOG_TAG, "Error making rest call", e);
+                            request = request.newBuilder().removeHeader(
+                                    LiAuthConstants.AUTHORIZATION).build();
+
+                            request = request.newBuilder().addHeader(
+                                    LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
+                                            LiSDKManager.getInstance().getNewAuthToken()).build();
+                        } catch (LiRestResponseException e) {
+                            Log.e(LOG_TAG, "Error making rest call", e);
+                        }
                     }
                     proceed = true;
                 }

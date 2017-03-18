@@ -87,40 +87,42 @@ public final class LiSDKManager extends LiAuthManager {
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        try {
-            String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
-            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
-            LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
-                    new LiAsyncRequestCallback<LiGetClientResponse>() {
+        if (_sdkInstance.isUserLoggedIn()) {
+            try {
+                String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
+                LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
+                LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
+                        new LiAsyncRequestCallback<LiGetClientResponse>() {
 
-                        @Override
-                        public void onSuccess(LiBaseRestRequest request,
-                                              LiGetClientResponse response)
-                                throws LiRestResponseException {
-                            if (response.getHttpCode() == 200) {
-                                Gson gson = new Gson();
-                                JsonArray items = response.getJsonObject().get("data")
-                                        .getAsJsonObject().get("items").getAsJsonArray();
-                                if (!items.isJsonNull() && items.size() > 0) {
-                                    LiAppSdkSettings liAppSdkSettings =
-                                            gson.fromJson(items.get(0), LiAppSdkSettings.class);
-                                    if (liAppSdkSettings != null) {
-                                        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                                                LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                                        sharedPreferences.edit().putString(LI_DEFAULT_SDK_SETTINGS,
-                                                liAppSdkSettings.getAdditionalInformation()).commit();
+                            @Override
+                            public void onSuccess(LiBaseRestRequest request,
+                                                  LiGetClientResponse response)
+                                    throws LiRestResponseException {
+                                if (response.getHttpCode() == 200) {
+                                    Gson gson = new Gson();
+                                    JsonArray items = response.getJsonObject().get("data")
+                                            .getAsJsonObject().get("items").getAsJsonArray();
+                                    if (!items.isJsonNull() && items.size() > 0) {
+                                        LiAppSdkSettings liAppSdkSettings =
+                                                gson.fromJson(items.get(0), LiAppSdkSettings.class);
+                                        if (liAppSdkSettings != null) {
+                                            SharedPreferences sharedPreferences = context.getSharedPreferences(
+                                                    LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                                            sharedPreferences.edit().putString(LI_DEFAULT_SDK_SETTINGS,
+                                                    liAppSdkSettings.getAdditionalInformation()).commit();
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onError(Exception exception) {
+                            @Override
+                            public void onError(Exception exception) {
 
-                        }
-                    });
-        } catch (LiRestResponseException e) {
-            Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
+                            }
+                        });
+            } catch (LiRestResponseException e) {
+                Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
+            }
         }
         return _sdkInstance;
     }

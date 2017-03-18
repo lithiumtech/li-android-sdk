@@ -18,6 +18,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModel;
@@ -77,7 +78,11 @@ abstract class LiBaseClient implements LiClient {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
-        this.basePath = String.format("community/2.0/%s/search", LiSDKManager.getInstance().getTenant());
+        String tenant = LiSDKManager.getInstance().getTenant();
+        if (tenant == null) {
+            tenant = LiSDKManager.getInstance().getLiAppCredentials().getTenantId();
+        }
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_BASE_PATH, tenant);
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
         this.requestType = requestType;
