@@ -1,4 +1,4 @@
-package lithium.community.android.sdk.client.manager;
+package lithium.community.android.sdk.manager;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -13,11 +13,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.TestHelper;
-import lithium.community.android.sdk.model.LiAvatar;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiImage;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
+import lithium.community.android.sdk.model.helpers.LiImage;
 import lithium.community.android.sdk.model.response.LiUser;
 
 import static org.mockito.Matchers.anyInt;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LiAuthManager.class,SharedPreferences.class})
+@PrepareForTest({LiSDKManager.class, SharedPreferences.class})
 public class LiAuthManagerTest {
 
     private static final String communityUrl = "http://community.lithium.com";
@@ -63,9 +63,7 @@ public class LiAuthManagerTest {
     //
     private Activity activity;
 
-    private LiAuthManager liAuthManager;
     private SharedPreferences sharedPreferences;
-
 
 
     @Test
@@ -78,7 +76,6 @@ public class LiAuthManagerTest {
         when(sharedPreferences.getString(anyString(), anyString())).thenReturn(authStateJson);
         when(activity.getResources()).thenReturn(resource);
         LiSDKManager.init(activity, TestHelper.getTestAppCredentials());
-        liAuthManager = new LiAuthManager(activity);
         LiUser liUser = new LiUser();
         LiImage avatarImage = mock(LiImage.class);
         when(avatarImage.getDescription()).thenReturn(AVATAR_IMAGE_DESC);
@@ -100,20 +97,15 @@ public class LiAuthManagerTest {
         when(editor.commit()).thenReturn(true);
         when(sharedPreferences.edit()).thenReturn(editor);
         when(sharedPreferences.edit().putString(anyString(), anyString())).thenReturn(editor);
-        liAuthManager.setLoggedInUser(liUser);
+        LiSDKManager.getInstance().setLoggedInUser(activity, liUser);
 
-        Assert.assertEquals(EMAIL, liAuthManager.getLoggedInUser().getEmail());
-        Assert.assertEquals(HREF, liAuthManager.getLoggedInUser().getHref());
-        Assert.assertEquals(PROFILE_PAGE_URL, liAuthManager.getLoggedInUser().getProfilePageUrl());
+        Assert.assertEquals(EMAIL, LiSDKManager.getInstance().getLoggedInUser().getEmail());
+        Assert.assertEquals(HREF, LiSDKManager.getInstance().getLoggedInUser().getHref());
+        Assert.assertEquals(PROFILE_PAGE_URL, LiSDKManager.getInstance().getLoggedInUser().getProfilePageUrl());
 
-        Assert.assertEquals(communityUrl, liAuthManager.getCommunityUrl().toString());
-        Assert.assertEquals(ACCESSTOKEN, liAuthManager.getNewAuthToken());
-        Assert.assertEquals(NEW_REFRESH_TOKEN, liAuthManager.getRefreshToken());
-        Assert.assertTrue(liAuthManager.isUserLoggedIn());
-
-        //
-
-
+        Assert.assertEquals(ACCESSTOKEN, LiSDKManager.getInstance().getNewAuthToken());
+        Assert.assertEquals(NEW_REFRESH_TOKEN, LiSDKManager.getInstance().getRefreshToken());
+        Assert.assertTrue(LiSDKManager.getInstance().isUserLoggedIn());
 
     }
 

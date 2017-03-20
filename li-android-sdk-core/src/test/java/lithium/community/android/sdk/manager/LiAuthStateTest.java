@@ -1,4 +1,4 @@
-package lithium.community.android.sdk.client.manager;
+package lithium.community.android.sdk.manager;
 
 import com.google.gson.Gson;
 

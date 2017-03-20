@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +16,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.TestHelper;
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.queryutil.LiQueryBuilder;
-import lithium.community.android.sdk.rest.LiRestv2Client;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
@@ -47,6 +44,7 @@ public class LiQueryBuilderTest {
     private String defaultSettings = TestHelper.DEFAULT_QUERY_SETTINGS;
 
     private LiDefaultQueryHelper liDefaultQueryHelper;
+
     @Before
     public void setUpTest() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -65,18 +63,19 @@ public class LiQueryBuilderTest {
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
 
     }
+
     @Test
     public void getQueryTest() {
-        assertEquals(RESULTANT_TEST_QUERY, LiQueryBuilder.getQuery(BASE_TEST_QUERY, TEST_TYPE));
+        assertEquals(RESULTANT_TEST_QUERY, LiQueryBuilder.getQuery(mContext, BASE_TEST_QUERY, TEST_TYPE));
     }
 
     @Test
     public void getQueryTestForDefaultSettings() {
-        assertEquals(RESULTANT_TEST_QUERY, LiQueryBuilder.getQuery(BASE_TEST_QUERY, TEST_TYPE));
+        assertEquals(RESULTANT_TEST_QUERY, LiQueryBuilder.getQuery(mContext, BASE_TEST_QUERY, TEST_TYPE));
     }
 
     @Test
     public void getQueryTestIfQuerySettingsNotPresent() {
-        assertEquals(BASE_TEST_QUERY, LiQueryBuilder.getQuery(BASE_TEST_QUERY,TYPE_HAVING_NO_CONFIG));
+        assertEquals(BASE_TEST_QUERY, LiQueryBuilder.getQuery(mContext, BASE_TEST_QUERY, TYPE_HAVING_NO_CONFIG));
     }
 }

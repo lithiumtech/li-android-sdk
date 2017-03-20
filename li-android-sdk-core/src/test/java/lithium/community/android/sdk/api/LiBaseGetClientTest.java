@@ -17,14 +17,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.TestHelper;
-import lithium.community.android.sdk.client.manager.LiAuthManager;
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
-import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 
 import static org.mockito.Matchers.anyInt;
@@ -42,12 +40,9 @@ public class LiBaseGetClientTest {
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
     private static final String LI_ARTICLES_QUERYSETTINGS_TYPE = "article";
 
-    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages WHERE conversation.style in ('forum', 'blog') AND depth = ## ORDER BY conversation.last_post_time desc LIMIT 50";
+    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private LiBaseGetClient liClient;
     private LiRestv2Client liRestv2Client;
-    private LiClientManager liClientManager;
-    private LiAuthManager liAuthManager;
-    private LiRestV2Request liRestV2Request;
     private Activity mContext;
     private LiSDKManager liSDKManager;
     private SharedPreferences mMockSharedPreferences;
@@ -57,7 +52,7 @@ public class LiBaseGetClientTest {
     private LiDefaultQueryHelper liDefaultQueryHelper;
 
     @Before
-    public void setUp() throws Exception, LiRestResponseException {
+    public void setUp() throws Exception {
 
         mContext = Mockito.mock(Activity.class);
         mMockSharedPreferences = Mockito.mock(SharedPreferences.class);
@@ -67,21 +62,12 @@ public class LiBaseGetClientTest {
         when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
         when(mContext.getResources()).thenReturn(resource);
         JsonObject jsonObject = new Gson().fromJson(defaultSettings, JsonObject.class);
-        liDefaultQueryHelper = Mockito.mock(LiDefaultQueryHelper.class);
-        when(liDefaultQueryHelper.getDefaultSetting()).thenReturn(jsonObject);
-        PowerMockito.mockStatic(LiDefaultQueryHelper.class);
-        BDDMockito.given(LiDefaultQueryHelper.getInstance()).willReturn(liDefaultQueryHelper);
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
         liRestv2Client = mock(LiRestv2Client.class);
-        liAuthManager = mock(LiAuthManager.class);
-        when(liAuthManager.getTenant()).thenReturn("test");
-        liClientManager = mock(LiClientManager.class);
-        when(liClientManager.getLiAuthManager()).thenReturn(liAuthManager);
+        when(liSDKManager.getTenant()).thenReturn("test");
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
-        PowerMockito.mockStatic(LiClientManager.class);
-        BDDMockito.given(LiClientManager.getInstance()).willReturn(liClientManager);
-        liClient = new LiBaseGetClient(LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
 
 
     }
@@ -90,6 +76,7 @@ public class LiBaseGetClientTest {
     public void testBaseGetClientCreation() throws LiRestResponseException {
         Assert.assertEquals(LI_ARTICLES_CLIENT_TYPE, liClient.type);
         Assert.assertEquals(LI_ARTICLES_QUERYSETTINGS_TYPE, liClient.querySettingsType);
+        PowerMockito.verifyStatic();
     }
 
     @Test

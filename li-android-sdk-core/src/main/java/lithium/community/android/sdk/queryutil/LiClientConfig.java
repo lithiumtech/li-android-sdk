@@ -14,7 +14,7 @@
 
 package lithium.community.android.sdk.queryutil;
 
-import lithium.community.android.sdk.client.manager.LiClientManager.Client;
+import lithium.community.android.sdk.manager.LiClientManager.Client;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiBrowse;
@@ -47,7 +47,7 @@ public class LiClientConfig {
                 return LiQueryConstant.LI_ARTICLES_CLIENT_BASE_LIQL;
             case LI_CATEGORY_CLIENT:
                 return LiQueryConstant.LI_CATEGORY_CLIENT_BASE_LIQL;
-            case LI_FLOATED_MESSAGE_CLIENT:
+            case LI_FLOATED_MESSAGES_CLIENT:
                 return LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL;
             case LI_MESSAGE_CHILDREN_CLIENT:
                 return LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_BASE_LIQL;
@@ -83,7 +83,7 @@ public class LiClientConfig {
                 return LiQueryConstant.LI_ARTICLES_CLIENT_TYPE;
             case LI_CATEGORY_CLIENT:
                 return LiQueryConstant.LI_CATEGORY_CLIENT_TYPE;
-            case LI_FLOATED_MESSAGE_CLIENT:
+            case LI_FLOATED_MESSAGES_CLIENT:
                 return LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_TYPE;
             case LI_MESSAGE_CHILDREN_CLIENT:
                 return LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_TYPE;
@@ -119,7 +119,7 @@ public class LiClientConfig {
                 return LiMessage.class;
             case LI_CATEGORY_CLIENT:
                 return LiBrowse.class;
-            case LI_FLOATED_MESSAGE_CLIENT:
+            case LI_FLOATED_MESSAGES_CLIENT:
                 return LiFloatedMessageModel.class;
             case LI_MESSAGE_CHILDREN_CLIENT:
                 return LiMessage.class;

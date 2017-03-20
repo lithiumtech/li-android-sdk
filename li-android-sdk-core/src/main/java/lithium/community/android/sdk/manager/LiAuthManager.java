@@ -12,11 +12,10 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.client.manager;
+package lithium.community.android.sdk.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,10 +25,8 @@ import org.json.JSONException;
 
 import java.net.URISyntaxException;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.auth.LiAuthService;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
-import lithium.community.android.sdk.auth.LiAuthTokenProvider;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.exception.LiRestResponseException;
@@ -47,7 +44,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_P
  * Created by kunal.shrivastava on 10/18/16.
  */
 
-public class LiAuthManager implements LiAuthTokenProvider {
+class LiAuthManager {
 
     private LiAuthState liAuthState;
 
@@ -57,6 +54,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Fetches the current logged in User.
+     *
      * @return user details.
      */
     public LiUser getLoggedInUser() {
@@ -68,46 +66,35 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Sets User
+     *
      * @param user {@Link LiUser}
      */
-    public void setLoggedInUser(LiUser user) {
+    public void setLoggedInUser(Context context, LiUser user) {
         if (liAuthState != null) {
             liAuthState.setUser(user);
-            getSharedPreferences(LiSDKManager.getInstance().getContext()).edit()
+            getSharedPreferences(context).edit()
                     .putString(LI_AUTH_STATE, liAuthState.jsonSerializeString())
                     .commit();
         }
     }
 
     /**
-     *
-     * Returns community URI.
-     */
-    @Override
-    public Uri getCommunityUrl() {
-        return LiSDKManager.getInstance().getLiAppCredentials().getCommunityUri();
-    }
-
-    /**
-     *
      * Returns Access Token.
      */
-    @Override
     public String getNewAuthToken() {
         return liAuthState == null ? null : liAuthState.getAccessToken();
     }
 
     /**
-     *
      * Returns Refresh Token.
      */
-    @Override
     public String getRefreshToken() {
         return liAuthState == null ? null : liAuthState.getRefreshToken();
     }
 
     /**
      * Login flow is initiated from here and then call goes to LiAuthService
+     *
      * @param context {@link Context}
      * @throws URISyntaxException
      */
@@ -115,8 +102,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
         if (!isUserLoggedIn()) {
             if (!TextUtils.isEmpty(ssoToken)) {
                 new LiAuthServiceImpl(context, ssoToken).startLoginFlow();
-            }
-            else {
+            } else {
                 new LiAuthServiceImpl(context).startLoginFlow();
             }
         }
@@ -124,6 +110,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * fetches shared preference
+     *
      * @param context {@link Context}
      * @return SharedPreferences
      */
@@ -133,7 +120,8 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * persists Auth State in shared preference when  Authorization Response is received
-     * @param context {@link Context}
+     *
+     * @param context               {@link Context}
      * @param authorizationResponse {@link LiSSOAuthResponse}
      */
     public void persistAuthState(Context context, @NonNull LiSSOAuthResponse authorizationResponse) {
@@ -146,7 +134,8 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * persists Auth State in shared preference when  Token Response is received
-     * @param context {@link Context}
+     *
+     * @param context  {@link Context}
      * @param response {@link LiTokenResponse}
      */
     public void persistAuthState(Context context, @NonNull LiTokenResponse response) {
@@ -158,6 +147,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Flushes auth state when a call to logout is made.
+     *
      * @param context {@link Context}
      */
     public void logout(Context context) {
@@ -167,6 +157,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Checks if the user is logged in.
+     *
      * @return true or false depending whether user is logged in.
      */
     public boolean isUserLoggedIn() {
@@ -175,6 +166,7 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Fetches Auth State from Shared Preference.
+     *
      * @param context {@link Context}
      * @return the LiAuthState class.
      */
@@ -215,9 +207,10 @@ public class LiAuthManager implements LiAuthTokenProvider {
 
     /**
      * Fetches Fresh Access Token and Persists it.
-     * @param context {@link Context}
+     *
+     * @param context             {@link Context}
      * @param mFreshTokenCallBack {@link LiAuthService.FreshTokenCallBack}
-     * @throws URISyntaxException {@link URISyntaxException}
+     * @throws URISyntaxException      {@link URISyntaxException}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void fetchFreshAccessToken(final Context context,

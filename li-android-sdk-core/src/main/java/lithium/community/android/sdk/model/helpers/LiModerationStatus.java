@@ -12,7 +12,7 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.model;
+package lithium.community.android.sdk.model.helpers;
 
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 

@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.api;
 
+import android.content.Context;
+
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.post.LiPostModel;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -29,8 +31,8 @@ public class LiBasePutClient extends LiBaseClient {
     public LiPostModel postModel;
     private String requestBody;
 
-    public LiBasePutClient(String basePath) throws LiRestResponseException {
-        super(basePath, RequestType.PUT);
+    public LiBasePutClient(Context context, String basePath) throws LiRestResponseException {
+        super(context, basePath, RequestType.PUT);
     }
 
     /**
@@ -39,7 +41,7 @@ public class LiBasePutClient extends LiBaseClient {
     @Override
     public void setLiRestV2Request() {
         this.requestBody = postModel.toJsonString();
-        this.liRestV2Request = new LiRestV2Request(LiBaseRestRequest.RestMethod.PUT, requestBody);
+        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.PUT, requestBody);
     }
 
     @Override

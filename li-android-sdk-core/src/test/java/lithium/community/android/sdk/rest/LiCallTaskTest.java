@@ -18,7 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import java.util.Arrays;
 
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -72,7 +72,6 @@ public class LiCallTaskTest{
         response = builder.build();
         PowerMockito.mockStatic(LiClientManager.class);
         liClientManager = mock(LiClientManager.class);
-        BDDMockito.given(LiClientManager.getInstance()).willReturn(liClientManager);
         when(liClientManager.getRestClient()).thenReturn(liRestClient);
         when(liRestClient.getGson()).thenReturn(gson);
         when(gson.fromJson(anyString(), (Class<Object>) any())).thenReturn(null);

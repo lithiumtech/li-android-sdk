@@ -24,5 +24,6 @@ public class LiAuthConstants {
     public static final String LOGIN_RESULT = "LOGIN_RESULT";
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
+    public static final String API_PROXY_DEFAULT_BASE_PATH = "api.lithium.com/2.0/%s/search";
 
 }

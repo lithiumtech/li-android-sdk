@@ -20,10 +20,10 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -42,17 +42,17 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_P
 public class LiNotificationProviderImpl implements LiNotificationProvider {
 
     @Override
-    public void onIdRefresh(final String deviceId, LiPushNotificationProvider liPushNotificationProvider) throws LiRestResponseException {
+    public void onIdRefresh(final String deviceId, LiPushNotificationProvider liPushNotificationProvider, final Context context) throws LiRestResponseException {
 
-        final Context context = LiSDKManager.getInstance().getContext();
         String savedId = getSharedPreferences(context).getString(LI_DEVICE_ID, null);
 
         /**
          * If there is no 'id' corresponding to the device id, a fresh call is made to get the 'id' and save it in
          * shared preferences.
          */
-        if(savedId == null || savedId.isEmpty()){
-            LiClient deviceIdFetchClient = LiClientManager.getInstance().getDeviceIdFetchClient(deviceId, liPushNotificationProvider.name());
+        if (savedId == null || savedId.isEmpty()) {
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, liPushNotificationProvider.name());
+            LiClient deviceIdFetchClient = LiClientManager.getDeviceIdFetchClient(liClientRequestParams);
             deviceIdFetchClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
@@ -67,6 +67,7 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                         }
                     }
                 }
+
                 @Override
                 public void onError(Exception exception) {
                     Log.e(LI_LOG_TAG, "Unable to fetch device id");
@@ -78,15 +79,17 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
          */
         else {
 
-            if(deviceId.equals(getSharedPreferences(context).getString(LI_RECEIVER_DEVICE_ID, null))){
+            if (deviceId.equals(getSharedPreferences(context).getString(LI_RECEIVER_DEVICE_ID, null))) {
                 return;
             }
-            LiClient deviceIdUpdateClient = LiClientManager.getInstance().getDeviceIdUpdateClient(deviceId, savedId);
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdUpdateClientRequestParams(context, deviceId, savedId);
+            LiClient deviceIdUpdateClient = LiClientManager.getDeviceIdUpdateClient(liClientRequestParams);
             deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
                     Log.i(LI_LOG_TAG, "Successfully updated device Id");
                 }
+
                 @Override
                 public void onError(Exception exception) {
                     Log.e(LI_LOG_TAG, "Unable to update device Id");
@@ -99,6 +102,7 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
 
     /**
      * provides the shared prefernece to save the 'id'.
+     *
      * @param context {@link Context}
      * @return SharedPreferences {@link SharedPreferences}
      */

@@ -12,10 +12,12 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.model;
+package lithium.community.android.sdk.model.helpers;
 
 
 import com.google.gson.annotations.SerializedName;
+
+import lithium.community.android.sdk.model.LiBaseModelImpl;
 
 /**
  * This model represents how a user's rank appears in the community.

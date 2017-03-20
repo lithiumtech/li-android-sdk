@@ -43,16 +43,16 @@ public final class LiAppCredentials {
 
     private final String ssoAuthorizeUri;
 
+    private final String tenantId;
+
     /**
      * private constructor.
      * @param clientKey This is client Id.
      * @param clientSecret This is client secret.
      * @param communityURL This is the URL of the community.
-     * @param deferredLogin Parameter to suggest if deferred login is enabled.
      * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
-    private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret, @NonNull String communityURL,
-                             boolean deferredLogin) throws MalformedURLException {
+    private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret, @NonNull String communityURL, @NonNull String tenantId) throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
@@ -62,6 +62,7 @@ public final class LiAppCredentials {
         this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL.toString()+"api/2.0/auth/authorize";
+        this.tenantId = tenantId;
     }
 
     private static String buildRedirectUri(Uri communityUri) {
@@ -87,6 +88,10 @@ public final class LiAppCredentials {
     @NonNull
     public String getRedirectUri() {
         return redirectUri;
+    }
+
+    public String getTenantId() {
+        return tenantId;
     }
 
     public String getSsoAuthorizeUri() { return ssoAuthorizeUri; }
@@ -135,7 +140,8 @@ public final class LiAppCredentials {
         private String clientKey;
         private String clientSecret;
         private String communityUri;
-        private boolean deferredLogin;
+
+        private String tenantId;
 
         public Builder() {
         }
@@ -153,18 +159,19 @@ public final class LiAppCredentials {
         }
 
         @NonNull
+        public Builder setTenantId(String tenantId) {
+            this.tenantId = tenantId;
+            return this;
+        }
+
+        @NonNull
         public Builder setCommunityUri(@NonNull String communityUri) {
             this.communityUri = communityUri;
             return this;
         }
 
-        public Builder setDeferredLogin(boolean deferredLogin) {
-            this.deferredLogin = deferredLogin;
-            return this;
-        }
-
         public LiAppCredentials build() throws MalformedURLException {
-            return new LiAppCredentials(clientKey, clientSecret, communityUri, deferredLogin);
+            return new LiAppCredentials(clientKey, clientSecret, communityUri, tenantId);
         }
     }
 }
