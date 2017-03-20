@@ -18,6 +18,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -403,7 +404,8 @@ public abstract class LiRestClient {
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = LiSDKManager.getInstance().getProxyHost();
+        String proxyHost = TextUtils.isEmpty(LiSDKManager.getInstance().getProxyHost())
+                ?LiSDKManager.getInstance().getLiAppCredentials().getApiProxyHost():LiSDKManager.getInstance().getProxyHost();
         Context context = baseRestRequest.getContext();
         uriBuilder.authority(proxyHost);
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
@@ -416,9 +418,10 @@ public abstract class LiRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(uriBuilder.build().toString())))
                 .method(baseRestRequest.getMethod().toString(), baseRestRequest.getRequestBody());
-
-        builder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                LiSDKManager.getInstance().getNewAuthToken());
+        if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
+            builder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
+                    LiSDKManager.getInstance().getNewAuthToken());
+        }
         builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
