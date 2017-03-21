@@ -98,6 +98,15 @@ class LiAuthManager {
      * @param context {@link Context}
      * @throws URISyntaxException
      */
+    public void initLoginFlow(Context context) throws URISyntaxException {
+        initLoginFlow(context, null);
+    }
+
+    /**
+     * Login flow is initiated from here and then call goes to LiAuthService
+     * @param context {@link Context}
+     * @throws URISyntaxException
+     */
     public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
         if (!isUserLoggedIn()) {
             if (!TextUtils.isEmpty(ssoToken)) {
