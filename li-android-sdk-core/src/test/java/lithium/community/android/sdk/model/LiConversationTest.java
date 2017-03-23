@@ -2,6 +2,8 @@ package lithium.community.android.sdk.model;
 
 import org.junit.Test;
 
+import lithium.community.android.sdk.model.helpers.LiConversation;
+
 import static org.junit.Assert.assertEquals;
 
 /**

@@ -3,6 +3,8 @@ package lithium.community.android.sdk.model;
 import org.json.JSONException;
 import org.junit.Test;
 
+import lithium.community.android.sdk.model.helpers.LiAvatar;
+
 import static org.junit.Assert.assertEquals;
 
 /**

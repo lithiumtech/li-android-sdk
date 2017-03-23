@@ -1,5 +1,5 @@
 /*
- * LiMessageMetrics.java
+ * LiKudoMetrics.java
  * Created on Dec 27, 2016
  *
  * Copyright 2016 Lithium Technologies, Inc.
@@ -12,24 +12,24 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.model;
+package lithium.community.android.sdk.model.helpers;
 
-import com.google.gson.annotations.SerializedName;
+import lithium.community.android.sdk.model.LiBaseModelImpl;
 
 /**
- * Metrics about the message.
+ * Kudo count metrics
  */
-public class LiMessageMetrics extends LiBaseModelImpl {
 
-    @SerializedName("views")
-    private Long viewCount;
+public class LiKudoMetrics extends LiBaseModelImpl {
 
-    public Long getViewCount() {
-        return viewCount;
+    private LiSum sum;
+
+    public LiSum getSum() {
+        return sum;
     }
 
-    public void setViewCount(Long viewCount) {
-        this.viewCount = viewCount;
+    public void setSum(LiSum sum) {
+        this.sum = sum;
     }
 
 }

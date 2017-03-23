@@ -24,12 +24,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import lithium.community.android.sdk.LiSDKManager;
-
-import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_AS_READ;
-import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_AS_READ;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE;
 
 /**
  * Created by kunal.shrivastava on 10/19/16.
@@ -43,21 +41,21 @@ public class LiQueryBuilder {
     private static final String LIMIT = "LIMIT";
     private static volatile LiQuerySetting liQuerySetting;
 
-    private  static JsonObject getDefault(String client) {
+    private static JsonObject getDefault(String client) {
         JsonObject jsonObject = LiDefaultQueryHelper.getInstance().getDefaultSetting();
         return (jsonObject == null ? null : jsonObject.getAsJsonObject(client));
     }
 
-    private static JsonObject getClientJsonSetting(String client) {
+    private static JsonObject getClientJsonSetting(String client, Context context) {
 
         Log.i("LiQueryBuilder", "Reading client settings from configurations");
 
-        String settingJsonStr = getSettingFromServer();
+        String settingJsonStr = getSettingFromServer(context);
         JsonObject clientSettings = getDefault(client);
         JsonObject serverSettingJson = null;
         if (settingJsonStr != null && !settingJsonStr.isEmpty()) {
             JsonElement jsonElement = new JsonParser().parse(settingJsonStr);
-            if(!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
+            if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
                 serverSettingJson = jsonElement.getAsJsonObject();
             }
         }
@@ -68,7 +66,8 @@ public class LiQueryBuilder {
 
     /**
      * Overrides default setting with the settings fetched fron the community.
-     * @param clientSettings Local settings to be used.
+     *
+     * @param clientSettings    Local settings to be used.
      * @param serverSettingJson Settings received from community.
      */
     private static void overrideDefaultSettings(JsonObject clientSettings, JsonObject serverSettingJson) {
@@ -83,11 +82,10 @@ public class LiQueryBuilder {
                 StringBuilder conversationStyleSB = new StringBuilder();
                 boolean isFirst = true;
                 conversationStyleSB.append("(");
-                for (JsonElement styleElem: discussionStyleArr) {
+                for (JsonElement styleElem : discussionStyleArr) {
                     if (isFirst) {
                         isFirst = false;
-                    }
-                    else {
+                    } else {
                         conversationStyleSB.append(", ");
                     }
                     conversationStyleSB.append("'").append(styleElem.getAsString()).append("'");
@@ -111,13 +109,14 @@ public class LiQueryBuilder {
 
     /**
      * Returns query setting class.
+     *
      * @param baseQuery It is the base query.
-     * @param client It is the client for which settings are to be fetched.
+     * @param client    It is the client for which settings are to be fetched.
      * @return query setting {@link LiQuerySetting}
      */
-    private static LiQuerySetting getQuerySetting(String baseQuery, String client) {
+    private static LiQuerySetting getQuerySetting(String baseQuery, String client, Context context) {
         Log.i("LiQueryBuilder", "calling getClientJsonSetting to get json setting for client: " + client);
-        JsonObject clientSettings = getClientJsonSetting(client);
+        JsonObject clientSettings = getClientJsonSetting(client, context);
         Gson gson = new Gson();
         try {
             liQuerySetting = gson.fromJson(clientSettings, LiQuerySetting.class);
@@ -129,7 +128,8 @@ public class LiQueryBuilder {
 
     /**
      * Builds the query from base query and query setting.
-     * @param baseQuery It is the base query.
+     *
+     * @param baseQuery      It is the base query.
      * @param liQuerySetting {@link LiQuerySetting}
      * @return Complete query.
      */
@@ -169,42 +169,43 @@ public class LiQueryBuilder {
      * any activity clients, and then create {@link LiQuerySetting} object from settings.
      * Using LiQuerySetting object, this will create a LIQL query to be used by activity client directly
      *
-     * @param baseQuery It is the base LIQL.
+     * @param baseQuery      It is the base LIQL.
      * @param liQuerySetting {@link LiQuerySetting}
-     * @return  LIQL query to be used by activity client directly.
+     * @return LIQL query to be used by activity client directly.
      */
     public static String getQuery(String baseQuery, LiQuerySetting liQuerySetting) {
         return buildQuery(baseQuery, liQuerySetting);
     }
+
     /**
      * Method to be called by activity client to create LIQL query, corresponding to that client. This method read settings for
      * any activity clients, and then create {@link LiQuerySetting} object from settings.
      * Using LiQuerySetting object, this will create a LIQL query to be used by activity client directly
      *
      * @param baseQuery It is the base LIQL.
-     * @param client It is the query settings type.
+     * @param client    It is the query settings type.
      * @return The complete query with appropriate values populated.
      */
-    public static String getQuery(String baseQuery, String client) {
+    public static String getQuery(Context context, String baseQuery, String client) {
         Log.i("LiQueryBuilder", "calling getQuerySetting to get query setting of client:: " + client);
-        LiQuerySetting liQuerySetting = getQuerySetting(baseQuery, client);
+        LiQuerySetting liQuerySetting = getQuerySetting(baseQuery, client, context);
         if (liQuerySetting != null) {
             Log.i("LiQueryBuilder", "Fetched Query Setting, calling buildQuery to build query");
-            if(client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)) {
+            if (client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)) {
                 return buildQuery(baseQuery, liQuerySetting) + LI_MARK_AS_READ;
             }
             return buildQuery(baseQuery, liQuerySetting);
         }
-        if(client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)){
+        if (client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)) {
             //Temporary addition to figure out if the message has been read by the user
             return (baseQuery + LI_MARK_AS_READ);
         }
         return baseQuery;
     }
 
-    private static String getSettingFromServer() {
+    private static String getSettingFromServer(Context context) {
         String settingFromServer;
-        SharedPreferences prefs = LiSDKManager.getInstance().getContext().getSharedPreferences(
+        SharedPreferences prefs = context.getSharedPreferences(
                 LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         settingFromServer = prefs.getString(LI_DEFAULT_SDK_SETTINGS, null);
         return settingFromServer;

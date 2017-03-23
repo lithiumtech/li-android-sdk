@@ -14,9 +14,12 @@
 
 package lithium.community.android.sdk.api;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.auth.LiAuthConstants;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.queryutil.LiQueryOrdering;
@@ -41,24 +44,27 @@ abstract class LiBaseClient implements LiClient {
     private final LiRestv2Client liRestv2Client;
     private final Class<? extends LiBaseModel> responseClass;
     protected final String type;
-
     private String imagePath;
-    private String imageName;
 
+    private String imageName;
     protected String querySettingsType;
+
+    protected Context context;
     protected LiRestV2Request liRestV2Request;
     protected String basePath;
     protected RequestType requestType;
     protected LiQueryOrdering liQueryOrdering;
     protected LiQueryRequestParams liQueryRequestParams;
 
-    public LiBaseClient(String type, Class<? extends LiBaseModel> responseClass) {
+    public LiBaseClient(Context context, String type, Class<? extends LiBaseModel> responseClass) {
+        this.context = context;
         this.type = type;
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
     }
 
-    public LiBaseClient(String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+        this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
         this.basePath = basePath;
@@ -68,16 +74,22 @@ abstract class LiBaseClient implements LiClient {
     }
 
 
-    public LiBaseClient(String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+        this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
-        this.basePath = String.format("community/2.0/%s/search", LiClientManager.getInstance().getLiAuthManager().getTenant());
+        String tenant = LiSDKManager.getInstance().getTenant();
+        if (tenant == null) {
+            tenant = LiSDKManager.getInstance().getLiAppCredentials().getTenantId();
+        }
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_BASE_PATH, tenant);
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
         this.requestType = requestType;
     }
 
-    public LiBaseClient(String basePath, RequestType requestType) {
+    public LiBaseClient(Context context, String basePath, RequestType requestType) {
+        this.context = context;
         this.type = null;
         this.querySettingsType = null;
         this.basePath = basePath;
@@ -86,7 +98,8 @@ abstract class LiBaseClient implements LiClient {
         this.requestType = requestType;
     }
 
-    public LiBaseClient(String basePath, RequestType requestType, String imagePath, String imageName) {
+    public LiBaseClient(Context context, String basePath, RequestType requestType, String imagePath, String imageName) {
+        this.context = context;
         this.type = null;
         this.querySettingsType = null;
         this.basePath = basePath;
@@ -166,8 +179,8 @@ abstract class LiBaseClient implements LiClient {
      * processSync call to upload files
      *
      * @param liAsyncRequestCallback {@link LiAsyncRequestCallback}
-     * @param imagePath this is the absolute path of the image.
-     * @param imageName this is the name of the image file.
+     * @param imagePath              this is the absolute path of the image.
+     * @param imageName              this is the name of the image file.
      */
     @Override
     public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath, final String imageName) throws LiRestResponseException {

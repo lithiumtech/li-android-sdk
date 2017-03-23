@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
+import lithium.community.android.sdk.manager.LiSDKManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;

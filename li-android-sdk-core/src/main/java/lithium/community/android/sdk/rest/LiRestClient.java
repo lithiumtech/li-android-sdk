@@ -18,6 +18,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -27,6 +28,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,14 +50,14 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
-import lithium.community.android.sdk.client.manager.LiAuthManager;
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiImageUtil;
 import lithium.community.android.sdk.utils.LiUriUtils;
@@ -155,7 +157,6 @@ public abstract class LiRestClient {
                     .connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS)
                     .sslSocketFactory(sslSocketFactory, trustManager);
             this.httpClient = builder.build();
-            //TODO: why generic exception
         } catch (Exception e) {
             throw LiRestResponseException.networkError(e.getMessage());
         }
@@ -168,30 +169,29 @@ public abstract class LiRestClient {
 
     /**
      * Makes Sync Network call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
      * @return LiBaseResponse {@link LiBaseResponse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public LiBaseResponse processSync(@NonNull LiBaseRestRequest baseRestRequest)
             throws LiRestResponseException {
-        LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
         LiCoreSDKUtils.checkNotNull(baseRestRequest);
-        if (baseRestRequest.isAuthenticatedRequest() && authManager.isUserLoggedIn()) {
-            if (authManager.getNeedsTokenRefresh()) {
-                Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + authManager.getNewAuthToken());
-                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
-                        LiSDKManager.getInstance().getContext()).performSyncRefreshTokenRequest();
-                authManager.persistAuthState(
-                        LiSDKManager.getInstance().getContext(), liTokenResponse);
+        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
+            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
+                Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext()).performSyncRefreshTokenRequest();
+                LiSDKManager.getInstance().persistAuthState(
+                        baseRestRequest.getContext(), liTokenResponse);
 
-                Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + authManager.getNewAuthToken());
+                Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
 
             }
         }
 
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor());
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
         Response response = null;
 
         try {
@@ -201,7 +201,7 @@ public abstract class LiRestClient {
             Log.e(LOG_TAG, "Error making rest call", e);
             throw LiRestResponseException.networkError(e.getMessage());
         } finally {
-            if(response != null && response.body() != null) {
+            if (response != null && response.body() != null) {
                 response.body().close();
             }
         }
@@ -209,22 +209,22 @@ public abstract class LiRestClient {
 
     /**
      * Makes Async Network call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callback {@link LiAsyncRequestCallback}
+     * @param callback        {@link LiAsyncRequestCallback}
      */
     public void processAsync(@NonNull final LiBaseRestRequest baseRestRequest,
                              @NonNull final LiAsyncRequestCallback callback) {
-        final LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
-        if (baseRestRequest.isAuthenticatedRequest() && authManager.isUserLoggedIn()) {
-            if (authManager.getNeedsTokenRefresh()) {
+        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
+            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + authManager.getNewAuthToken());
-                    authManager.fetchFreshAccessToken(
-                            LiSDKManager.getInstance().getContext(),
+                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    LiSDKManager.getInstance().fetchFreshAccessToken(
+                            baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + authManager.getNewAuthToken());
+                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
                                     enqueueCall(baseRestRequest, callback);
                                 }
                             });
@@ -234,18 +234,21 @@ public abstract class LiRestClient {
             } else {
                 enqueueCall(baseRestRequest, callback);
             }
+        } else {
+            enqueueCall(baseRestRequest, callback);
         }
     }
 
     /**
      * Makes network call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callback {@link LiAsyncRequestCallback}
+     * @param callback        {@link LiAsyncRequestCallback}
      */
     private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor());
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
         Call call = clientBuilder.build().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -260,8 +263,8 @@ public abstract class LiRestClient {
                     callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
                 } catch (LiRestResponseException e) {
                     throw new RuntimeException(e.getMessage());
-                }finally {
-                    if(response !=null && response.body() != null){
+                } finally {
+                    if (response != null && response.body() != null) {
                         response.body().close();
                     }
                 }
@@ -271,25 +274,25 @@ public abstract class LiRestClient {
 
     /**
      * Makes Async Call for uploading an image to the community.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callback {@link LiAsyncRequestCallback}
-     * @param imagePath Absolute path of the image file.
-     * @param imageName Name of the image file.
-     * @param requestBody Request body of image upload API.
+     * @param callback        {@link LiAsyncRequestCallback}
+     * @param imagePath       Absolute path of the image file.
+     * @param imageName       Name of the image file.
+     * @param requestBody     Request body of image upload API.
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest,
                                         @NonNull final LiAsyncRequestCallback callback, final String imagePath, final String imageName, final String requestBody) {
-        final LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
-        if (baseRestRequest.isAuthenticatedRequest() && authManager.isUserLoggedIn()) {
-            if (authManager.getNeedsTokenRefresh()) {
+        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
+            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + authManager.getNewAuthToken());
-                    authManager.fetchFreshAccessToken(
-                            LiSDKManager.getInstance().getContext(),
+                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    LiSDKManager.getInstance().fetchFreshAccessToken(
+                            baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + authManager.getNewAuthToken());
+                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
                                     uploadEnqueueCall(baseRestRequest, callback, imagePath, imageName, requestBody);
                                 }
                             });
@@ -304,11 +307,12 @@ public abstract class LiRestClient {
 
     /**
      * Makes network call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callback {@link LiAsyncRequestCallback}
-     * @param imagePath Absolute path of the image file.
-     * @param imageName Name of the image file.
-     * @param imgRequestBody Request body of image upload API.
+     * @param callback        {@link LiAsyncRequestCallback}
+     * @param imagePath       Absolute path of the image file.
+     * @param imageName       Name of the image file.
+     * @param imgRequestBody  Request body of image upload API.
      */
     private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
                                    String imagePath, String imageName, String imgRequestBody) {
@@ -317,25 +321,24 @@ public abstract class LiRestClient {
         File originalFile = new File(imagePath);
         final File file;
         final boolean isCompressed;
-        if(originalFile.length() >= LI_MAX_IMAGE_UPLOAD_SIZE){
+        if (originalFile.length() >= LI_MAX_IMAGE_UPLOAD_SIZE) {
             isCompressed = true;
-            file = new File(LiImageUtil.compressImage(imagePath, imageName, LiSDKManager.getInstance().getContext()));
-        }
-        else{
+            file = new File(LiImageUtil.compressImage(imagePath, imageName, baseRestRequest.getContext()));
+        } else {
             isCompressed = false;
             file = new File(imagePath);
         }
-        String requestBody = " {\"request\": {\"data\": {\"description\": \"Uploaded from community android app.\",\"field\": \"image.content\",\"title\": \""+imageName+"\",\"type\": \"image\",\"visibility\": \"public\"}}}";
+        String requestBody = " {\"request\": {\"data\": {\"description\": \"Uploaded from community android app.\",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("api.request", requestBody)
                 .addFormDataPart("image.content", imageName, MultipartBody.create(MEDIA_TYPE, file))
-                .addFormDataPart("payload","")
+                .addFormDataPart("payload", "")
                 .build();
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = LiClientManager.getInstance().getLiAuthManager().getProxyHost();
-        Context context = LiSDKManager.getInstance().getContext();
+        String proxyHost = LiSDKManager.getInstance().getProxyHost();
+        Context context = baseRestRequest.getContext();
         uriBuilder.authority(proxyHost);
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
@@ -348,12 +351,12 @@ public abstract class LiRestClient {
         request.url(HttpUrl.get(URI.create(uriBuilder.build().toString())));
         request.post(multipartBody);
         request.addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                LiClientManager.getInstance().getLiAuthManager().getNewAuthToken());
+                LiSDKManager.getInstance().getNewAuthToken());
         request.addHeader("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
-        if (LiClientManager.getInstance().getLiAuthManager().getLoggedInUser() != null) {
+        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
             String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
                     Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
-                    LiClientManager.getInstance().getLiAuthManager().getLoggedInUser().getLoginId();
+                    LiSDKManager.getInstance().getLoggedInUser().getLoginId();
             Log.i("LSI", lsiHeader);
             request.header("lia-sdk-app-info", lsiHeader);
         }
@@ -380,12 +383,12 @@ public abstract class LiRestClient {
                 } catch (LiRestResponseException e) {
                     throw new RuntimeException(e.getMessage());
                 } finally {
-                    if(response != null && response.body() != null){
+                    if (response != null && response.body() != null) {
                         response.body().close();
                     }
-                    if(isCompressed){
-                      boolean isDeleted = file.delete();
-                        Log.i("Image",isDeleted +"");
+                    if (isCompressed) {
+                        boolean isDeleted = file.delete();
+                        Log.i("Image", isDeleted + "");
                     }
                 }
             }
@@ -396,38 +399,40 @@ public abstract class LiRestClient {
     /**
      * Helper to build okHttp Request from RestRequest
      *
-     * @param restRequest {@link LiBaseRestRequest}
+     * @param baseRestRequest {@link LiBaseRestRequest}
      * @return final request that will be sent across network.
      */
-    protected Request buildRequest(LiBaseRestRequest restRequest) {
+    protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = LiClientManager.getInstance().getLiAuthManager().getProxyHost();
-        Context context = LiSDKManager.getInstance().getContext();
+        String proxyHost = TextUtils.isEmpty(LiSDKManager.getInstance().getProxyHost())
+                ?LiSDKManager.getInstance().getLiAppCredentials().getApiProxyHost():LiSDKManager.getInstance().getProxyHost();
+        Context context = baseRestRequest.getContext();
         uriBuilder.authority(proxyHost);
-        uriBuilder.appendEncodedPath(restRequest.getPath());
-        if (restRequest.getQueryParams() != null) {
-            for (String param : restRequest.getQueryParams().keySet()) {
+        uriBuilder.appendEncodedPath(baseRestRequest.getPath());
+        if (baseRestRequest.getQueryParams() != null) {
+            for (String param : baseRestRequest.getQueryParams().keySet()) {
                 LiUriUtils.appendQueryParameterIfNotNull(uriBuilder, param,
-                        restRequest.getQueryParams().get(param));
+                        baseRestRequest.getQueryParams().get(param));
             }
         }
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(uriBuilder.build().toString())))
-                .method(restRequest.getMethod().toString(), restRequest.getRequestBody());
-
-        builder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                LiClientManager.getInstance().getLiAuthManager().getNewAuthToken());
+                .method(baseRestRequest.getMethod().toString(), baseRestRequest.getRequestBody());
+        if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
+            builder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
+                    LiSDKManager.getInstance().getNewAuthToken());
+        }
         builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
-        if (LiClientManager.getInstance().getLiAuthManager().getLoggedInUser() != null) {
+        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
             String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
                     Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
-                    LiClientManager.getInstance().getLiAuthManager().getLoggedInUser().getLoginId();
+                    LiSDKManager.getInstance().getLoggedInUser().getLoginId();
             Log.i("LSI", lsiHeader);
             builder.header("lia-sdk-app-info", lsiHeader);
         }
         // Adding addition headers
-        final Map<String, String> additionalHttpHeaders = restRequest.getAdditionalHttpHeaders();
+        final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
             for (Map.Entry<String, String> entry : additionalHttpHeaders.entrySet()) {
                 builder.addHeader(entry.getKey(), entry.getValue());
@@ -475,7 +480,6 @@ public abstract class LiRestClient {
     }
 
     /**
-     *
      * Returns okHttp Client
      */
     private OkHttpClient getOkHttpClient() {
@@ -487,6 +491,11 @@ public abstract class LiRestClient {
      */
     private class RefreshAndRetryInterceptor implements Interceptor {
         private int maxTries = 2;
+        private Context context;
+
+        public RefreshAndRetryInterceptor(Context context) {
+            this.context = context;
+        }
 
         @Override
         public Response intercept(final Interceptor.Chain chain) throws IOException {
@@ -499,24 +508,37 @@ public abstract class LiRestClient {
                 if (response == null) {
                     proceed = true;
                 } else if (response.code() == 500 || response.code() == 501) {
+                    int httpCode = 500;
+                    JsonObject data;
+                    String responseStr = response.body().string();
                     try {
-                        LiAuthManager authManager = LiClientManager.getInstance().getLiAuthManager();
-                        LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
-                                LiSDKManager.getInstance().getContext()).performSyncRefreshTokenRequest();
-                        authManager.persistAuthState(
-                                LiSDKManager.getInstance().getContext(), liTokenResponse);
+                        data = new Gson().fromJson(responseStr, JsonObject.class);
+                        if (data.has("statusCode")) {
+                            httpCode = data.get("statusCode").getAsInt();
+                        }
+                    }
+                    catch(JsonSyntaxException ex){
 
-                        authManager.persistAuthState(
-                                LiSDKManager.getInstance().getContext(), liTokenResponse);
+                    }
+                    if (httpCode == 401) {
+                        try {
+                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
+                                    context).performSyncRefreshTokenRequest();
+                            LiSDKManager.getInstance().persistAuthState(
+                                    context, liTokenResponse);
 
-                        request = request.newBuilder().removeHeader(
-                                LiAuthConstants.AUTHORIZATION).build();
+                            LiSDKManager.getInstance().persistAuthState(
+                                    context, liTokenResponse);
 
-                        request = request.newBuilder().addHeader(
-                                LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                                        LiClientManager.getInstance().getLiAuthManager().getNewAuthToken()).build();
-                    } catch (LiRestResponseException e) {
-                        Log.e(LOG_TAG, "Error making rest call", e);
+                            request = request.newBuilder().removeHeader(
+                                    LiAuthConstants.AUTHORIZATION).build();
+
+                            request = request.newBuilder().addHeader(
+                                    LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
+                                            LiSDKManager.getInstance().getNewAuthToken()).build();
+                        } catch (LiRestResponseException e) {
+                            Log.e(LOG_TAG, "Error making rest call", e);
+                        }
                     }
                     proceed = true;
                 }

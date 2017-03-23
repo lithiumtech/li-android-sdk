@@ -14,19 +14,19 @@
 
 package lithium.community.android.sdk.api;
 
+import android.app.Activity;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import lithium.community.android.sdk.client.manager.LiAuthManager;
-import lithium.community.android.sdk.client.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -41,13 +41,15 @@ public class LiBaseDeleteClientTest {
     private static final String BASE_PATH = "http://localhost/";
     private LiBaseDeleteClient liClient;
     private LiRestv2Client liRestv2Client;
+    private Activity mContext;
 
     @Before
     public void setUp() throws LiRestResponseException {
+        mContext = Mockito.mock(Activity.class);
         liRestv2Client = mock(LiRestv2Client.class);
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
-        liClient = new LiBaseDeleteClient(BASE_PATH);
+        liClient = new LiBaseDeleteClient(mContext, BASE_PATH);
         PowerMockito.verifyStatic();
     }
 
@@ -55,8 +57,8 @@ public class LiBaseDeleteClientTest {
     public void testBasePostClientCreation() throws LiRestResponseException {
         Assert.assertEquals(null, liClient.querySettingsType);
         Assert.assertEquals(null, liClient.type);
-        Assert.assertEquals(BASE_PATH,liClient.basePath);
-        Assert.assertEquals(LiBaseClient.RequestType.DELETE,liClient.requestType);
+        Assert.assertEquals(BASE_PATH, liClient.basePath);
+        Assert.assertEquals(LiBaseClient.RequestType.DELETE, liClient.requestType);
         Assert.assertEquals(null, liClient.getRequestBody());
     }
 }

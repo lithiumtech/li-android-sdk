@@ -1,6 +1,6 @@
 /*
- * LiAcceptSolution.java
- * Created on Dec 27, 2016
+ * LiUserDeviceIdUpdate.java
+ * Created on Dec 28, 2016
  *
  * Copyright 2016 Lithium Technologies, Inc.
  * San Francisco, California, U.S.A.  All Rights Reserved.
@@ -17,15 +17,23 @@ package lithium.community.android.sdk.model.post;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Request body for POST call to accept a message as a solution.
- * Created by shoureya.kant on 10/26/16.
+ * Request body for POST call to update device id corresponding to id.
+ * Created by shoureya.kant on 12/28/16.
  */
 
-public class LiAcceptSolution extends LiBasePostModel {
+public class LiUserDeviceIdUpdateModel extends LiBasePostModel {
 
     private String type;
-    @SerializedName("message_id")
-    private String messageid;
+    @SerializedName("device_id")
+    private String deviceId;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public String getType() {
         return type;
@@ -35,11 +43,4 @@ public class LiAcceptSolution extends LiBasePostModel {
         this.type = type;
     }
 
-    public String getMessageid() {
-        return messageid;
-    }
-
-    public void setMessageid(String messageid) {
-        this.messageid = messageid;
-    }
 }

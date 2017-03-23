@@ -2,8 +2,7 @@ package lithium.community.android.sdk.model;
 
 import org.junit.Test;
 
-import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiImageMetaData;
+import lithium.community.android.sdk.model.helpers.LiImageMetaData;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

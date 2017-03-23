@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.rest;
 
+import android.content.Context;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +41,13 @@ public class LiBaseRestRequest {
     private final RequestBody requestBody;
     private final Map<String, String> additionalHttpHeaders;
     private final Map<String, String> queryParams;
-    protected String path;
+    private String path;
+    private Context context;
     private boolean isAuthenticatedRequest = false;
 
-    public LiBaseRestRequest(RestMethod method, String path, RequestBody requestBody,
+    public LiBaseRestRequest(Context context, RestMethod method, String path, RequestBody requestBody,
                              Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+        this.context = context;
         this.method = method;
         this.path = path;
         this.requestBody = requestBody;
@@ -53,8 +57,9 @@ public class LiBaseRestRequest {
     }
 
 
-    public LiBaseRestRequest(RestMethod method, RequestBody requestBody,
+    public LiBaseRestRequest(Context context, RestMethod method, RequestBody requestBody,
                              Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+        this.context = context;
         this.method = method;
         this.requestBody = requestBody;
         this.additionalHttpHeaders = additionalHttpHeaders;
@@ -89,6 +94,7 @@ public class LiBaseRestRequest {
 
     /**
      * This method segregates query parameters which may be present afte the 'q' param which takes in LIQL.
+     *
      * @param param It is the query parameter 'q' which taken in LIQL as value.
      * @param value It is the LIQL for above parameter 'q'.
      */
@@ -101,19 +107,16 @@ public class LiBaseRestRequest {
                 if (isFirst) {
                     isFirst = false;
                     queryParams.put(param, valueStr);
-                }
-                else {
+                } else {
                     String[] qParams = valueStr.split("=");
                     if (qParams.length > 1) {
-                        queryParams.put(qParams[0],qParams[1]);
-                    }
-                    else {
+                        queryParams.put(qParams[0], qParams[1]);
+                    } else {
                         queryParams.put(qParams[0], "");
                     }
                 }
             }
-        }
-        else {
+        } else {
             queryParams.put(param, value);
         }
     }
@@ -124,6 +127,10 @@ public class LiBaseRestRequest {
 
     public Map<String, String> getQueryParams() {
         return queryParams;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     /**

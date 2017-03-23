@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.api;
 
+import android.content.Context;
+
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.post.LiPostModel;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -31,22 +33,24 @@ public class LiBasePostClient extends LiBaseClient {
 
     /**
      * Constructor used for normal POST call.
+     *
      * @param basePath Api end point.
      * @throws LiRestResponseException
      */
-    public LiBasePostClient(String basePath) throws LiRestResponseException {
-        super(basePath, RequestType.POST);
+    public LiBasePostClient(Context context, String basePath) throws LiRestResponseException {
+        super(context, basePath, RequestType.POST);
     }
 
     /**
      * Constructor used for making POST call to upload image.
-     * @param basePath Api end point.
+     *
+     * @param basePath  Api end point.
      * @param imagePath Absolute path of the image.
      * @param imageName Name of the image file.
      * @throws LiRestResponseException
      */
-    public LiBasePostClient(String basePath, String imagePath, String imageName) throws LiRestResponseException {
-        super(basePath, RequestType.POST, imagePath, imageName);
+    public LiBasePostClient(Context context, String basePath, String imagePath, String imageName) throws LiRestResponseException {
+        super(context, basePath, RequestType.POST, imagePath, imageName);
     }
 
     /**
@@ -55,7 +59,7 @@ public class LiBasePostClient extends LiBaseClient {
     @Override
     public void setLiRestV2Request() {
         this.requestBody = postModel.toJsonString();
-        this.liRestV2Request = new LiRestV2Request(LiBaseRestRequest.RestMethod.POST, requestBody);
+        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.POST, requestBody);
     }
 
     @Override

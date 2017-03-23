@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by shoureya.kant on 12/28/16.
  */
 
-public class LiUserDeviceData extends LiBasePostModel {
+public class LiUserDeviceDataModel extends LiBasePostModel {
 
     private String type;
     @SerializedName("device_id")

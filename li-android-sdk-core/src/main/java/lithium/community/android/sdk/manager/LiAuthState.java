@@ -12,7 +12,7 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.client.manager;
+package lithium.community.android.sdk.manager;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +41,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotE
  * This class holds all the Authorization related responses and the Tokens.
  * Created by kunal.shrivastava on 10/18/16.
  */
+@VisibleForTesting
 class LiAuthState {
 
     private final static String LOG_TAG = "LiSDKAuth";
