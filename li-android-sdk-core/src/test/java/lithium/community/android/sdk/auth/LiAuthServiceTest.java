@@ -70,7 +70,6 @@ public class LiAuthServiceTest {
     public static final String COMMUNITY_URI = "http://testuri.com";
     public static final String TEST_CLIENT_SECRET = "Ghx+iRez0TXCPkjedCNZXgmCr+S1tWfi1znbzXKu+AY=";
     public static final String TEST_CLIENT_KEY = "mj2gw0IYuoo33m0rKxuX4KpxUfsy7Q0rcBJhq34GHgs=";
-    public static final boolean DEFERRED_LOGIN = false;
     public static final String RANDOM_STATE = "randomState";
     public static final String SSO_TOKEN = null;
     public static final String SSO_TOKEN1 = "SSoToken";
@@ -107,7 +106,7 @@ public class LiAuthServiceTest {
         Activity mContext;
 
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -148,7 +147,7 @@ public class LiAuthServiceTest {
 
         Activity mContext;
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -189,7 +188,7 @@ public class LiAuthServiceTest {
 
         Activity mContext;
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -239,7 +238,7 @@ public class LiAuthServiceTest {
         LiSSOAuthorizationRequest authorizationRequest;
         Activity mContext;
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -396,7 +395,7 @@ public class LiAuthServiceTest {
         LiSSOAuthorizationRequest authorizationRequest;
         Activity mContext;
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -451,7 +450,7 @@ public class LiAuthServiceTest {
         LiSSOAuthorizationRequest authorizationRequest;
         Activity mContext;
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
         mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
         when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
@@ -531,7 +530,7 @@ public class LiAuthServiceTest {
         Mockito.when(mContext.getResources()).thenReturn(resource);
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
         mContext = mock(Activity.class);
-        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).setDeferredLogin(DEFERRED_LOGIN).build();
+        LiAppCredentials liAppCredentials = new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_KEY).setClientSecret(TEST_CLIENT_SECRET).setCommunityUri(COMMUNITY_URI).build();
 //        mMockSharedPreferences = mock(SharedPreferences.class);
         resource = mock(Resources.class);
   //      when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
