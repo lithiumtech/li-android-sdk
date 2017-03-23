@@ -28,8 +28,8 @@ import lithium.community.android.sdk.LiSDKManager;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_AS_READ;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
  * Created by kunal.shrivastava on 10/19/16.

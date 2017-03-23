@@ -27,4 +27,6 @@ public class LiSDKErrorCodes {
 
     public static final int RUNTIME_ERROR = 103;
 
+    public static final int JSON_SYNTAX_ERROR = 104;
+
 }

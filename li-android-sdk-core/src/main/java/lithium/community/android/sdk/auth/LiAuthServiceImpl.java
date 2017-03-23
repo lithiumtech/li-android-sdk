@@ -25,7 +25,6 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.UUID;
@@ -48,7 +47,7 @@ import lithium.community.android.sdk.rest.LiGetClientResponse;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
-import static lithium.community.android.sdk.utils.LiSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 
 /**
  * Implementation class for LiAuthService. Starts login flow, performs authorization, fetches access and refresh tokens.
