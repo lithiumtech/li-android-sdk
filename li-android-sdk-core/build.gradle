@@ -129,7 +129,9 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-uploadArchives {
+task uploadLocalArchives(type: Upload) {
+    configuration = configurations.archives
+    uploadDescriptor = true
     repositories {
         mavenDeployer {
             repository(url: mavenLocal().url)
@@ -137,20 +139,20 @@ uploadArchives {
     }
 }
 
-//uploadArchives {
-//    repositories.mavenDeployer {
-//        pom.groupId = group
-//        pom.artifactId = artifactId
-//        pom.version = version
-//        // Add other pom properties here if you want (developer details / licenses)
-//        repository(url: "file://${localReleaseDest}")
-//    }
-//}
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.groupId = group
+        pom.artifactId = artifactId
+        pom.version = version
+        // Add other pom properties here if you want (developer details / licenses)
+        repository(url: "file://${localReleaseDest}")
+    }
+}
 
 task zipRelease(type: Zip) {
     from localReleaseDest
     destinationDir buildDir
-    archiveName "release-${version}.zip"
+    archiveName "${artifactId}-${version}.zip"
 }
 
 task generateRelease << {
