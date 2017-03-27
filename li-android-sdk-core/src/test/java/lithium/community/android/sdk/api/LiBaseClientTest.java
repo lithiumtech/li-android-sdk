@@ -89,7 +89,7 @@ public class LiBaseClientTest {
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
         liRestv2Client = mock(LiRestv2Client.class);
         MockitoAnnotations.initMocks(this);
-        when(liSDKManager.getTenant()).thenReturn("test");
+//        when(liSDKManager.getTenant()).thenReturn("test");
         liClientManager = mock(LiClientManager.class);
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);

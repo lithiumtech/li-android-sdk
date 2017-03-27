@@ -280,13 +280,16 @@ public class TestHelper {
     public static LiAppCredentials getTestAppCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL).build();
+                .setCommunityUri(TEST_COMMUNITY_URL).setApiProxyHost("api.qa.aws.lcloud.com")
+                .setTenantId("test").build();
     }
 
     public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL).build();
+                .setCommunityUri(TEST_COMMUNITY_URL)
+                .setApiProxyHost("api.qa.aws.lcloud.com")
+                .setTenantId("test").build();
     }
 
     /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
