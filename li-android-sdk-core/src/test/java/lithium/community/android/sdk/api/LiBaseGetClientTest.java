@@ -64,7 +64,7 @@ public class LiBaseGetClientTest {
         JsonObject jsonObject = new Gson().fromJson(defaultSettings, JsonObject.class);
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
         liRestv2Client = mock(LiRestv2Client.class);
-        when(liSDKManager.getTenant()).thenReturn("test");
+//        when(liSDKManager.getTenant()).thenReturn("test");
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
         liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
