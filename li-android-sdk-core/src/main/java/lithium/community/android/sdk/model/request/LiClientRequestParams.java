@@ -3,10 +3,12 @@ package lithium.community.android.sdk.model.request;
 import android.content.Context;
 
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
@@ -642,6 +644,186 @@ public class LiClientRequestParams {
 
         public LiDeviceIdUpdateClientRequestParams setId(String id) {
             this.id = id;
+            return this;
+        }
+    }
+
+    //Request params class for LiCreateUserClient
+    public static class LiCreateUserParams extends LiClientRequestParams {
+        private LiAvatar avatar;
+        private String biography;
+        private String coverImage;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String login;
+        private String password;
+
+        public LiCreateUserParams(Context context, LiAvatar avatar, String biography, String coverImage, String email, String firstName, String lastName, String login, String password) {
+            super(context);
+            this.avatar = avatar;
+            this.biography = biography;
+            this.coverImage = coverImage;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.login = login;
+            this.password = password;
+        }
+        public LiAvatar getAvatar() {
+            return avatar;
+        }
+
+        public String getBiography() {
+            return biography;
+        }
+
+        public String getCoverImage() {
+            return coverImage;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getLogin() {
+            return login;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public LiCreateUserParams setAvatar(LiAvatar avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public LiCreateUserParams setBiography(String biography) {
+            this.biography = biography;
+            return this;
+        }
+
+        public LiCreateUserParams setCoverImage(String coverImage) {
+            this.coverImage = coverImage;
+            return this;
+        }
+
+        public LiCreateUserParams setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public LiCreateUserParams setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public LiCreateUserParams setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public LiCreateUserParams setLogin(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public LiCreateUserParams setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+    }
+
+    //Request params class for LiUpdateUserClient
+    public static class LiUpdateUserParams extends LiClientRequestParams {
+        private LiAvatar avatar;
+        private String biography;
+        private String coverImage;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String login;
+
+        public LiUpdateUserParams(Context context, LiAvatar avatar, String biography, String coverImage, String email, String firstName, String lastName, String login) {
+            super(context);
+            this.avatar = avatar;
+            this.biography = biography;
+            this.coverImage = coverImage;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.login = login;
+        }
+        public LiAvatar getAvatar() {
+            return avatar;
+        }
+
+        public String getBiography() {
+            return biography;
+        }
+
+        public String getCoverImage() {
+            return coverImage;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getLogin() {
+            return login;
+        }
+
+
+        public LiUpdateUserParams setAvatar(LiAvatar avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public LiUpdateUserParams setBiography(String biography) {
+            this.biography = biography;
+            return this;
+        }
+
+        public LiUpdateUserParams setCoverImage(String coverImage) {
+            this.coverImage = coverImage;
+            return this;
+        }
+
+        public LiUpdateUserParams setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public LiUpdateUserParams setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public LiUpdateUserParams setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public LiUpdateUserParams setLogin(String login) {
+            this.login = login;
             return this;
         }
     }

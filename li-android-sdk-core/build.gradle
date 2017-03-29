@@ -28,7 +28,7 @@ android {
 
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled false
         }
     }
@@ -50,6 +50,7 @@ unMock {
     keep "android.database.AbstractCursor"
     keep "android.database.CrossProcessCursor"
     keepStartingWith "android.text.TextUtils"
+
     keepStartingWith "android.util."
     keepStartingWith "android.text."
     keepStartingWith "android.content.ContentValues"

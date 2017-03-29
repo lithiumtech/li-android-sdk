@@ -28,8 +28,10 @@ import lithium.community.android.sdk.api.LiBasePutClient;
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiBoard;
 import lithium.community.android.sdk.model.post.LiAcceptSolutionModel;
+import lithium.community.android.sdk.model.post.LiCreateUpdateUserModel;
 import lithium.community.android.sdk.model.post.LiGenericPostModel;
 import lithium.community.android.sdk.model.post.LiMarkAbuseModel;
 import lithium.community.android.sdk.model.post.LiPostKudoModel;
@@ -532,6 +534,66 @@ public class LiClientManager {
     }
 
     /**
+     * Creates new User.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams}general details of user for creating it.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getCreateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_CREATE_USER_CLIENT);
+
+        LiAvatar avatar = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getAvatar();
+        String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
+        String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
+        String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
+        String firstName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getFirstName();
+        String lastName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLastName();
+        String login = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLogin();
+        String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setAvatar(avatar);
+        liCreateUpdateUserModel.setBiography(biography);
+        liCreateUpdateUserModel.setCoverImage(coverImage);
+        liCreateUpdateUserModel.setEmail(email);
+        liCreateUpdateUserModel.setFirstName(firstName);
+        liCreateUpdateUserModel.setLastName(lastName);
+        liCreateUpdateUserModel.setLogin(login);
+        liCreateUpdateUserModel.setPassword(password);
+        liBasePostClient.postModel = liCreateUpdateUserModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Updates an existing user.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams}general details of user for updating it.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getUpdateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_UPDATE_USER_CLIENT);
+
+        LiAvatar avatar = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getAvatar();
+        String biography = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getBiography();
+        String coverImage = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getCoverImage();
+        String email = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getEmail();
+        String firstName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getFirstName();
+        String lastName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLastName();
+        String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setAvatar(avatar);
+        liCreateUpdateUserModel.setBiography(biography);
+        liCreateUpdateUserModel.setCoverImage(coverImage);
+        liCreateUpdateUserModel.setEmail(email);
+        liCreateUpdateUserModel.setFirstName(firstName);
+        liCreateUpdateUserModel.setLastName(lastName);
+        liCreateUpdateUserModel.setLogin(login);
+        liBasePutClient.postModel = liCreateUpdateUserModel;
+        return liBasePutClient;
+    }
+
+    /**
      * This is generic Post client. User can provide own specific path and response body.
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPostClientRequestParams} Endpoint of API.
@@ -615,6 +677,8 @@ public class LiClientManager {
         LI_MESSAGE_CHILDREN_CLIENT,
         LI_QUESTIONS_CLIENT,
         LI_CATEGORY_CLIENT,
+        LI_CREATE_USER_CLIENT,
+        LI_UPDATE_USER_CLIENT,
         LI_ARTICLES_BROWSE_CLIENT
     }
 }
