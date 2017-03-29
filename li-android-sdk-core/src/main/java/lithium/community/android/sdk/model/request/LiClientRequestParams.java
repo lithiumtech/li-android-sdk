@@ -659,16 +659,10 @@ public class LiClientRequestParams {
         private String login;
         private String password;
 
-        public LiCreateUserParams(Context context, LiAvatar avatar, String biography, String coverImage, String email, String firstName, String lastName, String login, String password) {
+        public LiCreateUserParams(Context context, String email, String login) {
             super(context);
-            this.avatar = avatar;
-            this.biography = biography;
-            this.coverImage = coverImage;
             this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
             this.login = login;
-            this.password = password;
         }
         public LiAvatar getAvatar() {
             return avatar;
@@ -753,15 +747,8 @@ public class LiClientRequestParams {
         private String lastName;
         private String login;
 
-        public LiUpdateUserParams(Context context, LiAvatar avatar, String biography, String coverImage, String email, String firstName, String lastName, String login) {
+        public LiUpdateUserParams(Context context) {
             super(context);
-            this.avatar = avatar;
-            this.biography = biography;
-            this.coverImage = coverImage;
-            this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.login = login;
         }
         public LiAvatar getAvatar() {
             return avatar;
