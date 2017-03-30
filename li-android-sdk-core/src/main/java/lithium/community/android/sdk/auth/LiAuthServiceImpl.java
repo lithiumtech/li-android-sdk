@@ -38,7 +38,6 @@ import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.notification.LiNotificationProviderImpl;
-import lithium.community.android.sdk.notification.LiPushNotificationProvider;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiAuthRestClient;
@@ -278,7 +277,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         try {
             if (LiCoreSDKUtils.isFireBaseIntegrated()) {
                 new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
-                        LiPushNotificationProvider.FIREBASE, mContext);
+                        mContext);
             }
 
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(mContext,
