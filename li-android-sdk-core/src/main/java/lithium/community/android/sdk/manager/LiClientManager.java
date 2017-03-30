@@ -37,6 +37,7 @@ import lithium.community.android.sdk.model.post.LiMarkAbuseModel;
 import lithium.community.android.sdk.model.post.LiPostKudoModel;
 import lithium.community.android.sdk.model.post.LiPostMessageModel;
 import lithium.community.android.sdk.model.post.LiReplyMessageModel;
+import lithium.community.android.sdk.model.post.LiSubscriptionPostModel;
 import lithium.community.android.sdk.model.post.LiUploadImageModel;
 import lithium.community.android.sdk.model.post.LiUserDeviceDataModel;
 import lithium.community.android.sdk.model.post.LiUserDeviceIdUpdateModel;
@@ -55,6 +56,8 @@ import lithium.community.android.sdk.utils.LiQueryConstant;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_INSERT_IMAGE_MACRO;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_LINE_SEPARATOR;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE;
 
 
 /**
@@ -121,7 +124,7 @@ public class LiClientManager {
      */
     public static LiClient getUserSubscriptionsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_USER_SUBSCRIPTIONS_CLIENT);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE, LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LI_SUBSCRIPTIONS_CLIENT_TYPE, LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
     }
 
     /**
@@ -227,7 +230,7 @@ public class LiClientManager {
         String userId = ((LiClientRequestParams.LiUserDetailsClientRequestParams) liClientRequestParams).getUserId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", userId);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL, LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE, LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE, LiUser.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL, LI_USER_DETAILS_CLIENT_TYPE, LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE, LiUser.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -552,6 +555,7 @@ public class LiClientManager {
         String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
         LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
         liCreateUpdateUserModel.setBiography(biography);
         liCreateUpdateUserModel.setCoverImage(coverImage);
@@ -562,6 +566,36 @@ public class LiClientManager {
         liCreateUpdateUserModel.setPassword(password);
         liBasePostClient.postModel = liCreateUpdateUserModel;
         return liBasePostClient;
+    }
+
+    /**
+     * Use to add a subscription
+     * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getSubscriptionPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_POST_SUBSCRIPTION_CLIENT);
+        LiMessage target = ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams).getTarget();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenant()));
+        LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
+        liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
+        liSubscriptionPostModel.setTarget(target);
+        liBasePostClient.postModel = liSubscriptionPostModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to delete subscription message.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiDeleteSubscriptionParams} It is subscription Id.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getSubscriptionDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_DELETE_SUBSCRIPTION_CLIENT);
+        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams)liClientRequestParams).getSubscriptionId();
+        LiBaseDeleteClient liBaseDeleteClient = new LiBaseDeleteClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/subscriptions/%s", LiSDKManager.getInstance().getTenant(), id));
+        return liBaseDeleteClient;
     }
 
     /**
@@ -582,6 +616,7 @@ public class LiClientManager {
         String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
         LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
         LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
         liCreateUpdateUserModel.setBiography(biography);
         liCreateUpdateUserModel.setCoverImage(coverImage);
@@ -679,6 +714,8 @@ public class LiClientManager {
         LI_CATEGORY_CLIENT,
         LI_CREATE_USER_CLIENT,
         LI_UPDATE_USER_CLIENT,
+        LI_POST_SUBSCRIPTION_CLIENT,
+        LI_DELETE_SUBSCRIPTION_CLIENT,
         LI_ARTICLES_BROWSE_CLIENT
     }
 }

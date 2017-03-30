@@ -24,11 +24,27 @@ import lithium.community.android.sdk.model.LiBaseModelImpl;
  */
 
 public class LiSubscriptions extends LiBaseModelImpl implements LiBaseMessageModel {
+
+    private String type;
     @SerializedName("id")
     private Long id;
     @SerializedName("target")
     private LiMessage liMessage;
+    @SerializedName("subscriber")
+    private LiUser user;
 
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public LiUser getUser() {
+        return user;
+    }
+    public void setUser(LiUser user) {
+        this.user = user;
+    }
     public Long getId() {
         return id;
     }

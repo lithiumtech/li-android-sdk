@@ -9,6 +9,7 @@ import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
+import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
@@ -645,6 +646,33 @@ public class LiClientRequestParams {
         public LiDeviceIdUpdateClientRequestParams setId(String id) {
             this.id = id;
             return this;
+        }
+    }
+
+    //Request params for LiSubscriptionPost client
+    public static class LiPostSubscriptionParams extends LiClientRequestParams {
+
+        private LiMessage target;
+
+        public LiPostSubscriptionParams(Context context, LiMessage target) {
+            super(context);
+            this.target = target;
+        }
+        public LiMessage getTarget() {
+            return target;
+        }
+    }
+
+    public static class LiDeleteSubscriptionParams extends LiClientRequestParams {
+
+        private String subscriptionId;
+
+        public LiDeleteSubscriptionParams(Context context, String subscriptionId) {
+            super(context);
+            this.subscriptionId = subscriptionId;
+        }
+        public String getSubscriptionId() {
+            return subscriptionId;
         }
     }
 
