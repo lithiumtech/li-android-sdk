@@ -3,7 +3,6 @@ package lithium.community.android.sdk.model.request;
 import android.content.Context;
 
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Set;
 
@@ -662,6 +661,88 @@ public class LiClientRequestParams {
             return target;
         }
     }
+
+    //Request params for LiMarkMessagePost client
+    public static class LiMarkMessageParams extends LiClientRequestParams {
+
+        private String userId;
+        private String messageId;
+        private boolean markUnread;
+
+        public LiMarkMessageParams(Context context, String userId, String messageId, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.messageId = messageId;
+            this.markUnread = markUnread;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
+    //Request params for LiMarkMessagesPost client
+    public static class LiMarkMessagesParams extends LiClientRequestParams {
+
+        private String userId;
+        private String messageIds;
+        private boolean markUnread;
+
+        public LiMarkMessagesParams(Context context, String userId, String messageIds, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.messageIds = messageIds;
+            this.markUnread = markUnread;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getMessageIds() {
+            return messageIds;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
+    //Request params for LiMarkTopicPost client
+    public static class LiMarkTopicParams extends LiClientRequestParams {
+
+        private String userId;
+        private String topicId;
+        private boolean markUnread;
+
+        public LiMarkTopicParams(Context context, String userId, String topicId, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.topicId = topicId;
+            this.markUnread = markUnread;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getTopicId() {
+            return topicId;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
 
     public static class LiDeleteSubscriptionParams extends LiClientRequestParams {
 

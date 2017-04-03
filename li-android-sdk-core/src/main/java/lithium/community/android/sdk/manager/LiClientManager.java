@@ -34,6 +34,9 @@ import lithium.community.android.sdk.model.post.LiAcceptSolutionModel;
 import lithium.community.android.sdk.model.post.LiCreateUpdateUserModel;
 import lithium.community.android.sdk.model.post.LiGenericPostModel;
 import lithium.community.android.sdk.model.post.LiMarkAbuseModel;
+import lithium.community.android.sdk.model.post.LiMarkMessageModel;
+import lithium.community.android.sdk.model.post.LiMarkMessagesModel;
+import lithium.community.android.sdk.model.post.LiMarkTopicModel;
 import lithium.community.android.sdk.model.post.LiPostKudoModel;
 import lithium.community.android.sdk.model.post.LiPostMessageModel;
 import lithium.community.android.sdk.model.post.LiReplyMessageModel;
@@ -56,6 +59,7 @@ import lithium.community.android.sdk.utils.LiQueryConstant;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_INSERT_IMAGE_MACRO;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_LINE_SEPARATOR;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_MESSAGE_CLIENT_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE;
 
@@ -569,6 +573,76 @@ public class LiClientManager {
     }
 
     /**
+     * Use to mark a message read/unread
+     * If u give markUnread flag as true it will mark given message as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkMessagePostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_POST_MARK_MESSAGE_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getUserId();
+        String messageId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getMessageId();
+        boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
+        liMarkMessageModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkMessageModel.setUser(userId);
+        liMarkMessageModel.setMessageId(messageId);
+        liMarkMessageModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkMessageModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to mark given comma separated  messageIds read/unread
+     * If u give markUnread flag as true it will mark given messages as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkMessagesPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_POST_MARK_MESSAGES_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getUserId();
+        String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getMessageIds();
+        boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
+        liMarkMessagesModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkMessagesModel.setUser(userId);
+        liMarkMessagesModel.setMessageIds(messageIds);
+        liMarkMessagesModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkMessagesModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to mark a topic read/unread
+     * If u give markUnread flag as true it will mark  messages in given topic as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkTopicPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_POST_MARK_TOPIC_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getUserId();
+        String topicId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getTopicId();
+        boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkTopicModel liMarkTopicModel = new LiMarkTopicModel();
+        liMarkTopicModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkTopicModel.setUser(userId);
+        liMarkTopicModel.setTopicId(topicId);
+        liMarkTopicModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkTopicModel;
+        return liBasePostClient;
+    }
+
+
+    /**
      * Use to add a subscription
      * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams}general message details.
      * @return {@link LiClient}
@@ -716,6 +790,9 @@ public class LiClientManager {
         LI_UPDATE_USER_CLIENT,
         LI_POST_SUBSCRIPTION_CLIENT,
         LI_DELETE_SUBSCRIPTION_CLIENT,
-        LI_ARTICLES_BROWSE_CLIENT
+        LI_ARTICLES_BROWSE_CLIENT,
+        LI_POST_MARK_MESSAGE_CLIENT,
+        LI_POST_MARK_MESSAGES_CLIENT,
+        LI_POST_MARK_TOPIC_CLIENT
     }
 }
