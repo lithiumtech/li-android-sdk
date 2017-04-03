@@ -52,6 +52,7 @@ public class LiQueryConstant {
     public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
     public static final String LI_USER_DEVICE_ID_FETCH_TYPE = "user_device_data";
     public static final String LI_APPLICATION_TYPE = "ANDROID";
+    public static final String LI_MARK_MESSAGE_CLIENT_TYPE = "message_read";
 
     public static final String LI_IMAGE_TYPE = "image";
     public static final String LI_FLOATED_MESSAGE_CLIENT_TYPE = "floated_message";
