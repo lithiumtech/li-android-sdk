@@ -544,13 +544,13 @@ public class LiClientRequestParams {
         }
     }
 
-    //Request params class for LiAcceptSolutionClient
-    public static class LiMarkAbuseClientRequestParams extends LiClientRequestParams {
+    //Request params class for LiReportAbuseClient
+    public static class LiReportAbuseClientRequestParams extends LiClientRequestParams {
         private String messageId;
         private String userId;
         private String body;
 
-        public LiMarkAbuseClientRequestParams(Context context, String messageId, String userId, String body) {
+        public LiReportAbuseClientRequestParams(Context context, String messageId, String userId, String body) {
             super(context);
             this.messageId = messageId;
             this.userId = userId;
@@ -562,7 +562,7 @@ public class LiClientRequestParams {
             return messageId;
         }
 
-        public LiMarkAbuseClientRequestParams setMessageId(String messageId) {
+        public LiReportAbuseClientRequestParams setMessageId(String messageId) {
             this.messageId = messageId;
             return this;
         }
@@ -571,7 +571,7 @@ public class LiClientRequestParams {
             return userId;
         }
 
-        public LiMarkAbuseClientRequestParams setUserId(String userId) {
+        public LiReportAbuseClientRequestParams setUserId(String userId) {
             this.userId = userId;
             return this;
         }
@@ -580,7 +580,7 @@ public class LiClientRequestParams {
             return body;
         }
 
-        public LiMarkAbuseClientRequestParams setBody(String body) {
+        public LiReportAbuseClientRequestParams setBody(String body) {
             this.body = body;
             return this;
         }
@@ -656,6 +656,7 @@ public class LiClientRequestParams {
         public LiPostSubscriptionParams(Context context, LiMessage target) {
             super(context);
             this.target = target;
+            this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
         public LiMessage getTarget() {
             return target;
@@ -674,6 +675,7 @@ public class LiClientRequestParams {
             this.userId = userId;
             this.messageId = messageId;
             this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_MESSAGE_POST_CLIENT;
         }
 
         public String getUserId() {
@@ -701,6 +703,7 @@ public class LiClientRequestParams {
             this.userId = userId;
             this.messageIds = messageIds;
             this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_MESSAGES_POST_CLIENT;
         }
 
         public String getUserId() {
@@ -728,6 +731,7 @@ public class LiClientRequestParams {
             this.userId = userId;
             this.topicId = topicId;
             this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_TOPIC_POST_CLIENT;
         }
 
         public String getUserId() {
@@ -751,6 +755,7 @@ public class LiClientRequestParams {
         public LiDeleteSubscriptionParams(Context context, String subscriptionId) {
             super(context);
             this.subscriptionId = subscriptionId;
+            this.client = LiClientManager.Client.LI_SUBSCRIPTION_DELETE_CLIENT;
         }
         public String getSubscriptionId() {
             return subscriptionId;
@@ -772,6 +777,7 @@ public class LiClientRequestParams {
             super(context);
             this.email = email;
             this.login = login;
+            this.client = LiClientManager.Client.LI_CREATE_USER_CLIENT;
         }
         public LiAvatar getAvatar() {
             return avatar;
@@ -858,6 +864,7 @@ public class LiClientRequestParams {
 
         public LiUpdateUserParams(Context context) {
             super(context);
+            this.client = LiClientManager.Client.LI_UPDATE_USER_CLIENT;
         }
         public LiAvatar getAvatar() {
             return avatar;
