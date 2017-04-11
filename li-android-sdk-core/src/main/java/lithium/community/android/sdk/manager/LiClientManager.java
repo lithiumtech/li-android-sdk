@@ -19,6 +19,7 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -326,7 +327,7 @@ public class LiClientManager {
     /**
      * This client is used to Un kudo a particular message. The id of the message which has to be Un kudoed is passed as parameter.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -334,6 +335,29 @@ public class LiClientManager {
         liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
         LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
+        return liBaseDeleteClient;
+    }
+
+    /**
+     * This client is used to Delete a particular message. The id of the message which has to be Deleted is passed as parameter.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} Id of the message to be un-kudoed.
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getMessageDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MESSAGE_DELETE_CLIENT);
+        String messageId = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).getMessageId();
+        boolean includeReplies = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).isIncludeReplies();
+        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams;
+        if (includeReplies) {
+            Map<String, String> requestParams = new HashMap<>();
+            requestParams.put("delete_message.include_replies", "true");
+            liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, requestParams);
+        } else {
+            liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId);
+        }
         LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
         return liBaseDeleteClient;
     }
@@ -812,6 +836,7 @@ public class LiClientManager {
      */
     public enum Client {
         LI_MESSAGES_CLIENT,
+        LI_MESSAGE_DELETE_CLIENT,
         LI_MESSAGES_BY_BOARD_ID_CLIENT,
         LI_SDK_SETTINGS_CLIENT,
         LI_USER_SUBSCRIPTIONS_CLIENT,

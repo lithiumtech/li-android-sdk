@@ -355,6 +355,43 @@ public class LiClientRequestParams {
         }
     }
 
+    //Request params class for LiMessageDeleteClient
+    public static class LiMessageDeleteClientRequestParams extends LiClientRequestParams {
+        private String messageId;
+        //if this flag is set it will Delete Replies also
+        private boolean includeReplies;
+
+        public LiMessageDeleteClientRequestParams(Context context, String messageId) {
+            super(context);
+            this.messageId = messageId;
+            this.client = LiClientManager.Client.LI_MESSAGE_DELETE_CLIENT;
+        }
+
+        public LiMessageDeleteClientRequestParams(Context context, String messageId, boolean includeReplies) {
+            super(context);
+            this.messageId = messageId;
+            this.includeReplies = includeReplies;
+        }
+
+        public boolean isIncludeReplies() {
+            return includeReplies;
+        }
+
+        public void setIncludeReplies(boolean includeReplies) {
+            this.includeReplies = includeReplies;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public LiMessageDeleteClientRequestParams setMessageId(String messageId) {
+            this.messageId = messageId;
+            return this;
+        }
+    }
+
+
     //Request params class for LiAcceptSolutionClient
     public static class LiAcceptSolutionClientRequestParams extends LiClientRequestParams {
         private Long messageId;
