@@ -78,5 +78,7 @@ public class LiQueryConstant {
     public static final String LI_INSERT_IMAGE_MACRO = "<p><li-image id=%s width=\"500\" height=\"500\" alt=%s align=\"inline\" size=\"large\" sourcetype=\"new\"></li-image></p>";
     public static final String LI_LINE_SEPARATOR = System.getProperty("line.separator");
     public static final Integer DEFAULT_LIQL_QUERY_LIMIT = 25;
+    public static final String LI_MESSAGE_TYPE = "messages";
+    public static final String LI_SUBSCRIPTION_TYPE = "subscriptions";
     //Add constant here
 }

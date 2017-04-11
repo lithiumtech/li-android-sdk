@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.JsonObject;
 
+import java.util.Map;
 import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
@@ -999,6 +1000,54 @@ public class LiClientRequestParams {
         public LiGenericQueryParamsClientRequestParams setLiQueryRequestParams(LiQueryRequestParams liQueryRequestParams) {
             this.liQueryRequestParams = liQueryRequestParams;
             return this;
+        }
+    }
+
+    //Request params class for LiGenericDeleteQueryParamsClient
+    public static class LiGenericDeleteQueryParamsClientRequestParams extends LiClientRequestParams {
+        private Map<String, String> liQueryRequestParams;
+        private String id;
+        private LiClientManager.DeleteClient deleteClient;
+        private String extraPathAfterId;
+
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id) {
+            super(context);
+            this.id = id;
+            this.deleteClient = deleteClient;
+            this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, Map<String, String> liQueryRequestParams) {
+            this(context, deleteClient, id);
+            this.liQueryRequestParams = liQueryRequestParams;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, String extraPathAfterId) {
+            this(context, deleteClient, id);
+            this.extraPathAfterId = extraPathAfterId;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, String extraPathAfterId, Map<String, String> liQueryRequestParams) {
+            this(context, deleteClient, id, liQueryRequestParams);
+            this.extraPathAfterId = extraPathAfterId;
+        }
+
+
+        public Map<String, String> getLiQueryRequestParams() {
+            return liQueryRequestParams;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public LiClientManager.DeleteClient getDeleteClient() {
+            return deleteClient;
+        }
+
+        public String getExtraPathAfterId() {
+            return extraPathAfterId;
         }
     }
 }
