@@ -874,6 +874,36 @@ public class LiClientRequestParams {
         }
     }
 
+    //Request params class for LiGenericPutClient
+    public static class LiGenericPutClientRequestParams extends LiClientRequestParams {
+        private String path;
+        private JsonObject requestBody;
+
+        public LiGenericPutClientRequestParams(Context context, String path, JsonObject requestBody) {
+            super(context);
+            this.path = path;
+            this.requestBody = requestBody;
+            this.client = LiClientManager.Client.LI_GENERIC_PUT_CLIENT;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public LiGenericPutClientRequestParams setPath(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public JsonObject getRequestBody() {
+            return requestBody;
+        }
+
+        public LiGenericPutClientRequestParams setRequestBody(JsonObject requestBody) {
+            this.requestBody = requestBody;
+            return this;
+        }
+    }
     //Request params class for LiGenericLiqlClient
     public static class LiGenericLiqlClientRequestParams extends LiClientRequestParams {
         private String liQuery;

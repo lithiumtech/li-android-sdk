@@ -33,6 +33,7 @@ import lithium.community.android.sdk.model.helpers.LiBoard;
 import lithium.community.android.sdk.model.post.LiAcceptSolutionModel;
 import lithium.community.android.sdk.model.post.LiCreateUpdateUserModel;
 import lithium.community.android.sdk.model.post.LiGenericPostModel;
+import lithium.community.android.sdk.model.post.LiGenericPutModel;
 import lithium.community.android.sdk.model.post.LiMarkAbuseModel;
 import lithium.community.android.sdk.model.post.LiPostKudoModel;
 import lithium.community.android.sdk.model.post.LiPostMessageModel;
@@ -652,6 +653,26 @@ public class LiClientManager {
     }
 
     /**
+     * This is generic PUT client. User can provide own specific path and response body.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPutClientRequestParams} Endpoint of API.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getGenericPutClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_GENERIC_PUT_CLIENT);
+        String path = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getPath();
+        JsonObject requestBody = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getRequestBody();
+        String requestPath = "/community/2.0/%s/" + path;
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+                String.format(requestPath,
+                        LiSDKManager.getInstance().getTenant()));
+        LiGenericPutModel genericPutModel = new LiGenericPutModel();
+        genericPutModel.setData(requestBody);
+        liBasePutClient.postModel = genericPutModel;
+        return liBasePutClient;
+    }
+
+    /**
      * This is generic Get client which can take user defined LIQL as parameter
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} Generic LIQL query.
@@ -716,6 +737,7 @@ public class LiClientManager {
         LI_UPDATE_USER_CLIENT,
         LI_POST_SUBSCRIPTION_CLIENT,
         LI_DELETE_SUBSCRIPTION_CLIENT,
+        LI_GENERIC_PUT_CLIENT,
         LI_ARTICLES_BROWSE_CLIENT
     }
 }
