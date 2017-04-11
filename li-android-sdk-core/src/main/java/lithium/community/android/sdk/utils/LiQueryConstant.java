@@ -26,7 +26,7 @@ public class LiQueryConstant {
     public static final String LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL = "SELECT id, target.id, target.subject, target.post_time, target.kudos.sum(weight), target.body, target.conversation.style, target.conversation.solved, target.conversation.last_post_time FROM subscriptions";
     public static final String LI_BROWSE_CLIENT_BASE_LIQL = "select id, title, parent.id, parent.title, depth from nodes";
     public static final String LI_SEARCH_CLIENT_BASE_LIQL = "SELECT id, subject, view_href, board.id, post_time, kudos.sum(weight), conversation.style, conversation.solved, conversation.last_post_time FROM messages";
-    public static final String LI_MESSAGE_CHILDREN_CLIENT_BASE_LIQL = "SELECT id, body, subject, view_href, post_time, kudos.sum(weight), can_accept_solution, is_solution, user_context.kudo, user_context.can_kudo, user_context.can_reply, author.id, author.avatar, author.login FROM messages";
+    public static final String LI_MESSAGE_CHILDREN_CLIENT_BASE_LIQL = "SELECT id, body, subject, view_href, post_time, kudos.sum(weight), can_accept_solution, is_solution, user_context.kudo, user_context.can_kudo, user_context.can_reply, user_context.read, author.id, author.avatar, author.login FROM messages";
     public static final String LI_QUESTIONS_CLIENT_BASE_LIQL = "SELECT id, subject, view_href, board.id, post_time, kudos.sum(weight), conversation.style, conversation.solved, author, conversation.last_post_time  FROM messages";
     public static final String LI_CATEGORY_CLIENT_BASE_LIQL = "select id, title, parent.id, parent.title, depth from nodes";
     public static final String LI_ARTICLES_BROWSE_CLIENT_BASE_LIQL = "SELECT id, subject, view_href, post_time, kudos.sum(weight), conversation.style, conversation.solved, conversation.last_post_time FROM messages";
@@ -52,6 +52,7 @@ public class LiQueryConstant {
     public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
     public static final String LI_USER_DEVICE_ID_FETCH_TYPE = "user_device_data";
     public static final String LI_APPLICATION_TYPE = "ANDROID";
+    public static final String LI_MARK_MESSAGE_CLIENT_TYPE = "message_read";
 
     public static final String LI_IMAGE_TYPE = "image";
     public static final String LI_FLOATED_MESSAGE_CLIENT_TYPE = "floated_message";
@@ -77,5 +78,7 @@ public class LiQueryConstant {
     public static final String LI_INSERT_IMAGE_MACRO = "<p><li-image id=%s width=\"500\" height=\"500\" alt=%s align=\"inline\" size=\"large\" sourcetype=\"new\"></li-image></p>";
     public static final String LI_LINE_SEPARATOR = System.getProperty("line.separator");
     public static final Integer DEFAULT_LIQL_QUERY_LIMIT = 25;
+    public static final String LI_MESSAGE_TYPE = "messages";
+    public static final String LI_SUBSCRIPTION_TYPE = "subscriptions";
     //Add constant here
 }

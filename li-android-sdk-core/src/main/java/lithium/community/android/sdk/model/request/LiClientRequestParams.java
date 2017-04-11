@@ -3,8 +3,8 @@ package lithium.community.android.sdk.model.request;
 import android.content.Context;
 
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 
+import java.util.Map;
 import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
@@ -545,13 +545,13 @@ public class LiClientRequestParams {
         }
     }
 
-    //Request params class for LiAcceptSolutionClient
-    public static class LiMarkAbuseClientRequestParams extends LiClientRequestParams {
+    //Request params class for LiReportAbuseClient
+    public static class LiReportAbuseClientRequestParams extends LiClientRequestParams {
         private String messageId;
         private String userId;
         private String body;
 
-        public LiMarkAbuseClientRequestParams(Context context, String messageId, String userId, String body) {
+        public LiReportAbuseClientRequestParams(Context context, String messageId, String userId, String body) {
             super(context);
             this.messageId = messageId;
             this.userId = userId;
@@ -563,7 +563,7 @@ public class LiClientRequestParams {
             return messageId;
         }
 
-        public LiMarkAbuseClientRequestParams setMessageId(String messageId) {
+        public LiReportAbuseClientRequestParams setMessageId(String messageId) {
             this.messageId = messageId;
             return this;
         }
@@ -572,7 +572,7 @@ public class LiClientRequestParams {
             return userId;
         }
 
-        public LiMarkAbuseClientRequestParams setUserId(String userId) {
+        public LiReportAbuseClientRequestParams setUserId(String userId) {
             this.userId = userId;
             return this;
         }
@@ -581,7 +581,7 @@ public class LiClientRequestParams {
             return body;
         }
 
-        public LiMarkAbuseClientRequestParams setBody(String body) {
+        public LiReportAbuseClientRequestParams setBody(String body) {
             this.body = body;
             return this;
         }
@@ -657,11 +657,97 @@ public class LiClientRequestParams {
         public LiPostSubscriptionParams(Context context, LiMessage target) {
             super(context);
             this.target = target;
+            this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
         public LiMessage getTarget() {
             return target;
         }
     }
+
+    //Request params for LiMarkMessagePost client
+    public static class LiMarkMessageParams extends LiClientRequestParams {
+
+        private String userId;
+        private String messageId;
+        private boolean markUnread;
+
+        public LiMarkMessageParams(Context context, String userId, String messageId, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.messageId = messageId;
+            this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_MESSAGE_POST_CLIENT;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
+    //Request params for LiMarkMessagesPost client
+    public static class LiMarkMessagesParams extends LiClientRequestParams {
+
+        private String userId;
+        private String messageIds;
+        private boolean markUnread;
+
+        public LiMarkMessagesParams(Context context, String userId, String messageIds, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.messageIds = messageIds;
+            this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_MESSAGES_POST_CLIENT;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getMessageIds() {
+            return messageIds;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
+    //Request params for LiMarkTopicPost client
+    public static class LiMarkTopicParams extends LiClientRequestParams {
+
+        private String userId;
+        private String topicId;
+        private boolean markUnread;
+
+        public LiMarkTopicParams(Context context, String userId, String topicId, boolean markUnread) {
+            super(context);
+            this.userId = userId;
+            this.topicId = topicId;
+            this.markUnread = markUnread;
+            this.client = LiClientManager.Client.LI_MARK_TOPIC_POST_CLIENT;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getTopicId() {
+            return topicId;
+        }
+
+        public boolean isMarkUnread() {
+            return markUnread;
+        }
+    }
+
 
     public static class LiDeleteSubscriptionParams extends LiClientRequestParams {
 
@@ -670,6 +756,7 @@ public class LiClientRequestParams {
         public LiDeleteSubscriptionParams(Context context, String subscriptionId) {
             super(context);
             this.subscriptionId = subscriptionId;
+            this.client = LiClientManager.Client.LI_SUBSCRIPTION_DELETE_CLIENT;
         }
         public String getSubscriptionId() {
             return subscriptionId;
@@ -691,6 +778,7 @@ public class LiClientRequestParams {
             super(context);
             this.email = email;
             this.login = login;
+            this.client = LiClientManager.Client.LI_CREATE_USER_CLIENT;
         }
         public LiAvatar getAvatar() {
             return avatar;
@@ -777,6 +865,7 @@ public class LiClientRequestParams {
 
         public LiUpdateUserParams(Context context) {
             super(context);
+            this.client = LiClientManager.Client.LI_UPDATE_USER_CLIENT;
         }
         public LiAvatar getAvatar() {
             return avatar;
@@ -941,6 +1030,55 @@ public class LiClientRequestParams {
         public LiGenericQueryParamsClientRequestParams setLiQueryRequestParams(LiQueryRequestParams liQueryRequestParams) {
             this.liQueryRequestParams = liQueryRequestParams;
             return this;
+        }
+    }
+
+    //Request params class for LiGenericDeleteQueryParamsClient
+    public static class LiGenericDeleteQueryParamsClientRequestParams extends LiClientRequestParams {
+        private Map<String, String> liQueryRequestParams;
+        private String id;
+        private LiClientManager.CollectionsType collectionsType;
+        //This will be appended after id in the delete url
+        private String subResourcePath;
+
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
+            super(context);
+            this.id = id;
+            this.collectionsType = collectionsType;
+            this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id);
+            this.liQueryRequestParams = liQueryRequestParams;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
+            this(context, collectionsType, id);
+            this.subResourcePath = subResourcePath;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id, liQueryRequestParams);
+            this.subResourcePath = subResourcePath;
+        }
+
+
+        public Map<String, String> getLiQueryRequestParams() {
+            return liQueryRequestParams;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public LiClientManager.CollectionsType getCollectionsType() {
+            return collectionsType;
+        }
+
+        public String getSubResourcePath() {
+            return subResourcePath;
         }
     }
 }
