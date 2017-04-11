@@ -1007,30 +1007,31 @@ public class LiClientRequestParams {
     public static class LiGenericDeleteQueryParamsClientRequestParams extends LiClientRequestParams {
         private Map<String, String> liQueryRequestParams;
         private String id;
-        private LiClientManager.DeleteClient deleteClient;
-        private String extraPathAfterId;
+        private LiClientManager.CollectionsType collectionsType;
+        //This will be appended after id in the delete url
+        private String subResourcePath;
 
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id) {
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
             super(context);
             this.id = id;
-            this.deleteClient = deleteClient;
+            this.collectionsType = collectionsType;
             this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, Map<String, String> liQueryRequestParams) {
-            this(context, deleteClient, id);
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id);
             this.liQueryRequestParams = liQueryRequestParams;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, String extraPathAfterId) {
-            this(context, deleteClient, id);
-            this.extraPathAfterId = extraPathAfterId;
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
+            this(context, collectionsType, id);
+            this.subResourcePath = subResourcePath;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.DeleteClient deleteClient, String id, String extraPathAfterId, Map<String, String> liQueryRequestParams) {
-            this(context, deleteClient, id, liQueryRequestParams);
-            this.extraPathAfterId = extraPathAfterId;
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id, liQueryRequestParams);
+            this.subResourcePath = subResourcePath;
         }
 
 
@@ -1042,12 +1043,12 @@ public class LiClientRequestParams {
             return id;
         }
 
-        public LiClientManager.DeleteClient getDeleteClient() {
-            return deleteClient;
+        public LiClientManager.CollectionsType getCollectionsType() {
+            return collectionsType;
         }
 
-        public String getExtraPathAfterId() {
-            return extraPathAfterId;
+        public String getSubResourcePath() {
+            return subResourcePath;
         }
     }
 }

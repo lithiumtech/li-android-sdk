@@ -332,7 +332,7 @@ public class LiClientManager {
     public static LiClient getUnKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), DeleteClient.MESSAGE, messageId, "/kudos");
+        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
         LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
         return liBaseDeleteClient;
     }
@@ -672,7 +672,7 @@ public class LiClientManager {
     public static LiClient getSubscriptionDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
         String id = ((LiClientRequestParams.LiDeleteSubscriptionParams)liClientRequestParams).getSubscriptionId();
-        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), DeleteClient.SUBSCRIPTION, id);
+        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.SUBSCRIPTION, id);
         LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
         return liBaseDeleteClient;
     }
@@ -759,26 +759,31 @@ public class LiClientManager {
     /**
      * Generic DELETE Client
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams} {@link LiQueryRequestParams}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams}
      * @return LiClient {@link LiClient}
      */
     public static LiClient getGenericDeleteQueryParamsGetClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT);
-        Map<String, String> queryRequestParams = ((LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams).getLiQueryRequestParams();
-        String id = ((LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams).getId();
-        String extraPathAfterId = ((LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams).getExtraPathAfterId();
-        DeleteClient deleteClient = ((LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams).getDeleteClient();
-        String path = String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(), deleteClient.getValue(), id);
+        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams clientRequestParams = (LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams;
+        Map<String, String> queryRequestParams = clientRequestParams.getLiQueryRequestParams();
+        String id = clientRequestParams.getId();
+        String extraPathAfterId = clientRequestParams.getSubResourcePath();
+        CollectionsType collectionsType = clientRequestParams.getCollectionsType();
+        StringBuilder path = new StringBuilder();
+        path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(), collectionsType.getValue(), id));
         if (extraPathAfterId != null) {
-            path = path + extraPathAfterId;
+            path=path.append(extraPathAfterId);
         }
         if (queryRequestParams != null && queryRequestParams.size() > 0) {
-            path = path + "?";
+            path = path.append("?");
             for (String key : queryRequestParams.keySet()) {
-                path = path + key + "=" + queryRequestParams.get(key);
+                String value = queryRequestParams.get(key);
+                if(value!=null) {
+                    path = path.append(key).append("=").append(value);
+                }
             }
         }
-        return new LiBaseDeleteClient(liClientRequestParams.getContext(), path);
+        return new LiBaseDeleteClient(liClientRequestParams.getContext(), path.toString());
     }
 
     /**
@@ -827,13 +832,13 @@ public class LiClientManager {
         LI_MARK_TOPIC_POST_CLIENT
     }
 
-    public enum DeleteClient {
+    public enum CollectionsType {
         MESSAGE(LI_MESSAGE_TYPE),
         SUBSCRIPTION(LI_SUBSCRIPTION_TYPE);
 
         private final String value;
 
-        DeleteClient(String value) {
+        CollectionsType(String value) {
             this.value = value;
         }
 
