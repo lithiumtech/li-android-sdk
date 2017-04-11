@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.JsonObject;
 
+import java.util.Map;
 import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
@@ -999,6 +1000,55 @@ public class LiClientRequestParams {
         public LiGenericQueryParamsClientRequestParams setLiQueryRequestParams(LiQueryRequestParams liQueryRequestParams) {
             this.liQueryRequestParams = liQueryRequestParams;
             return this;
+        }
+    }
+
+    //Request params class for LiGenericDeleteQueryParamsClient
+    public static class LiGenericDeleteQueryParamsClientRequestParams extends LiClientRequestParams {
+        private Map<String, String> liQueryRequestParams;
+        private String id;
+        private LiClientManager.CollectionsType collectionsType;
+        //This will be appended after id in the delete url
+        private String subResourcePath;
+
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
+            super(context);
+            this.id = id;
+            this.collectionsType = collectionsType;
+            this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id);
+            this.liQueryRequestParams = liQueryRequestParams;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
+            this(context, collectionsType, id);
+            this.subResourcePath = subResourcePath;
+        }
+
+        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
+            this(context, collectionsType, id, liQueryRequestParams);
+            this.subResourcePath = subResourcePath;
+        }
+
+
+        public Map<String, String> getLiQueryRequestParams() {
+            return liQueryRequestParams;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public LiClientManager.CollectionsType getCollectionsType() {
+            return collectionsType;
+        }
+
+        public String getSubResourcePath() {
+            return subResourcePath;
         }
     }
 }
