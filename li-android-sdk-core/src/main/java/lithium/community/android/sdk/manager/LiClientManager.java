@@ -19,6 +19,7 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -326,15 +327,15 @@ public class LiClientManager {
     /**
      * This client is used to Un kudo a particular message. The id of the message which has to be Un kudoed is passed as parameter.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getUnKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
-        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
         return liBaseDeleteClient;
     }
 
@@ -673,8 +674,8 @@ public class LiClientManager {
     public static LiClient getSubscriptionDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
         String id = ((LiClientRequestParams.LiDeleteSubscriptionParams)liClientRequestParams).getSubscriptionId();
-        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams liGenericDeleteQueryParamsClientRequestParams = new LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams(liClientRequestParams.getContext(), CollectionsType.SUBSCRIPTION, id);
-        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericDeleteQueryParamsGetClient(liGenericDeleteQueryParamsClientRequestParams);
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.SUBSCRIPTION, id);
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
         return liBaseDeleteClient;
     }
 
@@ -780,12 +781,12 @@ public class LiClientManager {
     /**
      * Generic DELETE Client
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteClientRequestParams}
      * @return LiClient {@link LiClient}
      */
-    public static LiClient getGenericDeleteQueryParamsGetClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getGenericQueryDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT);
-        LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams clientRequestParams = (LiClientRequestParams.LiGenericDeleteQueryParamsClientRequestParams) liClientRequestParams;
+        LiClientRequestParams.LiGenericDeleteClientRequestParams clientRequestParams = (LiClientRequestParams.LiGenericDeleteClientRequestParams) liClientRequestParams;
         Map<String, String> queryRequestParams = clientRequestParams.getLiQueryRequestParams();
         String id = clientRequestParams.getId();
         String extraPathAfterId = clientRequestParams.getSubResourcePath();
@@ -793,13 +794,13 @@ public class LiClientManager {
         StringBuilder path = new StringBuilder();
         path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(), collectionsType.getValue(), id));
         if (extraPathAfterId != null) {
-            path=path.append(extraPathAfterId);
+            path = path.append(extraPathAfterId);
         }
         if (queryRequestParams != null && queryRequestParams.size() > 0) {
             path = path.append("?");
             for (String key : queryRequestParams.keySet()) {
                 String value = queryRequestParams.get(key);
-                if(value!=null) {
+                if (value != null) {
                     path = path.append(key).append("=").append(value);
                 }
             }
@@ -808,10 +809,35 @@ public class LiClientManager {
     }
 
     /**
+     * This client is used to Delete a particular message. The id of the message which has to be Deleted is passed as parameter.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} Id of the message to be deleted.
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getMessageDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MESSAGE_DELETE_CLIENT);
+        String messageId = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).getMessageId();
+        boolean includeReplies = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).isIncludeReplies();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams;
+        if (includeReplies) {
+            Map<String, String> requestParams = new HashMap<>();
+            requestParams.put("delete_message.include_replies", "true");
+            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, requestParams);
+        } else {
+            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId);
+        }
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
+        return liBaseDeleteClient;
+    }
+
+
+    /**
      * Enum of all clients.
      */
     public enum Client {
         LI_MESSAGES_CLIENT,
+        LI_MESSAGE_DELETE_CLIENT,
         LI_MESSAGES_BY_BOARD_ID_CLIENT,
         LI_SDK_SETTINGS_CLIENT,
         LI_USER_SUBSCRIPTIONS_CLIENT,
@@ -855,7 +881,9 @@ public class LiClientManager {
         LI_MARK_MESSAGES_POST_CLIENT,
         LI_MARK_TOPIC_POST_CLIENT
     }
-
+    /**
+     * Enum of all collection types.
+     */
     public enum CollectionsType {
         MESSAGE(LI_MESSAGE_TYPE),
         SUBSCRIPTION(LI_SUBSCRIPTION_TYPE);

@@ -355,6 +355,44 @@ public class LiClientRequestParams {
         }
     }
 
+    //Request params class for LiMessageDeleteClient
+    public static class LiMessageDeleteClientRequestParams extends LiClientRequestParams {
+        private String messageId;
+        //if this flag is set it will Delete Replies also
+        private boolean includeReplies;
+
+        public LiMessageDeleteClientRequestParams(Context context, String messageId) {
+            super(context);
+            this.messageId = messageId;
+            this.client = LiClientManager.Client.LI_MESSAGE_DELETE_CLIENT;
+        }
+
+        public LiMessageDeleteClientRequestParams(Context context, String messageId, boolean includeReplies) {
+            super(context);
+            this.messageId = messageId;
+            this.includeReplies = includeReplies;
+            this.client = LiClientManager.Client.LI_MESSAGE_DELETE_CLIENT;
+        }
+
+        public boolean isIncludeReplies() {
+            return includeReplies;
+        }
+
+        public void setIncludeReplies(boolean includeReplies) {
+            this.includeReplies = includeReplies;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public LiMessageDeleteClientRequestParams setMessageId(String messageId) {
+            this.messageId = messageId;
+            return this;
+        }
+    }
+
+
     //Request params class for LiAcceptSolutionClient
     public static class LiAcceptSolutionClientRequestParams extends LiClientRequestParams {
         private Long messageId;
@@ -1034,7 +1072,7 @@ public class LiClientRequestParams {
     }
 
     //Request params class for LiGenericDeleteQueryParamsClient
-    public static class LiGenericDeleteQueryParamsClientRequestParams extends LiClientRequestParams {
+    public static class LiGenericDeleteClientRequestParams extends LiClientRequestParams {
         private Map<String, String> liQueryRequestParams;
         private String id;
         private LiClientManager.CollectionsType collectionsType;
@@ -1042,24 +1080,24 @@ public class LiClientRequestParams {
         private String subResourcePath;
 
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
             super(context);
             this.id = id;
             this.collectionsType = collectionsType;
             this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
             this(context, collectionsType, id);
             this.liQueryRequestParams = liQueryRequestParams;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
             this(context, collectionsType, id);
             this.subResourcePath = subResourcePath;
         }
 
-        public LiGenericDeleteQueryParamsClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
             this(context, collectionsType, id, liQueryRequestParams);
             this.subResourcePath = subResourcePath;
         }
