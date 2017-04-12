@@ -64,6 +64,7 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_INSERT_IMAG
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_LINE_SEPARATOR;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_MESSAGE_CLIENT_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_POST_QUESTION_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTION_TYPE;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE;
@@ -389,6 +390,26 @@ public class LiClientManager {
         return liBasePostClient;
     }
 
+    /**
+     * This client is used to update an existing messge by id.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateMessageClientRequestParams} It is the subject of the message, body and id.
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getUpdateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_UPDATE_MESSAGE_CLIENT);
+        String subject = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getSubject();
+        String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getBody();
+        String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getMessageId();
+
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages/%s", LiSDKManager.getInstance().getTenant(), messageId));
+        LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
+        liPostMessageModel.setType(LI_POST_QUESTION_TYPE);
+        liPostMessageModel.setBody(body);
+        liPostMessageModel.setSubject(subject);
+        liBasePutClient.postModel = liPostMessageModel;
+        return liBasePutClient;
+    }
     /**
      * This method embeds image tag into the Message Body.
      * <p><li-image id=IMAGEID</> width="500" height="500" alt=IAMGEID.png align="inline" size="large" sourcetype="new"></li-image></p>
@@ -879,7 +900,8 @@ public class LiClientManager {
         LI_ARTICLES_BROWSE_CLIENT,
         LI_MARK_MESSAGE_POST_CLIENT,
         LI_MARK_MESSAGES_POST_CLIENT,
-        LI_MARK_TOPIC_POST_CLIENT
+        LI_MARK_TOPIC_POST_CLIENT,
+        LI_UPDATE_MESSAGE_CLIENT
     }
     /**
      * Enum of all collection types.
