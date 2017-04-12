@@ -53,6 +53,7 @@ public class LiClientManagerTest {
     public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
 
     private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
     private static final String POST = "POST";
 
 
@@ -107,6 +108,17 @@ public class LiClientManagerTest {
         PowerMockito.verifyStatic();
         Assert.assertEquals(LI_ARTICLES_BROWSE_CLIENT_TYPE, liClient.getType());
         Assert.assertEquals(GET, "" + liClient.getRequestType());
+    }
+
+    @Test
+    public void testDeleteMessageClient() throws LiRestResponseException {
+        String id = "33";
+        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessageDeleteClientRequestParams(mContext, id);
+        LiClient liClient = LiClientManager.getMessageDeleteClient(liClientRequestParams);
+        liClient.processSync();
+        PowerMockito.verifyStatic();
+        Assert.assertNull(liClient.getType());
+        Assert.assertEquals(DELETE, "" + liClient.getRequestType());
     }
 /*
     @Test
