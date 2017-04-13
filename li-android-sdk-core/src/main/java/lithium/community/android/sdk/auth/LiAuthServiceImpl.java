@@ -139,7 +139,6 @@ public class LiAuthServiceImpl implements LiAuthService {
     public void performSSOAuthorizationRequest(@NonNull LiSSOAuthorizationRequest request) throws LiRestResponseException {
         checkIfDisposed();
         Uri requestUri = request.getUri();
-        Log.d(LOG_TAG, String.format("Initiating authorization request to %s", requestUri.toString()));
         final LiAuthRestClient authRestClient = getLiAuthRestClient();
 
         LiAuthRequestStore.getInstance().addAuthRequest(request);
@@ -240,9 +239,6 @@ public class LiAuthServiceImpl implements LiAuthService {
                             obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
                             tokenResponse.setJsonString(String.valueOf(obj));
                             LiSDKManager.getInstance().persistAuthState(mContext, tokenResponse);
-                            Log.i(LOG_TAG, String.format(
-                                    "Token Response [ Access Token: %s ]",
-                                    tokenResponse.getAccessToken()));
                             getUserAfterTokenResponse(loginCompleteCallBack);
                         }
                         else {
@@ -386,9 +382,6 @@ public class LiAuthServiceImpl implements LiAuthService {
                         JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
                         obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
                         tokenResponse.setJsonString(String.valueOf(obj));
-                        Log.i(LOG_TAG, String.format(
-                                "Token Response [ Access Token: %s ]",
-                                tokenResponse.getAccessToken()));
                         callback.onTokenRequestCompleted(tokenResponse, null);
                     }
                     else {
@@ -434,9 +427,6 @@ public class LiAuthServiceImpl implements LiAuthService {
             JsonObject obj = resp.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
             obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
             tokenResponse.setJsonString(String.valueOf(obj));
-            Log.i(LOG_TAG, String.format(
-                    "Token Response [ Access Token: %s ]",
-                    tokenResponse.getAccessToken()));
             return tokenResponse;
         } catch (RuntimeException e) {
             throw LiRestResponseException.runtimeError(e.getMessage());
