@@ -477,6 +477,49 @@ public class LiClientRequestParams {
         }
     }
 
+    //Request params class for LiUpdateMessageClient
+    public static class LiUpdateMessageClientRequestParams extends LiClientRequestParams {
+
+        private String messageId;
+        private String subject;
+        private String body;
+
+        public LiUpdateMessageClientRequestParams(Context context, String messageId, String subject, String body){
+            super(context);
+            this.messageId = messageId;
+            this.body = body;
+            this.subject = subject;
+            this.client = LiClientManager.Client.LI_UPDATE_MESSAGE_CLIENT;
+        }
+
+        public String getMessageId(){
+            return messageId;
+        }
+
+        public LiUpdateMessageClientRequestParams setMessageId(String messageId){
+            this.messageId = messageId;
+            return this;
+        }
+
+        public String getBody(){
+            return body;
+        }
+
+        public LiUpdateMessageClientRequestParams setBody(String body){
+            this.body = body;
+            return this;
+        }
+
+        public String getSubject(){
+            return subject;
+        }
+
+        public LiUpdateMessageClientRequestParams setSubject(String subject){
+            this.subject = subject;
+            return this;
+        }
+    }
+
     //Request params class for LiCreateReplyClient
     public static class LiCreateReplyClientRequestParams extends LiClientRequestParams {
         private String body;
