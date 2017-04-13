@@ -179,12 +179,12 @@ public abstract class LiRestClient {
         LiCoreSDKUtils.checkNotNull(baseRestRequest);
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
-                Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
                 LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext()).performSyncRefreshTokenRequest();
                 LiSDKManager.getInstance().persistAuthState(
                         baseRestRequest.getContext(), liTokenResponse);
 
-                Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
 
             }
         }
@@ -218,13 +218,13 @@ public abstract class LiRestClient {
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
                     LiSDKManager.getInstance().fetchFreshAccessToken(
                             baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
                                     enqueueCall(baseRestRequest, callback);
                                 }
                             });
@@ -286,13 +286,13 @@ public abstract class LiRestClient {
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.i(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
                     LiSDKManager.getInstance().fetchFreshAccessToken(
                             baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.i(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
                                     uploadEnqueueCall(baseRestRequest, callback, imagePath, imageName, requestBody);
                                 }
                             });
@@ -357,7 +357,6 @@ public abstract class LiRestClient {
             String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
                     Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
                     LiSDKManager.getInstance().getLoggedInUser().getLoginId();
-            Log.i("LSI", lsiHeader);
             request.header("lia-sdk-app-info", lsiHeader);
         }
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
@@ -428,7 +427,6 @@ public abstract class LiRestClient {
             String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
                     Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
                     LiSDKManager.getInstance().getLoggedInUser().getLoginId();
-            Log.i("LSI", lsiHeader);
             builder.header("lia-sdk-app-info", lsiHeader);
         }
         // Adding addition headers
