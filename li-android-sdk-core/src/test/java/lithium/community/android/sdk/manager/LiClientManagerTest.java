@@ -55,6 +55,7 @@ public class LiClientManagerTest {
     private static final String GET = "GET";
     private static final String DELETE = "DELETE";
     private static final String POST = "POST";
+    private static final String PUT = "PUT";
 
 
     @Mock
@@ -119,6 +120,19 @@ public class LiClientManagerTest {
         PowerMockito.verifyStatic();
         Assert.assertNull(liClient.getType());
         Assert.assertEquals(DELETE, "" + liClient.getRequestType());
+    }
+
+    @Test
+    public void testUpdateMessageClient() throws LiRestResponseException {
+        String messageId = "33";
+        String subject = "Test";
+        String body = "This is test";
+        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUpdateMessageClientRequestParams(mContext, messageId, subject, body);
+        LiClient liClient = LiClientManager.getUpdateMessageClient(liClientRequestParams);
+        liClient.processSync();
+        PowerMockito.verifyStatic();
+        Assert.assertNull(liClient.getType());
+        Assert.assertEquals(PUT, "" + liClient.getRequestType());
     }
 /*
     @Test

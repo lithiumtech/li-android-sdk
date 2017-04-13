@@ -484,7 +484,7 @@ public class LiClientRequestParams {
         private String subject;
         private String body;
 
-        LiUpdateMessageClientRequestParams(Context context, String messageId, String subject, String body){
+        public LiUpdateMessageClientRequestParams(Context context, String messageId, String subject, String body){
             super(context);
             this.messageId = messageId;
             this.body = body;
