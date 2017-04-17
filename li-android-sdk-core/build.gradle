@@ -4,7 +4,7 @@ apply plugin: 'de.mobilej.unmock'
 apply plugin: 'jacoco'
 
 group = 'lithium.community.android.sdk'
-version = '1.1.0'
+version = '1.1.1'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
 
@@ -27,7 +27,7 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled false
         }
@@ -73,7 +73,7 @@ unMock {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
 
