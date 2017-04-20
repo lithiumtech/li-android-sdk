@@ -4,7 +4,7 @@ apply plugin: 'de.mobilej.unmock'
 apply plugin: 'jacoco'
 
 group = 'lithium.community.android.sdk'
-version = '1.1.1'
+version = '1.1.0'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
 
