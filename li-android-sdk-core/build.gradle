@@ -28,7 +28,7 @@ android {
 
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled false
         }
     }
@@ -50,6 +50,7 @@ unMock {
     keep "android.database.AbstractCursor"
     keep "android.database.CrossProcessCursor"
     keepStartingWith "android.text.TextUtils"
+
     keepStartingWith "android.util."
     keepStartingWith "android.text."
     keepStartingWith "android.content.ContentValues"
@@ -72,7 +73,7 @@ unMock {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
 

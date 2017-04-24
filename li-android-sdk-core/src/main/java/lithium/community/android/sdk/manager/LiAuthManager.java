@@ -233,7 +233,6 @@ class LiAuthManager {
                     mFreshTokenCallBack.onFreshTokenFetched(false);
                     return;
                 }
-                Log.i("LiClientManager", "received access token :" + response.getAccessToken());
                 persistAuthState(context, response);
                 mFreshTokenCallBack.onFreshTokenFetched(true);
             }

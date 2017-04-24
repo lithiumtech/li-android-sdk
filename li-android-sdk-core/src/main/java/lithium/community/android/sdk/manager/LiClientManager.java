@@ -19,6 +19,8 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import lithium.community.android.sdk.api.LiBaseDeleteClient;
@@ -28,13 +30,20 @@ import lithium.community.android.sdk.api.LiBasePutClient;
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiBoard;
 import lithium.community.android.sdk.model.post.LiAcceptSolutionModel;
+import lithium.community.android.sdk.model.post.LiCreateUpdateUserModel;
 import lithium.community.android.sdk.model.post.LiGenericPostModel;
+import lithium.community.android.sdk.model.post.LiGenericPutModel;
 import lithium.community.android.sdk.model.post.LiMarkAbuseModel;
+import lithium.community.android.sdk.model.post.LiMarkMessageModel;
+import lithium.community.android.sdk.model.post.LiMarkMessagesModel;
+import lithium.community.android.sdk.model.post.LiMarkTopicModel;
 import lithium.community.android.sdk.model.post.LiPostKudoModel;
 import lithium.community.android.sdk.model.post.LiPostMessageModel;
 import lithium.community.android.sdk.model.post.LiReplyMessageModel;
+import lithium.community.android.sdk.model.post.LiSubscriptionPostModel;
 import lithium.community.android.sdk.model.post.LiUploadImageModel;
 import lithium.community.android.sdk.model.post.LiUserDeviceDataModel;
 import lithium.community.android.sdk.model.post.LiUserDeviceIdUpdateModel;
@@ -53,6 +62,12 @@ import lithium.community.android.sdk.utils.LiQueryConstant;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_INSERT_IMAGE_MACRO;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_LINE_SEPARATOR;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_MESSAGE_CLIENT_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_POST_QUESTION_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SUBSCRIPTION_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE;
 
 
 /**
@@ -119,7 +134,7 @@ public class LiClientManager {
      */
     public static LiClient getUserSubscriptionsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_USER_SUBSCRIPTIONS_CLIENT);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE, LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LI_SUBSCRIPTIONS_CLIENT_TYPE, LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
     }
 
     /**
@@ -225,7 +240,7 @@ public class LiClientManager {
         String userId = ((LiClientRequestParams.LiUserDetailsClientRequestParams) liClientRequestParams).getUserId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", userId);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL, LiQueryConstant.LI_USER_DETAILS_CLIENT_TYPE, LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE, LiUser.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL, LI_USER_DETAILS_CLIENT_TYPE, LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE, LiUser.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -313,14 +328,15 @@ public class LiClientManager {
     /**
      * This client is used to Un kudo a particular message. The id of the message which has to be Un kudoed is passed as parameter.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getUnKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiBaseDeleteClient liBaseDeleteClient = new LiBaseDeleteClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages/%s/kudos", LiSDKManager.getInstance().getTenant(), messageId));
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
         return liBaseDeleteClient;
     }
 
@@ -374,6 +390,26 @@ public class LiClientManager {
         return liBasePostClient;
     }
 
+    /**
+     * This client is used to update an existing messge by id.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateMessageClientRequestParams} It is the subject of the message, body and id.
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getUpdateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_UPDATE_MESSAGE_CLIENT);
+        String subject = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getSubject();
+        String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getBody();
+        String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getMessageId();
+
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages/%s", LiSDKManager.getInstance().getTenant(), messageId));
+        LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
+        liPostMessageModel.setType(LI_POST_QUESTION_TYPE);
+        liPostMessageModel.setBody(body);
+        liPostMessageModel.setSubject(subject);
+        liBasePutClient.postModel = liPostMessageModel;
+        return liBasePutClient;
+    }
     /**
      * This method embeds image tag into the Message Body.
      * <p><li-image id=IMAGEID</> width="500" height="500" alt=IAMGEID.png align="inline" size="large" sourcetype="new"></li-image></p>
@@ -456,17 +492,17 @@ public class LiClientManager {
     /**
      * This client is used to report abuse a message.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkAbuseClientRequestParams}The id of message which is to be marked as abusive.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiReportAbuseClientRequestParams}The id of message which is to be marked as abusive.
      * @param liClientRequestParams The id of the user marking the message as abusive.
      * @param liClientRequestParams The body of the message
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMarkAbuseClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getReportAbuseClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_MARK_ABUSE_CLIENT);
-        String messageId = ((LiClientRequestParams.LiMarkAbuseClientRequestParams) liClientRequestParams).getMessageId();
-        String userId = ((LiClientRequestParams.LiMarkAbuseClientRequestParams) liClientRequestParams).getUserId();
-        String body = ((LiClientRequestParams.LiMarkAbuseClientRequestParams) liClientRequestParams).getBody();
+        String messageId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getMessageId();
+        String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getUserId();
+        String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getBody();
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/abuse_reports", LiSDKManager.getInstance().getTenant()));
         LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
         liMarkAbuseModel.setType(LiQueryConstant.LI_MARK_ABUSE_TYPE);
@@ -532,6 +568,169 @@ public class LiClientManager {
     }
 
     /**
+     * Creates new User.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams}general details of user for creating it.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getCreateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_CREATE_USER_CLIENT);
+
+        LiAvatar avatar = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getAvatar();
+        String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
+        String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
+        String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
+        String firstName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getFirstName();
+        String lastName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLastName();
+        String login = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLogin();
+        String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
+        liCreateUpdateUserModel.setAvatar(avatar);
+        liCreateUpdateUserModel.setBiography(biography);
+        liCreateUpdateUserModel.setCoverImage(coverImage);
+        liCreateUpdateUserModel.setEmail(email);
+        liCreateUpdateUserModel.setFirstName(firstName);
+        liCreateUpdateUserModel.setLastName(lastName);
+        liCreateUpdateUserModel.setLogin(login);
+        liCreateUpdateUserModel.setPassword(password);
+        liBasePostClient.postModel = liCreateUpdateUserModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to mark a message read/unread
+     * If u give markUnread flag as true it will mark given message as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkMessagePostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MARK_MESSAGE_POST_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getUserId();
+        String messageId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getMessageId();
+        boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
+        liMarkMessageModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkMessageModel.setUser(userId);
+        liMarkMessageModel.setMessageId(messageId);
+        liMarkMessageModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkMessageModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to mark given comma separated  messageIds read/unread
+     * If u give markUnread flag as true it will mark given messages as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkMessagesPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MARK_MESSAGES_POST_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getUserId();
+        String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getMessageIds();
+        boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
+        liMarkMessagesModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkMessagesModel.setUser(userId);
+        liMarkMessagesModel.setMessageIds(messageIds);
+        liMarkMessagesModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkMessagesModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to mark a topic read/unread
+     * If u give markUnread flag as true it will mark  messages in given topic as Unread
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getMarkTopicPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MARK_TOPIC_POST_CLIENT);
+        String userId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getUserId();
+        String topicId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getTopicId();
+        boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).isMarkUnread();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+        LiMarkTopicModel liMarkTopicModel = new LiMarkTopicModel();
+        liMarkTopicModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
+        liMarkTopicModel.setUser(userId);
+        liMarkTopicModel.setTopicId(topicId);
+        liMarkTopicModel.setMarkUnread(markUnread);
+        liBasePostClient.postModel = liMarkTopicModel;
+        return liBasePostClient;
+    }
+
+
+    /**
+     * Use to add a subscription
+     * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams}general message details.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getSubscriptionPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
+        LiMessage target = ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams).getTarget();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenant()));
+        LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
+        liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
+        liSubscriptionPostModel.setTarget(target);
+        liBasePostClient.postModel = liSubscriptionPostModel;
+        return liBasePostClient;
+    }
+
+    /**
+     * Use to delete subscription message.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiDeleteSubscriptionParams} It is subscription Id.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getSubscriptionDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
+        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams)liClientRequestParams).getSubscriptionId();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.SUBSCRIPTION, id);
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
+        return liBaseDeleteClient;
+    }
+
+    /**
+     * Updates an existing user.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams}general details of user for updating it.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getUpdateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_UPDATE_USER_CLIENT);
+
+        LiAvatar avatar = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getAvatar();
+        String biography = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getBiography();
+        String coverImage = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getCoverImage();
+        String email = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getEmail();
+        String firstName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getFirstName();
+        String lastName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLastName();
+        String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+        liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
+        liCreateUpdateUserModel.setAvatar(avatar);
+        liCreateUpdateUserModel.setBiography(biography);
+        liCreateUpdateUserModel.setCoverImage(coverImage);
+        liCreateUpdateUserModel.setEmail(email);
+        liCreateUpdateUserModel.setFirstName(firstName);
+        liCreateUpdateUserModel.setLastName(lastName);
+        liCreateUpdateUserModel.setLogin(login);
+        liBasePutClient.postModel = liCreateUpdateUserModel;
+        return liBasePutClient;
+    }
+
+    /**
      * This is generic Post client. User can provide own specific path and response body.
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPostClientRequestParams} Endpoint of API.
@@ -552,6 +751,26 @@ public class LiClientManager {
         genericPostModel.setData(requestBody);
         liBasePostClient.postModel = genericPostModel;
         return liBasePostClient;
+    }
+
+    /**
+     * This is generic PUT client. User can provide own specific path and response body.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPutClientRequestParams} Endpoint of API.
+     * @return {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getGenericPutClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_GENERIC_PUT_CLIENT);
+        String path = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getPath();
+        JsonObject requestBody = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getRequestBody();
+        String requestPath = "/community/2.0/%s/" + path;
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+                String.format(requestPath,
+                        LiSDKManager.getInstance().getTenant()));
+        LiGenericPutModel genericPutModel = new LiGenericPutModel();
+        genericPutModel.setData(requestBody);
+        liBasePutClient.postModel = genericPutModel;
+        return liBasePutClient;
     }
 
     /**
@@ -581,10 +800,65 @@ public class LiClientManager {
     }
 
     /**
+     * Generic DELETE Client
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteClientRequestParams}
+     * @return LiClient {@link LiClient}
+     */
+    public static LiClient getGenericQueryDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT);
+        LiClientRequestParams.LiGenericDeleteClientRequestParams clientRequestParams = (LiClientRequestParams.LiGenericDeleteClientRequestParams) liClientRequestParams;
+        Map<String, String> queryRequestParams = clientRequestParams.getLiQueryRequestParams();
+        String id = clientRequestParams.getId();
+        String extraPathAfterId = clientRequestParams.getSubResourcePath();
+        CollectionsType collectionsType = clientRequestParams.getCollectionsType();
+        StringBuilder path = new StringBuilder();
+        path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(), collectionsType.getValue(), id));
+        if (extraPathAfterId != null) {
+            path = path.append(extraPathAfterId);
+        }
+        if (queryRequestParams != null && queryRequestParams.size() > 0) {
+            path = path.append("?");
+            for (String key : queryRequestParams.keySet()) {
+                String value = queryRequestParams.get(key);
+                if (value != null) {
+                    path = path.append(key).append("=").append(value);
+                }
+            }
+        }
+        return new LiBaseDeleteClient(liClientRequestParams.getContext(), path.toString());
+    }
+
+    /**
+     * This client is used to Delete a particular message. The id of the message which has to be Deleted is passed as parameter.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} Id of the message to be deleted.
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getMessageDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_MESSAGE_DELETE_CLIENT);
+        String messageId = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).getMessageId();
+        boolean includeReplies = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).isIncludeReplies();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams;
+        if (includeReplies) {
+            Map<String, String> requestParams = new HashMap<>();
+            requestParams.put("delete_message.include_replies", "true");
+            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, requestParams);
+        } else {
+            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId);
+        }
+        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
+        return liBaseDeleteClient;
+    }
+
+
+    /**
      * Enum of all clients.
      */
     public enum Client {
         LI_MESSAGES_CLIENT,
+        LI_MESSAGE_DELETE_CLIENT,
         LI_MESSAGES_BY_BOARD_ID_CLIENT,
         LI_SDK_SETTINGS_CLIENT,
         LI_USER_SUBSCRIPTIONS_CLIENT,
@@ -609,12 +883,41 @@ public class LiClientManager {
         LI_GENERIC_POST_CLIENT,
         LI_GENERIC_LIQL_CLIENT,
         LI_GENERIC_QUERY_PARAMS_CLIENT,
+        LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT,
         LI_ARTICLES_CLIENT,
         LI_SUBSCRIPTION_CLIENT,
         LI_BROWSE_CLIENT,
         LI_MESSAGE_CHILDREN_CLIENT,
         LI_QUESTIONS_CLIENT,
         LI_CATEGORY_CLIENT,
-        LI_ARTICLES_BROWSE_CLIENT
+        LI_CREATE_USER_CLIENT,
+        LI_UPDATE_USER_CLIENT,
+        LI_POST_SUBSCRIPTION_CLIENT,
+        LI_DELETE_SUBSCRIPTION_CLIENT,
+        LI_GENERIC_PUT_CLIENT,
+        LI_SUBSCRIPTION_POST_CLIENT,
+        LI_SUBSCRIPTION_DELETE_CLIENT,
+        LI_ARTICLES_BROWSE_CLIENT,
+        LI_MARK_MESSAGE_POST_CLIENT,
+        LI_MARK_MESSAGES_POST_CLIENT,
+        LI_MARK_TOPIC_POST_CLIENT,
+        LI_UPDATE_MESSAGE_CLIENT
+    }
+    /**
+     * Enum of all collection types.
+     */
+    public enum CollectionsType {
+        MESSAGE(LI_MESSAGE_TYPE),
+        SUBSCRIPTION(LI_SUBSCRIPTION_TYPE);
+
+        private final String value;
+
+        CollectionsType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }

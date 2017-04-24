@@ -18,17 +18,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
+import lithium.community.android.sdk.queryutil.LiQueryBuilder;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiPostClientResponse;
 
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
@@ -42,7 +47,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_P
 public class LiNotificationProviderImpl implements LiNotificationProvider {
 
     @Override
-    public void onIdRefresh(final String deviceId, LiPushNotificationProvider liPushNotificationProvider, final Context context) throws LiRestResponseException {
+    public void onIdRefresh(final String deviceId, final Context context) throws LiRestResponseException {
 
         String savedId = getSharedPreferences(context).getString(LI_DEVICE_ID, null);
 
@@ -51,7 +56,21 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
          * shared preferences.
          */
         if (savedId == null || savedId.isEmpty()) {
-            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, liPushNotificationProvider.name());
+            String settingFromServer;
+            SharedPreferences prefs = context.getSharedPreferences(
+                    LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            settingFromServer = prefs.getString(LI_DEFAULT_SDK_SETTINGS, null);
+            String pushNotificationAdapter = null;
+            JsonObject settingFromServerJson;
+            if (settingFromServer != null && !settingFromServer.isEmpty()) {
+                JsonElement jsonElement = new JsonParser().parse(settingFromServer);
+                if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
+                    settingFromServerJson = jsonElement.getAsJsonObject();
+                    pushNotificationAdapter = settingFromServerJson.get("push_notification_adapter").getAsString();
+                }
+            }
+
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, pushNotificationAdapter);
             LiClient deviceIdFetchClient = LiClientManager.getDeviceIdFetchClient(liClientRequestParams);
             deviceIdFetchClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
