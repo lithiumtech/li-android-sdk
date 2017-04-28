@@ -59,12 +59,6 @@ public class LiLoginActivity extends LiBaseAuthActivity {
     }
 
     private class LoginWebViewClient extends WebViewClient {
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
-        }
-
         @Override
         public void onPageFinished(WebView view, String url) {
             if (!isAccessTokenSaved) {

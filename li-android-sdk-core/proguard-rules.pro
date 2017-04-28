@@ -21,11 +21,11 @@
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -verbose
-
--optimizations !code/simplification/arithmetic,!code/allocation/variable
 -keep class **
 -keepclassmembers class *{*;}
 -keepattributes *
+-dontshrink
+-dontoptimize
 
 -assumenosideeffects class android.util.Log {
    public static boolean isLoggable(java.lang.String, int);
