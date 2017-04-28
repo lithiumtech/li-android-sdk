@@ -14,7 +14,7 @@
 
 package lithium.community.android.sdk.queryutil;
 
-import lithium.community.android.sdk.client.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiClientManager;
 
 /**
  * This class specifies fields on which liQueryOrdering clause is allowed for different clients.

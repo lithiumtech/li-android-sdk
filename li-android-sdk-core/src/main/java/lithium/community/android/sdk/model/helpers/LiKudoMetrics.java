@@ -1,6 +1,6 @@
 /*
- * PushNotificationProvider.java
- * Created on Dec 28, 2016
+ * LiKudoMetrics.java
+ * Created on Dec 27, 2016
  *
  * Copyright 2016 Lithium Technologies, Inc.
  * San Francisco, California, U.S.A.  All Rights Reserved.
@@ -12,13 +12,24 @@
  * agreement you entered into with Lithium.
  */
 
-package lithium.community.android.sdk.notification;
+package lithium.community.android.sdk.model.helpers;
+
+import lithium.community.android.sdk.model.LiBaseModelImpl;
 
 /**
- * Enum for different types of Push Notification Providers.
- * Created by shoureya.kant on 12/28/16.
+ * Kudo count metrics
  */
 
-public enum LiPushNotificationProvider {
-   FIREBASE, GCM;
+public class LiKudoMetrics extends LiBaseModelImpl {
+
+    private LiSum sum;
+
+    public LiSum getSum() {
+        return sum;
+    }
+
+    public void setSum(LiSum sum) {
+        this.sum = sum;
+    }
+
 }

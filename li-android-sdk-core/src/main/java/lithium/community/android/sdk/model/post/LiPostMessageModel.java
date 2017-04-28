@@ -14,7 +14,7 @@
 
 package lithium.community.android.sdk.model.post;
 
-import lithium.community.android.sdk.model.LiBoard;
+import lithium.community.android.sdk.model.helpers.LiBoard;
 
 /**
  * Request body for POST call to post a question.

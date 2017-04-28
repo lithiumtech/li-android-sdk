@@ -43,14 +43,22 @@ public final class LiAppCredentials {
 
     private final String ssoAuthorizeUri;
 
+    private final String tenantId;
+
+    private final String apiProxyHost;
+
     /**
      * private constructor.
      * @param clientKey This is client Id.
      * @param clientSecret This is client secret.
      * @param communityURL This is the URL of the community.
+     * @param tenantId tenant ID for the community.
+     * @param apiProxyHost API proxy host.
      * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
-    private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret, @NonNull String communityURL) throws MalformedURLException {
+    private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret,
+                             @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost)
+            throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
@@ -60,6 +68,8 @@ public final class LiAppCredentials {
         this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL.toString()+"api/2.0/auth/authorize";
+        this.tenantId = tenantId;
+        this.apiProxyHost = apiProxyHost;
     }
 
     private static String buildRedirectUri(Uri communityUri) {
@@ -87,7 +97,15 @@ public final class LiAppCredentials {
         return redirectUri;
     }
 
+    public String getTenantId() {
+        return tenantId;
+    }
+
     public String getSsoAuthorizeUri() { return ssoAuthorizeUri; }
+
+    public String getApiProxyHost() {
+        return apiProxyHost;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -133,6 +151,8 @@ public final class LiAppCredentials {
         private String clientKey;
         private String clientSecret;
         private String communityUri;
+        private String tenantId;
+        private String apiProxyHost;
 
         public Builder() {
         }
@@ -150,13 +170,24 @@ public final class LiAppCredentials {
         }
 
         @NonNull
+        public Builder setTenantId(String tenantId) {
+            this.tenantId = tenantId;
+            return this;
+        }
+
+        @NonNull
         public Builder setCommunityUri(@NonNull String communityUri) {
             this.communityUri = communityUri;
             return this;
         }
 
+        public Builder setApiProxyHost(String apiProxyHost) {
+            this.apiProxyHost = apiProxyHost;
+            return this;
+        }
+
         public LiAppCredentials build() throws MalformedURLException {
-            return new LiAppCredentials(clientKey, clientSecret, communityUri);
+            return new LiAppCredentials(clientKey, clientSecret, communityUri, tenantId, apiProxyHost);
         }
     }
 }

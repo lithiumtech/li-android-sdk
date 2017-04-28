@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.api;
 
+import android.content.Context;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -37,13 +39,13 @@ public class LiBaseGetClient extends LiBaseClient {
     private LiQueryValueReplacer liQueryValueReplacer;
     private LiQueryRequestParams liQueryRequestParams;
 
-    public LiBaseGetClient(String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass) throws LiRestResponseException {
-        super(type, querySettingsType, responseClass, RequestType.GET);
+    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass) throws LiRestResponseException {
+        super(context, type, querySettingsType, responseClass, RequestType.GET);
         this.activityLIQL = activityLIQL;
     }
 
-    public LiBaseGetClient(String activityLIQL, String type, Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
-        super(type, responseClass);
+    public LiBaseGetClient(Context context, String activityLIQL, String type, Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
+        super(context, type, responseClass);
         this.activityLIQL = activityLIQL;
         this.liQueryRequestParams = liQueryRequestParams;
     }
@@ -54,11 +56,12 @@ public class LiBaseGetClient extends LiBaseClient {
      */
     @Override
     public void setLiRestV2Request() {
-        this.liRestV2Request = new LiRestV2Request(getLiqlQuery(), type);
+        this.liRestV2Request = new LiRestV2Request(context, getLiqlQuery(), type);
     }
 
     /**
      * Request body is always null for GET Client.
+     *
      * @return null
      */
     @Override
@@ -75,11 +78,11 @@ public class LiBaseGetClient extends LiBaseClient {
 
         if (LiQueryConstant.LI_GENERIC_TYPE.equals(querySettingsType)) {
             return activityLIQL;
-        } else if(liQueryRequestParams != null) {
+        } else if (liQueryRequestParams != null) {
             return LiQueryBuilder.getQuery(activityLIQL, liQueryRequestParams.getQuerySetting());
         } else {
             LiQueryBuilder liQueryBuilder = new LiQueryBuilder();
-            String query = liQueryBuilder.getQuery(activityLIQL, this.querySettingsType);
+            String query = liQueryBuilder.getQuery(context, activityLIQL, this.querySettingsType);
             if (liQueryValueReplacer != null) {
                 Iterator it = liQueryValueReplacer.getReplacementMap().entrySet().iterator();
                 while (it.hasNext()) {
@@ -109,6 +112,7 @@ public class LiBaseGetClient extends LiBaseClient {
 
     /**
      * Method to add liQueryValueReplacer to replace special characters with actual values
+     *
      * @param liQueryValueReplacer {@link LiQueryValueReplacer}
      * @return this
      */

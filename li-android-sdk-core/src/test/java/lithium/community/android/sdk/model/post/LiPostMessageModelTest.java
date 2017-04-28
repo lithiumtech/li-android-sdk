@@ -3,7 +3,7 @@ package lithium.community.android.sdk.model.post;
 import org.junit.Test;
 
 import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.LiBoard;
+import lithium.community.android.sdk.model.helpers.LiBoard;
 
 import static org.junit.Assert.assertEquals;
 

@@ -28,10 +28,10 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import lithium.community.android.sdk.LiSDKManager;
 import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.api.LiBaseGetClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.rest.LiAuthRestClient;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;

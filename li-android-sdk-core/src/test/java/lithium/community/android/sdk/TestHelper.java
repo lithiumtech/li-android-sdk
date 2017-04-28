@@ -14,14 +14,11 @@
 
 package lithium.community.android.sdk;
 
-import android.app.Activity;
 import android.net.Uri;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.client.manager.LiClientManager;
 
 /**
  * Contains common test values which are useful across all tests.
@@ -283,18 +280,21 @@ public class TestHelper {
     public static LiAppCredentials getTestAppCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL).build();
+                .setCommunityUri(TEST_COMMUNITY_URL).setApiProxyHost("api.qa.aws.lcloud.com")
+                .setTenantId("test").build();
     }
 
     public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
         return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL).build();
+                .setCommunityUri(TEST_COMMUNITY_URL)
+                .setApiProxyHost("api.qa.aws.lcloud.com")
+                .setTenantId("test").build();
     }
 
-    public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
+    /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
         LiClientManager liClientManger = LiClientManager.init(context);
         LiClientManager instance = liClientManger.getInstance();
         return instance;
-    }
+    }*/
 }
