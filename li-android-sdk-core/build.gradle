@@ -142,9 +142,9 @@ task uploadLocalArchives(type: Upload) {
 
 uploadArchives {
     repositories.mavenDeployer {
-        pom.groupId = group
-        pom.artifactId = artifactId
-        pom.version = version
+        pom.groupId = "lithium.community.android.sdk"
+        pom.artifactId = "li-android-sdk-core"
+        pom.version = "1.1.0"
         // Add other pom properties here if you want (developer details / licenses)
         repository(url: "file://${localReleaseDest}")
     }
@@ -163,7 +163,7 @@ task generateRelease << {
 
 generateRelease.dependsOn(uploadArchives)
 generateRelease.dependsOn(zipRelease)
-
+generateRelease.dependsOn(javadoc)
 
 artifacts {
     archives androidSourcesJar
