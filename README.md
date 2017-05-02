@@ -40,11 +40,12 @@ Copyright 2017 Lithium Technologies
 The [Lithium Community Android SDK Example](https://github.com/lithiumtech/li-android-sdk-example/blob/dev/README.md) is a basic implementation of the Community Android SDK. The reference application shows the fastest way to get a Lithium Community backed application running quickly.
 
 ## Getting help
-Visit the [Current Betas Forum](https://community.lithium.com/t5/Current-betas/bd-p/BetaCurrent) on the Lithium Community to learn about our beta program, ask questions, and talk with other members of the Lithium Developer community.
+Visit the [Developers Discussion forum](https://community.lithium.com/t5/Developers-Discussion/bd-p/studio) on the Lithium Community to ask questions and talk with other members of the Lithium Developer community.
 
 ## Next steps
 * Review our [providers and models documentation](https://github.com/lithiumtech/li-android-sdk-core/wiki/Community-Android-SDK-API-providers)
 * Review the [li-android-sdk-core Javadoc](https://lithiumtech.github.io/li-android-sdk-core/)
+* Run through our [tutorials](https://github.com/lithiumtech/li-android-sdk-core/wiki/Tutorials)
 * Read about our [Support UI components](https://github.com/lithiumtech/li-android-sdk-ui/wiki/Community-Android-SDK-UI-components)
 * Learn about [authentication options](https://github.com/lithiumtech/li-android-sdk-core/wiki/Authentication-with-the-Community-Android-SDK)
 * Create your [app key and secret credentials](https://github.com/lithiumtech/li-android-sdk-core/wiki/Getting-Started-with-the-Community-Android-SDK#get-authorization-credentials)
