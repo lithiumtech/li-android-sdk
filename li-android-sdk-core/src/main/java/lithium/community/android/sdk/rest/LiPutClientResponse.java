@@ -9,6 +9,7 @@ import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.response.LiBrowse;
 
 /**
+ * Wrapper for LiBaseResponse to PUT response.
  * Created by kunal.shrivastava on 5/4/17.
  */
 
