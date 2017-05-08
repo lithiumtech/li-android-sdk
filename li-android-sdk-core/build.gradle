@@ -4,7 +4,7 @@ apply plugin: 'de.mobilej.unmock'
 apply plugin: 'jacoco'
 
 group = 'lithium.community.android.sdk'
-version = '1.1.0'
+version = '1.1.1'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
 
@@ -144,7 +144,7 @@ uploadArchives {
     repositories.mavenDeployer {
         pom.groupId = "lithium.community.android.sdk"
         pom.artifactId = "li-android-sdk-core"
-        pom.version = "1.1.0"
+        pom.version = "1.1.1"
         // Add other pom properties here if you want (developer details / licenses)
         repository(url: "file://${localReleaseDest}")
     }
