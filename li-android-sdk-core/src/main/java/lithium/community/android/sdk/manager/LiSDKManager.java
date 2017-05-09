@@ -42,7 +42,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
- * Interface to Lithium community SDK. Provides entry point into community rest api v2 using
+ * Interface to Lithium Community Android SDK. Provides the entry point into the Community REST api v2 using
  * OAuth2 implementation.
  */
 public final class LiSDKManager extends LiAuthManager {
@@ -64,6 +64,10 @@ public final class LiSDKManager extends LiAuthManager {
         this.liAppCredentials = liAppCredentials;
     }
 
+    /**
+     * Checks whether the SDK is initialized.
+     * @return true or false depending on whether the SDK is initialized
+     */
     public static boolean isEnvironmentInitialized() {
         if (isInitialized.get() && _sdkInstance != null) {
             return true;
@@ -72,7 +76,7 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Initializing liSDKManager class and initiates login flow. Also fetches SDK settings after login.
+     * Initiales LiSDKManager and initiates the login flow. This also fetches SDK settings after login.
      *
      * @param context          {@link Context}
      * @param liAppCredentials {@link LiAppCredentials}

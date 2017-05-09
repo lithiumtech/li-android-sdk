@@ -35,13 +35,15 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
+/*
+ * Created by kunal.shrivastava on 10/18/16.
+ */
 
 /**
  * This class also manages
  * the responsibility of initiating the OAuth2-authorize flow if the user state is blank or empty. When
  * the token is expired, this class manages the responsibility of refreshing the auth state using OAuth
  * refresh token api.
- * Created by kunal.shrivastava on 10/18/16.
  */
 
 class LiAuthManager {
