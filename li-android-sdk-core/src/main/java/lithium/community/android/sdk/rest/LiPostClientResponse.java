@@ -21,11 +21,17 @@ import java.util.Map;
 
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.response.LiBrowse;
-
-/**
- * Wrapper for LiBaseResponse to POST response.
+/*
  * Created by shoureya.kant on 11/21/16.
  */
+
+/**
+ * Wrapper for LiBaseResponse to POST response. Represents the response to a POST action.
+ * The class includes methods to get the response, and to get specific details about
+ * the response like the HTTP code and status, and the JSON object if one is included.
+ */
+
+
 
 public class LiPostClientResponse implements LiClientResponse<LiBaseResponse> {
     private LiBaseResponse liBaseResponse;

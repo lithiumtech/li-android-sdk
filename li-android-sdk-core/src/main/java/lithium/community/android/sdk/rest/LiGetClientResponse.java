@@ -10,6 +10,8 @@
  * You shall not disclose such Confidential Information and shall
  * use  it  only in  accordance  with  the terms of  the  license
  * agreement you entered into with Lithium.
+ *
+ * Created by kunal.shrivastava on 11/3/16.
  */
 
 package lithium.community.android.sdk.rest;
@@ -27,8 +29,9 @@ import lithium.community.android.sdk.model.response.LiBrowse;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 /**
- * Wrapper for LiBaseResponse to GET response.
- * Created by kunal.shrivastava on 11/3/16.
+ * Wrapper for LiBaseResponse to GET response. Represents the response to a GET action.
+ * The class includes methods to get the response (transformed to the corresponding data model),
+ * and to get details like the HTTP code and status of the response.
  */
 
 public class LiGetClientResponse implements LiClientResponse<List<LiBaseModel>> {
