@@ -19,8 +19,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import lithium.community.android.sdk.auth.LiAuthConstants;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.queryutil.LiQueryOrdering;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
@@ -28,8 +28,10 @@ import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiClientResponse;
+import lithium.community.android.sdk.rest.LiDeleteClientResponse;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
 import lithium.community.android.sdk.rest.LiPostClientResponse;
+import lithium.community.android.sdk.rest.LiPutClientResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 
@@ -134,6 +136,10 @@ abstract class LiBaseClient implements LiClient {
                     if (null != response) {
                         if (requestType.equals(RequestType.GET)) {
                             liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                        } else if (requestType.equals(RequestType.DELETE)) {
+                            liAsyncRequestCallback.onSuccess(request, new LiDeleteClientResponse(response));
+                        } else if (requestType.equals(RequestType.PUT)) {
+                            liAsyncRequestCallback.onSuccess(request, new LiPutClientResponse(response));
                         } else {
                             liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
                         }
