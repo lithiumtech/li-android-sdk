@@ -17,6 +17,7 @@ package lithium.community.android.sdk.auth;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -57,7 +59,11 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         return super.onOptionsItemSelected(item);
 
     }
-
+    private class LoginWebChromeClient extends WebChromeClient {
+        public void onProgressChanged(WebView view, int progress) {
+            progBar.setProgress(progress);
+        }
+    }
     private class LoginWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -66,6 +72,8 @@ public class LiLoginActivity extends LiBaseAuthActivity {
                 loginInProgTxt.setVisibility(View.GONE);
                 webViewOauth.setVisibility(View.VISIBLE);
             }
+            progBar.setVisibility(View.GONE);
+            progBar.setProgress(100);
         }
 
         @Override
@@ -80,6 +88,13 @@ public class LiLoginActivity extends LiBaseAuthActivity {
             }
 
             return false;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            progBar.setVisibility(View.VISIBLE);
+            progBar.setProgress(0);
         }
     }
 
@@ -108,6 +123,7 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         setTitle(authUrl);
         //set the web client
         webViewOauth.setWebViewClient(new LoginWebViewClient());
+        webViewOauth.setWebChromeClient(new LoginWebChromeClient());
         //activates JavaScript (just in case)
         WebSettings webSettings = webViewOauth.getSettings();
         webSettings.setJavaScriptEnabled(true);

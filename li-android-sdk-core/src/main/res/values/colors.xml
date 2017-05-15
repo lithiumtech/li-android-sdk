@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="li_horiz_prog_colorPrimaryDark">#0084a5</color>
+    <color name="li_horiz_prog_colorAccent">#42B4D6</color>
+    <color name="li_horiz_prog_aboutPageTextColor1">#7b7a7a</color>
+</resources>
