@@ -71,7 +71,7 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAIL
 
 
 /**
- * This class acts as a manager to hold and refresh the user's auth state. It has all the API providers
+ * This class acts as a manager to hold and refresh the user's authentication state. It includes all of the API providers
  * to interact with the community.
  */
 public class LiClientManager {
@@ -81,10 +81,10 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches list of all the articles for that user, it is a basic search which gets top articles (configurable limit) ordered by PostTime or Kudos count.
-     * The articles are visible on App home page
+     * Fetches a list of all the articles for the user in context ordered by post time or kudos count. Create parameters with {@LiClientRequestParams.LiMessagesClientRequestParams}.
      *
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesClientRequestParams} the Android context (required)
+     * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getMessagesClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -95,11 +95,12 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches all articles corresponding to a particular board id for a user.
-     * It takes 'boardId' as parameter.
+     * Fetches all articles on the specified board, authored by the user in context. Create parameters with {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesClientRequestParams} contains Id of board for which messags are to be fetched.
-     * @return LiClient {@link LiClient}
+     *
+     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the board from which to fetch the messages (required)
+     * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getMessagesByBoardIdClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -111,10 +112,10 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches all the settings of the SDK from LIA for that user.
-     * It takes 'clientId' as parameter as setting details are governed by 'clientId'.
+     * Fetches all the SDK settings from the Community app. Create parameters with {@LiClientRequestParams.LiSdkSettingsClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiSdkSettingsClientRequestParams} contains client id.
+     * @param liClientRequestParams {@LiClientRequestParams.LiSdkSettingsClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the client ID (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -127,9 +128,10 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches list of all subscriptions corresponding to a particular user.
+     * Fetches a list of all Community subscriptions for the user in context. Create parameters with {@LiClientRequestParams.LiUserSubscriptionsClientRequestParams}.
      *
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@LiClientRequestParams.LiUserSubscriptionsClientRequestParams} the Android context (required)
+     * @return LiSubscription {@link LiSubscriptions}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getUserSubscriptionsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -138,10 +140,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches list of boards for a given category. It takes 'categoryId' as a parameter.
+     * Fetches a list of boards for a given category, along with board and category details. Create parameters with {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams} contains category Id.
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the category ID (required)
+     * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getCategoryBoardsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -153,10 +156,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches list of boards for a given category. It takes 'categoryId' as a parameter.
+     * Fetches boards at a specific depth in the Community Structure hierarchy. 0 is the highest level in the structure. Create parameters with {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams} Depicts the level upto which data is required.
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the depth of boards to include in the query (required)
+     * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getBoardsByDepthClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -168,11 +172,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches details of child messages (replies or posts in a thread) of a given message node.
-     * It takes 'parentId' as a parameter.
+     * Fetches details of child messages of the specified message. Child messages include replies comments, as well as nested replies or comments. Create parameters with {@link LiClientRequestParams.LiRepliesClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiRepliesClientRequestParams} This id of parent message.
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiRepliesClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the parent message (required)
+     * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     @NonNull
@@ -185,11 +189,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used for searching in the community. The search text is passed as parameter as 'query'.
-     * The 'query' parameter is compared with body/subject of the message.
+     * Performs a keyword search in the community. Create parameters with {@link LiClientRequestParams.LiSearchClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiSearchClientRequestParams} This is the string to be searched.
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiSearchClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the text string to search, passed as 'query'. The 'query' parameter is compared with the body and subject of the message. (required)
+     * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getSearchClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -201,10 +205,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches question posted by any author up to a specified depth. It takes 'authorId' and 'depth' as parameters.
+     * Fetches messages posted by a specified author up to a specified depth in the Community Structure hierarchy. Crate parameters with {@link LiClientRequestParams.LiUserMessagesClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUserMessagesClientRequestParams}  id of the author.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUserMessagesClientRequestParams} level upto which data is required.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUserMessagesClientRequestParams}  the Android context (required)
+     * @param liClientRequestParams the ID of the author (required)
+     * @param liClientRequestParams the depth of the message, where the a topic message = 0, the first reply = 1, and so on (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -218,9 +223,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches category details for the user. It selects from nodes where node_type is equal to category.
+     * Fetches category details available to the user in context. This method respects the Hide from Lists and Menus setting in Community Admin.
+     * Create parameters with {@link LiClientRequestParams.LiCategoryClientRequestParams}.
      *
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCategoryClientRequestParams} the Android context (required)
+     * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getCategoryClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -229,10 +236,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches all the details of a user. It takes 'userId' as parameter.
+     * Fetches all details about the specified user. Create parameters with {@link LiClientRequestParams.LiUserDetailsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUserDetailsClientRequestParams} The id of the user whose details are to be fetched.
-     * @return LiClient LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUserDetailsClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the user (required)
+     * @return LUser {@link LiUser}
      * @throws LiRestResponseException LiClient {@link LiRestResponseException}
      */
     public static LiClient getUserDetailsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -244,10 +252,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches details of a particular message. It takes 'messageId' as parameter.
+     * Fetches details of the specified message. Create parameters with {@link LiClientRequestParams.LiMessageClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageClientRequestParams} Id of the message.
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the message (required)
+     * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -259,10 +268,13 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches details of all pinned messages of a user.
+     * Fetches details of all floated (or "pinned") of the specified board for the user in context.
+     * Create parameters with {@LiClientRequestParams.LiFloatedMessagesClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiFloatedMessagesClientRequestParams} Id of the board and scope for searching the floated messages. Currently it has two scopes ("global", "local")
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@LiClientRequestParams.LiFloatedMessagesClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the board (required)
+     * @param liClientRequestParams the scope for searching the floated messages. Supported scopes: "global", "local" (required)
+     * @return LiFloatedMessageModel {@link LiFloatedMessageModel}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getFloatedMessagesClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -275,11 +287,11 @@ public class LiClientManager {
     }
 
     /**
-     * This client fetches details of desired sets of messages.
-     * The message ids of the messages whose details are needed is passes as parameter in a set.
+     * Fetches details for the specified set of messages. Create parameters with {@LiClientRequestParams.LiMessagesByIdsClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByIdsClientRequestParams}
-     * @return LiClient {@link LiClient}
+     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByIdsClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the IDs of the messages, passed as a set (required)
+     * @return LiMessages {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public static LiClient getMessagesByIdsClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -304,9 +316,12 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to kudo a particular message. The id of the message which has to be kudoed is passed as parameter.
+     * Kudos the specified message for the user in context.
+     * Create parameters with {@link LiClientRequestParams.LiKudoClientRequestParams}.
+     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiKudoClientRequestParams} Id of the message to be Kudoed.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiKudoClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the message to kudo (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -326,9 +341,12 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to Un kudo a particular message. The id of the message which has to be Un kudoed is passed as parameter.
+     * Unkudos the specified message for the user in context.
+     * Create parameters with {@link LiClientRequestParams.LiUnKudoClientRequestParams}.
+     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} Id of the message to be un-kudoed.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the message to unkudoed (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -341,9 +359,12 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to accept an article as solution. The message id of the article to be marked as accepted is passes as parameter.
+     * Marks a message as an accepted solution.
+     * Create parameters with {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams}.
+     * Uses {@link LiAcceptSolutionModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams}Id of the message to be marked as solution.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of the message to mark as a solution (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -359,11 +380,16 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to post a new question. It takes the subject, body and the id of the board to which the question is to be posted.
+     * Posts a new message to the community.
+     * Create parameters with {@link LiClientRequestParams.LiCreateMessageClientRequestParams}.
+     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateMessageClientRequestParams} It is the subject of the message,
-     * @param liClientRequestParams It is the body of the message.
-     * @param liClientRequestParams The board to which message is attached.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateMessageClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the subject of the message (required)
+     * @param liClientRequestParams the body of the message (required)
+     * @param liClientRequestParams the image filename (if an image is included in the message)
+     * @param liClientRequestParams the image ID (if an image is included in the message)
+     * @param liClientRequestParams the ID of the board where the message will be posted (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -391,8 +417,13 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to update an existing messge by id.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateMessageClientRequestParams} It is the subject of the message, body and id.
+     * Updates an existing message by ID. Crate parameters with {@link LiClientRequestParams.LiUpdateMessageClientRequestParams}.
+     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the PUT call.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateMessageClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the message subject
+     * @param liClientRequestParams the message body
+     * @param liClientRequestParams the message ID (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -411,11 +442,11 @@ public class LiClientManager {
         return liBasePutClient;
     }
     /**
-     * This method embeds image tag into the Message Body.
+     * Embeds an image tag into the message body.
      * <p><li-image id=IMAGEID</> width="500" height="500" alt=IAMGEID.png align="inline" size="large" sourcetype="new"></li-image></p>
      * //This is to insert image id in body if any to effectively display image along with post.
      *
-     * @param body      Body of the message to which image has to be attached.
+     * @param body      Body of the message to which image has to be attached
      * @param imageId   Id of the image received from community.
      * @param imageName Name of the image.
      * @return Message Body with embedded image tag.
@@ -431,11 +462,16 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used for replying to a question. It takes the body(reply) and the id of the article to which reply is being made.
+     * Creates a reply or comment.
+     * Create parameters with {@link LiClientRequestParams.LiCreateReplyClientRequestParams}.
+     * Uses {@link LiReplyMessageModel} to build request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateReplyClientRequestParams} Body of reply message.
-     * @param liClientRequestParams Id of the message to which reply is made.
-     * @return LiClient LiClient {@link LiClient}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateReplyClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the message ID (required)
+     * @param liClientRequestParams the message body (required)
+     * @param liClientRequestParams the image filename (if the message includes an image)
+     * @param liClientRequestParams the image ID (if the message includes an image)
+     * @return LiClient {@link LiClient}
      * @throws LiRestResponseException LiClient {@link LiRestResponseException}
      */
     public static LiClient getCreateReplyClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -461,12 +497,14 @@ public class LiClientManager {
     }
 
     /**
-     * This client is use to upload an image to the LIA. It takes image title, description, name and the path where the image is placed.
+     * Uploads an image to the community on behalf of the user in context. The image is placed into the user's public album.
+     * Create parameters with {@link LiClientRequestParams.LiUploadImageClientRequestParams}.
+     * Uses {@link LiUploadImageModel} to build request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUploadImageClientRequestParams}      This is title of the message.
-     * @param liClientRequestParams This is description of the image to be uploaded.
-     * @param liClientRequestParams Name of the image file.
-     * @param liClientRequestParams Absolute path of the image file.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUploadImageClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the image title (required)
+     * @param liClientRequestParams the image filename (required)
+     * @param liClientRequestParams the absolute path to the image (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -490,11 +528,16 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to report abuse a message.
+     * Creates an abuse report for the specified message.
+     * Create parameters with {@link LiClientRequestParams.LiReportAbuseClientRequestParams}.
+     * Uses the {@link LiMarkAbuseModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiReportAbuseClientRequestParams}The id of message which is to be marked as abusive.
-     * @param liClientRequestParams The id of the user marking the message as abusive.
-     * @param liClientRequestParams The body of the message
+     * Added 1.0.2
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiReportAbuseClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the ID of message to report (required)
+     * @param liClientRequestParams the message body of the message being reported (required)
+     * @param liClientRequestParams the ID of the user making the abuse report (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -520,10 +563,11 @@ public class LiClientManager {
     }
 
     /**
-     * Fetches 'id' corresponding to device id form the community.
+     * Fetches the ID corresponding to device ID from the community.
+     * Create parameters with {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams} Id registered with notification providers.
-     * @param liClientRequestParams Global provide for Push notification. Currently "GCM" and "FIREBASE".
+     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams} the ID registered with notification provider
+     * @param liClientRequestParams the Global provider for Push notification. Currently "GCM" and "FIREBASE".
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -545,10 +589,11 @@ public class LiClientManager {
     }
 
     /**
-     * Updates 'id' in community with the given device id.
+     * Updates the device ID in community with the given device ID. Create parameters with {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams}Id registered with notification providers.
-     * @param liClientRequestParams Id corresponding to device id in the community.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the device ID registered with the push notification provider (required)
+     * @param liClientRequestParams the ID corresponding to device ID in the community (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -568,8 +613,21 @@ public class LiClientManager {
     }
 
     /**
-     * Creates new User.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams}general details of user for creating it.
+     * Creates new user account.
+     * Create parameters with {@link LiClientRequestParams.LiCreateUserParams}.
+     * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
+     *
+     * Added 1.1.0
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams} the Android context (required)
+     * @param liClientRequestParams the user's login (required)
+     * @param liClientRequestParams the user's password (required)
+     * @param liClientRequestParams the user's email (required)
+     * @param liClientRequestParams the user's avatar
+     * @param liClientRequestParams the user's biography
+     * @param liClientRequestParams the user's first name
+     * @param liClientRequestParams the user's last name
+     *
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -600,10 +658,16 @@ public class LiClientManager {
     }
 
     /**
-     * Use to mark a message read/unread
-     * If u give markUnread flag as true it will mark given message as Unread
+     * Mark a single message as read or unread
+     * Create parameters with {@link LiClientRequestParams.LiMarkMessageParams}.
+     * Uses the {@link LiMarkMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams}general message details.
+     * Added 1.1.0
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams} the Android context (required)
+     * @param liClientRequestParams the ID of the user marking the message (required)
+     * @param liClientRequestParams the ID of the message (required)
+     * @param liClientRequestParams whether to mark the message read or unread. Pass 'markUnread' as 'true' to mark the message as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -623,10 +687,16 @@ public class LiClientManager {
     }
 
     /**
-     * Use to mark given comma separated  messageIds read/unread
-     * If u give markUnread flag as true it will mark given messages as Unread
+     * Marks a set of messages (not necessarily in the same thread) as read or unread. Compare this to getMarkTopicPostClient.
+     * Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMarkMessagesParams}.
+     * Uses the {@link LiMarkMessagesModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams}general message details.
+     * Added 1.1.0
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams} the Android context
+     * @param liClientRequestParams the user marking the messages (required)
+     * @param liClientRequestParams the IDs of the messages to mark in a comma-separated list (required)
+     * @param liClientRequestParams whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark the messages as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -646,10 +716,15 @@ public class LiClientManager {
     }
 
     /**
-     * Use to mark a topic read/unread
-     * If u give markUnread flag as true it will mark  messages in given topic as Unread
+     * Marks a topic message and all its replies as read or unread. Compare this to getMarkMessagesPostClient.
+     * Create parameters with {@link LiClientRequestParams.LiMarkTopicParams}.
+     * Uses the {@link LiMarkTopicModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams}general message details.
+     * Added 1.1.0
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams} the Android context (required)
+     * @param liClientRequestParams the ID of the topic message to mark (required)
+     * @param liClientRequestParams whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark the messages as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -670,8 +745,14 @@ public class LiClientManager {
 
 
     /**
-     * Use to add a subscription
-     * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams}general message details.
+     * Creates a subscription to the specified target (a board or message).
+     * Create parameters with {@link LiClientRequestParams.LiPostSubscriptionParams}.
+     * Uses the {@link LiSubscriptionPostModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
+     *
+     * Added 1.0.1
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams} the Android context (required)
+     * @param liClientRequestParams the target of the subscription -- a board or message (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -687,8 +768,10 @@ public class LiClientManager {
     }
 
     /**
-     * Use to delete subscription message.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeleteSubscriptionParams} It is subscription Id.
+     * Deletes a subscription.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiDeleteSubscriptionParams} the Android context
+     * @param liClientRequestParams the subscription ID
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -701,8 +784,20 @@ public class LiClientManager {
     }
 
     /**
-     * Updates an existing user.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams}general details of user for updating it.
+     * Updates an existing user. Create parameters with {@link LiClientRequestParams.LiUpdateUserParams}.
+     * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
+     *
+     * Added 1.1.0
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams} the Android context (required)
+     * @param liClientRequestParams the user's avatar
+     * @param liClientRequestParams the user's biography
+     * @param liClientRequestParams the user's cover image
+     * @param liClientRequestParams the user's email
+     * @param liClientRequestParams the user's first name
+     * @param liClientRequestParams the user's last name
+     * @param liClientRequestParams the user's login
+     *
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -731,10 +826,12 @@ public class LiClientManager {
     }
 
     /**
-     * This is generic Post client. User can provide own specific path and response body.
+     * This is generic Post client. Provide a path to a Community API v1 or v2 endpoint and a request body.
+     * Create parameters with {@link LiClientRequestParams.LiGenericPostClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPostClientRequestParams} Endpoint of API.
-     * @param liClientRequestParams Request body as {@link JsonObject}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPostClientRequestParams} the Android context
+     * @param liClientRequestParams the path to a Community v1 or v2 endpoint
+     * @param liClientRequestParams the request body as a {@link JsonObject}
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -754,8 +851,12 @@ public class LiClientManager {
     }
 
     /**
-     * This is generic PUT client. User can provide own specific path and response body.
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPutClientRequestParams} Endpoint of API.
+     * This is generic PUT client. Provide the path to a Community API v1 or v2 endpoint and a request body.
+     * Create parameters with {@link LiClientRequestParams.LiGenericPutClientRequestParams}.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPutClientRequestParams} the Android context (required)
+     * @param liClientRequestParams the path to a Community v1 or v2 endpoint (required)
+     * @param liClientRequestParams the request body as a {@link JsonObject} (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -774,9 +875,10 @@ public class LiClientManager {
     }
 
     /**
-     * This is generic Get client which can take user defined LIQL as parameter
+     * This is generic Get client. Provide a LiQL query. Create parameters with {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} Generic LIQL query.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} the Android context (required)
+     * @param liClientRequestParams a custom LiQL query (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -787,10 +889,11 @@ public class LiClientManager {
     }
 
     /**
-     * Generic GET Client whose `where clause`, `liQueryOrdering` and `limit` fields can be changed in LIQL,
-     * but base LIQL query will be defined by the client type passed in parameter
+     * Creates custom WHERE clause, ORDER BY, and/or LIMIT parameters to a LIQL queries used by a Lithium API provider.
+     * Create parameters with {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams} {@link LiQueryRequestParams}
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams} the Android context
+     *
      * @return LiClient {@link LiClient}
      */
     public static LiClient getGenericQueryParamsGetClient(LiClientRequestParams liClientRequestParams) {
@@ -800,7 +903,7 @@ public class LiClientManager {
     }
 
     /**
-     * Generic DELETE Client
+     * This is a generic DELETE client.
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteClientRequestParams}
      * @return LiClient {@link LiClient}
@@ -830,9 +933,12 @@ public class LiClientManager {
     }
 
     /**
-     * This client is used to Delete a particular message. The id of the message which has to be Deleted is passed as parameter.
+     * Deletes the specified message. Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMessageDeleteClientRequestParamsLiMessageDeleteClientRequestParams}.
+     * Optionally pass the 'includeReplies' parameters as 'true' to delete replies or comments associated with the message.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} Id of the message to be deleted.
+     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} the Android context
+     * @param liClientRequestParams the ID of the message to delete
+     * @param liClientRequestParams whether or not to delete replies/comments to the message
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
