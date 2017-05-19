@@ -142,9 +142,11 @@ class LiAuthManager {
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
+        //get secured preferences and check key has any value there
         SharedPreferences securedPreferences = this.getSecuredPreferences(context);
         String value = securedPreferences.getString(key, null);
         if (value == null) {
+            //if not present then check in old unencrypted preferences and then move it new encrypted preferences file
             SharedPreferences prefs = context.getSharedPreferences(LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             value = prefs.getString(key, null);
             securedPreferences.edit().putString(key, value).commit();
