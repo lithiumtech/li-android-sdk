@@ -24,6 +24,9 @@ import android.util.Log;
 import org.json.JSONException;
 
 import java.net.URISyntaxException;
+import java.security.Key;
+
+import javax.crypto.Cipher;
 
 import lithium.community.android.sdk.auth.LiAuthService;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
@@ -34,6 +37,9 @@ import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 /*
  * Created by kunal.shrivastava on 10/18/16.
@@ -74,9 +80,7 @@ class LiAuthManager {
     public void setLoggedInUser(Context context, LiUser user) {
         if (liAuthState != null) {
             liAuthState.setUser(user);
-            getSharedPreferences(context).edit()
-                    .putString(LI_AUTH_STATE, liAuthState.jsonSerializeString())
-                    .commit();
+            putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
         }
     }
 
@@ -125,8 +129,28 @@ class LiAuthManager {
      * @param context {@link Context}
      * @return SharedPreferences
      */
-    private SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    SharedPreferences getSecuredPreferences(Context context) {
+        return new SecurePreferences(context);
+    }
+
+    public void removeFromSecuredPreferences(Context context, String key) {
+        this.getSecuredPreferences(context).edit().remove(key).commit();
+    }
+
+    public void putInSecuredPreferences(Context context, String key, String value) {
+        this.getSecuredPreferences(context).edit().putString(key, value).commit();
+    }
+
+    public String getFromSecuredPreferences(Context context, String key) {
+        SharedPreferences securedPreferences = this.getSecuredPreferences(context);
+        String value = securedPreferences.getString(key, null);
+        if (value == null) {
+            SharedPreferences prefs = context.getSharedPreferences(LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            value = prefs.getString(key, null);
+            securedPreferences.edit().putString(key, value).commit();
+            prefs.edit().remove(key).commit();
+        }
+        return value;
     }
 
     /**
@@ -138,9 +162,7 @@ class LiAuthManager {
     public void persistAuthState(Context context, @NonNull LiSSOAuthResponse authorizationResponse) {
         this.liAuthState = new LiAuthState();
         liAuthState.update(authorizationResponse);
-        getSharedPreferences(context).edit()
-                .putString(LI_AUTH_STATE, liAuthState.jsonSerializeString())
-                .commit();
+        putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
     }
 
     /**
@@ -151,9 +173,7 @@ class LiAuthManager {
      */
     public void persistAuthState(Context context, @NonNull LiTokenResponse response) {
         this.liAuthState.update(response);
-        getSharedPreferences(context).edit()
-                .putString(LI_AUTH_STATE, liAuthState.jsonSerializeString())
-                .commit();
+        putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
     }
 
     /**
@@ -162,7 +182,10 @@ class LiAuthManager {
      * @param context {@link Context}
      */
     public void logout(Context context) {
-        getSharedPreferences(context).edit().remove(LI_SHARED_PREFERENCES_NAME).commit();
+        this.removeFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
+        this.removeFromSecuredPreferences(context, LI_AUTH_STATE);
+        this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
+        this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         this.liAuthState = null;
     }
 
@@ -182,8 +205,7 @@ class LiAuthManager {
      * @return the LiAuthState class.
      */
     public final LiAuthState restoreAuthState(Context context) {
-        String jsonString = context.getSharedPreferences(LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getString(LI_AUTH_STATE, null);
+        String jsonString = getFromSecuredPreferences(context, LI_AUTH_STATE);
         if (!TextUtils.isEmpty(jsonString)) {
             try {
                 liAuthState = LiAuthState.jsonDeserialize(jsonString);

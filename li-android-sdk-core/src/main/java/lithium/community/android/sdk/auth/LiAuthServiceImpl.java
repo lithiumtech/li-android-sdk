@@ -34,6 +34,7 @@ import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.SecurePreferences;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiUser;
@@ -291,10 +292,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                             LiAppSdkSettings liAppSdkSettings =
                                     gson.fromJson(items.get(0), LiAppSdkSettings.class);
                             if (liAppSdkSettings != null) {
-                                SharedPreferences prefs = mContext.getSharedPreferences(
-                                        LI_DEFAULT_SDK_SETTINGS, Context.MODE_PRIVATE);
-                                prefs.edit().putString(LI_DEFAULT_SDK_SETTINGS,
-                                        liAppSdkSettings.getAdditionalInformation()).commit();
+                                LiSDKManager.getInstance().putInSecuredPreferences(
+                                        mContext,
+                                        LI_DEFAULT_SDK_SETTINGS,
+                                        liAppSdkSettings.getAdditionalInformation());
                             }
                         }
                     }
@@ -444,9 +445,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         Intent intent = new Intent(mContext.getString(R.string.li_login_complete_broadcast_intent));
         intent.putExtra(LiCoreSDKUtils.LOGIN_RESULT, isLoginSuccess);
         mContext.sendBroadcast(intent);
-        if (this != null) {
-            this.dispose();
-        }
+        this.dispose();
     }
 
     /**
