@@ -22,9 +22,18 @@ import lithium.community.android.sdk.model.response.LiMessage;
  */
 
 public class LiReplyMessageModel extends LiBasePostModel {
+    private String subject;
     private String type;
     private String body;
     private LiMessage parent;
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
     public String getBody() {
         return body;

@@ -655,6 +655,7 @@ public class LiClientRequestParams {
 
     //Request params class for LiCreateReplyClient
     public static class LiCreateReplyClientRequestParams extends LiClientRequestParams {
+        private String subject;
         private String body;
         private Long messageId;
         private String imageId;
@@ -669,13 +670,23 @@ public class LiClientRequestParams {
          * @param imageId the ID of the image included with the reply/comment, if one exists (optional)
          * @param imageName the filename of the image included with the reply/comment, if one exists (optional)
          */
-        public LiCreateReplyClientRequestParams(Context context, String body, Long messageId, String imageId, String imageName) {
+        public LiCreateReplyClientRequestParams(Context context, String subject, String body, Long messageId, String imageId, String imageName) {
             super(context);
+            this.subject = subject;
             this.body = body;
             this.messageId = messageId;
             this.imageId = imageId;
             this.imageName = imageName;
             this.client = LiClientManager.Client.LI_CREATE_REPLY_CLIENT;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public LiCreateReplyClientRequestParams setSubject(String subject) {
+            this.subject = subject;
+            return this;
         }
 
         public String getBody() {

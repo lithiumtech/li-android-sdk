@@ -476,6 +476,7 @@ public class LiClientManager {
      */
     public static LiClient getCreateReplyClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_CREATE_REPLY_CLIENT);
+        String subject = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getSubject();
         String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getBody();
         Long messageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getMessageId();
         String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageId();
@@ -489,6 +490,7 @@ public class LiClientManager {
         liId.setValue(Long.valueOf(messageId));
         parent.setId(liId);
         body = embedImageTag(body, imageId, imageName);
+        liReplyMessage.setSubject(subject);
         liReplyMessage.setBody(body);
         liReplyMessage.setType(LiQueryConstant.LI_REPLY_MESSAGE_TYPE);
         liReplyMessage.setParent(parent);
