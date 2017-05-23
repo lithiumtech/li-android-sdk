@@ -77,10 +77,10 @@ public interface LiAuthService {
 
     /**
      * Performs post authorization flow.
-     * @param authException {@link LiAuthorizationException}
      * @param isLoginSuccess Says whether login is success and user data has been retrieved.
+     * @param  responseCode HTTP error code that gets returned in the intent
      */
-    void enablePostAuthorizationFlows(LiAuthorizationException authException, boolean isLoginSuccess);
+    void enablePostAuthorizationFlows(boolean isLoginSuccess, int responseCode);
 
     /**
      * Disposes the LiAuthServiceImpl after auth flow.

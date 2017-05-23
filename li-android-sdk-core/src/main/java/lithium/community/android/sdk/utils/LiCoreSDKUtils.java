@@ -50,7 +50,6 @@ import lithium.community.android.sdk.model.response.LiBrowse;
  * Utility class for common operations.
  */
 public class LiCoreSDKUtils {
-    public static final String LOGIN_RESULT = "LOGIN_RESULT";
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
 
     private LiCoreSDKUtils() {

@@ -35,6 +35,7 @@ import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUUIDUtils;
 
@@ -102,7 +103,7 @@ public final class LiSDKManager extends LiAuthManager {
                             public void onSuccess(LiBaseRestRequest request,
                                                   LiGetClientResponse response)
                                     throws LiRestResponseException {
-                                if (response.getHttpCode() == 200) {
+                                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
                                     JsonArray items = response.getJsonObject().get("data")
                                             .getAsJsonObject().get("items").getAsJsonArray();

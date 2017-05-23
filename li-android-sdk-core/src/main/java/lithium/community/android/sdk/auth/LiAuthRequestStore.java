@@ -21,11 +21,7 @@ import java.util.Map;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 
-/**
- * The pending intents are read and sent by
- * the {@link LiAuthReceiverActivity} when the redirect Uri is received.
- */
-/* package */ class LiAuthRequestStore {
+class LiAuthRequestStore {
     private static LiAuthRequestStore sInstance;
     private Map<String, LiSSOAuthorizationRequest> mLiRequests = new HashMap<>();
 

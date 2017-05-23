@@ -16,7 +16,6 @@ package lithium.community.android.sdk.auth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -31,10 +30,9 @@ import java.util.UUID;
 
 import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.api.LiClient;
+import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.SecurePreferences;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiUser;
@@ -45,6 +43,7 @@ import lithium.community.android.sdk.rest.LiAuthRestClient;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
@@ -100,10 +99,8 @@ public class LiAuthServiceImpl implements LiAuthService {
             try {
                 performSSOAuthorizationRequest(authorizationRequest);
             } catch (LiRestResponseException e) {
-                enablePostAuthorizationFlows(
-                        LiAuthorizationException.generalEx(
-                                LiAuthorizationException.GeneralErrors.SERVER_ERROR.code,
-                                e.getMessage()), false);
+                enablePostAuthorizationFlows(false
+                        , LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
             }
         } else {
             performAuthorizationRequest(authorizationRequest);
@@ -153,10 +150,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                     if (request == null) {
                         Log.e(LOG_TAG, String.format(
                                 "Response received for unknown request with state %s", state));
-                        enablePostAuthorizationFlows(LiAuthorizationException.generalEx(
-                                LiAuthorizationException.GeneralErrors.SERVER_ERROR.code,
-                                String.format(
-                                        "Response received for unknown request with state %s", state)), false);
+                        enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
                         return;
                     }
                     liSsoAuthResponse.setJsonString(String.valueOf(response.getData().get("data")));
@@ -164,17 +158,14 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                         @Override
                         public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
-                            enablePostAuthorizationFlows(null, isSuccess);
+                            enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
                         }
                     });
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    enablePostAuthorizationFlows(
-                            LiAuthorizationException.generalEx(
-                                    LiAuthorizationException.GeneralErrors.SERVER_ERROR.code,
-                                    e.getMessage()), false);
+                    enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     Log.e(LOG_TAG, "Error Fetching Auth Code: " + e);
                 }
             });
@@ -437,13 +428,14 @@ public class LiAuthServiceImpl implements LiAuthService {
     /**
      * Process post Authorization.
      *
-     * @param authException  {@link LiAuthorizationException}
      * @param isLoginSuccess Checks if login is complete i.e user details has been fetched.
+     * @param  responseCode HTTP error code that gets returned in the intent
      */
     @Override
-    public void enablePostAuthorizationFlows(LiAuthorizationException authException, boolean isLoginSuccess) {
+    public void enablePostAuthorizationFlows(boolean isLoginSuccess, int responseCode) {
         Intent intent = new Intent(mContext.getString(R.string.li_login_complete_broadcast_intent));
-        intent.putExtra(LiCoreSDKUtils.LOGIN_RESULT, isLoginSuccess);
+        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT, isLoginSuccess);
+        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT_CODE, responseCode);
         mContext.sendBroadcast(intent);
         this.dispose();
     }

@@ -276,7 +276,7 @@ public class LiAuthServiceTest {
 
                     }
                 }
-        ).when(liAuthService).enablePostAuthorizationFlows(eq(liAuthorizationException),anyBoolean());
+        ).when(liAuthService).enablePostAuthorizationFlows(anyBoolean(), 200);
         doAnswer(
                 new Answer<Void>() {
                     @Override
@@ -286,7 +286,7 @@ public class LiAuthServiceTest {
 
                     }
                 }
-        ).when(liAuthService).enablePostAuthorizationFlows(isA(LiAuthorizationException.class),anyBoolean());
+        ).when(liAuthService).enablePostAuthorizationFlows(anyBoolean(), 200);
         LiAuthRestClient liAuthRestClient=new LiAuthRestClient();
         PowerMockito.doReturn(liAuthRestClient).when(liAuthService,"getLiAuthRestClient");
         liAuthRestClient= spy(liAuthRestClient);

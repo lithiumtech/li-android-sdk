@@ -13,4 +13,11 @@ public class LiCoreSDKConstants {
     public static final String LI_RECEIVER_DEVICE_ID = "Li_receivedDeviceId";
     public static final long LI_MAX_IMAGE_UPLOAD_SIZE = 1024*1024;
     public static final String LI_SSO_TOKEN = "LI_SSO_TOKEN";
+
+    public static final String LOGIN_RESULT = "LOGIN_RESULT";
+    public static final String LOGIN_RESULT_CODE = "LOGIN_RESULT_CODE";
+    public static final int HTTP_CODE_SUCCESSFUL = 200;
+    public static final int HTTP_CODE_FORBIDDEN = 403;
+    public static final int HTTP_CODE_UNAUTHORIZED = 401;
+    public static final int HTTP_CODE_SERVER_ERROR = 500;
 }
