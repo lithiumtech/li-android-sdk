@@ -15,7 +15,6 @@
 package lithium.community.android.sdk.notification;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -23,11 +22,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.queryutil.LiQueryBuilder;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -37,7 +35,6 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 
 /**
  * This class is used to update device id corresponding to 'id' in the community side when onIdRefresh is called.
@@ -48,18 +45,14 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
 
     @Override
     public void onIdRefresh(final String deviceId, final Context context) throws LiRestResponseException {
-
-        String savedId = getSharedPreferences(context).getString(LI_DEVICE_ID, null);
-
+        String savedId = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEVICE_ID);
         /**
          * If there is no 'id' corresponding to the device id, a fresh call is made to get the 'id' and save it in
          * shared preferences.
          */
         if (savedId == null || savedId.isEmpty()) {
             String settingFromServer;
-            SharedPreferences prefs = context.getSharedPreferences(
-                    LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            settingFromServer = prefs.getString(LI_DEFAULT_SDK_SETTINGS, null);
+            settingFromServer = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
             String pushNotificationAdapter = null;
             JsonObject settingFromServerJson;
             if (settingFromServer != null && !settingFromServer.isEmpty()) {
@@ -81,8 +74,8 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                         JsonObject dataObj = data.get("data").getAsJsonObject();
                         if (dataObj.has("id")) {
                             String id = dataObj.get("id").getAsString();
-                            getSharedPreferences(context).edit()
-                                    .putString(LI_DEVICE_ID, id).putString(LI_RECEIVER_DEVICE_ID, deviceId).commit();
+                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
+                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
                         }
                     }
                 }
@@ -97,8 +90,8 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
          * If 'id' is present then device id corresponding to it on the community end is update with the passed device id.
          */
         else {
-
-            if (deviceId.equals(getSharedPreferences(context).getString(LI_RECEIVER_DEVICE_ID, null))) {
+            String deviceIdFromPref = LiSDKManager.getInstance().getFromSecuredPreferences(context,LI_RECEIVER_DEVICE_ID);
+            if (deviceId.equals(deviceIdFromPref)) {
                 return;
             }
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdUpdateClientRequestParams(context, deviceId, savedId);
@@ -117,15 +110,5 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
 
         }
 
-    }
-
-    /**
-     * provides the shared prefernece to save the 'id'.
-     *
-     * @param context {@link Context}
-     * @return SharedPreferences {@link SharedPreferences}
-     */
-    private SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 }

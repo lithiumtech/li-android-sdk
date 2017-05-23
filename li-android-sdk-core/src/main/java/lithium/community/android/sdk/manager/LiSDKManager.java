@@ -110,10 +110,10 @@ public final class LiSDKManager extends LiAuthManager {
                                         LiAppSdkSettings liAppSdkSettings =
                                                 gson.fromJson(items.get(0), LiAppSdkSettings.class);
                                         if (liAppSdkSettings != null) {
-                                            SharedPreferences sharedPreferences = context.getSharedPreferences(
-                                                    LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                                            sharedPreferences.edit().putString(LI_DEFAULT_SDK_SETTINGS,
-                                                    liAppSdkSettings.getAdditionalInformation()).commit();
+                                            getInstance().putInSecuredPreferences(
+                                                    context,
+                                                    LI_DEFAULT_SDK_SETTINGS,
+                                                    liAppSdkSettings.getAdditionalInformation());
                                         }
                                     }
                                 }
