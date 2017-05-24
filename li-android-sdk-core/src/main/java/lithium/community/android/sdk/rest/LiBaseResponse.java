@@ -59,21 +59,25 @@ public class LiBaseResponse {
     public LiBaseResponse(Response response) throws IOException, LiRestResponseException {
 
         httpCode = response.code();
-        String responseStr = response.body().string();
+        String responseStr = response.body().string()+"}";
         try {
             data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
+            if (httpCode == 500) {
+                if (data.has("statusCode")) {
+                    httpCode = data.get("statusCode").getAsInt();
+                }
+            }
+            status = response.isSuccessful() ? "success" : "error";
+            message = response.message();
         }
         catch(JsonSyntaxException ex){
-            throw LiRestResponseException.jsonSyntaxError("Improper Json syntax received in response");
+//            throw LiRestResponseException.jsonSyntaxError("Improper Json syntax received in response");
+            httpCode = 500;
+            status = "error";
+            message = response.message();
         }
 
-        if (httpCode == 500) {
-            if (data.has("statusCode")) {
-                httpCode = data.get("statusCode").getAsInt();
-            }
-        }
-        status = response.isSuccessful() ? "success" : "error";
-        message = response.message();
+
     }
 
     public JsonObject getData() {

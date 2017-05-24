@@ -136,7 +136,6 @@ public class LiAuthServiceImpl implements LiAuthService {
     @Override
     public void performSSOAuthorizationRequest(@NonNull LiSSOAuthorizationRequest request) throws LiRestResponseException {
         checkIfDisposed();
-        Uri requestUri = request.getUri();
         final LiAuthRestClient authRestClient = getLiAuthRestClient();
 
         LiAuthRequestStore.getInstance().addAuthRequest(request);
@@ -144,6 +143,10 @@ public class LiAuthServiceImpl implements LiAuthService {
             authRestClient.authorizeAsync(request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
+                    if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        enablePostAuthorizationFlows(false, response.getHttpCode());
+                        return;
+                    }
                     LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
                     String state = liSsoAuthResponse.getState();
                     LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
