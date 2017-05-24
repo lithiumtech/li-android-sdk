@@ -227,7 +227,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                     public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
                         Gson gson = new Gson();
                         JsonObject data = LiClientManager.getRestClient().getGson().fromJson(response.getData(), JsonObject.class);
-                        if (data.has("response") && data.get("response").getAsJsonObject().has("data")) {
+                        if (data != null && data.has("response") && data.get("response").getAsJsonObject().has("data")) {
                             LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
                             tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
                             JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
