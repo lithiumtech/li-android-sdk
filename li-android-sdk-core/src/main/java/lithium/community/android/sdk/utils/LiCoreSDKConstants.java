@@ -20,4 +20,5 @@ public class LiCoreSDKConstants {
     public static final int HTTP_CODE_FORBIDDEN = 403;
     public static final int HTTP_CODE_UNAUTHORIZED = 401;
     public static final int HTTP_CODE_SERVER_ERROR = 500;
+    public static final int HTTP_CODE_SERVICE_UNAVAILABLE = 503;
 }

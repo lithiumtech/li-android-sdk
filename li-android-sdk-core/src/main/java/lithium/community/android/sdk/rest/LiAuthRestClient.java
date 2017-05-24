@@ -73,9 +73,8 @@ public class LiAuthRestClient {
                 try {
                     callback.onSuccess(getLiBaseResponseFromResponse(response));
                 } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    callback.onError(e);
                 }
-
             }
         });
     }

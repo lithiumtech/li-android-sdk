@@ -262,7 +262,7 @@ public abstract class LiRestClient {
                 try {
                     callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
                 } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    callback.onError(e);
                 } finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
