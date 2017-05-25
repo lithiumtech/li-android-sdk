@@ -60,7 +60,7 @@ public class LiBaseResponse {
     public LiBaseResponse(Response response) throws IOException, LiRestResponseException {
 
         httpCode = response.code();
-        String responseStr = response.body().string()+"}";
+        String responseStr = response.body().string();
         try {
             data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
             if (httpCode == LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR) {
