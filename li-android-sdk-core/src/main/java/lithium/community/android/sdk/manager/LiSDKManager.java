@@ -89,6 +89,7 @@ public final class LiSDKManager extends LiAuthManager {
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         if (isInitialized.compareAndSet(false, true)) {
             LiDefaultQueryHelper.initHelper(context);
+            LiSecuredPrefManager.init(context);
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
