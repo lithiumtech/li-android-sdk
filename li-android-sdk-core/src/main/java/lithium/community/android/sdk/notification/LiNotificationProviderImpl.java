@@ -30,6 +30,7 @@ import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiPostClientResponse;
+import lithium.community.android.sdk.rest.LiPutClientResponse;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
@@ -96,9 +97,9 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             }
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdUpdateClientRequestParams(context, deviceId, savedId);
             LiClient deviceIdUpdateClient = LiClientManager.getDeviceIdUpdateClient(liClientRequestParams);
-            deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
+            deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPutClientResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+                public void onSuccess(LiBaseRestRequest request, LiPutClientResponse response) throws LiRestResponseException {
                     Log.i(LI_LOG_TAG, "Successfully updated device Id");
                 }
 
@@ -107,7 +108,6 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                     Log.e(LI_LOG_TAG, "Unable to update device Id");
                 }
             });
-
         }
 
     }
