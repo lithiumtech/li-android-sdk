@@ -3,6 +3,7 @@ package lithium.community.android.sdk.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.util.NoSuchPropertyException;
 
@@ -42,10 +43,17 @@ class LiSecuredPrefManager {
         }
         return _instance;
     }
+    private static String encode(byte[] input) {
+        return Base64.encodeToString(input, Base64.NO_PADDING | Base64.NO_WRAP);
+    }
+
+    private static byte[] decode(String input) {
+        return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
+    }
 
     private LiSecuredPrefManager(Context context) throws NoSuchAlgorithmException {
         encryptionKey = "$2a$12$LHZACI8yh9OZDK0Ep.gb9u".getBytes();
-//        String encryptionStr = context.getPackageName().toCharArray() + Settings.Secure.getString(context.getContentResolver(),
+//        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(),
 //                Settings.Secure.ANDROID_ID);
 //        encryptionKey = encryptionStr.getBytes();
         sha = MessageDigest.getInstance("SHA-1");
@@ -66,14 +74,13 @@ class LiSecuredPrefManager {
     public String encrypt(String str) throws Exception {
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-        return new String(cipher.doFinal(str.getBytes()));
+        return encode(cipher.doFinal(str.getBytes("UTF-8")));
     }
 
     public String decrypt(String encrStr) throws Exception {
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, aesKey);
-        String decrStr = new String(cipher.doFinal(encrStr.getBytes()));
-        return decrStr;
+        return new String(cipher.doFinal(decode(encrStr)), "UTF-8");
     }
 
     /**
@@ -113,7 +120,9 @@ class LiSecuredPrefManager {
         SharedPreferences securedPreferences = this.getSecuredPreferences(context);
         String value;
         try {
-            value = LiSecuredPrefManager.getInstance().decrypt(LiSecuredPrefManager.getInstance().encrypt(key));
+            value = LiSecuredPrefManager.getInstance().decrypt(
+                    securedPreferences.getString(
+                            LiSecuredPrefManager.getInstance().encrypt(key), null));
             if (value == null) {
                 //if not present then check in old unencrypted preferences and then move it new encrypted preferences file
                 value = securedPreferences.getString(key, null);
