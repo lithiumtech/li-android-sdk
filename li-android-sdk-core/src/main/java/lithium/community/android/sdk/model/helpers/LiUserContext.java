@@ -26,11 +26,25 @@ import lithium.community.android.sdk.model.LiBaseModelImpl;
 public class LiUserContext extends LiBaseModelImpl {
 
     private Boolean kudo;
+
     private Boolean read;
+
     @SerializedName("can_kudo")
     private boolean canKudo;
+
     @SerializedName("can_reply")
     private boolean canReply;
+
+    @SerializedName("can_delete")
+    private boolean canDelete;
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
+    }
 
     public boolean isCanReply() {
         return canReply;
