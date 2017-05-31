@@ -124,16 +124,28 @@ class LiAuthManager {
         }
     }
 
-    public void removeFromSecuredPreferences(Context context, String key) {
-        LiSecuredPrefManager.getInstance().remove(context, key);
+    public boolean removeFromSecuredPreferences(Context context, String key) {
+        if (LiSecuredPrefManager.getInstance() != null) {
+            LiSecuredPrefManager.getInstance().remove(context, key);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void putInSecuredPreferences(Context context, String key, String value) {
-        LiSecuredPrefManager.getInstance().putString(context, key, value);
+    public boolean putInSecuredPreferences(Context context, String key, String value) {
+        if (LiSecuredPrefManager.getInstance() != null) {
+            LiSecuredPrefManager.getInstance().putString(context, key, value);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
-        return LiSecuredPrefManager.getInstance().getString(context, key);
+        return LiSecuredPrefManager.getInstance()==null?null:LiSecuredPrefManager.getInstance().getString(context, key);
     }
 
     /**

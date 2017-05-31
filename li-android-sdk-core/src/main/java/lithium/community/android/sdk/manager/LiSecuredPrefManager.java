@@ -39,7 +39,8 @@ class LiSecuredPrefManager {
      */
     public static LiSecuredPrefManager getInstance() {
         if (_instance == null) {
-            throw new NoSuchPropertyException("LiSecuredPrefManager not intialized. Call init method first");
+            Log.e(LI_LOG_TAG, "LiSecuredPrefManager not intialized. Call init method first");
+            return null;
         }
         return _instance;
     }
@@ -52,10 +53,9 @@ class LiSecuredPrefManager {
     }
 
     private LiSecuredPrefManager(Context context) throws NoSuchAlgorithmException {
-        encryptionKey = "$2a$12$LHZACI8yh9OZDK0Ep.gb9u".getBytes();
-//        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(),
-//                Settings.Secure.ANDROID_ID);
-//        encryptionKey = encryptionStr.getBytes();
+        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        encryptionKey = encryptionStr.getBytes();
         sha = MessageDigest.getInstance("SHA-1");
         aesKey = new SecretKeySpec(Arrays.copyOf(sha.digest(encryptionKey), ENCRYPTION_LENGTH), ENCRYPTION_ALGORITHM);
     }
@@ -96,33 +96,31 @@ class LiSecuredPrefManager {
 
     public void remove(Context context, String key) {
         try {
-            this.getSecuredPreferences(context).edit().remove(
-                    LiSecuredPrefManager.getInstance().encrypt(key)).apply();
+            _instance.getSecuredPreferences(context).edit().remove(
+                    _instance.encrypt(key)).apply();
         } catch (Exception e) {
             Log.e(LI_LOG_TAG, "Encryption error, "+e.getMessage());
-            this.getSecuredPreferences(context).edit().remove(key).apply();
+            _instance.getSecuredPreferences(context).edit().remove(key).apply();
         }
     }
 
     public void putString(Context context, String key, String value) {
         try {
-            this.getSecuredPreferences(context).edit().putString(
-                    LiSecuredPrefManager.getInstance().encrypt(key),
-                    LiSecuredPrefManager.getInstance().encrypt(value)).apply();
+            _instance.getSecuredPreferences(context).edit().putString(
+                    _instance.encrypt(key),
+                    _instance.encrypt(value)).apply();
         } catch (Exception e) {
             Log.e(LI_LOG_TAG, "Encryption error, "+e.getMessage());
-            this.getSecuredPreferences(context).edit().putString(key, value).apply();
+            _instance.getSecuredPreferences(context).edit().putString(key, value).apply();
         }
     }
 
     public String getString(Context context, String key) {
         //get secured preferences and check key has any value there
-        SharedPreferences securedPreferences = this.getSecuredPreferences(context);
+        SharedPreferences securedPreferences = _instance.getSecuredPreferences(context);
         String value;
         try {
-            value = LiSecuredPrefManager.getInstance().decrypt(
-                    securedPreferences.getString(
-                            LiSecuredPrefManager.getInstance().encrypt(key), null));
+            value = _instance.decrypt(securedPreferences.getString(_instance.encrypt(key), null));
             if (value == null) {
                 //if not present then check in old unencrypted preferences and then move it new encrypted preferences file
                 value = securedPreferences.getString(key, null);
