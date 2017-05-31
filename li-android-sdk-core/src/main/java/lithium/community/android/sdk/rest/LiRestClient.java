@@ -354,10 +354,19 @@ public abstract class LiRestClient {
                 LiSDKManager.getInstance().getNewAuthToken());
         request.addHeader("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
-                    Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
-                    LiSDKManager.getInstance().getLoggedInUser().getLoginId();
-            request.header("lia-sdk-app-info", lsiHeader);
+            StringBuilder lsiHeader = new StringBuilder();
+            lsiHeader.append(LiSDKManager.getInstance().getLiAppCredentials().getClientKey())
+                    .append(",")
+                    .append(android.os.Build.VERSION.SDK_INT)
+                    .append(",")
+                    .append(android.os.Build.DEVICE)
+                    .append(",")
+                    .append(android.os.Build.MODEL)
+                    .append(",")
+                    .append(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))
+                    .append("-")
+                    .append(LiSDKManager.getInstance().getLoggedInUser().getLoginId());
+            request.header("lia-sdk-app-info", lsiHeader.toString());
         }
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
