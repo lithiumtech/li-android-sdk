@@ -56,10 +56,13 @@ public class LiQueryBuilderTest {
         when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
         when(mContext.getResources()).thenReturn(resource);
         JsonObject jsonObject = new Gson().fromJson(defaultSettings, JsonObject.class);
+
         liDefaultQueryHelper = mock(LiDefaultQueryHelper.class);
         when(liDefaultQueryHelper.getDefaultSetting()).thenReturn(jsonObject);
         PowerMockito.mockStatic(LiDefaultQueryHelper.class);
+        when(LiDefaultQueryHelper.initHelper(mContext)).thenReturn(liDefaultQueryHelper);
         BDDMockito.given(LiDefaultQueryHelper.getInstance()).willReturn(liDefaultQueryHelper);
+
         liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
 
     }
