@@ -88,7 +88,12 @@ public final class LiSDKManager extends LiAuthManager {
             throws URISyntaxException {
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         if (isInitialized.compareAndSet(false, true)) {
-            LiDefaultQueryHelper.initHelper(context);
+            if (LiDefaultQueryHelper.initHelper(context) == null) {
+                return null;
+            }
+            if (LiSecuredPrefManager.init(context) == null) {
+                return null;
+            }
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);

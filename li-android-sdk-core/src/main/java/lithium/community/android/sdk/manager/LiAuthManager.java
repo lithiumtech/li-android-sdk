@@ -39,6 +39,7 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 /*
@@ -123,36 +124,28 @@ class LiAuthManager {
         }
     }
 
-    /**
-     * fetches shared preference
-     *
-     * @param context {@link Context}
-     * @return SharedPreferences
-     */
-    SharedPreferences getSecuredPreferences(Context context) {
-        return new SecurePreferences(context);
+    public boolean removeFromSecuredPreferences(Context context, String key) {
+        if (LiSecuredPrefManager.getInstance() != null) {
+            LiSecuredPrefManager.getInstance().remove(context, key);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void removeFromSecuredPreferences(Context context, String key) {
-        this.getSecuredPreferences(context).edit().remove(key).commit();
-    }
-
-    public void putInSecuredPreferences(Context context, String key, String value) {
-        this.getSecuredPreferences(context).edit().putString(key, value).commit();
+    public boolean putInSecuredPreferences(Context context, String key, String value) {
+        if (LiSecuredPrefManager.getInstance() != null) {
+            LiSecuredPrefManager.getInstance().putString(context, key, value);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
-        //get secured preferences and check key has any value there
-        SharedPreferences securedPreferences = this.getSecuredPreferences(context);
-        String value = securedPreferences.getString(key, null);
-        if (value == null) {
-            //if not present then check in old unencrypted preferences and then move it new encrypted preferences file
-            SharedPreferences prefs = context.getSharedPreferences(LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            value = prefs.getString(key, null);
-            securedPreferences.edit().putString(key, value).commit();
-            prefs.edit().remove(key).commit();
-        }
-        return value;
+        return LiSecuredPrefManager.getInstance()==null?null:LiSecuredPrefManager.getInstance().getString(context, key);
     }
 
     /**
@@ -188,6 +181,7 @@ class LiAuthManager {
         this.removeFromSecuredPreferences(context, LI_AUTH_STATE);
         this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
+        this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
         this.liAuthState = null;
     }
 
