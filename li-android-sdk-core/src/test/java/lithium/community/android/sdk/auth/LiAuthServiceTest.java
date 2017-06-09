@@ -267,26 +267,6 @@ public class LiAuthServiceTest {
         doNothing().when(liAuthService,"dispose");
 
         LiAuthorizationException liAuthorizationException=null;
-        doAnswer(
-                new Answer<Void>() {
-                    @Override
-                    public Void answer(final InvocationOnMock invocation) throws Throwable {
-                        System.out.println("enablepostauhfloaw");
-                        return null;
-
-                    }
-                }
-        ).when(liAuthService).enablePostAuthorizationFlows(eq(liAuthorizationException),anyBoolean());
-        doAnswer(
-                new Answer<Void>() {
-                    @Override
-                    public Void answer(final InvocationOnMock invocation) throws Throwable {
-                        System.out.println("enablepostauhfloaw with exp");
-                        return null;
-
-                    }
-                }
-        ).when(liAuthService).enablePostAuthorizationFlows(isA(LiAuthorizationException.class),anyBoolean());
         LiAuthRestClient liAuthRestClient=new LiAuthRestClient();
         PowerMockito.doReturn(liAuthRestClient).when(liAuthService,"getLiAuthRestClient");
         liAuthRestClient= spy(liAuthRestClient);

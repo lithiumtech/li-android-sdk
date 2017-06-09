@@ -23,10 +23,11 @@ import com.google.gson.Gson;
 
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.rest.LiAuthRestClient;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiUriUtils;
 
-import static lithium.community.android.sdk.auth.LiAuthorizationException.EXTRA_EXCEPTION;
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
+import static lithium.community.android.sdk.auth.LiAuthorizationException.EXTRA_EXCEPTION;
 
 /**
  * It is a base activity use to extract Auth code and save access token.
@@ -50,10 +51,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
         if (request == null) {
             Log.e(LOG_TAG, String.format(
                     "Response received for unknown request with state %s", state));
-            service.enablePostAuthorizationFlows(LiAuthorizationException.generalEx(
-                    LiAuthorizationException.GeneralErrors.SERVER_ERROR.code,
-                    String.format(
-                            "Response received for unknown request with state %s", state)), false);
+            service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
             finish();
             return;
         }
@@ -86,7 +84,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
             service.handleAuthorizationResponse(response2, autheClient, new LiAuthService.LoginCompleteCallBack() {
                 @Override
                 public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
-                    service.enablePostAuthorizationFlows(null, isSuccess);
+                    service.enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
                     finish();
                 }
 
@@ -97,9 +95,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
                 responseData.putExtra(LiAuthConstants.LOGIN_RESULT, false);
                 errorMessage = responseData.getStringExtra(EXTRA_EXCEPTION);
             }
-            service.enablePostAuthorizationFlows(LiAuthorizationException.generalEx(
-                    LiAuthorizationException.GeneralErrors.SERVER_ERROR.code,
-                    errorMessage), false);
+            service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
         }
     }
 }

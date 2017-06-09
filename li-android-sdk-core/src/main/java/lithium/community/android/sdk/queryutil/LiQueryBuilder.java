@@ -24,6 +24,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import lithium.community.android.sdk.manager.LiSDKManager;
+
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_AS_READ;
@@ -50,7 +52,7 @@ public class LiQueryBuilder {
 
         Log.i("LiQueryBuilder", "Reading client settings from configurations");
 
-        String settingJsonStr = getSettingFromServer(context);
+        String settingJsonStr = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
         JsonObject clientSettings = getDefault(client);
         JsonObject serverSettingJson = null;
         if (settingJsonStr != null && !settingJsonStr.isEmpty()) {
@@ -202,13 +204,4 @@ public class LiQueryBuilder {
         }
         return baseQuery;
     }
-
-    private static String getSettingFromServer(Context context) {
-        String settingFromServer;
-        SharedPreferences prefs = context.getSharedPreferences(
-                LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        settingFromServer = prefs.getString(LI_DEFAULT_SDK_SETTINGS, null);
-        return settingFromServer;
-    }
-
 }

@@ -14,6 +14,8 @@
 
 package lithium.community.android.sdk.model.response;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -351,7 +353,9 @@ public class LiUser extends LiBaseModelImpl {
         LiCoreSDKUtils.put(json, USER_AVATAR, this.avatar.jsonSerialize());
         LiCoreSDKUtils.put(json, USER_LOGIN, this.login.getValue());
         LiCoreSDKUtils.put(json, USER_HREF, this.href);
-        LiCoreSDKUtils.put(json, USER_VIEW_HREF, this.profilePageUrl);
+        if (!TextUtils.isEmpty(profilePageUrl)) {
+            LiCoreSDKUtils.put(json, USER_VIEW_HREF, this.profilePageUrl);
+        }
         return json;
     }
 }

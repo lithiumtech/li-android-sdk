@@ -35,6 +35,7 @@ import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUUIDUtils;
 
@@ -87,7 +88,12 @@ public final class LiSDKManager extends LiAuthManager {
             throws URISyntaxException {
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         if (isInitialized.compareAndSet(false, true)) {
-            LiDefaultQueryHelper.initHelper(context);
+            if (LiDefaultQueryHelper.initHelper(context) == null) {
+                return null;
+            }
+            if (LiSecuredPrefManager.init(context) == null) {
+                return null;
+            }
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
@@ -102,7 +108,7 @@ public final class LiSDKManager extends LiAuthManager {
                             public void onSuccess(LiBaseRestRequest request,
                                                   LiGetClientResponse response)
                                     throws LiRestResponseException {
-                                if (response.getHttpCode() == 200) {
+                                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
                                     JsonArray items = response.getJsonObject().get("data")
                                             .getAsJsonObject().get("items").getAsJsonArray();
@@ -110,10 +116,10 @@ public final class LiSDKManager extends LiAuthManager {
                                         LiAppSdkSettings liAppSdkSettings =
                                                 gson.fromJson(items.get(0), LiAppSdkSettings.class);
                                         if (liAppSdkSettings != null) {
-                                            SharedPreferences sharedPreferences = context.getSharedPreferences(
-                                                    LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                                            sharedPreferences.edit().putString(LI_DEFAULT_SDK_SETTINGS,
-                                                    liAppSdkSettings.getAdditionalInformation()).commit();
+                                            getInstance().putInSecuredPreferences(
+                                                    context,
+                                                    LI_DEFAULT_SDK_SETTINGS,
+                                                    liAppSdkSettings.getAdditionalInformation());
                                         }
                                     }
                                 }
