@@ -16,12 +16,14 @@ package lithium.community.android.sdk.auth;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -33,6 +35,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import lithium.community.android.sdk.R;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 /**
  * Activity that receives the redirect Uri sent by the OpenID endpoint. This activity gets launched
@@ -65,6 +69,15 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         }
     }
     private class LoginWebViewClient extends WebViewClient {
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            LiCoreSDKUtils.sendLoginBroadcast(view.getContext(),
+                    false,
+                    LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            Log.e(LiCoreSDKConstants.LI_LOG_TAG, "SSL Error opening login webpage");
+            finish();
+        }
+
         @Override
         public void onPageFinished(WebView view, String url) {
             if (!isAccessTokenSaved) {

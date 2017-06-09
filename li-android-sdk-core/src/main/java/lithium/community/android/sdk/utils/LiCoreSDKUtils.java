@@ -15,6 +15,7 @@
 package lithium.community.android.sdk.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.response.LiBrowse;
 
@@ -467,4 +469,12 @@ public class LiCoreSDKUtils {
     public static Long getTime(Long time){
         return (time != null ? (time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
     }
+
+    public static void sendLoginBroadcast(Context context, boolean isLoginSuccessful, int responseCode) {
+        Intent intent = new Intent(context.getString(R.string.li_login_complete_broadcast_intent));
+        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT, isLoginSuccessful);
+        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT_CODE, responseCode);
+        context.sendBroadcast(intent);
+    }
+
 }

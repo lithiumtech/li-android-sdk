@@ -436,10 +436,7 @@ public class LiAuthServiceImpl implements LiAuthService {
      */
     @Override
     public void enablePostAuthorizationFlows(boolean isLoginSuccess, int responseCode) {
-        Intent intent = new Intent(mContext.getString(R.string.li_login_complete_broadcast_intent));
-        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT, isLoginSuccess);
-        intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT_CODE, responseCode);
-        mContext.sendBroadcast(intent);
+        LiCoreSDKUtils.sendLoginBroadcast(mContext, isLoginSuccess, responseCode);
         this.dispose();
     }
 
