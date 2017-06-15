@@ -433,9 +433,19 @@ public abstract class LiRestClient {
         builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
-                    Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
-                    LiSDKManager.getInstance().getLoggedInUser().getLoginId();
+            String lsiHeader = LiSDKManager.getInstance().getLiAppCredentials().getClientKey() +
+                    "," +
+                    android.os.Build.VERSION.SDK_INT +
+                    "," +
+                    android.os.Build.DEVICE +
+                    "," +
+                    android.os.Build.MODEL +
+                    "," +
+                    Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) +
+                    "-" +
+                    LiSDKManager.getInstance().getLoggedInUser().getLoginId() +
+                    "-" +
+                    LiSDKManager.getInstance().getLiAppCredentials().getClientAppName();
             builder.header("lia-sdk-app-info", lsiHeader);
         }
         // Adding addition headers
