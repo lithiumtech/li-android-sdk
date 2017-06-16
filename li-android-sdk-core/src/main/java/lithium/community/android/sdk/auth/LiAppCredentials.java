@@ -201,8 +201,9 @@ public final class LiAppCredentials {
             return this;
         }
 
-        public void setClientAppName(String clientAppName) {
+        public Builder setClientAppName(String clientAppName) {
             this.clientAppName = clientAppName;
+            return this;
         }
 
         public LiAppCredentials build() throws MalformedURLException {
