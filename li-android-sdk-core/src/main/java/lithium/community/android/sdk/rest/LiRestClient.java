@@ -433,19 +433,7 @@ public abstract class LiRestClient {
         builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            String lsiHeader = LiSDKManager.getInstance().getLiAppCredentials().getClientKey() +
-                    "," +
-                    android.os.Build.VERSION.SDK_INT +
-                    "," +
-                    android.os.Build.DEVICE +
-                    "," +
-                    android.os.Build.MODEL +
-                    "," +
-                    Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) +
-                    "-" +
-                    LiSDKManager.getInstance().getLoggedInUser().getLoginId() +
-                    "-" +
-                    LiSDKManager.getInstance().getLiAppCredentials().getClientAppName();
+            String lsiHeader = buildLSIHeaderString(context);
             builder.header("lia-sdk-app-info", lsiHeader);
         }
         // Adding addition headers
@@ -457,6 +445,24 @@ public abstract class LiRestClient {
         }
 
         return builder.build();
+    }
+
+    @NonNull
+    private String buildLSIHeaderString(Context context) {
+        JsonObject headerJson = new JsonObject();
+        headerJson.addProperty("client_name",
+                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        headerJson.addProperty("client_type", "android");
+        headerJson.addProperty("client_id",
+                LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        headerJson.addProperty("device_code", android.os.Build.DEVICE);
+        headerJson.addProperty("device_model", android.os.Build.MODEL);
+        headerJson.addProperty("device_id",
+                Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+        headerJson.addProperty("device_api_level", android.os.Build.VERSION.SDK_INT);
+        headerJson.addProperty("user_id",
+                LiSDKManager.getInstance().getLoggedInUser().getLoginId());
+        return headerJson.toString();
     }
 
     public String asString(LiBaseResponse response) throws IOException {
