@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import lithium.community.android.sdk.manager.LiSDKManager;
+
 /**
  * Utility class to compress image to be uploaded to community. This is to allow
  * images of size more than 1 MB to get uploaded.
@@ -43,11 +45,21 @@ public class LiImageUtil {
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");
         Bitmap original = BitmapFactory.decodeFile(filePath);
-        File compressedFile = new File(context.getFilesDir() + "/" + fileName);
+        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) +
+                File.separator +
+                LiSDKManager.getInstance().getLiAppCredentials().getTenantId() +
+                "-community" +
+                File.separator;
+        File compressedFile = new File(fileDirectory + "/" + fileName);
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(compressedFile);
-            original.compress(Bitmap.CompressFormat.JPEG, 40, out);
+            if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+                original.compress(Bitmap.CompressFormat.JPEG, 40, out);
+            }
+            else if (fileName.endsWith(".png")) {
+                original.compress(Bitmap.CompressFormat.PNG, 40, out);
+            }
         }
         catch(FileNotFoundException ex){
             Log.e("Exception", ex.toString());

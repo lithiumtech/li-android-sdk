@@ -73,8 +73,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
 
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_MAX_IMAGE_UPLOAD_SIZE;
-
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
  */
@@ -321,7 +319,7 @@ public abstract class LiRestClient {
         File originalFile = new File(imagePath);
         final File file;
         final boolean isCompressed;
-        if (originalFile.length() >= LI_MAX_IMAGE_UPLOAD_SIZE) {
+        if (originalFile.length() >= LiCoreSDKConstants.LI_MAX_IMAGE_UPLOAD_SIZE) {
             isCompressed = true;
             file = new File(LiImageUtil.compressImage(imagePath, imageName, baseRestRequest.getContext()));
         } else {
