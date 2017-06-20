@@ -11,7 +11,6 @@ public class LiCoreSDKConstants {
     public static final String LI_DEVICE_ID = "Li_device_id";
     public static final String LI_LOG_TAG = "LI_LOG_TAG";
     public static final String LI_RECEIVER_DEVICE_ID = "Li_receivedDeviceId";
-    public static final long LI_MAX_IMAGE_UPLOAD_SIZE = 4*1024*1024;
     public static final String LI_SSO_TOKEN = "LI_SSO_TOKEN";
 
     public static final String LOGIN_RESULT = "LOGIN_RESULT";

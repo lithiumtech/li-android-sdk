@@ -53,13 +53,10 @@ import javax.net.ssl.X509TrustManager;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
-import lithium.community.android.sdk.utils.LiImageUtil;
 import lithium.community.android.sdk.utils.LiUriUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -317,21 +314,12 @@ public abstract class LiRestClient {
 
         final MediaType MEDIA_TYPE = MediaType.parse("image/*");
         File originalFile = new File(imagePath);
-        final File file;
-        final boolean isCompressed;
-        if (originalFile.length() >= LiCoreSDKConstants.LI_MAX_IMAGE_UPLOAD_SIZE) {
-            isCompressed = true;
-            file = new File(LiImageUtil.compressImage(imagePath, imageName, baseRestRequest.getContext()));
-        } else {
-            isCompressed = false;
-            file = new File(imagePath);
-        }
         String requestBody = " {\"request\": {\"data\": {\"description\": \"Uploaded from community android app.\",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("api.request", requestBody)
-                .addFormDataPart("image.content", imageName, MultipartBody.create(MEDIA_TYPE, file))
+                .addFormDataPart("image.content", imageName, MultipartBody.create(MEDIA_TYPE, originalFile))
                 .addFormDataPart("payload", "")
                 .build();
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
@@ -391,10 +379,6 @@ public abstract class LiRestClient {
                 } finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
-                    }
-                    if (isCompressed) {
-                        boolean isDeleted = file.delete();
-                        Log.i("Image", isDeleted + "");
                     }
                 }
             }
