@@ -29,6 +29,7 @@ import lithium.community.android.sdk.utils.LiUriUtils;
  */
 public final class LiAppCredentials {
 
+    public static final String SDK_SUFFIX = "-sdk";
     @NonNull
     private final String clientKey;
     @NonNull
@@ -71,14 +72,13 @@ public final class LiAppCredentials {
         this.communityUri = Uri.parse(communityURL);
         this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
         this.redirectUri = buildRedirectUri(communityUri);
-        this.ssoAuthorizeUri = communityURL+"api/2.0/auth/authorize";
+        this.ssoAuthorizeUri = communityURL + "api/2.0/auth/authorize";
         this.tenantId = tenantId;
         this.apiProxyHost = apiProxyHost;
         if (!TextUtils.isEmpty(clientAppName)) {
             this.clientAppName = clientAppName;
-        }
-        else {
-            this.clientAppName = tenantId +"-sdk";
+        } else {
+            this.clientAppName = tenantId + SDK_SUFFIX;
         }
     }
 
