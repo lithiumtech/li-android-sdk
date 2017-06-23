@@ -16,6 +16,7 @@ package lithium.community.android.sdk.auth;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.net.MalformedURLException;
 
@@ -28,6 +29,7 @@ import lithium.community.android.sdk.utils.LiUriUtils;
  */
 public final class LiAppCredentials {
 
+    public static final String SDK_SUFFIX = "-sdk";
     @NonNull
     private final String clientKey;
     @NonNull
@@ -47,6 +49,8 @@ public final class LiAppCredentials {
 
     private final String apiProxyHost;
 
+    private final String clientAppName;
+
     /**
      * private constructor.
      * @param clientKey This is client Id.
@@ -57,7 +61,8 @@ public final class LiAppCredentials {
      * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
     private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret,
-                             @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost)
+                             @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost,
+                             String clientAppName)
             throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
@@ -67,13 +72,22 @@ public final class LiAppCredentials {
         this.communityUri = Uri.parse(communityURL);
         this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
         this.redirectUri = buildRedirectUri(communityUri);
-        this.ssoAuthorizeUri = communityURL.toString()+"api/2.0/auth/authorize";
+        this.ssoAuthorizeUri = communityURL + "api/2.0/auth/authorize";
         this.tenantId = tenantId;
         this.apiProxyHost = apiProxyHost;
+        if (!TextUtils.isEmpty(clientAppName)) {
+            this.clientAppName = clientAppName;
+        } else {
+            this.clientAppName = tenantId + SDK_SUFFIX;
+        }
     }
 
     private static String buildRedirectUri(Uri communityUri) {
         return LiUriUtils.reverseDomainName(communityUri) + "://oauth2callback";
+    }
+
+    public String getClientAppName() {
+        return clientAppName;
     }
 
     public String getClientKey() {
@@ -153,6 +167,7 @@ public final class LiAppCredentials {
         private String communityUri;
         private String tenantId;
         private String apiProxyHost;
+        private String clientAppName;
 
         public Builder() {
         }
@@ -186,8 +201,13 @@ public final class LiAppCredentials {
             return this;
         }
 
+        public Builder setClientAppName(String clientAppName) {
+            this.clientAppName = clientAppName;
+            return this;
+        }
+
         public LiAppCredentials build() throws MalformedURLException {
-            return new LiAppCredentials(clientKey, clientSecret, communityUri, tenantId, apiProxyHost);
+            return new LiAppCredentials(clientKey, clientSecret, communityUri, tenantId, apiProxyHost, clientAppName);
         }
     }
 }
