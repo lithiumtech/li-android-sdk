@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.manager.LiSDKManager;
 
 /**
@@ -54,7 +53,7 @@ public class LiImageUtils {
         final File communityRoot = new File(fileDirectory);
         communityRoot.mkdirs();
         File compressedFile = new File(fileDirectory + "/" + fileName);
-        FileOutputStream out = null;
+        FileOutputStream out;
         try {
             out = new FileOutputStream(compressedFile);
             if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
@@ -63,32 +62,23 @@ public class LiImageUtils {
             else if (fileName.endsWith(".png")) {
                 compressedBitmap.compress(Bitmap.CompressFormat.PNG, imageQuality, out);
             }
+            Log.i("compressed Image: ", compressedFile.length() + "");
             out.close();
-        }
-        catch(FileNotFoundException ex){
-            Log.e("Exception", ex.toString());
-            return originalFile;
         } catch (IOException e) {
             Log.e("Exception", e.toString());
         }
-        Log.i("compressed Image: ", compressedFile.length() + "");
-
         return compressedFile;
     }
 
     public static Bitmap getCompressedBitmap(String filePath, int reqWidth, int reqHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        Bitmap compressedBitmap = BitmapFactory.decodeFile(filePath, options);
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
-        String imageType = options.outMimeType;
+        BitmapFactory.decodeFile(filePath, options);
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        compressedBitmap = BitmapFactory.decodeFile(filePath, options);
-        return compressedBitmap;
+        return BitmapFactory.decodeFile(filePath, options);
     }
 
     public static int calculateInSampleSize(
