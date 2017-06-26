@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.manager.LiSDKManager;
 
 /**
@@ -38,11 +39,13 @@ public class LiImageUtils {
      * @param {@link Context}
      * @return Absolute Path of compressed image.
      */
-    public static File compressImage(String filePath, String fileName, Context context){
+    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality){
 
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");
-        Bitmap original = BitmapFactory.decodeFile(filePath);
+
+        Bitmap compressedBitmap = getCompressedBitmap(filePath, reqWidth, reqHeight);
+
         String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) +
                 File.separator +
                 LiSDKManager.getInstance().getLiAppCredentials().getTenantId() +
@@ -55,10 +58,10 @@ public class LiImageUtils {
         try {
             out = new FileOutputStream(compressedFile);
             if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-                original.compress(Bitmap.CompressFormat.JPEG, 40, out);
+                compressedBitmap.compress(Bitmap.CompressFormat.JPEG, imageQuality, out);
             }
             else if (fileName.endsWith(".png")) {
-                original.compress(Bitmap.CompressFormat.PNG, 40, out);
+                compressedBitmap.compress(Bitmap.CompressFormat.PNG, imageQuality, out);
             }
             out.close();
         }
@@ -71,5 +74,43 @@ public class LiImageUtils {
         Log.i("compressed Image: ", compressedFile.length() + "");
 
         return compressedFile;
+    }
+
+    public static Bitmap getCompressedBitmap(String filePath, int reqWidth, int reqHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap compressedBitmap = BitmapFactory.decodeFile(filePath, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+        String imageType = options.outMimeType;
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        compressedBitmap = BitmapFactory.decodeFile(filePath, options);
+        return compressedBitmap;
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

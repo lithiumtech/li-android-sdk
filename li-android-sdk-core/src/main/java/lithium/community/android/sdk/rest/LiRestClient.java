@@ -19,7 +19,10 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,6 +53,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
@@ -320,7 +324,10 @@ public abstract class LiRestClient {
         final boolean isCompressed;
         if (originalFile.length() >= LiCoreSDKConstants.LI_MIN_IMAGE_SIZE_TO_COMPRESS) {
             isCompressed = true;
-            file = LiImageUtils.compressImage(imagePath, imageName, baseRestRequest.getContext());
+            Context context = baseRestRequest.getContext();
+            int imageCompressionSize = context.getResources().getDimensionPixelSize(R.dimen.li_image_compression_size);
+            int imageQuality = context.getResources().getInteger(R.integer.li_image_compression_quality);
+            file = LiImageUtils.compressImage(imagePath, imageName, context, imageCompressionSize, imageCompressionSize, imageQuality);
         } else {
             isCompressed = false;
             file = new File(imagePath);
