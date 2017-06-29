@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
@@ -918,7 +919,7 @@ public class LiClientRequestParams {
     //Request params for LiSubscriptionPost client
     public static class LiPostSubscriptionParams extends LiClientRequestParams {
 
-        private LiMessage target;
+        private LiBaseModel target;
 
         /**
          * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
@@ -926,12 +927,12 @@ public class LiClientRequestParams {
          * @param context the Android context (required)
          * @param target the ID of the target of the subscription, either a message ID or a board ID (required)
          */
-        public LiPostSubscriptionParams(Context context, LiMessage target) {
+        public LiPostSubscriptionParams(Context context, LiBaseModel target) {
             super(context);
             this.target = target;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
-        public LiMessage getTarget() {
+        public LiBaseModel getTarget() {
             return target;
         }
     }

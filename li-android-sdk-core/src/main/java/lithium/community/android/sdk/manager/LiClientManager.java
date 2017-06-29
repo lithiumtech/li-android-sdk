@@ -29,6 +29,7 @@ import lithium.community.android.sdk.api.LiBasePostClient;
 import lithium.community.android.sdk.api.LiBasePutClient;
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiBoard;
@@ -760,7 +761,23 @@ public class LiClientManager {
      */
     public static LiClient getSubscriptionPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
-        LiMessage target = ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams).getTarget();
+        LiBaseModel liBaseModel = ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams).getTarget();
+        LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.Target();
+        if (liBaseModel.getModel() instanceof LiMessage) {
+            LiMessage message = (LiMessage) liBaseModel.getModel();
+            target.setType("message");
+            target.setId(String.valueOf(message.getId()));
+
+        } else if (liBaseModel.getModel() instanceof LiBrowse) {
+            LiBrowse board = (LiBrowse) liBaseModel.getModel();
+            target.setType("board");
+            String id = board.getId();
+            String boardPrefix = "board:";
+            id = id.substring(
+                    id.indexOf(boardPrefix) + boardPrefix.length(),
+                    id.length());
+            target.setId(id);
+        }
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenant()));
         LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
         liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
