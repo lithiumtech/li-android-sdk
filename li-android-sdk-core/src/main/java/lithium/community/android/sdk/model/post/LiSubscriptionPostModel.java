@@ -9,7 +9,7 @@ import lithium.community.android.sdk.model.response.LiMessage;
 public class LiSubscriptionPostModel extends LiBasePostModel {
 
     private String type;
-    private LiMessage target;
+    private Target target;
 
     public String getType() {
         return type;
@@ -19,11 +19,33 @@ public class LiSubscriptionPostModel extends LiBasePostModel {
         this.type = type;
     }
 
-    public LiMessage getTarget() {
+    public Target getTarget() {
         return target;
     }
 
-    public void setTarget(LiMessage target) {
+    public void setTarget(Target target) {
         this.target = target;
+    }
+
+    public static class Target {
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        private String type;
+        private String id;
+
     }
 }

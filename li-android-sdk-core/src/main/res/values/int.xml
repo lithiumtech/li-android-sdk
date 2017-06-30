@@ -1,0 +1,3 @@
+<resources>
+    <integer name="li_image_compression_quality">70</integer>
+</resources>

@@ -19,7 +19,10 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,16 +53,16 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
-import lithium.community.android.sdk.utils.LiImageUtil;
+import lithium.community.android.sdk.utils.LiImageUtils;
 import lithium.community.android.sdk.utils.LiUriUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -72,8 +75,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
-
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_MAX_IMAGE_UPLOAD_SIZE;
 
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
@@ -321,13 +322,17 @@ public abstract class LiRestClient {
         File originalFile = new File(imagePath);
         final File file;
         final boolean isCompressed;
-        if (originalFile.length() >= LI_MAX_IMAGE_UPLOAD_SIZE) {
+        if (originalFile.length() >= LiCoreSDKConstants.LI_MIN_IMAGE_SIZE_TO_COMPRESS) {
             isCompressed = true;
-            file = new File(LiImageUtil.compressImage(imagePath, imageName, baseRestRequest.getContext()));
+            Context context = baseRestRequest.getContext();
+            int imageCompressionSize = context.getResources().getDimensionPixelSize(R.dimen.li_image_compression_size);
+            int imageQuality = context.getResources().getInteger(R.integer.li_image_compression_quality);
+            file = LiImageUtils.compressImage(imagePath, imageName, context, imageCompressionSize, imageCompressionSize, imageQuality);
         } else {
             isCompressed = false;
             file = new File(imagePath);
         }
+
         String requestBody = " {\"request\": {\"data\": {\"description\": \"Uploaded from community android app.\",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
@@ -354,19 +359,7 @@ public abstract class LiRestClient {
                 LiSDKManager.getInstance().getNewAuthToken());
         request.addHeader("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            StringBuilder lsiHeader = new StringBuilder();
-            lsiHeader.append(LiSDKManager.getInstance().getLiAppCredentials().getClientKey())
-                    .append(",")
-                    .append(android.os.Build.VERSION.SDK_INT)
-                    .append(",")
-                    .append(android.os.Build.DEVICE)
-                    .append(",")
-                    .append(android.os.Build.MODEL)
-                    .append(",")
-                    .append(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))
-                    .append("-")
-                    .append(LiSDKManager.getInstance().getLoggedInUser().getLoginId());
-            request.header("lia-sdk-app-info", lsiHeader.toString());
+            request.header("lia-sdk-app-info", buildLSIHeaderString(context));
         }
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
@@ -433,9 +426,7 @@ public abstract class LiRestClient {
         builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
         if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            String lsiHeader = android.os.Build.VERSION.SDK_INT + "," + android.os.Build.DEVICE + "," + android.os.Build.MODEL + "," +
-                    Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID) + "-" +
-                    LiSDKManager.getInstance().getLoggedInUser().getLoginId();
+            String lsiHeader = buildLSIHeaderString(context);
             builder.header("lia-sdk-app-info", lsiHeader);
         }
         // Adding addition headers
@@ -447,6 +438,24 @@ public abstract class LiRestClient {
         }
 
         return builder.build();
+    }
+
+    @NonNull
+    private String buildLSIHeaderString(Context context) {
+        JsonObject headerJson = new JsonObject();
+        headerJson.addProperty("client_name",
+                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        headerJson.addProperty("client_type", "android");
+        headerJson.addProperty("client_id",
+                LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        headerJson.addProperty("device_code", android.os.Build.DEVICE);
+        headerJson.addProperty("device_model", android.os.Build.MODEL);
+        headerJson.addProperty("device_id",
+                Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+        headerJson.addProperty("device_api_level", android.os.Build.VERSION.SDK_INT);
+        headerJson.addProperty("user_id",
+                LiSDKManager.getInstance().getLoggedInUser().getLoginId());
+        return headerJson.toString();
     }
 
     public String asString(LiBaseResponse response) throws IOException {
