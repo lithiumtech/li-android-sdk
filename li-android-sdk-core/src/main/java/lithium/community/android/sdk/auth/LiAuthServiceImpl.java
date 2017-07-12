@@ -19,16 +19,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.UUID;
 
-import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
@@ -61,16 +60,27 @@ public class LiAuthServiceImpl implements LiAuthService {
     private String ssoToken;
 
     private boolean mDisposed = false;
-
+    private LiDeviceTokenProvider liDeviceTokenProvider;
     /**
      * Constructor for SSO flow.
      *
      * @param context  {@link Context}
      * @param ssoToken This is the SSO Token.
      */
-    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken) {
+    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) {
         mContext = LiCoreSDKUtils.checkNotNull(context);
         this.ssoToken = ssoToken;
+        this.liDeviceTokenProvider = liDeviceTokenProvider;
+    }
+
+    /**
+     * Constructor for non SSO flow
+     *
+     * @param context {@link Context}
+     */
+    public LiAuthServiceImpl(@NonNull Context context, LiDeviceTokenProvider liDeviceTokenProvider) {
+        mContext = LiCoreSDKUtils.checkNotNull(context);
+        this.liDeviceTokenProvider = liDeviceTokenProvider;
     }
 
     /**
@@ -266,9 +276,8 @@ public class LiAuthServiceImpl implements LiAuthService {
      */
     private void getSDKSettings(final LoginCompleteCallBack loginCompleteCallBack) {
         try {
-            if (LiCoreSDKUtils.isFireBaseIntegrated()) {
-                new LiNotificationProviderImpl().onIdRefresh(FirebaseInstanceId.getInstance().getToken(),
-                        mContext);
+            if (this.liDeviceTokenProvider != null && !TextUtils.isEmpty(this.liDeviceTokenProvider.getDeviceId())) {
+                new LiNotificationProviderImpl().onIdRefresh(this.liDeviceTokenProvider.getDeviceId(), mContext);
             }
 
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(mContext,
