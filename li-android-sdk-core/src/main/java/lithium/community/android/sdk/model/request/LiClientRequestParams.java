@@ -920,7 +920,8 @@ public class LiClientRequestParams {
     public static class LiPostSubscriptionParams extends LiClientRequestParams {
 
         private LiBaseModel target;
-
+        private String targetId;
+        private String targetType;
         /**
          * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
          *
@@ -932,8 +933,27 @@ public class LiClientRequestParams {
             this.target = target;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
+        /**
+         * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
+         *
+         * @param context the Android context (required)
+         * @param targetId the ID of the target of the subscription, either a message ID or a board ID (required)
+         * @param targetType the type of the target of the subscription, either a "message" or a "board" (required)
+         */
+        public LiPostSubscriptionParams(Context context, String targetId, String targetType) {
+            super(context);
+            this.target = target;
+            this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
+        }
         public LiBaseModel getTarget() {
             return target;
+        }
+        public String getTargetId() {
+            return targetId;
+        }
+
+        public String getTargetType() {
+            return targetType;
         }
     }
 
