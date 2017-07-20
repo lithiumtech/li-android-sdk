@@ -508,6 +508,7 @@ public class LiClientManager {
      * @param liClientRequestParams the image title (required)
      * @param liClientRequestParams the image filename (required)
      * @param liClientRequestParams the absolute path to the image (required)
+     * Note: the image filename and the filename in the absolute path param above must be equal.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -756,7 +757,7 @@ public class LiClientManager {
      *
      * Alternatively in the parameters "message/boardId" and "type" need to be passed in the constructor.
      * "type" is either "message" or "board" depending upon what was selected.
-     * 
+     *
      * If both are set then the target takes precedence and string parameters are ignored.
      *
      * Uses the {@link LiSubscriptionPostModel} to build the request body.

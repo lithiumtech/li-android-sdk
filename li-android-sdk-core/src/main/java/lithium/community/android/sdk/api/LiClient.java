@@ -50,6 +50,7 @@ public interface LiClient {
      * @param callback {@link LiAsyncRequestCallback}
      * @param imageName This is name of the image file.
      * @param imagePath This is absolute path of image.
+     * Note: the imageName and the filename in the absolute path param above must be equal.
      * @throws LiRestResponseException
      */
     public void processAsync(LiAsyncRequestCallback callback, String imagePath, String imageName) throws LiRestResponseException;
