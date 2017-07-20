@@ -508,6 +508,7 @@ public class LiClientManager {
      * @param liClientRequestParams the image title (required)
      * @param liClientRequestParams the image filename (required)
      * @param liClientRequestParams the absolute path to the image (required)
+     * Note: the image filename and the filename in the absolute path param above must be equal.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -750,7 +751,17 @@ public class LiClientManager {
     /**
      * Creates a subscription to the specified target (a board or message).
      * Create parameters with {@link LiClientRequestParams.LiPostSubscriptionParams}.
-     * Uses the {@link LiSubscriptionPostModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
+     *
+     * The parameters can either be a target which is a {@link LiBaseModel} in the form of {@link LiMessage} or {@link LiBrowse}
+     * which was selected to be subscribed to and needs to be passed in the constructor
+     *
+     * Alternatively in the parameters "message/boardId" and "type" need to be passed in the constructor.
+     * "type" is either "message" or "board" depending upon what was selected.
+     *
+     * If both are set then the target takes precedence and string parameters are ignored.
+     *
+     * Uses the {@link LiSubscriptionPostModel} to build the request body.
+     * The model is converted to a JsonObject, which is then used in the POST call.
      *
      * Added 1.0.1
      *
@@ -761,23 +772,30 @@ public class LiClientManager {
      */
     public static LiClient getSubscriptionPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
-        LiBaseModel liBaseModel = ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams).getTarget();
+        LiClientRequestParams.LiPostSubscriptionParams liPostSubscriptionParams =
+                ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams);
+        LiBaseModel liBaseModel = liPostSubscriptionParams.getTarget();
         LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.Target();
-        if (liBaseModel.getModel() instanceof LiMessage) {
-            LiMessage message = (LiMessage) liBaseModel.getModel();
-            target.setType("message");
-            target.setId(String.valueOf(message.getId()));
+        String targetID = null;
+        String targetType = null;
+        if (liBaseModel != null) {
+            if (liBaseModel.getModel() instanceof LiMessage) {
+                LiMessage message = (LiMessage) liBaseModel.getModel();
+                targetType = "message";
+                targetID = String.valueOf(message.getId());
 
-        } else if (liBaseModel.getModel() instanceof LiBrowse) {
-            LiBrowse board = (LiBrowse) liBaseModel.getModel();
-            target.setType("board");
-            String id = board.getId();
-            String boardPrefix = "board:";
-            id = id.substring(
-                    id.indexOf(boardPrefix) + boardPrefix.length(),
-                    id.length());
-            target.setId(id);
+            } else if (liBaseModel.getModel() instanceof LiBrowse) {
+                LiBrowse board = (LiBrowse) liBaseModel.getModel();
+                targetType = "board";
+                targetID = extractBoardId(board.getId());
+            }
         }
+        else {
+            targetType = liPostSubscriptionParams.getTargetType();
+            targetID = liPostSubscriptionParams.getTargetId();
+        }
+        target.setType(targetType);
+        target.setId(targetID);
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenant()));
         LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
         liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
@@ -786,6 +804,17 @@ public class LiClientManager {
         return liBasePostClient;
     }
 
+    private static String extractBoardId(String boardId) {
+        String finalBoardId = boardId;
+        String boardPrefix = "board:";
+        if (finalBoardId.contains(boardPrefix)) {
+            finalBoardId = finalBoardId.substring(
+                    finalBoardId.indexOf(boardPrefix) + boardPrefix.length(),
+                    finalBoardId.length());
+        }
+
+        return finalBoardId;
+    }
     /**
      * Deletes a subscription.
      *
