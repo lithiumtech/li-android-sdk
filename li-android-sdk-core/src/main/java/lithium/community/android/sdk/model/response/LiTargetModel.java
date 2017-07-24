@@ -14,11 +14,14 @@
 
 package lithium.community.android.sdk.model.response;
 
+import lithium.community.android.sdk.model.helpers.LiBoard;
+
 /**
  * Created by kunal.shrivastava on 11/4/16.
  * Interface to be implemented by all the models which is having LiMessage variable
  */
 
-public interface LiBaseMessageModel {
+public interface LiTargetModel {
     public LiMessage getLiMessage();
+    public LiBoard getLiBoard();
 }
