@@ -1,5 +1,7 @@
 package lithium.community.android.sdk.model.response;
 
+import com.google.gson.JsonObject;
+
 import org.junit.Test;
 
 import lithium.community.android.sdk.model.LiBaseModelImpl;
@@ -25,13 +27,21 @@ public class LiSubscriptionsTest {
         assertEquals(id, subscriptions.getId());
     }
     @Test
-    public void getMessageTest(){
-
-        LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
-        liId.setValue(id);
-        liMessage.setId(liId);
-        subscriptions.setLiMessage(liMessage);
+    public void getTargetMessageTest(){
+        JsonObject messageObject = new JsonObject();
+        messageObject.addProperty("id", id);
+        messageObject.addProperty("type", "message");
+        subscriptions.setTargetObject(messageObject);
         assertEquals(id, subscriptions.getLiMessage().getId());
+    }
+
+    @Test
+    public void getTargetBoardest(){
+        JsonObject messageObject = new JsonObject();
+        messageObject.addProperty("id", id);
+        messageObject.addProperty("type", "board");
+        subscriptions.setTargetObject(messageObject);
+        assertEquals(id, Long.valueOf(subscriptions.getLiBoard().getId()));
     }
 
 }
