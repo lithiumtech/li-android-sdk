@@ -38,10 +38,17 @@ public class LiBaseGetClient extends LiBaseClient {
     private final String activityLIQL;
     private LiQueryValueReplacer liQueryValueReplacer;
     private LiQueryRequestParams liQueryRequestParams;
+    private boolean noLiQL;
 
     public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass) throws LiRestResponseException {
         super(context, type, querySettingsType, responseClass, RequestType.GET);
         this.activityLIQL = activityLIQL;
+    }
+
+    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, String pathParam) throws LiRestResponseException {
+        super(context, type, querySettingsType, responseClass, RequestType.GET, pathParam);
+        this.activityLIQL = activityLIQL;
+        this.noLiQL = true;
     }
 
     public LiBaseGetClient(Context context, String activityLIQL, String type, Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
@@ -56,7 +63,7 @@ public class LiBaseGetClient extends LiBaseClient {
      */
     @Override
     public void setLiRestV2Request() {
-        this.liRestV2Request = new LiRestV2Request(context, getLiqlQuery(), type);
+        this.liRestV2Request = new LiRestV2Request(context, getLiqlQuery(), type, noLiQL);
     }
 
     /**

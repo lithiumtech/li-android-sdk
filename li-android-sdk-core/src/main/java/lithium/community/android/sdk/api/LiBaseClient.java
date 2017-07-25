@@ -84,11 +84,26 @@ abstract class LiBaseClient implements LiClient {
         if (tenant == null) {
             tenant = LiSDKManager.getInstance().getLiAppCredentials().getTenantId();
         }
-        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_BASE_PATH, tenant);
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_SEARCH_BASE_PATH, tenant);
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
         this.requestType = requestType;
     }
+
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType, String pathParam) throws LiRestResponseException {
+        this.context = context;
+        this.type = type;
+        this.querySettingsType = querySettingsType;
+        String tenant = LiSDKManager.getInstance().getTenant();
+        if (tenant == null) {
+            tenant = LiSDKManager.getInstance().getLiAppCredentials().getTenantId();
+        }
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_GENERIC_BASE_PATH, tenant, pathParam);
+        this.responseClass = responseClass;
+        this.liRestv2Client = LiRestv2Client.getInstance();
+        this.requestType = requestType;
+    }
+
 
     public LiBaseClient(Context context, String basePath, RequestType requestType) {
         this.context = context;

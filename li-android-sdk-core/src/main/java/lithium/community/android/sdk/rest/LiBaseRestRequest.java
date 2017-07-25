@@ -15,6 +15,9 @@
 package lithium.community.android.sdk.rest;
 
 import android.content.Context;
+import android.text.TextUtils;
+
+import org.w3c.dom.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -99,15 +102,13 @@ public class LiBaseRestRequest {
      * @param value It is the LIQL for above parameter 'q'.
      */
     public void addQueryParam(String param, String value) {
-        if (param.equals("q") && (value != null) && value.contains("&")) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        if (value.contains("&")) {
             String[] values = value.split("&");
-            queryParams.put(param, value);
-            boolean isFirst = true;
             for (String valueStr : values) {
-                if (isFirst) {
-                    isFirst = false;
-                    queryParams.put(param, valueStr);
-                } else {
+                if (valueStr.contains("=")) {
                     String[] qParams = valueStr.split("=");
                     if (qParams.length > 1) {
                         queryParams.put(qParams[0], qParams[1]);
@@ -115,8 +116,12 @@ public class LiBaseRestRequest {
                         queryParams.put(qParams[0], "");
                     }
                 }
+                else {
+                    queryParams.put(param, valueStr);
+                }
             }
-        } else {
+        }
+        else {
             queryParams.put(param, value);
         }
     }

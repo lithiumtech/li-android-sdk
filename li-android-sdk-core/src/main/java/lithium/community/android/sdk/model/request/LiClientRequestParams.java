@@ -2,6 +2,7 @@ package lithium.community.android.sdk.model.request;
 
 import android.content.Context;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -1264,7 +1265,7 @@ public class LiClientRequestParams {
     //Request params class for LiGenericPostClient
     public static class LiGenericPostClientRequestParams extends LiClientRequestParams {
         private String path;
-        private JsonObject requestBody;
+        private JsonElement requestBody;
 
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
@@ -1273,7 +1274,7 @@ public class LiClientRequestParams {
          * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
-        public LiGenericPostClientRequestParams(Context context, String path, JsonObject requestBody) {
+        public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody) {
             super(context);
             this.path = path;
             this.requestBody = requestBody;
@@ -1289,7 +1290,7 @@ public class LiClientRequestParams {
             return this;
         }
 
-        public JsonObject getRequestBody() {
+        public JsonElement getRequestBody() {
             return requestBody;
         }
 
@@ -1358,6 +1359,41 @@ public class LiClientRequestParams {
 
         public LiGenericLiqlClientRequestParams setLiQuery(String liQuery) {
             this.liQuery = liQuery;
+            return this;
+        }
+    }
+
+    //Request params class for LiGenericLiqlClient
+    public static class LiGenericNoLiqlClientRequestParams extends LiClientRequestParams {
+        private String liQuery;
+        private String pathParam;
+
+        /**
+         * Builds the parameters for {@link LiClientManager#getGenericLiqlGetClient(LiClientRequestParams)}.
+         *
+         * @param context the Android context
+         * @param liQuery the LiQL query to run, e.g. "SELECT subject, body FROM messages LIMIT 10"
+         */
+        public LiGenericNoLiqlClientRequestParams(Context context, String liQuery, String pathParam) {
+            super(context);
+            this.liQuery = liQuery;
+            this.pathParam = pathParam;
+            this.client = LiClientManager.Client.LI_GENERIC_LIQL_CLIENT;
+        }
+
+        public String getLiQuery() {
+            return liQuery;
+        }
+        public String getPathParam() {
+            return pathParam;
+        }
+
+        public LiGenericNoLiqlClientRequestParams setLiQuery(String liQuery) {
+            this.liQuery = liQuery;
+            return this;
+        }
+        public LiGenericNoLiqlClientRequestParams setPathParam(String basePath) {
+            this.pathParam = basePath;
             return this;
         }
     }

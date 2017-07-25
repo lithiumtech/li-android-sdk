@@ -49,7 +49,7 @@ public class LiRestV2RequestTest {
 
     @Test
     public void liRestV2RequestWithOutAdditionalHeadersTest() {
-        LiRestV2Request liRestV2Request = new LiRestV2Request(mContext, LI_QL, TYPE);
+        LiRestV2Request liRestV2Request = new LiRestV2Request(mContext, LI_QL, TYPE, false);
         assertEquals(TYPE, liRestV2Request.getType());
     }
 

@@ -17,6 +17,7 @@ package lithium.community.android.sdk.manager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -886,7 +887,7 @@ public class LiClientManager {
     public static LiClient getGenericPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_GENERIC_POST_CLIENT);
         String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getPath();
-        JsonObject requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
+        JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
         String requestPath = "/community/2.0/%s/" + path;
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format(requestPath,
@@ -935,6 +936,22 @@ public class LiClientManager {
         String liQuery = ((LiClientRequestParams.LiGenericLiqlClientRequestParams) liClientRequestParams).getLiQuery();
         return new LiBaseGetClient(liClientRequestParams.getContext(), liQuery, null, LiQueryConstant.LI_GENERIC_TYPE, null);
     }
+
+    /**
+     * This is generic Get client. Provide a LiQL query. Create parameters with {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}.
+     *
+     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} the Android context (required)
+     * @param liClientRequestParams a custom LiQL query (required)
+     * @return LiClient {@link LiClient}
+     * @throws LiRestResponseException {@link LiRestResponseException}
+     */
+    public static LiClient getGenericNoLiqlGetClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_GENERIC_LIQL_CLIENT);
+        String pathParam = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getPathParam();
+        String liQuery = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getLiQuery();
+        return new LiBaseGetClient(liClientRequestParams.getContext(), liQuery, null, LiQueryConstant.LI_GENERIC_TYPE, null, pathParam);
+    }
+
 
     /**
      * Creates custom WHERE clause, ORDER BY, and/or LIMIT parameters to a LIQL queries used by a Lithium API provider.

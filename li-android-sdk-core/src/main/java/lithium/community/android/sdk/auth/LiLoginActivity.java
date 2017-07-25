@@ -131,8 +131,9 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         loginInProgTxt.setText(getString(R.string.li_openingLoginPage));
         loginInProgTxt.setVisibility(View.VISIBLE);
         isAccessTokenSaved = false;
-        //load the url of the oAuth login page
-        webViewOauth.loadUrl(authUrl);
+        webViewOauth.clearHistory();
+        webViewOauth.clearFormData();
+        webViewOauth.clearCache(true);
         setTitle(authUrl);
         //set the web client
         webViewOauth.setWebViewClient(new LoginWebViewClient());
@@ -140,5 +141,9 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         //activates JavaScript (just in case)
         WebSettings webSettings = webViewOauth.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setAppCacheEnabled(false);
+        //load the url of the oAuth login page
+        webViewOauth.loadUrl(authUrl);
     }
 }
