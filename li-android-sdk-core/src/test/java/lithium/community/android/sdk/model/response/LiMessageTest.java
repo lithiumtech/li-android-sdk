@@ -155,7 +155,7 @@ public class LiMessageTest {
             baseResponse.setData(jsonObject);
             List<LiBaseModel> responseList = (List<LiBaseModel>) baseResponse.toEntityList("message", LiMessage.class, gson);
             assertEquals(1, responseList.size());
-            LiMessage returnedMessage = ((LiBaseMessageModel)responseList.get(0)).getLiMessage();
+            LiMessage returnedMessage = ((LiTargetModel)responseList.get(0)).getLiMessage();
             assertEquals(213824, returnedMessage.getId().intValue());
             assertEquals(52295, returnedMessage.getAuthor().getId().intValue());
             assertEquals("LiNC@tkb", returnedMessage.getBoard().getId());

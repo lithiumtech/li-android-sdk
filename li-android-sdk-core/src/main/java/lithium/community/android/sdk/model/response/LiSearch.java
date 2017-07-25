@@ -15,17 +15,23 @@
 package lithium.community.android.sdk.model.response;
 
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.model.helpers.LiBoard;
 
 /**
  * Data Model for GET call to search in app.
  * Created by kunal.shrivastava on 10/28/16.
  */
 
-public class LiSearch extends LiBaseModelImpl implements LiBaseMessageModel {
+public class LiSearch extends LiBaseModelImpl implements LiTargetModel {
     private LiMessage liMessage;
 
     public LiMessage getLiMessage() {
         return liMessage;
+    }
+
+    @Override
+    public LiBoard getLiBoard() {
+        return null;
     }
 
     public void setLiMessage(LiMessage liMessage) {
