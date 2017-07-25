@@ -29,6 +29,15 @@ public class LiBoard extends LiBaseModelImpl {
     private String href;
     private String view_href;
     private String id;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @SerializedName("interaction_style")
     private String interactionStyle;

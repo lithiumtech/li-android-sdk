@@ -2,18 +2,23 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'de.mobilej.unmock'
 apply plugin: 'jacoco'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 group = 'lithium.community.android.sdk'
-version = '1.1.3'
+version = '1.2.0'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
+def repositoryName = 'li-android-sdk'
 
 android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 19
@@ -85,7 +90,7 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.2'
 
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.robolectric:robolectric:3.1.2'
@@ -144,7 +149,7 @@ uploadArchives {
     repositories.mavenDeployer {
         pom.groupId = "lithium.community.android.sdk"
         pom.artifactId = "li-android-sdk-core"
-        pom.version = "1.1.3"
+        pom.version = "1.2.0"
         // Add other pom properties here if you want (developer details / licenses)
         repository(url: "file://${localReleaseDest}")
     }
@@ -168,4 +173,55 @@ generateRelease.dependsOn(javadoc)
 artifacts {
     archives androidSourcesJar
     archives androidJavadocsJar
+}
+
+def siteUrl = 'https://github.com/lithiumtech/li-android-sdk-core'      // Homepage URL of the library
+def gitUrl = 'https://github.com/lithiumtech/li-android-sdk-core.git'   // Git repository URL
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name 'li-android-sdk-core'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+//                developers {
+//                    developer {
+//                        id '<your user ID>'
+//                        name '<your name>'
+//                        email '<your email>'
+//                    }
+//                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "${repositoryName}"
+        name = "${artifactId}"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
 }

@@ -15,21 +15,17 @@
 package lithium.community.android.sdk.manager;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONException;
 
 import java.net.URISyntaxException;
-import java.security.Key;
-
-import javax.crypto.Cipher;
 
 import lithium.community.android.sdk.auth.LiAuthService;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
+import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.exception.LiRestResponseException;
@@ -39,9 +35,7 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 /*
  * Created by kunal.shrivastava on 10/18/16.
  */
@@ -106,20 +100,42 @@ class LiAuthManager {
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context) throws URISyntaxException {
-        initLoginFlow(context, null);
+        initLoginFlow(context, null, null);
     }
 
     /**
      * Login flow is initiated from here and then call goes to LiAuthService
-     * @param context {@link Context}
+     * @param context Android context
+     * @param ssoToken pass the Single Sign-on token if the community uses its own identity provider
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
+        initLoginFlow(context, ssoToken, null);
+    }
+
+    /**
+     * Login flow is initiated from here and then call goes to LiAuthService
+     * @param context Android context
+     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
+     * @throws URISyntaxException
+     */
+    public void initLoginFlow(Context context, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
+        initLoginFlow(context, null, liDeviceTokenProvider);
+    }
+
+    /**
+     * Login flow is initiated from here and then call goes to LiAuthService
+     * @param ssoToken pass the Single Sign-on token if the community uses its own identity provider
+     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
+     * @param context {@link Context}
+     * @throws URISyntaxException
+     */
+    public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
         if (!isUserLoggedIn()) {
             if (!TextUtils.isEmpty(ssoToken)) {
-                new LiAuthServiceImpl(context, ssoToken).startLoginFlow();
+                new LiAuthServiceImpl(context, ssoToken, liDeviceTokenProvider).startLoginFlow();
             } else {
-                new LiAuthServiceImpl(context).startLoginFlow();
+                new LiAuthServiceImpl(context, liDeviceTokenProvider).startLoginFlow();
             }
         }
     }

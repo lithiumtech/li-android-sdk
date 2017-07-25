@@ -1,5 +1,5 @@
 /*
- * LiSearch.java
+ * LiBaseMessageModel.java
  * Created on Dec 27, 2016
  *
  * Copyright 2016 Lithium Technologies, Inc.
@@ -14,27 +14,14 @@
 
 package lithium.community.android.sdk.model.response;
 
-import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiBoard;
 
 /**
- * Data Model for GET call to search in app.
- * Created by kunal.shrivastava on 10/28/16.
+ * Created by kunal.shrivastava on 11/4/16.
+ * Interface to be implemented by all the models which is having LiMessage variable
  */
 
-public class LiSearch extends LiBaseModelImpl implements LiTargetModel {
-    private LiMessage liMessage;
-
-    public LiMessage getLiMessage() {
-        return liMessage;
-    }
-
-    @Override
-    public LiBoard getLiBoard() {
-        return null;
-    }
-
-    public void setLiMessage(LiMessage liMessage) {
-        this.liMessage = liMessage;
-    }
+public interface LiTargetModel {
+    public LiMessage getLiMessage();
+    public LiBoard getLiBoard();
 }

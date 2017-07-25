@@ -29,7 +29,7 @@ import lithium.community.android.sdk.model.helpers.LiUserContext;
  *
  * @link http://community.lithium.com/t5/Developer-Documentation/bd-p/dev-doc-portal?section=commv2&collection=messages
  */
-public class LiMessage extends LiBaseModelImpl implements LiBaseMessageModel {
+public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
 
     private String href;
     private String view_href;
@@ -256,5 +256,10 @@ public class LiMessage extends LiBaseModelImpl implements LiBaseMessageModel {
     @Override
     public LiMessage getLiMessage() {
         return this;
+    }
+
+    @Override
+    public LiBoard getLiBoard() {
+        return null;
     }
 }
