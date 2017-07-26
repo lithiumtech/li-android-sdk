@@ -31,7 +31,7 @@ public class LiQueryConstant {
     public static final String LI_CATEGORY_CLIENT_BASE_LIQL = "select id, title, parent.id, parent.title, depth from nodes";
     public static final String LI_ARTICLES_BROWSE_CLIENT_BASE_LIQL = "SELECT id, subject, view_href, post_time, kudos.sum(weight), conversation.style, conversation.solved, conversation.last_post_time, user_context, author, parent.id, metrics FROM messages";
     public static final String LI_USER_DETAILS_CLIENT_BASE_LIQL = "SELECT email, href, last_visit_time, login, id, view_href, avatar from users";
-    public static final String LI_MESSAGE_CLIENT_BASE_LIQL = "SELECT id, body, subject, view_href, post_time, kudos.sum(weight), can_accept_solution, is_solution, user_context.kudo, user_context.can_kudo, user_context.can_reply, user_context.can_delete, author.id, author.avatar, author.login, parent.id, metrics FROM messages";
+    public static final String LI_MESSAGE_CLIENT_BASE_LIQL = "SELECT id, body, subject, view_href, post_time, kudos.sum(weight), can_accept_solution, is_solution, user_context.kudo, user_context.can_kudo, user_context.can_reply, user_context.can_delete, user_context.read, author.id, author.avatar, author.login, parent.id, metrics FROM messages";
     public static final String LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL = "select * from floated_messages";
     public static final String LI_SDK_SETTINGS_CLIENT_BASE_LIQL = "select additional_information from app_sdk_settings";
 

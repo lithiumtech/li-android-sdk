@@ -8,7 +8,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 group = 'lithium.community.android.sdk'
-version = '1.2.0'
+version = '1.2.1'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
 def repositoryName = 'li-android-sdk'
@@ -90,7 +90,6 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
-    compile 'com.google.firebase:firebase-messaging:11.0.2'
 
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.robolectric:robolectric:3.1.2'
@@ -149,7 +148,7 @@ uploadArchives {
     repositories.mavenDeployer {
         pom.groupId = "lithium.community.android.sdk"
         pom.artifactId = "li-android-sdk-core"
-        pom.version = "1.2.0"
+        pom.version = "1.2.1"
         // Add other pom properties here if you want (developer details / licenses)
         repository(url: "file://${localReleaseDest}")
     }
@@ -195,13 +194,6 @@ install {
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-//                developers {
-//                    developer {
-//                        id '<your user ID>'
-//                        name '<your name>'
-//                        email '<your email>'
-//                    }
-//                }
                 scm {
                     connection gitUrl
                     developerConnection gitUrl
