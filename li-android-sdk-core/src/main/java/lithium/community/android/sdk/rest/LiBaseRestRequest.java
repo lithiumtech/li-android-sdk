@@ -22,7 +22,9 @@ import org.w3c.dom.Text;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -108,7 +110,9 @@ public class LiBaseRestRequest {
         if (value.contains("&")) {
             String[] values = value.split("&");
             for (String valueStr : values) {
-                if (valueStr.contains("=")) {
+                //match the value str with a liql. if it matches add the "q=" param else split the strig in query param
+                Matcher matcher = LiCoreSDKUtils.liqlPattern.matcher(valueStr);
+                if (!matcher.matches()) {
                     String[] qParams = valueStr.split("=");
                     if (qParams.length > 1) {
                         queryParams.put(qParams[0], qParams[1]);
