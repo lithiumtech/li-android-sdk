@@ -113,11 +113,15 @@ public class LiBaseRestRequest {
                 //match the value str with a liql. if it matches add the "q=" param else split the strig in query param
                 Matcher matcher = LiCoreSDKUtils.liqlPattern.matcher(valueStr);
                 if (!matcher.matches()) {
-                    String[] qParams = valueStr.split("=");
-                    if (qParams.length > 1) {
-                        queryParams.put(qParams[0], qParams[1]);
+                    if (valueStr.contains("=")) {
+                        String[] qParams = valueStr.split("=");
+                        if (qParams.length > 1) {
+                            queryParams.put(qParams[0], qParams[1]);
+                        } else {
+                            queryParams.put(qParams[0], "");
+                        }
                     } else {
-                        queryParams.put(qParams[0], "");
+                        queryParams.put(valueStr, "");
                     }
                 }
                 else {
