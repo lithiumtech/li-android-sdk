@@ -93,7 +93,7 @@ public class LiClientManager {
         liClientRequestParams.validate(Client.LI_MESSAGES_CLIENT);
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", "0");
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_ARTICLES_CLIENT_BASE_LIQL, LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -110,7 +110,7 @@ public class LiClientManager {
         String boardId = ((LiClientRequestParams.LiMessagesByBoardIdClientRequestParams) liClientRequestParams).getBoardId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", boardId).replaceAll("&&", "0");
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_BASE_LIQL, LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_BROWSE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_BROWSE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -187,7 +187,7 @@ public class LiClientManager {
         Long parentId = ((LiClientRequestParams.LiRepliesClientRequestParams) liClientRequestParams).getParentId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(parentId));
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -203,7 +203,7 @@ public class LiClientManager {
         String query = ((LiClientRequestParams.LiSearchClientRequestParams) liClientRequestParams).getQuery();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", query);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), String.format(LiQueryConstant.LI_SEARCH_CLIENT_BASE_LIQL, query), LiQueryConstant.LI_SEARCH_CLIENT_TYPE, LiQueryConstant.LI_SEARCH_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), String.format(LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, query), LiQueryConstant.LI_SEARCH_CLIENT_TYPE, LiQueryConstant.LI_SEARCH_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -221,7 +221,7 @@ public class LiClientManager {
         String depth = ((LiClientRequestParams.LiUserMessagesClientRequestParams) liClientRequestParams).getDepth();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(authorId)).replaceAll("&&", depth);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_QUESTIONS_CLIENT_BASE_LIQL, LiQueryConstant.LI_QUESTIONS_CLIENT_TYPE, LiQueryConstant.LI_QUESTIONS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_QUESTIONS_CLIENT_TYPE, LiQueryConstant.LI_QUESTIONS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -266,7 +266,7 @@ public class LiClientManager {
         Long messageId = ((LiClientRequestParams.LiMessageClientRequestParams) liClientRequestParams).getMessageId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(messageId));
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CLIENT_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -314,7 +314,7 @@ public class LiClientManager {
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", sb.toString());
 
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CLIENT_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_BY_IDS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_BY_IDS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
@@ -998,7 +998,7 @@ public class LiClientManager {
     }
 
     /**
-     * Deletes the specified message. Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMessageDeleteClientRequestParamsLiMessageDeleteClientRequestParams}.
+     * Deletes the specified message. Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMessageDeleteClientRequestParams}.
      * Optionally pass the 'includeReplies' parameters as 'true' to delete replies or comments associated with the message.
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} the Android context
