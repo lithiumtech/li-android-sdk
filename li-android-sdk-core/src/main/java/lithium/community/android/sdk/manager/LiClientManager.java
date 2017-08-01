@@ -93,7 +93,7 @@ public class LiClientManager {
         liClientRequestParams.validate(Client.LI_MESSAGES_CLIENT);
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", "0");
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**

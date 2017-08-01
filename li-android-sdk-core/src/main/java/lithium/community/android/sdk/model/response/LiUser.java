@@ -70,6 +70,7 @@ public class LiUser extends LiBaseModelImpl {
     @SerializedName("view_href")
     private String profilePageUrl;
 
+    @SerializedName("rank")
     private LiRanking ranking;
 
     @SerializedName("registered")

@@ -25,6 +25,42 @@ public class LiRanking extends LiBaseModelImpl {
     private String href;
     private String name;
     private Long id;
+    private String type;
+    private int position;
+    private String color;
+    private String icon_left;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getIcon_left() {
+        return icon_left;
+    }
+
+    public void setIcon_left(String icon_left) {
+        this.icon_left = icon_left;
+    }
 
     @SerializedName("display")
     private LiRankingDisplay lithiumRankingDisplay;
