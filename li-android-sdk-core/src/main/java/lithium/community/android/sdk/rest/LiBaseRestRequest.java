@@ -100,37 +100,33 @@ public class LiBaseRestRequest {
     /**
      * This method segregates query parameters which may be present afte the 'q' param which takes in LIQL.
      *
-     * @param param It is the query parameter 'q' which taken in LIQL as value.
-     * @param value It is the LIQL for above parameter 'q'.
+     * @param queryParameters
      */
-    public void addQueryParam(String param, String value) {
-        if (TextUtils.isEmpty(value)) {
+    public void addQueryParam(String queryParameters) {
+        if (TextUtils.isEmpty(queryParameters)) {
             return;
         }
-        if (value.contains("&")) {
-            String[] values = value.split("&");
-            for (String valueStr : values) {
-                //match the value str with a liql. if it matches add the "q=" param else split the strig in query param
-                Matcher matcher = LiCoreSDKUtils.liqlPattern.matcher(valueStr);
-                if (!matcher.matches()) {
-                    if (valueStr.contains("=")) {
-                        String[] qParams = valueStr.split("=");
-                        if (qParams.length > 1) {
-                            queryParams.put(qParams[0], qParams[1]);
-                        } else {
-                            queryParams.put(qParams[0], "");
-                        }
-                    } else {
-                        queryParams.put(valueStr, "");
-                    }
+        if(queryParameters.toUpperCase().startsWith("SELECT ")) {
+            if (queryParameters.contains("&")) {
+                String[] queryParamsArr = queryParameters.split("&");
+                queryParams.put("q",queryParamsArr[0]);
+                for (int i=1;i<queryParamsArr.length;i++) {
+                    String[] qParams = queryParamsArr[i].split("=");
+                    String key = qParams[0];
+                    String value = (qParams.length > 1)? qParams[1]: null;
+                    queryParams.put(key, value);
                 }
-                else {
-                    queryParams.put(param, valueStr);
-                }
+            } else {
+                queryParams.put("q",queryParameters);
             }
-        }
-        else {
-            queryParams.put(param, value);
+        } else {
+            String[] queryParamsArr = queryParameters.split("&");
+            for (String temp: queryParamsArr) {
+                String[] qParams = temp.split("=");
+                String key = qParams[0];
+                String value = (qParams.length > 1) ? qParams[1] : null;
+                queryParams.put(key, value);
+            }
         }
     }
 

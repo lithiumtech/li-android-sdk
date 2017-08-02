@@ -34,22 +34,16 @@ public class LiRestV2Request extends LiBaseRestRequest {
     public LiRestV2Request(Context context, String liql, String type, Map<String, String> additionalHttpHeaders,
                            boolean isAuthenticatedRequest) {
         super(context, RestMethod.GET, null, additionalHttpHeaders, isAuthenticatedRequest);
-        addQueryParam("q", liql);
+        addQueryParam(liql);
         this.type = type;
     }
 
     /**
      * Preparing rest v2 request for GET call when no additional headers are present.
      */
-    public LiRestV2Request(Context context, String liql, String type, boolean noLiQL) {
+    public LiRestV2Request(Context context, String queryParams, String type) {
         super(context, RestMethod.GET, null, null, true);
-        if (noLiQL) {
-            addQueryParam("?", liql);
-        }
-        else {
-            addQueryParam("q", liql);
-        }
-
+        addQueryParam(queryParams);
         this.type = type;
     }
 

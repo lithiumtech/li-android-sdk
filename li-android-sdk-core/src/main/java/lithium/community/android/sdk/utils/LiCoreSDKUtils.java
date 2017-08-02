@@ -52,8 +52,6 @@ import lithium.community.android.sdk.model.response.LiBrowse;
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
-    private static final String LIQL_REGEX = "SELECT\\s.*FROM\\s.*WHERE\\s.*";
-    public static final Pattern liqlPattern = Pattern.compile(LIQL_REGEX);
     private LiCoreSDKUtils() {
     }
 
