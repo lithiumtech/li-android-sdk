@@ -948,8 +948,8 @@ public class LiClientManager {
     public static LiClient getGenericNoLiqlGetClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_GENERIC_LIQL_CLIENT);
         String pathParam = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getPathParam();
-        String liQuery = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getLiQuery();
-        return new LiBaseGetClient(liClientRequestParams.getContext(), liQuery, null, LiQueryConstant.LI_GENERIC_TYPE, null, pathParam);
+        String queryParams = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getQueryParams();
+        return new LiBaseGetClient(liClientRequestParams.getContext(), queryParams, null, LiQueryConstant.LI_GENERIC_TYPE, null, pathParam);
     }
 
 

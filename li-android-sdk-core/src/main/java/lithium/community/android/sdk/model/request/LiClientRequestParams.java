@@ -11,7 +11,6 @@ import java.util.Set;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
-import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
@@ -1363,37 +1362,38 @@ public class LiClientRequestParams {
         }
     }
 
-    //Request params class for LiGenericLiqlClient
+    //Request params class for LiGenericNoLiqlClient
     public static class LiGenericNoLiqlClientRequestParams extends LiClientRequestParams {
-        private String liQuery;
+        private String queryParams;
         private String pathParam;
 
         /**
          * Builds the parameters for {@link LiClientManager#getGenericLiqlGetClient(LiClientRequestParams)}.
          *
          * @param context the Android context
-         * @param liQuery the LiQL query to run, e.g. "SELECT subject, body FROM messages LIMIT 10"
+         * @param queryParams request query params for e.g. "method=post&board.id=someBoard"
+         * @param pathParam path param other than "search" for e.g. "allowed" to check if certain action is allowed on a resource or not
          */
-        public LiGenericNoLiqlClientRequestParams(Context context, String liQuery, String pathParam) {
+        public LiGenericNoLiqlClientRequestParams(Context context, String queryParams, String pathParam) {
             super(context);
-            this.liQuery = liQuery;
+            this.queryParams = queryParams;
             this.pathParam = pathParam;
             this.client = LiClientManager.Client.LI_GENERIC_LIQL_CLIENT;
         }
 
-        public String getLiQuery() {
-            return liQuery;
+        public String getQueryParams() {
+            return queryParams;
         }
         public String getPathParam() {
             return pathParam;
         }
 
-        public LiGenericNoLiqlClientRequestParams setLiQuery(String liQuery) {
-            this.liQuery = liQuery;
+        public LiGenericNoLiqlClientRequestParams setQueryParams(String queryParams) {
+            this.queryParams = queryParams;
             return this;
         }
-        public LiGenericNoLiqlClientRequestParams setPathParam(String basePath) {
-            this.pathParam = basePath;
+        public LiGenericNoLiqlClientRequestParams setPathParam(String pathParam) {
+            this.pathParam = pathParam;
             return this;
         }
     }
