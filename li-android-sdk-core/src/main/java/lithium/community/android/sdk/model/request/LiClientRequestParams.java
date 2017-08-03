@@ -2,6 +2,7 @@ package lithium.community.android.sdk.model.request;
 
 import android.content.Context;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -10,7 +11,6 @@ import java.util.Set;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
-import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
@@ -1264,7 +1264,7 @@ public class LiClientRequestParams {
     //Request params class for LiGenericPostClient
     public static class LiGenericPostClientRequestParams extends LiClientRequestParams {
         private String path;
-        private JsonObject requestBody;
+        private JsonElement requestBody;
 
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
@@ -1273,7 +1273,7 @@ public class LiClientRequestParams {
          * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
-        public LiGenericPostClientRequestParams(Context context, String path, JsonObject requestBody) {
+        public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody) {
             super(context);
             this.path = path;
             this.requestBody = requestBody;
@@ -1289,7 +1289,7 @@ public class LiClientRequestParams {
             return this;
         }
 
-        public JsonObject getRequestBody() {
+        public JsonElement getRequestBody() {
             return requestBody;
         }
 
@@ -1358,6 +1358,42 @@ public class LiClientRequestParams {
 
         public LiGenericLiqlClientRequestParams setLiQuery(String liQuery) {
             this.liQuery = liQuery;
+            return this;
+        }
+    }
+
+    //Request params class for LiGenericNoLiqlClient
+    public static class LiGenericNoLiqlClientRequestParams extends LiClientRequestParams {
+        private String queryParams;
+        private String pathParam;
+
+        /**
+         * Builds the parameters for {@link LiClientManager#getGenericLiqlGetClient(LiClientRequestParams)}.
+         *
+         * @param context the Android context
+         * @param queryParams request query params for e.g. "method=post&board.id=someBoard"
+         * @param pathParam path param other than "search" for e.g. "allowed" to check if certain action is allowed on a resource or not
+         */
+        public LiGenericNoLiqlClientRequestParams(Context context, String queryParams, String pathParam) {
+            super(context);
+            this.queryParams = queryParams;
+            this.pathParam = pathParam;
+            this.client = LiClientManager.Client.LI_GENERIC_LIQL_CLIENT;
+        }
+
+        public String getQueryParams() {
+            return queryParams;
+        }
+        public String getPathParam() {
+            return pathParam;
+        }
+
+        public LiGenericNoLiqlClientRequestParams setQueryParams(String queryParams) {
+            this.queryParams = queryParams;
+            return this;
+        }
+        public LiGenericNoLiqlClientRequestParams setPathParam(String pathParam) {
+            this.pathParam = pathParam;
             return this;
         }
     }

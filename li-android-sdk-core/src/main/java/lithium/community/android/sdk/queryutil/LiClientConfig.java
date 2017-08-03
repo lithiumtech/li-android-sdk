@@ -40,25 +40,25 @@ public class LiClientConfig {
     public static String getBaseQuery(Client client) {
         switch (client) {
             case LI_ARTICLES_BROWSE_CLIENT:
-                return LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL;
             case LI_BROWSE_CLIENT:
                 return LiQueryConstant.LI_BROWSE_CLIENT_BASE_LIQL;
             case LI_ARTICLES_CLIENT:
-                return LiQueryConstant.LI_ARTICLES_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL;
             case LI_CATEGORY_CLIENT:
                 return LiQueryConstant.LI_CATEGORY_CLIENT_BASE_LIQL;
             case LI_FLOATED_MESSAGES_CLIENT:
                 return LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL;
             case LI_MESSAGE_CHILDREN_CLIENT:
-                return LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL;
             case LI_MESSAGE_CLIENT:
-                return LiQueryConstant.LI_MESSAGE_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL;
             case LI_QUESTIONS_CLIENT:
-                return LiQueryConstant.LI_QUESTIONS_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL;
             case LI_SDK_SETTINGS_CLIENT:
                 return LiQueryConstant.LI_SDK_SETTINGS_CLIENT_BASE_LIQL;
             case LI_SEARCH_CLIENT:
-                return LiQueryConstant.LI_SEARCH_CLIENT_BASE_LIQL;
+                return LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL;
             case LI_SUBSCRIPTION_CLIENT:
                 return LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL;
             case LI_USER_DETAILS_CLIENT:

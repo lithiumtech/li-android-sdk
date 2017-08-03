@@ -60,7 +60,7 @@ public class LiBaseRestRequestTest {
         additionalHttpHeaders.put("test", "test");
         path = "path";
         liBaseRestRequest = new LiBaseRestRequest(mContext, method, path, requestBody, additionalHttpHeaders, isAuthenticatedRequest);
-        liBaseRestRequest.addQueryParam("param", "param");
+        liBaseRestRequest.addQueryParam("param=param");
         Assert.assertEquals(method, liBaseRestRequest.getMethod());
         Assert.assertEquals(requestBody, liBaseRestRequest.getRequestBody());
         Assert.assertEquals(additionalHttpHeaders, liBaseRestRequest.getAdditionalHttpHeaders());

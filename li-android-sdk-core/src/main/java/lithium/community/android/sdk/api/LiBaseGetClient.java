@@ -44,6 +44,11 @@ public class LiBaseGetClient extends LiBaseClient {
         this.activityLIQL = activityLIQL;
     }
 
+    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, String pathParam) throws LiRestResponseException {
+        super(context, type, querySettingsType, responseClass, RequestType.GET, pathParam);
+        this.activityLIQL = activityLIQL;
+    }
+
     public LiBaseGetClient(Context context, String activityLIQL, String type, Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
         super(context, type, responseClass);
         this.activityLIQL = activityLIQL;

@@ -3,10 +3,7 @@ package lithium.community.android.sdk.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.res.ResourcesCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -14,7 +11,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import lithium.community.android.sdk.R;
-import lithium.community.android.sdk.notification.LiNotificationPayload;
 
 /**
  * This class is for receiving a notification from FireBase and showing it on the notification bar of the device.

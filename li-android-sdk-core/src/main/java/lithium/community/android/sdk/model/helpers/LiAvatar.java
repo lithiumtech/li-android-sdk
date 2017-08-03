@@ -31,6 +31,9 @@ public class LiAvatar extends LiBaseModelImpl {
     private static final String MESSAGE_IMAGE_URL = "MESSAGE_IMAGE_URL";
     private String profile;
     private String message;
+    private String inline;
+    private String favicon;
+    private String print;
 
     public static LiAvatar jsonDeserialize(JSONObject json) throws JSONException {
         LiAvatar avatar = new LiAvatar();
@@ -65,4 +68,28 @@ public class LiAvatar extends LiBaseModelImpl {
         LiCoreSDKUtils.put(json, MESSAGE_IMAGE_URL, this.getMessage());
         return json;
     }
+    public String getInline() {
+        return inline;
+    }
+
+    public void setInline(String inline) {
+        this.inline = inline;
+    }
+
+    public String getFavicon() {
+        return favicon;
+    }
+
+    public void setFavicon(String favicon) {
+        this.favicon = favicon;
+    }
+
+    public String getPrint() {
+        return print;
+    }
+
+    public void setPrint(String print) {
+        this.print = print;
+    }
+
 }

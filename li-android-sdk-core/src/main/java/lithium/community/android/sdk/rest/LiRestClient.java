@@ -412,8 +412,7 @@ public abstract class LiRestClient {
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
-                LiUriUtils.appendQueryParameterIfNotNull(uriBuilder, param,
-                        baseRestRequest.getQueryParams().get(param));
+                uriBuilder.appendQueryParameter(param, baseRestRequest.getQueryParams().get(param));
             }
         }
         Request.Builder builder = new Request.Builder()

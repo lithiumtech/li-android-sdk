@@ -15,9 +15,13 @@
 package lithium.community.android.sdk.manager;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import org.json.JSONException;
 
@@ -198,6 +202,21 @@ class LiAuthManager {
         this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
+        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new way of using CookieManager else use the deprecate methods for older versions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieSyncManager cookieSyncMngr= CookieSyncManager.createInstance(context);
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager= CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
         this.liAuthState = null;
     }
 
