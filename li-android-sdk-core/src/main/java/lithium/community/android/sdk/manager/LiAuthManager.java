@@ -202,6 +202,7 @@ class LiAuthManager {
         this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
+        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new way of using CookieManager else use the deprecate methods for older versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieManager.getInstance().removeAllCookies(null);
