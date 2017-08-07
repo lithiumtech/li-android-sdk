@@ -25,6 +25,87 @@ public class LiRanking extends LiBaseModelImpl {
     private String href;
     private String name;
     private Long id;
+    private String type;
+    private int position;
+    private String color;
+    private String icon_left;
+    private String icon_right;
+    private String formula;
+    private String icon_topic;
+    private boolean formula_enabled;
+    private boolean bold;
+
+    public boolean isBold() {
+        return bold;
+    }
+
+    public void setBold(boolean bold) {
+        this.bold = bold;
+    }
+
+    public String getIcon_topic() {
+        return icon_topic;
+    }
+
+    public void setIcon_topic(String icon_topic) {
+        this.icon_topic = icon_topic;
+    }
+
+    public String getIcon_right() {
+        return icon_right;
+    }
+
+    public void setIcon_right(String icon_right) {
+        this.icon_right = icon_right;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public boolean isFormula_enabled() {
+        return formula_enabled;
+    }
+
+    public void setFormula_enabled(boolean formula_enabled) {
+        this.formula_enabled = formula_enabled;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getIcon_left() {
+        return icon_left;
+    }
+
+    public void setIcon_left(String icon_left) {
+        this.icon_left = icon_left;
+    }
 
     @SerializedName("display")
     private LiRankingDisplay lithiumRankingDisplay;

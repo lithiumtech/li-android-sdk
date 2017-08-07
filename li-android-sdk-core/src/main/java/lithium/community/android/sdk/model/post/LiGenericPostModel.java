@@ -14,7 +14,7 @@
 
 package lithium.community.android.sdk.model.post;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 /**
  * Request body for making any POST call. It requires parameter as JsonObject.
@@ -23,12 +23,12 @@ import com.google.gson.JsonObject;
 
 public class LiGenericPostModel extends LiBasePostModel {
 
-    private JsonObject data;
+    private JsonElement data;
 
-    public JsonObject getData() {
+    public JsonElement getData() {
         return data;
     }
-    public void setData(JsonObject data) {
+    public void setData(JsonElement data) {
         this.data = data;
     }
 }

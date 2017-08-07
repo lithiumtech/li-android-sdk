@@ -22,6 +22,7 @@ import lithium.community.android.sdk.model.helpers.LiConversation;
 import lithium.community.android.sdk.model.helpers.LiKudoMetrics;
 import lithium.community.android.sdk.model.helpers.LiMessageMetrics;
 import lithium.community.android.sdk.model.helpers.LiModerationStatus;
+import lithium.community.android.sdk.model.helpers.LiReplies;
 import lithium.community.android.sdk.model.helpers.LiUserContext;
 
 /**
@@ -77,6 +78,9 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
 
     @SerializedName("conversation")
     private LiConversation liConversation;
+
+    @SerializedName("replies")
+    private LiReplies liReplies;
 
     private Boolean acceptedOnUI;
 
@@ -261,5 +265,13 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
     @Override
     public LiBoard getLiBoard() {
         return null;
+    }
+
+    public LiReplies getLiReplies() {
+        return liReplies;
+    }
+
+    public void setLiReplies(LiReplies liReplies) {
+        this.liReplies = liReplies;
     }
 }

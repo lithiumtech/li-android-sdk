@@ -41,6 +41,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.model.LiBaseModel;
@@ -51,7 +52,6 @@ import lithium.community.android.sdk.model.response.LiBrowse;
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
-
     private LiCoreSDKUtils() {
     }
 

@@ -75,7 +75,7 @@ public class LiRestv2ClientTest {
         doReturn(liBaseResponse).when(liRestv2ClientSpy).processSync(isA(LiBaseRestRequest.class));
 
         LiRestV2Request liBaseRestRequest = new LiRestV2Request(context, liql, "message");
-        liBaseRestRequest.addQueryParam("test", "test");
+        liBaseRestRequest.addQueryParam("test");
 
         LiBaseResponse liBaseResponse1 = liRestv2ClientSpy.processSync(liBaseRestRequest);
 

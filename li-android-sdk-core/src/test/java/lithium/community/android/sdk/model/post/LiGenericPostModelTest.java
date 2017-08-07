@@ -21,7 +21,7 @@ public class LiGenericPostModelTest {
         data.addProperty("test", "test value");
         liGenericPostModel = new LiGenericPostModel();
         liGenericPostModel.setData(data);
-        Assert.assertEquals("test value", liGenericPostModel.getData().get("test").getAsString());
+        Assert.assertEquals("test value", liGenericPostModel.getData().getAsJsonObject().get("test").getAsString());
     }
 
 }
