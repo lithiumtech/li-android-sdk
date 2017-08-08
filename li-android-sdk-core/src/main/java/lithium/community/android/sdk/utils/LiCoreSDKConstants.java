@@ -8,6 +8,7 @@ public class LiCoreSDKConstants {
     public static final String LI_SHARED_PREFERENCES_NAME = "LiSharedStatePreference";
     public static final String LI_AUTH_STATE = "LI_AUTH_STATE";
     public static final String LI_DEFAULT_SDK_SETTINGS = "LiDefaultSDKSettings";
+    public static final String LI_VISITOR_ID = "LI_VISITOR_ID";
     public static final String LI_DEVICE_ID = "Li_device_id";
     public static final String LI_LOG_TAG = "LI_LOG_TAG";
     public static final String LI_RECEIVER_DEVICE_ID = "Li_receivedDeviceId";
