@@ -70,6 +70,7 @@ public class LiQueryConstant {
     public static final String LI_MARK_ABUSE_TYPE = "abuse_report";
 
     public static final String LI_MARK_AS_READ = "&api.mark_read=true";
+    public static final String LI_FOR_UI_SEARCH = "&api.for_ui_search=true";
 
     public static final String LI_INSERT_IMAGE_MACRO = "<p><li-image id=%s width=\"500\" height=\"500\" alt=%s align=\"inline\" size=\"large\" sourcetype=\"new\"></li-image></p>";
     public static final String LI_LINE_SEPARATOR = System.getProperty("line.separator");
