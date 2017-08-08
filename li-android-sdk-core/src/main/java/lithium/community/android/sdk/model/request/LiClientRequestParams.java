@@ -1186,6 +1186,7 @@ public class LiClientRequestParams {
         private String firstName;
         private String lastName;
         private String login;
+        private String id;
 
         /**
          * Builds the parameters for {@link LiClientManager#getUpdateUserClient(LiClientRequestParams)}.
@@ -1224,6 +1225,14 @@ public class LiClientRequestParams {
             return login;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public LiUpdateUserParams setId(String id) {
+            this.id = id;
+            return this;
+        }
 
         public LiUpdateUserParams setAvatar(LiAvatar avatar) {
             this.avatar = avatar;

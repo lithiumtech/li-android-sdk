@@ -860,7 +860,8 @@ public class LiClientManager {
         String firstName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getFirstName();
         String lastName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLastName();
         String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
-        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        String id = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getId();
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenant(), id));
         LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
