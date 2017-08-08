@@ -14,6 +14,7 @@
 
 package lithium.community.android.sdk.manager;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -901,6 +902,30 @@ public class LiClientManager {
     }
 
     /**
+     * This is a beacon client which is used to send information to the community backend for analytics aka LSI
+     * @param liClientRequestParams {@link LiClientRequestParams.LiBeaconPostClientRequestParams}
+     */
+    public static LiClient getBeaconClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_BEACON_CLIENT);
+        LiClientRequestParams.LiBeaconPostClientRequestParams liBeaconPostClientRequestParams =
+                ((LiClientRequestParams.LiBeaconPostClientRequestParams) liClientRequestParams);
+        String targetType = liBeaconPostClientRequestParams.getTargetType();
+        String targetId = liBeaconPostClientRequestParams.getTargetId();
+        Context context = liBeaconPostClientRequestParams.getContext();
+        JsonObject requestBody = null;
+        if (!TextUtils.isEmpty(targetId) && !TextUtils.isEmpty(targetType)) {
+            requestBody = new JsonObject();
+            JsonObject targetJsonObject = new JsonObject();
+            targetJsonObject.addProperty("type", targetType);
+            targetJsonObject.addProperty("id", targetId);
+            requestBody.add("target", targetJsonObject);
+        }
+
+        LiClientRequestParams params = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon", requestBody);
+        return LiClientManager.getGenericPostClient(params);
+    }
+
+    /**
      * This is generic PUT client. Provide the path to a Community API v1 or v2 endpoint and a request body.
      * Create parameters with {@link LiClientRequestParams.LiGenericPutClientRequestParams}.
      *
@@ -1053,6 +1078,7 @@ public class LiClientManager {
         LI_DEVICE_ID_FETCH_CLIENT,
         LI_DEVICE_ID_UPDATE_CLIENT,
         LI_GENERIC_POST_CLIENT,
+        LI_BEACON_CLIENT,
         LI_GENERIC_LIQL_CLIENT,
         LI_GENERIC_QUERY_PARAMS_CLIENT,
         LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT,
