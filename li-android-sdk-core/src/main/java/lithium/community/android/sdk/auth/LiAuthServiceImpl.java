@@ -287,7 +287,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 @Override
                 public void onSuccess(LiBaseRestRequest request,
                                       LiGetClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == 200) {
+                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Gson gson = new Gson();
                         JsonArray items = response.getJsonObject().get("data")
                                 .getAsJsonObject().get("items").getAsJsonArray();

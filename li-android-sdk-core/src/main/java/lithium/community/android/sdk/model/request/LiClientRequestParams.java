@@ -1186,6 +1186,7 @@ public class LiClientRequestParams {
         private String firstName;
         private String lastName;
         private String login;
+        private String id;
 
         /**
          * Builds the parameters for {@link LiClientManager#getUpdateUserClient(LiClientRequestParams)}.
@@ -1224,6 +1225,14 @@ public class LiClientRequestParams {
             return login;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public LiUpdateUserParams setId(String id) {
+            this.id = id;
+            return this;
+        }
 
         public LiUpdateUserParams setAvatar(LiAvatar avatar) {
             this.avatar = avatar;
@@ -1257,6 +1266,39 @@ public class LiClientRequestParams {
 
         public LiUpdateUserParams setLogin(String login) {
             this.login = login;
+            return this;
+        }
+    }
+
+    public static class LiBeaconPostClientRequestParams extends LiClientRequestParams {
+        private String targetType;
+        private String targetId;
+
+        /**
+         * Builds the params for {@link LiClientManager#getBeaconClient(LiClientRequestParams)}
+         * @param context Android context
+         */
+        public LiBeaconPostClientRequestParams(Context context) {
+            super(context);
+            this.client = LiClientManager.Client.LI_BEACON_CLIENT;
+            this.targetId = targetId;
+            this.targetType = targetType;
+        }
+        public String getTargetType() {
+            return targetType;
+        }
+
+        public LiBeaconPostClientRequestParams setTargetType(String targetType) {
+            this.targetType = targetType;
+            return this;
+        }
+
+        public String getTargetId() {
+            return targetId;
+        }
+
+        public LiBeaconPostClientRequestParams setTargetId(String targetId) {
+            this.targetId = targetId;
             return this;
         }
     }

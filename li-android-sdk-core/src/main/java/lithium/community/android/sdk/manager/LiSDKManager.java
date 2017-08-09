@@ -41,6 +41,7 @@ import lithium.community.android.sdk.utils.LiUUIDUtils;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
  * Interface to Lithium Community Android SDK. Provides the entry point into the Community REST api v2 using
@@ -134,6 +135,10 @@ public final class LiSDKManager extends LiAuthManager {
                 Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
             }
         }
+        //Generate a visitor ID and save it in secure preferences
+        String visitorId = LiCoreSDKUtils.getRandomHexString();
+        getInstance().putInSecuredPreferences(
+                context, LI_VISITOR_ID, visitorId);
         return _sdkInstance;
     }
 
