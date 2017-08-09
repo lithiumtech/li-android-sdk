@@ -135,10 +135,13 @@ public final class LiSDKManager extends LiAuthManager {
                 Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
             }
         }
-        //Generate a visitor ID and save it in secure preferences
-        String visitorId = LiCoreSDKUtils.getRandomHexString();
-        getInstance().putInSecuredPreferences(
-                context, LI_VISITOR_ID, visitorId);
+
+        if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
+            //Generate a visitor ID and save it in secure preferences
+            String visitorId = LiCoreSDKUtils.getRandomHexString();
+            getInstance().putInSecuredPreferences(
+                    context, LI_VISITOR_ID, visitorId);
+        }
         return _sdkInstance;
     }
 
