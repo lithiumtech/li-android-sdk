@@ -15,7 +15,7 @@ public class LiCoreSDKConstants {
     public static final String LI_SSO_TOKEN = "LI_SSO_TOKEN";
     public static final String LI_BEACON_TARGET_TYPE_BOARD = "board";
     public static final String LI_BEACON_TARGET_TYPE_USER = "user";
-    public static final String LI_BEACON_TARGET_TYPE_THREAD = "thread";
+    public static final String LI_BEACON_TARGET_TYPE_CONVERSATION = "conversation";
     public static final String LI_BEACON_TARGET_TYPE_CATEGORY = "category";
 
     public static final String LOGIN_RESULT = "LOGIN_RESULT";
