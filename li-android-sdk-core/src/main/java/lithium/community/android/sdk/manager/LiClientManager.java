@@ -912,7 +912,7 @@ public class LiClientManager {
         String targetType = liBeaconPostClientRequestParams.getTargetType();
         String targetId = liBeaconPostClientRequestParams.getTargetId();
         Context context = liBeaconPostClientRequestParams.getContext();
-        JsonObject requestBody = new JsonObject();;
+        JsonObject requestBody = new JsonObject();
         if (!TextUtils.isEmpty(targetId) && !TextUtils.isEmpty(targetType)) {
             JsonObject targetJsonObject = new JsonObject();
             targetJsonObject.addProperty("type", targetType);
