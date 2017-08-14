@@ -21,6 +21,8 @@ import android.text.TextUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -840,7 +842,10 @@ public class LiClientManager {
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams} the Android context (required)
-     * @param liClientRequestParams the user's avatar
+     * @param liClientRequestParams the user's avatar image url
+     * @param liClientRequestParams the user's avatar image external url
+     * @param liClientRequestParams the user's avatar image internal url
+     * @param liClientRequestParams the user's avatar image id
      * @param liClientRequestParams the user's biography
      * @param liClientRequestParams the user's cover image
      * @param liClientRequestParams the user's email
@@ -853,15 +858,29 @@ public class LiClientManager {
      */
     public static LiClient getUpdateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UPDATE_USER_CLIENT);
+        LiClientRequestParams.LiUpdateUserParams liUpdateUserParams = (LiClientRequestParams.LiUpdateUserParams) liClientRequestParams;
 
-        LiAvatar avatar = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getAvatar();
-        String biography = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getBiography();
-        String coverImage = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getCoverImage();
-        String email = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getEmail();
-        String firstName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getFirstName();
-        String lastName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLastName();
-        String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
-        String id = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getId();
+        LiAvatar avatar = new LiAvatar();
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarUrl())) {
+            avatar.setUrl(liUpdateUserParams.getAvatarUrl());
+        }
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarExternalUrl())) {
+            avatar.setExternal(liUpdateUserParams.getAvatarExternalUrl());
+        }
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarInternalUrl())) {
+            avatar.setInternal(liUpdateUserParams.getAvatarInternalUrl());
+        }
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarImageId())) {
+            avatar.setImage(liUpdateUserParams.getAvatarImageId());
+        }
+
+        String biography = liUpdateUserParams.getBiography();
+        String coverImage = liUpdateUserParams.getCoverImage();
+        String email = liUpdateUserParams.getEmail();
+        String firstName = liUpdateUserParams.getFirstName();
+        String lastName = liUpdateUserParams.getLastName();
+        String login = liUpdateUserParams.getLogin();
+        String id = liUpdateUserParams.getId();
         LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenant(), id));
         LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);

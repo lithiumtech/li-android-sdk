@@ -34,6 +34,10 @@ public class LiAvatar extends LiBaseModelImpl {
     private String inline;
     private String favicon;
     private String print;
+    private String url;
+    private String image;
+    private String internal;
+    private String external;
 
     public static LiAvatar jsonDeserialize(JSONObject json) throws JSONException {
         LiAvatar avatar = new LiAvatar();
@@ -91,5 +95,34 @@ public class LiAvatar extends LiBaseModelImpl {
     public void setPrint(String print) {
         this.print = print;
     }
+    public String getUrl() {
+        return url;
+    }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getInternal() {
+        return internal;
+    }
+
+    public void setInternal(String internal) {
+        this.internal = internal;
+    }
+
+    public String getExternal() {
+        return external;
+    }
+
+    public void setExternal(String external) {
+        this.external = external;
+    }
 }
