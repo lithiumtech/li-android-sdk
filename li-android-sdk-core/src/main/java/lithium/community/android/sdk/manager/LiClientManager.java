@@ -21,8 +21,6 @@ import android.text.TextUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -641,8 +639,21 @@ public class LiClientManager {
      */
     public static LiClient getCreateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_CREATE_USER_CLIENT);
+        LiClientRequestParams.LiCreateUserParams liCreateUserParams = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams);
+        LiAvatar avatar = new LiAvatar();
+        if (!TextUtils.isEmpty(liCreateUserParams.getAvatarUrl())) {
+            avatar.setUrl(liCreateUserParams.getAvatarUrl());
+        }
+        if (!TextUtils.isEmpty(liCreateUserParams.getAvatarExternal())) {
+            avatar.setExternal(liCreateUserParams.getAvatarExternal());
+        }
+        if (!TextUtils.isEmpty(liCreateUserParams.getAvatarInternal())) {
+            avatar.setInternal(liCreateUserParams.getAvatarInternal());
+        }
+        if (!TextUtils.isEmpty(liCreateUserParams.getAvatarImageId())) {
+            avatar.setImage(liCreateUserParams.getAvatarImageId());
+        }
 
-        LiAvatar avatar = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getAvatar();
         String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
         String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
         String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
@@ -864,11 +875,11 @@ public class LiClientManager {
         if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarUrl())) {
             avatar.setUrl(liUpdateUserParams.getAvatarUrl());
         }
-        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarExternalUrl())) {
-            avatar.setExternal(liUpdateUserParams.getAvatarExternalUrl());
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarExternal())) {
+            avatar.setExternal(liUpdateUserParams.getAvatarExternal());
         }
-        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarInternalUrl())) {
-            avatar.setInternal(liUpdateUserParams.getAvatarInternalUrl());
+        if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarInternal())) {
+            avatar.setInternal(liUpdateUserParams.getAvatarInternal());
         }
         if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarImageId())) {
             avatar.setImage(liUpdateUserParams.getAvatarImageId());
