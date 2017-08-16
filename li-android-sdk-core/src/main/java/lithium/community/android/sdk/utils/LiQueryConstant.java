@@ -25,7 +25,7 @@ public class LiQueryConstant {
     public static final String LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL = "SELECT id, target.author, target.id, target.subject, target.post_time, target.kudos.sum(weight), target.body, target.conversation.style, target.conversation.solved, target.conversation.last_post_time FROM subscriptions";
     public static final String LI_BROWSE_CLIENT_BASE_LIQL = "select id, title, parent.id, parent.title, depth from nodes";
     public static final String LI_CATEGORY_CLIENT_BASE_LIQL = "select id, title, parent.id, parent.title, depth from nodes";
-    public static final String LI_USER_DETAILS_CLIENT_BASE_LIQL = "SELECT email, href, last_visit_time, login, id, view_href, avatar from users";
+    public static final String LI_USER_DETAILS_CLIENT_BASE_LIQL = "SELECT email, href, last_visit_time, login, id, view_href, rank, avatar from users";
     public static final String LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL = "select * from floated_messages";
     public static final String LI_SDK_SETTINGS_CLIENT_BASE_LIQL = "select additional_information from app_sdk_settings";
     public static final String LI_MESSAGE_LIST_BASE_LIQL = "SELECT id, subject, view_href, board.id, post_time, kudos.sum(weight), conversation.style, conversation.solved, conversation.last_post_time, user_context, author, author.id, author.avatar, author.rank, author.login, author.href, author.email, parent.id, metrics, replies.count(*) FROM messages";
@@ -70,6 +70,7 @@ public class LiQueryConstant {
     public static final String LI_MARK_ABUSE_TYPE = "abuse_report";
 
     public static final String LI_MARK_AS_READ = "&api.mark_read=true";
+    public static final String LI_FOR_UI_SEARCH = "&api.for_ui_search=true";
 
     public static final String LI_INSERT_IMAGE_MACRO = "<p><li-image id=%s width=\"500\" height=\"500\" alt=%s align=\"inline\" size=\"large\" sourcetype=\"new\"></li-image></p>";
     public static final String LI_LINE_SEPARATOR = System.getProperty("line.separator");

@@ -14,6 +14,7 @@
 
 package lithium.community.android.sdk.manager;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -860,7 +861,8 @@ public class LiClientManager {
         String firstName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getFirstName();
         String lastName = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLastName();
         String login = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getLogin();
-        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
+        String id = ((LiClientRequestParams.LiUpdateUserParams) liClientRequestParams).getId();
+        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(), String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenant(), id));
         LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
@@ -897,6 +899,29 @@ public class LiClientManager {
         genericPostModel.setData(requestBody);
         liBasePostClient.postModel = genericPostModel;
         return liBasePostClient;
+    }
+
+    /**
+     * This is a beacon client which is used to send information to the community backend for analytics aka LSI
+     * @param liClientRequestParams {@link LiClientRequestParams.LiBeaconPostClientRequestParams}
+     */
+    public static LiClient getBeaconClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+        liClientRequestParams.validate(Client.LI_BEACON_CLIENT);
+        LiClientRequestParams.LiBeaconPostClientRequestParams liBeaconPostClientRequestParams =
+                ((LiClientRequestParams.LiBeaconPostClientRequestParams) liClientRequestParams);
+        String targetType = liBeaconPostClientRequestParams.getTargetType();
+        String targetId = liBeaconPostClientRequestParams.getTargetId();
+        Context context = liBeaconPostClientRequestParams.getContext();
+        JsonObject requestBody = new JsonObject();
+        if (!TextUtils.isEmpty(targetId) && !TextUtils.isEmpty(targetType)) {
+            JsonObject targetJsonObject = new JsonObject();
+            targetJsonObject.addProperty("type", targetType);
+            targetJsonObject.addProperty("id", targetId);
+            requestBody.add("target", targetJsonObject);
+        }
+
+        LiClientRequestParams params = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon", requestBody);
+        return LiClientManager.getGenericPostClient(params);
     }
 
     /**
@@ -1052,6 +1077,7 @@ public class LiClientManager {
         LI_DEVICE_ID_FETCH_CLIENT,
         LI_DEVICE_ID_UPDATE_CLIENT,
         LI_GENERIC_POST_CLIENT,
+        LI_BEACON_CLIENT,
         LI_GENERIC_LIQL_CLIENT,
         LI_GENERIC_QUERY_PARAMS_CLIENT,
         LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT,

@@ -355,12 +355,8 @@ public abstract class LiRestClient {
         Request.Builder request = new Request.Builder();
         request.url(HttpUrl.get(URI.create(uriBuilder.build().toString())));
         request.post(multipartBody);
-        request.addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                LiSDKManager.getInstance().getNewAuthToken());
-        request.addHeader("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
-        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            request.header("lia-sdk-app-info", buildLSIHeaderString(context));
-        }
+        request = buildRequestHeaders(baseRestRequest, uriBuilder, context, request);
+
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
             for (Map.Entry<String, String> entry : additionalHttpHeaders.entrySet()) {
@@ -418,16 +414,7 @@ public abstract class LiRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(uriBuilder.build().toString())))
                 .method(baseRestRequest.getMethod().toString(), baseRestRequest.getRequestBody());
-        if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
-            builder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
-                    LiSDKManager.getInstance().getNewAuthToken());
-        }
-        builder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
-
-        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            String lsiHeader = buildLSIHeaderString(context);
-            builder.header("lia-sdk-app-info", lsiHeader);
-        }
+        builder = buildRequestHeaders(baseRestRequest, uriBuilder, context, builder);
         // Adding addition headers
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
@@ -440,6 +427,27 @@ public abstract class LiRestClient {
     }
 
     @NonNull
+    private Request.Builder buildRequestHeaders(LiBaseRestRequest baseRestRequest, Uri.Builder uriBuilder, Context context, Request.Builder requestBuilder) {
+
+        if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
+            requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
+                    LiSDKManager.getInstance().getNewAuthToken());
+        }
+        requestBuilder.header("Content-Type", "application/json");
+        requestBuilder.header("Application-Identifier",
+                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        requestBuilder.header("Application-Version", "1.0.0");
+        requestBuilder.header("Visitor-Id",
+                LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
+        requestBuilder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+
+        //Older way of sending LSI headers to community backend. will be removed once new headers are confirmed.
+        requestBuilder.header("lia-sdk-app-info", buildLSIHeaderString(context));
+        return requestBuilder;
+    }
+
+    @NonNull
+    @Deprecated
     private String buildLSIHeaderString(Context context) {
         JsonObject headerJson = new JsonObject();
         headerJson.addProperty("client_name",
@@ -452,8 +460,11 @@ public abstract class LiRestClient {
         headerJson.addProperty("device_id",
                 Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
         headerJson.addProperty("device_api_level", android.os.Build.VERSION.SDK_INT);
-        headerJson.addProperty("user_id",
-                LiSDKManager.getInstance().getLoggedInUser().getLoginId());
+        String userId = null;
+        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
+            userId = LiSDKManager.getInstance().getLoggedInUser().getLoginId();
+        }
+        headerJson.addProperty("user_id", userId);
         return headerJson.toString();
     }
 

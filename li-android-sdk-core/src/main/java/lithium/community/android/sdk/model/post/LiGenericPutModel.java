@@ -1,5 +1,6 @@
 package lithium.community.android.sdk.model.post;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
@@ -15,5 +16,15 @@ public class LiGenericPutModel extends LiBasePostModel {
     }
     public void setData(JsonObject data) {
         this.data = data;
+    }
+    @Override
+    public JsonObject toJson() {
+        return data.getAsJsonObject();
+    }
+
+    @Override
+    public String toJsonString() {
+        Gson gson = new Gson();
+        return gson.toJson(data);
     }
 }

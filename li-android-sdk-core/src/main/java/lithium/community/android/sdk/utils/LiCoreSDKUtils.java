@@ -23,38 +23,78 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
-
+import lithium.community.android.sdk.R;
+import lithium.community.android.sdk.model.LiBaseModel;
+import lithium.community.android.sdk.model.response.LiBrowse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import lithium.community.android.sdk.R;
-import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.response.LiBrowse;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * Utility class for common operations.
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
+    private static char[] HEX_CHAR = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    private static final ThreadLocal<SecureRandom> randTl = new ThreadLocal<SecureRandom>() {
+        @Override
+        protected SecureRandom initialValue() {
+            return new SecureRandom();
+        }
+    };
+
     private LiCoreSDKUtils() {
     }
 
+
+    public static String getRandomHexString() {
+        return toHexString(getRandomBytes(randTl.get(), 128));
+    }
+
+    /**
+     * Create a random byte array using a random number generator supplied by the caller.
+     * To generate a cryptographically strong random sequence, use {@link SecureRandom} as the
+     * random number generator implementation.
+     *
+     * @param rand the random number generator to use. Cannot be {@code null}.
+     * @param bits minimum number of bytes in returned array, actual output may be longer due to rounding.
+     * @return byte array that's ((bits - 1) / 8 + 1) * bytes long.
+     * @throws IllegalArgumentException if bits < 1 or bits > 65536 (byte array of length 8192).
+     */
+    public static byte[] getRandomBytes(Random rand, int bits) {
+        if (bits < 1) {
+            throw new IllegalArgumentException("bits < 1");
+        } else if (bits > 65536) {
+            throw new IllegalArgumentException("bits > 65536");
+        }
+
+        byte[] bytes = new byte[(bits - 1) / 8 + 1];
+        rand.nextBytes(bytes);
+        return bytes;
+    }
+
+    /**
+     * Convert a byte[] array to hex string format.
+     *
+     * @param bytes byte[] buffer to convert to string format
+     */
+    public static String toHexString(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+
+        StringBuilder buf = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes) {
+            buf.append(HEX_CHAR[(b & 0xF0) >>> 4]);
+            buf.append(HEX_CHAR[b & 0x0F]);
+        }
+
+        return buf.toString();
+    }
 
     /**
      * Check that the specified argument value is not {@code null}.
