@@ -15,7 +15,6 @@
 package lithium.community.android.sdk.manager;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.util.NoSuchPropertyException;
@@ -31,6 +30,7 @@ import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
+import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -39,8 +39,8 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUUIDUtils;
 
+import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
@@ -128,12 +128,33 @@ public final class LiSDKManager extends LiAuthManager {
 
                             @Override
                             public void onError(Exception exception) {
-
+                                Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: "+exception.getMessage());
                             }
                         });
             } catch (LiRestResponseException e) {
                 Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
             }
+            //get logged in user details
+            try {
+                LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUserDetailsClientRequestParams(context, "self");
+                LiClientManager.getUserDetailsClient(liClientRequestParams)
+                        .processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
+                            @Override
+                            public void onSuccess(LiBaseRestRequest request, LiGetClientResponse
+                                    liClientResponse) throws LiRestResponseException {
+                                LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
+                                LiSDKManager.getInstance().setLoggedInUser(context, user);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e(LOG_TAG, "Unable to fetch user details: " + e);
+                            }
+                        });
+            } catch (LiRestResponseException e) {
+                Log.e(LOG_TAG, "ERROR: " + e);
+            }
+
         }
 
         if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {

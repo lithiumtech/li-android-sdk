@@ -44,6 +44,7 @@ import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.LiUUIDUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
@@ -280,8 +281,8 @@ public class LiAuthServiceImpl implements LiAuthService {
                 new LiNotificationProviderImpl().onIdRefresh(this.liDeviceTokenProvider.getDeviceId(), mContext);
             }
 
-            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(mContext,
-                    LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+            String clientId = LiUUIDUtils.toUUID(LiSDKManager.getInstance().getLiAppCredentials().getClientKey().getBytes()).toString();
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(mContext, clientId);
             LiClient settingsClient = LiClientManager.getSdkSettingsClient(liClientRequestParams);
             settingsClient.processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
                 @Override
@@ -348,8 +349,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                     });
         } catch (LiRestResponseException e) {
             Log.e(LOG_TAG, "ERROR: " + e);
-            loginCompleteCallBack.onLoginComplete(LiAuthorizationException.generalEx(
-                    LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, e.getMessage()), false);
+            getSDKSettings(loginCompleteCallBack);
         }
     }
 
