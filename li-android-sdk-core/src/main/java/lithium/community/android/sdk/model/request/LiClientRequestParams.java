@@ -10,7 +10,6 @@ import java.util.Set;
 
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
@@ -1082,7 +1081,10 @@ public class LiClientRequestParams {
 
     //Request params class for LiCreateUserClient
     public static class LiCreateUserParams extends LiClientRequestParams {
-        private LiAvatar avatar;
+        private String avatarUrl;
+        private String avatarImageId;
+        private String avatarExternal;
+        private String avatarInternal;
         private String biography;
         private String coverImage;
         private String email;
@@ -1103,9 +1105,6 @@ public class LiClientRequestParams {
             this.email = email;
             this.login = login;
             this.client = LiClientManager.Client.LI_CREATE_USER_CLIENT;
-        }
-        public LiAvatar getAvatar() {
-            return avatar;
         }
 
         public String getBiography() {
@@ -1134,11 +1133,6 @@ public class LiClientRequestParams {
 
         public String getPassword() {
             return password;
-        }
-
-        public LiCreateUserParams setAvatar(LiAvatar avatar) {
-            this.avatar = avatar;
-            return this;
         }
 
         public LiCreateUserParams setBiography(String biography) {
@@ -1175,11 +1169,49 @@ public class LiClientRequestParams {
             this.password = password;
             return this;
         }
+        public String getAvatarUrl() {
+            return avatarUrl;
+        }
+
+        public LiCreateUserParams setAvatarUrl(String avatarUrl) {
+            this.avatarUrl = avatarUrl;
+            return this;
+        }
+
+        public String getAvatarImageId() {
+            return avatarImageId;
+        }
+
+        public LiCreateUserParams setAvatarImageId(String avatarImageId) {
+            this.avatarImageId = avatarImageId;
+            return this;
+        }
+
+        public String getAvatarExternal() {
+            return avatarExternal;
+        }
+
+        public LiCreateUserParams setAvatarExternal(String avatarExternal) {
+            this.avatarExternal = avatarExternal;
+            return this;
+        }
+
+        public String getAvatarInternal() {
+            return avatarInternal;
+        }
+
+        public LiCreateUserParams setAvatarInternal(String avatarInternal) {
+            this.avatarInternal = avatarInternal;
+            return this;
+        }
     }
 
     //Request params class for LiUpdateUserClient
     public static class LiUpdateUserParams extends LiClientRequestParams {
-        private LiAvatar avatar;
+        private String avatarUrl;
+        private String avatarImageId;
+        private String avatarExternal;
+        private String avatarInternal;
         private String biography;
         private String coverImage;
         private String email;
@@ -1196,9 +1228,6 @@ public class LiClientRequestParams {
         public LiUpdateUserParams(Context context) {
             super(context);
             this.client = LiClientManager.Client.LI_UPDATE_USER_CLIENT;
-        }
-        public LiAvatar getAvatar() {
-            return avatar;
         }
 
         public String getBiography() {
@@ -1234,11 +1263,6 @@ public class LiClientRequestParams {
             return this;
         }
 
-        public LiUpdateUserParams setAvatar(LiAvatar avatar) {
-            this.avatar = avatar;
-            return this;
-        }
-
         public LiUpdateUserParams setBiography(String biography) {
             this.biography = biography;
             return this;
@@ -1266,6 +1290,41 @@ public class LiClientRequestParams {
 
         public LiUpdateUserParams setLogin(String login) {
             this.login = login;
+            return this;
+        }
+        public String getAvatarUrl() {
+            return avatarUrl;
+        }
+
+        public LiUpdateUserParams setAvatarUrl(String avatarUrl) {
+            this.avatarUrl = avatarUrl;
+            return this;
+        }
+
+        public String getAvatarImageId() {
+            return avatarImageId;
+        }
+
+        public LiUpdateUserParams setAvatarImageId(String avatarImageId) {
+            this.avatarImageId = avatarImageId;
+            return this;
+        }
+
+        public String getAvatarExternal() {
+            return avatarExternal;
+        }
+
+        public LiUpdateUserParams setAvatarExternal(String avatarExternal) {
+            this.avatarExternal = avatarExternal;
+            return this;
+        }
+
+        public String getAvatarInternal() {
+            return avatarInternal;
+        }
+
+        public LiUpdateUserParams setAvatarInternal(String avatarInternal) {
+            this.avatarInternal = avatarInternal;
             return this;
         }
     }
