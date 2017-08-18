@@ -98,6 +98,12 @@ public final class LiSDKManager extends LiAuthManager {
             _sdkInstance = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
+        if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
+            //Generate a visitor ID and save it in secure preferences
+            getInstance().putInSecuredPreferences(
+                    context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
+        }
+
         if (_sdkInstance.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
@@ -155,13 +161,6 @@ public final class LiSDKManager extends LiAuthManager {
                 Log.e(LOG_TAG, "ERROR: " + e);
             }
 
-        }
-
-        if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
-            //Generate a visitor ID and save it in secure preferences
-            String visitorId = LiCoreSDKUtils.getRandomHexString();
-            getInstance().putInSecuredPreferences(
-                    context, LI_VISITOR_ID, visitorId);
         }
         return _sdkInstance;
     }
