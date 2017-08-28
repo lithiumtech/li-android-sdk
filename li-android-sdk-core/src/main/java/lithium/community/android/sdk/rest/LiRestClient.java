@@ -441,13 +441,14 @@ public abstract class LiRestClient {
                 LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
         requestBuilder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
-        //Older way of sending LSI headers to community backend. will be removed once new headers are confirmed.
-        requestBuilder.header("lia-sdk-app-info", buildLSIHeaderString(context));
         return requestBuilder;
     }
 
     @NonNull
     @Deprecated
+    /**
+     * request header key "lia-sdk-app-info"
+     */
     private String buildLSIHeaderString(Context context) {
         JsonObject headerJson = new JsonObject();
         headerJson.addProperty("client_name",
