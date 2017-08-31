@@ -167,7 +167,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1, null);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1);
         liAuthService=spy(liAuthService);
         doNothing().when(liAuthService).dispose();
         doNothing().when(liAuthService).performSSOAuthorizationRequest(isA(LiSSOAuthorizationRequest.class));
@@ -208,7 +208,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN, null);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN);
         //liAuthService=spy(liAuthService);
 
         liAuthService = spy(liAuthService);
@@ -259,7 +259,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1, null);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1);
         liAuthService = spy(liAuthService);
         when(resource.getBoolean(anyInt())).thenReturn(true);
         doNothing().when(liAuthService,

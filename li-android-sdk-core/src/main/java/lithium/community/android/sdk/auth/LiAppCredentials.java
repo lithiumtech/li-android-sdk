@@ -62,11 +62,12 @@ public final class LiAppCredentials {
      */
     private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret,
                              @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost,
-                             String clientAppName)
+                             @NonNull String clientAppName)
             throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(clientAppName, "clientAppName cannot be empty");
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
         this.communityUri = Uri.parse(communityURL);

@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
@@ -42,6 +43,7 @@ import lithium.community.android.sdk.utils.LiUUIDUtils;
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ORIGIN_TIME_KEY;
 
 /**
  * Interface to Lithium Community Android SDK. Provides the entry point into the Community REST api v2 using
@@ -52,7 +54,6 @@ public final class LiSDKManager extends LiAuthManager {
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager _sdkInstance;
     private final LiAppCredentials liAppCredentials;
-
     /**
      * Protected constructor.
      *
@@ -102,6 +103,8 @@ public final class LiSDKManager extends LiAuthManager {
             //Generate a visitor ID and save it in secure preferences
             getInstance().putInSecuredPreferences(
                     context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
+            getInstance().putInSecuredPreferences(
+                    context, LI_VISITOR_ORIGIN_TIME_KEY, String.valueOf(new Date().getTime()));
         }
 
         if (_sdkInstance.isUserLoggedIn()) {

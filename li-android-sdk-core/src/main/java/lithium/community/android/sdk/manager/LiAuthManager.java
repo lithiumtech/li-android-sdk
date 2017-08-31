@@ -54,6 +54,14 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER
 class LiAuthManager {
 
     private LiAuthState liAuthState;
+    private LiDeviceTokenProvider liDeviceTokenProvider;
+    public LiDeviceTokenProvider getLiDeviceTokenProvider() {
+        return liDeviceTokenProvider;
+    }
+
+    public void setLiDeviceTokenProvider(LiDeviceTokenProvider liDeviceTokenProvider) {
+        this.liDeviceTokenProvider = liDeviceTokenProvider;
+    }
 
     LiAuthManager(Context context) {
         this.liAuthState = restoreAuthState(context);
@@ -124,6 +132,7 @@ class LiAuthManager {
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
+        this.liDeviceTokenProvider = liDeviceTokenProvider;
         initLoginFlow(context, null, liDeviceTokenProvider);
     }
 
@@ -135,11 +144,12 @@ class LiAuthManager {
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
+        this.liDeviceTokenProvider = liDeviceTokenProvider;
         if (!isUserLoggedIn()) {
             if (!TextUtils.isEmpty(ssoToken)) {
-                new LiAuthServiceImpl(context, ssoToken, liDeviceTokenProvider).startLoginFlow();
+                new LiAuthServiceImpl(context, ssoToken).startLoginFlow();
             } else {
-                new LiAuthServiceImpl(context, liDeviceTokenProvider).startLoginFlow();
+                new LiAuthServiceImpl(context).startLoginFlow();
             }
         }
     }
