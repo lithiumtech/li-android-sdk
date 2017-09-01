@@ -42,6 +42,7 @@ import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -73,7 +74,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
 
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_LAST_ISSUE_TIME_KEY;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
 
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
@@ -262,9 +264,12 @@ public abstract class LiRestClient {
                 try {
                     String requestUrl = response.header("http.request");
                     if (requestUrl != null && requestUrl.contains("/beacon")) {
-                        String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_LAST_ISSUE_TIME);
+                        String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
                         LiSDKManager.getInstance().putInSecuredPreferences(
-                                baseRestRequest.getContext(), LI_VISITOR_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
+                                baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
+                        String visitOriginTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME);
+                        LiSDKManager.getInstance().putInSecuredPreferences(
+                                baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
                     }
 
                     callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
@@ -444,12 +449,6 @@ public abstract class LiRestClient {
                 LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, "1.0.0");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ORIGIN_TIME, LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ORIGIN_TIME_KEY));
-        String visitorLastIssuedTime = LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_LAST_ISSUE_TIME_KEY);
-        if (!TextUtils.isEmpty(visitorLastIssuedTime)) {
-            requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_LAST_ISSUE_TIME, visitorLastIssuedTime);
-        }
-
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
         return requestBuilder;

@@ -50,8 +50,8 @@ public class LiRestV2Request extends LiBaseRestRequest {
     /**
      * Preparing rest v2 request for POST call.
      */
-    public LiRestV2Request(Context context, RestMethod restMethod, String requestBody) {
-        super(context, restMethod, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestBody), null, true);
+    public LiRestV2Request(Context context, RestMethod restMethod, String requestBody, Map<String, String> additionalHttpHeaders) {
+        super(context, restMethod, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestBody), additionalHttpHeaders, true);
         this.type = null;
     }
 

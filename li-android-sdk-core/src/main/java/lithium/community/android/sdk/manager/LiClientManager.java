@@ -60,7 +60,9 @@ import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.queryutil.LiClientConfig;
 import lithium.community.android.sdk.queryutil.LiQueryRequestParams;
 import lithium.community.android.sdk.queryutil.LiQueryValueReplacer;
+import lithium.community.android.sdk.rest.LiRequestHeaderConstants;
 import lithium.community.android.sdk.rest.LiRestv2Client;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiQueryConstant;
 
 import static lithium.community.android.sdk.utils.LiQueryConstant.LI_INSERT_IMAGE_MACRO;
@@ -920,10 +922,11 @@ public class LiClientManager {
         liClientRequestParams.validate(Client.LI_GENERIC_POST_CLIENT);
         String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getPath();
         JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
+        Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getAdditionalHttpHeaders();
         String requestPath = "/community/2.0/%s/" + path;
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format(requestPath,
-                        LiSDKManager.getInstance().getTenant()));
+                        LiSDKManager.getInstance().getTenant()), additionalHeaders);
 
         LiGenericPostModel genericPostModel = new LiGenericPostModel();
         genericPostModel.setData(requestBody);
@@ -949,8 +952,17 @@ public class LiClientManager {
             targetJsonObject.addProperty("id", targetId);
             requestBody.add("target", targetJsonObject);
         }
+        Map<String, String> additionalHeaders = new HashMap<>();
+        String visitOriginTime = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY);
+        if (!TextUtils.isEmpty(visitOriginTime)) {
+            additionalHeaders.put(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME, visitOriginTime);
+        }
+        String visitorLastIssuedTime = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY);
+        if (!TextUtils.isEmpty(visitorLastIssuedTime)) {
+            additionalHeaders.put(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME, visitorLastIssuedTime);
+        }
 
-        LiClientRequestParams params = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon", requestBody);
+        LiClientRequestParams params = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon", requestBody, additionalHeaders);
         return LiClientManager.getGenericPostClient(params);
     }
 

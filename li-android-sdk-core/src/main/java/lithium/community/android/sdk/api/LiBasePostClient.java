@@ -16,6 +16,8 @@ package lithium.community.android.sdk.api;
 
 import android.content.Context;
 
+import java.util.Map;
+
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.post.LiPostModel;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
@@ -30,7 +32,7 @@ import lithium.community.android.sdk.rest.LiRestV2Request;
 public class LiBasePostClient extends LiBaseClient {
     public LiPostModel postModel;
     private String requestBody;
-
+    private Map<String, String> additionalHttpHeaders;
     /**
      * Constructor used for normal POST call.
      *
@@ -39,6 +41,18 @@ public class LiBasePostClient extends LiBaseClient {
      */
     public LiBasePostClient(Context context, String basePath) throws LiRestResponseException {
         super(context, basePath, RequestType.POST);
+        this.additionalHttpHeaders = additionalHttpHeaders;
+    }
+
+    /**
+     * Constructor used for normal POST call.
+     *
+     * @param basePath Api end point.
+     * @throws LiRestResponseException
+     */
+    public LiBasePostClient(Context context, String basePath, Map<String, String> additionalHttpHeaders) throws LiRestResponseException {
+        super(context, basePath, RequestType.POST);
+        this.additionalHttpHeaders = additionalHttpHeaders;
     }
 
     /**
@@ -59,7 +73,7 @@ public class LiBasePostClient extends LiBaseClient {
     @Override
     public void setLiRestV2Request() {
         this.requestBody = postModel.toJsonString();
-        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.POST, requestBody);
+        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.POST, requestBody, additionalHttpHeaders);
     }
 
     @Override

@@ -365,7 +365,6 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    System.out.println(response);
                     Gson gson = new Gson();
                     JsonObject data = gson.fromJson(response.getData(), JsonObject.class);
                     if (data.has("response") && data.get("response").getAsJsonObject().has("data")) {
@@ -412,7 +411,6 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setUri(Uri.parse(uri));
         try {
             LiBaseResponse resp = authRestClient.refreshTokenSync(liRefreshTokenRequest);
-            System.out.println(resp);
             Gson gson = new Gson();
             LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
             tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
