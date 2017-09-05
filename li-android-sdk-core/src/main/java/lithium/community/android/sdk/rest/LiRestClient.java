@@ -226,8 +226,13 @@ public abstract class LiRestClient {
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
-                                    enqueueCall(baseRestRequest, callback);
+                                    if (isFetched) {
+                                        Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                        enqueueCall(baseRestRequest, callback);
+                                    }
+                                    else {
+                                        callback.onError(LiRestResponseException.networkError("Could not refresh token"));
+                                    }
                                 }
                             });
                 } catch (URISyntaxException | LiRestResponseException e) {
