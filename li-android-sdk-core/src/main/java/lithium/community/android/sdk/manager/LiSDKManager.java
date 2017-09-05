@@ -52,7 +52,6 @@ public final class LiSDKManager extends LiAuthManager {
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager _sdkInstance;
     private final LiAppCredentials liAppCredentials;
-
     /**
      * Protected constructor.
      *

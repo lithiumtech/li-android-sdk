@@ -1366,6 +1366,22 @@ public class LiClientRequestParams {
     public static class LiGenericPostClientRequestParams extends LiClientRequestParams {
         private String path;
         private JsonElement requestBody;
+        private Map<String, String> additionalHttpHeaders;
+
+        /**
+         * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
+         *
+         * @param context the Android context
+         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param requestBody a {@link JsonObject} representing the request body
+         */
+        public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody, Map<String, String> additionalHttpHeaders) {
+            super(context);
+            this.path = path;
+            this.requestBody = requestBody;
+            this.client = LiClientManager.Client.LI_GENERIC_POST_CLIENT;
+            this.additionalHttpHeaders = additionalHttpHeaders;
+        }
 
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
@@ -1398,12 +1414,21 @@ public class LiClientRequestParams {
             this.requestBody = requestBody;
             return this;
         }
+        public Map<String, String> getAdditionalHttpHeaders() {
+            return additionalHttpHeaders;
+        }
+
+        public LiGenericPostClientRequestParams setAdditionalHttpHeaders(Map<String, String> additionalHttpHeaders) {
+            this.additionalHttpHeaders = additionalHttpHeaders;
+            return this;
+        }
     }
 
     //Request params class for LiGenericPutClient
     public static class LiGenericPutClientRequestParams extends LiClientRequestParams {
         private String path;
         private JsonObject requestBody;
+        private Map<String, String> additionalHttpHeaders;
 
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPutClient(LiClientRequestParams)}.
@@ -1418,6 +1443,22 @@ public class LiClientRequestParams {
             this.requestBody = requestBody;
             this.client = LiClientManager.Client.LI_GENERIC_PUT_CLIENT;
         }
+
+        /**
+         * Builds the parameters for {@link LiClientManager#getGenericPutClient(LiClientRequestParams)}.
+         *
+         * @param context the Android context
+         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param requestBody a {@link JsonObject} representing the request body
+         */
+        public LiGenericPutClientRequestParams(Context context, String path, JsonObject requestBody, Map<String, String> additionalHttpHeaders) {
+            super(context);
+            this.path = path;
+            this.requestBody = requestBody;
+            this.client = LiClientManager.Client.LI_GENERIC_PUT_CLIENT;
+            this.additionalHttpHeaders = additionalHttpHeaders;
+        }
+
 
         public String getPath() {
             return path;
@@ -1434,6 +1475,14 @@ public class LiClientRequestParams {
 
         public LiGenericPutClientRequestParams setRequestBody(JsonObject requestBody) {
             this.requestBody = requestBody;
+            return this;
+        }
+        public Map<String, String> getAdditionalHttpHeaders() {
+            return additionalHttpHeaders;
+        }
+
+        public LiGenericPutClientRequestParams setAdditionalHttpHeaders(Map<String, String> additionalHttpHeaders) {
+            this.additionalHttpHeaders = additionalHttpHeaders;
             return this;
         }
     }
