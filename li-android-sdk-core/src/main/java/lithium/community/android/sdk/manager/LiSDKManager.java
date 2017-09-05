@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;

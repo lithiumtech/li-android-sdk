@@ -41,7 +41,6 @@ public class LiBasePostClient extends LiBaseClient {
      */
     public LiBasePostClient(Context context, String basePath) throws LiRestResponseException {
         super(context, basePath, RequestType.POST);
-        this.additionalHttpHeaders = additionalHttpHeaders;
     }
 
     /**
