@@ -61,27 +61,15 @@ public class LiAuthServiceImpl implements LiAuthService {
     private String ssoToken;
 
     private boolean mDisposed = false;
-    private LiDeviceTokenProvider liDeviceTokenProvider;
     /**
      * Constructor for SSO flow.
      *
      * @param context  {@link Context}
      * @param ssoToken This is the SSO Token.
      */
-    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) {
+    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken) {
         mContext = LiCoreSDKUtils.checkNotNull(context);
         this.ssoToken = ssoToken;
-        this.liDeviceTokenProvider = liDeviceTokenProvider;
-    }
-
-    /**
-     * Constructor for non SSO flow
-     *
-     * @param context {@link Context}
-     */
-    public LiAuthServiceImpl(@NonNull Context context, LiDeviceTokenProvider liDeviceTokenProvider) {
-        mContext = LiCoreSDKUtils.checkNotNull(context);
-        this.liDeviceTokenProvider = liDeviceTokenProvider;
     }
 
     /**
@@ -277,10 +265,6 @@ public class LiAuthServiceImpl implements LiAuthService {
      */
     private void getSDKSettings(final LoginCompleteCallBack loginCompleteCallBack) {
         try {
-            if (this.liDeviceTokenProvider != null && !TextUtils.isEmpty(this.liDeviceTokenProvider.getDeviceId())) {
-                new LiNotificationProviderImpl().onIdRefresh(this.liDeviceTokenProvider.getDeviceId(), mContext);
-            }
-
             String clientId = LiUUIDUtils.toUUID(LiSDKManager.getInstance().getLiAppCredentials().getClientKey().getBytes()).toString();
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(mContext, clientId);
             LiClient settingsClient = LiClientManager.getSdkSettingsClient(liClientRequestParams);
@@ -302,6 +286,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                                         liAppSdkSettings.getAdditionalInformation());
                             }
                         }
+                    }
+                    LiDeviceTokenProvider liDeviceTokenProvider = LiSDKManager.getInstance().getLiDeviceTokenProvider();
+                    if (liDeviceTokenProvider != null && !TextUtils.isEmpty(liDeviceTokenProvider.getDeviceId())) {
+                        new LiNotificationProviderImpl().onIdRefresh(liDeviceTokenProvider.getDeviceId(), mContext);
                     }
 
                     loginCompleteCallBack.onLoginComplete(null, true);
@@ -377,7 +365,6 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    System.out.println(response);
                     Gson gson = new Gson();
                     JsonObject data = gson.fromJson(response.getData(), JsonObject.class);
                     if (data.has("response") && data.get("response").getAsJsonObject().has("data")) {
@@ -424,7 +411,6 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setUri(Uri.parse(uri));
         try {
             LiBaseResponse resp = authRestClient.refreshTokenSync(liRefreshTokenRequest);
-            System.out.println(resp);
             Gson gson = new Gson();
             LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
             tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));

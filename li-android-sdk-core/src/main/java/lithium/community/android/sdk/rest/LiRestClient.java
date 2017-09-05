@@ -19,10 +19,7 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,6 +42,7 @@ import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -75,6 +73,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
+
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
 
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
@@ -225,8 +226,13 @@ public abstract class LiRestClient {
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
-                                    enqueueCall(baseRestRequest, callback);
+                                    if (isFetched) {
+                                        Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                        enqueueCall(baseRestRequest, callback);
+                                    }
+                                    else {
+                                        callback.onError(LiRestResponseException.networkError("Could not refresh token"));
+                                    }
                                 }
                             });
                 } catch (URISyntaxException | LiRestResponseException e) {
@@ -261,6 +267,16 @@ public abstract class LiRestClient {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
+                    String requestUrl = response.header("http.request");
+                    if (requestUrl != null && requestUrl.contains("/beacon")) {
+                        String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
+                        LiSDKManager.getInstance().putInSecuredPreferences(
+                                baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
+                        String visitOriginTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME);
+                        LiSDKManager.getInstance().putInSecuredPreferences(
+                                baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
+                    }
+
                     callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
                 } catch (LiRestResponseException e) {
                     callback.onError(e);
@@ -433,21 +449,21 @@ public abstract class LiRestClient {
             requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
                     LiSDKManager.getInstance().getNewAuthToken());
         }
-        requestBuilder.header("Content-Type", "application/json");
-        requestBuilder.header("Application-Identifier",
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
                 LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        requestBuilder.header("Application-Version", "1.0.0");
-        requestBuilder.header("Visitor-Id",
-                LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
-        requestBuilder.header("client-id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, "1.0.0");
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
 
-        //Older way of sending LSI headers to community backend. will be removed once new headers are confirmed.
-        requestBuilder.header("lia-sdk-app-info", buildLSIHeaderString(context));
         return requestBuilder;
     }
 
     @NonNull
     @Deprecated
+    /**
+     * request header key "lia-sdk-app-info"
+     */
     private String buildLSIHeaderString(Context context) {
         JsonObject headerJson = new JsonObject();
         headerJson.addProperty("client_name",

@@ -123,7 +123,7 @@ public class LiBaseResponse {
 
     private List<LiBaseModel> singleEntityOrListFromJson(final JsonElement node, final String objectNamePlural,
                                                          final String objectName, final Class<? extends LiBaseModel> baseModelClass, final Gson gson) throws LiRestResponseException {
-        if (node.getAsJsonObject().has(DATA)) {
+        if (node != null && node.getAsJsonObject().has(DATA)) {
             JsonObject response = node.getAsJsonObject().get(DATA).getAsJsonObject();
             if (!response.has(TYPE)) {
                 throw LiRestResponseException.jsonSerializationError("Required data type not found in response");
