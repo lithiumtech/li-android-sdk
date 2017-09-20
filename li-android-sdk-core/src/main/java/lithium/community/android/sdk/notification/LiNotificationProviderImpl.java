@@ -43,6 +43,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER
  */
 
 public class LiNotificationProviderImpl implements LiNotificationProvider {
+    private static final String PUSH_NOTIFICATION_ADAPTER = "push_notification_adapter";
 
     @Override
     public void onIdRefresh(final String deviceId, final Context context) throws LiRestResponseException {
@@ -54,13 +55,15 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
         if (savedId == null || savedId.isEmpty()) {
             String settingFromServer;
             settingFromServer = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
-            String pushNotificationAdapter = null;
+            String pushNotificationAdapter = "FIREBASE";
             JsonObject settingFromServerJson;
             if (settingFromServer != null && !settingFromServer.isEmpty()) {
                 JsonElement jsonElement = new JsonParser().parse(settingFromServer);
                 if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
                     settingFromServerJson = jsonElement.getAsJsonObject();
-                    pushNotificationAdapter = settingFromServerJson.get("push_notification_adapter").getAsString();
+                    if (settingFromServerJson.has(PUSH_NOTIFICATION_ADAPTER) && settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER) != null) {
+                        pushNotificationAdapter = settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER).getAsString();
+                    }
                 }
             }
 
