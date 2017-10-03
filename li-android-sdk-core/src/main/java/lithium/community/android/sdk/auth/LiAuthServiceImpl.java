@@ -281,19 +281,29 @@ public class LiAuthServiceImpl implements LiAuthService {
                                       LiGetClientResponse response) throws LiRestResponseException {
                     if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Gson gson = new Gson();
-                        JsonArray items = response.getJsonObject().get("data")
-                                .getAsJsonObject().get("items").getAsJsonArray();
-                        if (!items.isJsonNull() && items.size() > 0) {
-                            LiAppSdkSettings liAppSdkSettings =
-                                    gson.fromJson(items.get(0), LiAppSdkSettings.class);
-                            if (liAppSdkSettings != null) {
-                                LiSDKManager.getInstance().putInSecuredPreferences(
-                                        mContext,
-                                        LI_DEFAULT_SDK_SETTINGS,
-                                        liAppSdkSettings.getAdditionalInformation());
+                        JsonObject responseJsonObject = response.getJsonObject();
+                        if (responseJsonObject.has("data")) {
+                            JsonObject dataObj = responseJsonObject.get("data")
+                                    .getAsJsonObject();
+                            if (dataObj.has("items")) {
+                                JsonArray items = dataObj.get("items").getAsJsonArray();
+                                if (!items.isJsonNull() && items.size() > 0) {
+                                    LiAppSdkSettings liAppSdkSettings =
+                                            gson.fromJson(items.get(0), LiAppSdkSettings.class);
+                                    if (liAppSdkSettings != null) {
+                                        LiSDKManager.getInstance().putInSecuredPreferences(
+                                                mContext,
+                                                LI_DEFAULT_SDK_SETTINGS,
+                                                liAppSdkSettings.getAdditionalInformation());
+                                    }
+                                }
                             }
                         }
                     }
+                    else {
+                        Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
+                    }
+
                     LiDeviceTokenProvider liDeviceTokenProvider = LiSDKManager.getInstance().getLiDeviceTokenProvider();
                     if (liDeviceTokenProvider != null && !TextUtils.isEmpty(liDeviceTokenProvider.getDeviceId())) {
                         new LiNotificationProviderImpl().onIdRefresh(liDeviceTokenProvider.getDeviceId(), mContext);
@@ -329,8 +339,13 @@ public class LiAuthServiceImpl implements LiAuthService {
                         @Override
                         public void onSuccess(LiBaseRestRequest request, LiGetClientResponse
                                 liClientResponse) throws LiRestResponseException {
-                            LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
-                            LiSDKManager.getInstance().setLoggedInUser(mContext, user);
+                            if (liClientResponse != null
+                                    && liClientResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL
+                                    && liClientResponse.getResponse() != null
+                                    && !liClientResponse.getResponse().isEmpty()) {
+                                LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
+                                LiSDKManager.getInstance().setLoggedInUser(mContext, user);
+                            }
                             getSDKSettings(loginCompleteCallBack);
                         }
 

@@ -31,6 +31,7 @@ import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiPostClientResponse;
 import lithium.community.android.sdk.rest.LiPutClientResponse;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
@@ -72,15 +73,20 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             deviceIdFetchClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
-                    LiBaseResponse liBaseResponse = response.getResponse();
-                    JsonObject data = liBaseResponse.getData();
-                    if (data != null && data.has("data")) {
-                        JsonObject dataObj = data.get("data").getAsJsonObject();
-                        if (dataObj.has("id")) {
-                            String id = dataObj.get("id").getAsString();
-                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
-                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
+                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        LiBaseResponse liBaseResponse = response.getResponse();
+                        JsonObject data = liBaseResponse.getData();
+                        if (data != null && data.has("data")) {
+                            JsonObject dataObj = data.get("data").getAsJsonObject();
+                            if (dataObj.has("id")) {
+                                String id = dataObj.get("id").getAsString();
+                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
+                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
+                            }
                         }
+                    }
+                    else {
+                        Log.e(LI_LOG_TAG, "Unable to fetch device id");
                     }
                 }
 
@@ -103,7 +109,12 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPutClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPutClientResponse response) throws LiRestResponseException {
-                    Log.i(LI_LOG_TAG, "Successfully updated device Id");
+                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        Log.i(LI_LOG_TAG, "Successfully updated device Id");
+                    }
+                    else {
+                        Log.e(LI_LOG_TAG, "Unable to update device Id");
+                    }
                 }
 
                 @Override

@@ -39,6 +39,7 @@ import lithium.community.android.sdk.rest.LiClientResponse;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -178,7 +179,9 @@ public class LiBaseClientTest {
         liClient.processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
             @Override
             public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) throws LiRestResponseException {
-                Assert.assertEquals(200, response.getHttpCode());
+                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    Assert.assertEquals(200, response.getHttpCode());
+                }
             }
 
             @Override

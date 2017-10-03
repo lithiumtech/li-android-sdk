@@ -74,6 +74,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
 
+import static lithium.community.android.sdk.auth.LiAuthConstants.APPLICATION_VERSION_HEADER_VALUE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
 
@@ -371,7 +372,7 @@ public abstract class LiRestClient {
         Request.Builder request = new Request.Builder();
         request.url(HttpUrl.get(URI.create(uriBuilder.build().toString())));
         request.post(multipartBody);
-        request = buildRequestHeaders(baseRestRequest, uriBuilder, context, request);
+        request = buildRequestHeaders(context, request);
 
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
@@ -430,7 +431,7 @@ public abstract class LiRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(uriBuilder.build().toString())))
                 .method(baseRestRequest.getMethod().toString(), baseRestRequest.getRequestBody());
-        builder = buildRequestHeaders(baseRestRequest, uriBuilder, context, builder);
+        builder = buildRequestHeaders(context, builder);
         // Adding addition headers
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
@@ -443,18 +444,18 @@ public abstract class LiRestClient {
     }
 
     @NonNull
-    private Request.Builder buildRequestHeaders(LiBaseRestRequest baseRestRequest, Uri.Builder uriBuilder, Context context, Request.Builder requestBuilder) {
+    private Request.Builder buildRequestHeaders(Context context, Request.Builder requestBuilder) {
 
         if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
             requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
                     LiSDKManager.getInstance().getNewAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
                 LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, "1.0.0");
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, LiSDKManager.getInstance().getFromSecuredPreferences(baseRestRequest.getContext(), LiCoreSDKConstants.LI_VISITOR_ID));
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
 
         return requestBuilder;
     }
@@ -550,7 +551,7 @@ public abstract class LiRestClient {
                 if (response == null) {
                     proceed = true;
                 } else if (response.code() == 500 || response.code() == 501) {
-                    int httpCode = 500;
+                    int httpCode = response.code();
                     JsonObject data;
                     String responseStr = response.body().string();
                     try {
@@ -562,7 +563,8 @@ public abstract class LiRestClient {
                     catch(JsonSyntaxException ex){
 
                     }
-                    if (httpCode == 401) {
+                    //in case token is expired on the server. TODO still need to check why there is a 501/500 instead of 401 or 403
+                    if (httpCode == 401 || httpCode == 500 || httpCode == 501 || httpCode == 403) {
                         try {
                             LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
                                     context).performSyncRefreshTokenRequest();
@@ -585,7 +587,6 @@ public abstract class LiRestClient {
                     proceed = true;
                 }
 
-                //in case token is expired on the server. TODO still need to check why there is a 501/500 instead of 403
                 if (proceed) {
                     response = chain.proceed(request);
                     currentCount++;
