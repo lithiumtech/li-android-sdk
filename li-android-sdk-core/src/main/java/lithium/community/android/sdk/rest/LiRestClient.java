@@ -42,7 +42,6 @@ import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -55,8 +54,8 @@ import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
@@ -75,6 +74,10 @@ import okhttp3.Response;
 import okhttp3.TlsVersion;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.APPLICATION_VERSION_HEADER_VALUE;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_FORBIDDEN;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_UNAUTHORIZED;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
 
@@ -546,11 +549,11 @@ public abstract class LiRestClient {
             int currentCount = 0;
             Response response = null;
             while (currentCount < maxTries
-                    && (response == null || (response.code() == 500 || response.code() == 501))) {
+                    && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
                 boolean proceed = false;
                 if (response == null) {
                     proceed = true;
-                } else if (response.code() == 500 || response.code() == 501) {
+                } else if (response.code() != HTTP_CODE_SUCCESSFUL) {
                     int httpCode = response.code();
                     JsonObject data;
                     String responseStr = response.body().string();
@@ -561,10 +564,9 @@ public abstract class LiRestClient {
                         }
                     }
                     catch(JsonSyntaxException ex){
-
+                        Log.e(LI_LOG_TAG, "wrong json, not able to parse "+ex.getMessage());
                     }
-                    //in case token is expired on the server. TODO still need to check why there is a 501/500 instead of 401 or 403
-                    if (httpCode == 401 || httpCode == 500 || httpCode == 501 || httpCode == 403) {
+                    if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {
                             LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
                                     context).performSyncRefreshTokenRequest();
@@ -581,7 +583,7 @@ public abstract class LiRestClient {
                                     LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER +
                                             LiSDKManager.getInstance().getNewAuthToken()).build();
                         } catch (LiRestResponseException e) {
-                            Log.e(LOG_TAG, "Error making rest call", e);
+                            Log.e(LOG_TAG, "Error making rest call for refresh token", e);
                         }
                     }
                     proceed = true;
