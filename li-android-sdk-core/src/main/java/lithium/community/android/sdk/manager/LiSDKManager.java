@@ -21,6 +21,7 @@ import android.util.NoSuchPropertyException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -116,18 +117,27 @@ public final class LiSDKManager extends LiAuthManager {
                                     throws LiRestResponseException {
                                 if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
-                                    JsonArray items = response.getJsonObject().get("data")
-                                            .getAsJsonObject().get("items").getAsJsonArray();
-                                    if (!items.isJsonNull() && items.size() > 0) {
-                                        LiAppSdkSettings liAppSdkSettings =
-                                                gson.fromJson(items.get(0), LiAppSdkSettings.class);
-                                        if (liAppSdkSettings != null) {
-                                            getInstance().putInSecuredPreferences(
-                                                    context,
-                                                    LI_DEFAULT_SDK_SETTINGS,
-                                                    liAppSdkSettings.getAdditionalInformation());
+                                    JsonObject responseJsonObject = response.getJsonObject();
+                                    if (responseJsonObject.has("data")) {
+                                        JsonObject dataObj = responseJsonObject.get("data")
+                                                .getAsJsonObject();
+                                        if (dataObj.has("items")) {
+                                            JsonArray items = dataObj.get("items").getAsJsonArray();
+                                            if (!items.isJsonNull() && items.size() > 0) {
+                                                LiAppSdkSettings liAppSdkSettings =
+                                                        gson.fromJson(items.get(0), LiAppSdkSettings.class);
+                                                if (liAppSdkSettings != null) {
+                                                    getInstance().putInSecuredPreferences(
+                                                            context,
+                                                            LI_DEFAULT_SDK_SETTINGS,
+                                                            liAppSdkSettings.getAdditionalInformation());
+                                                }
+                                            }
                                         }
                                     }
+                                }
+                                else {
+                                    Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
                                 }
                             }
 
@@ -147,8 +157,16 @@ public final class LiSDKManager extends LiAuthManager {
                             @Override
                             public void onSuccess(LiBaseRestRequest request, LiGetClientResponse
                                     liClientResponse) throws LiRestResponseException {
-                                LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
-                                LiSDKManager.getInstance().setLoggedInUser(context, user);
+                                if (liClientResponse != null
+                                        && liClientResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL
+                                        && liClientResponse.getResponse() != null
+                                        && !liClientResponse.getResponse().isEmpty()) {
+                                    LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
+                                    _sdkInstance.setLoggedInUser(context, user);
+                                }
+                                else {
+                                    Log.e(LOG_TAG, "No user found while fetching UserDetails");
+                                }
                             }
 
                             @Override
