@@ -27,6 +27,7 @@ import org.json.JSONException;
 
 import java.net.URISyntaxException;
 
+import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthService;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
@@ -55,6 +56,8 @@ class LiAuthManager {
 
     private LiAuthState liAuthState;
     private LiDeviceTokenProvider liDeviceTokenProvider;
+    protected final LiAppCredentials liAppCredentials;
+
     public LiDeviceTokenProvider getLiDeviceTokenProvider() {
         return liDeviceTokenProvider;
     }
@@ -63,8 +66,9 @@ class LiAuthManager {
         this.liDeviceTokenProvider = liDeviceTokenProvider;
     }
 
-    LiAuthManager(Context context) {
+    LiAuthManager(Context context, LiAppCredentials liAppCredentials) {
         this.liAuthState = restoreAuthState(context);
+        this.liAppCredentials = liAppCredentials;
     }
 
     /**
@@ -262,21 +266,33 @@ class LiAuthManager {
      * Returns proxy host received along with auth code .
      */
     public String getProxyHost() {
-        return liAuthState == null ? null : liAuthState.getProxyHost();
+        String proxyHost;
+        if (liAuthState == null || TextUtils.isEmpty(liAuthState.getProxyHost())) {
+            proxyHost = liAppCredentials.getApiProxyHost();
+        } else {
+            proxyHost = liAuthState.getProxyHost();
+        }
+        return proxyHost;
     }
 
     /**
      * Returns tenant id received along with auth code .
      */
     public String getTenant() {
-        return liAuthState == null ? null : liAuthState.getTenantId();
+        String tenant;
+        if (liAuthState == null || TextUtils.isEmpty(liAuthState.getTenantId())) {
+            tenant = liAppCredentials.getTenantId();
+        } else {
+            tenant = liAuthState.getTenantId();
+        }
+        return tenant;
     }
 
     /**
      * Checks if need to getch fresh access tokens.
      */
     public boolean getNeedsTokenRefresh() {
-        return liAuthState == null ? true : this.liAuthState.getNeedsTokenRefresh();
+        return liAuthState == null || this.liAuthState.getNeedsTokenRefresh();
     }
 
     /**

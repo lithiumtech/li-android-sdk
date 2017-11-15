@@ -1,21 +1,33 @@
 package lithium.community.android.sdk.rest;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
+import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
 import lithium.community.android.sdk.auth.LiSSOAuthorizationRequest;
 import lithium.community.android.sdk.auth.LiSSOTokenRequest;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -24,6 +36,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
@@ -44,7 +58,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LiAuthRestClient.class,OkHttpClient.class,Response.class,ResponseBody.class})
 public class LiAuthRestClientTest {
-
+    @Mock
+    private Activity mContext;
+    private SharedPreferences mMockSharedPreferences;
+    private Resources resource;
+    private LiSDKManager liSDKManager;
     public static final String CLIENT_ID = "clientId";
     public static final String SSO_TOKEN = "ssoToken";
     public static final String STATE = "state";
@@ -56,6 +74,21 @@ public class LiAuthRestClientTest {
     public static final String GRANT_TYPE = "grantType";
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String REFRESH_TOKEN = "refreshToken";
+    @Before
+    public void setUpTest() throws Exception {
+        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
+        // inject the mocks in the test the initMocks method needs to be called.
+        MockitoAnnotations.initMocks(this);
+
+        mContext = Mockito.mock(Activity.class);
+        mMockSharedPreferences = Mockito.mock(SharedPreferences.class);
+        resource = Mockito.mock(Resources.class);
+        Mockito.when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
+        Mockito.when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
+        Mockito.when(mContext.getResources()).thenReturn(resource);
+        Mockito.when(resource.getBoolean(anyInt())).thenReturn(true);
+        liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
+    }
 
 
     @Test
@@ -117,7 +150,7 @@ public class LiAuthRestClientTest {
     @Test
     public void accessTokenAsyncSuccess() throws IOException, LiRestResponseException {
         LiSSOTokenRequest liSSOTokenRequest=new LiSSOTokenRequest();
-        liSSOTokenRequest.setAcceesCode(ACCESS_CODE);
+        liSSOTokenRequest.setAccessCode(ACCESS_CODE);
         liSSOTokenRequest.setRedirectUri(REDIRECT_URI);
         liSSOTokenRequest.setUri(Uri.parse(URI));
         liSSOTokenRequest.setGrantType(GRANT_TYPE);
@@ -173,7 +206,7 @@ public class LiAuthRestClientTest {
     }
 
     @Test
-    public void refreshTokenAsyncTest() throws IOException, LiRestResponseException {
+    public void refreshTokenAsyncTest() throws IOException {
         LiRefreshTokenRequest liRefreshTokenRequest=new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientSecret(CLIENT_SECRET);
         liRefreshTokenRequest.setGrantType(GRANT_TYPE);
@@ -209,7 +242,11 @@ public class LiAuthRestClientTest {
         ResponseBody body=mock(ResponseBody.class);
         doReturn(body).when(response).body();
         final Response finalResponse = response;
-        doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        try {
+            doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        } catch (LiRestResponseException e) {
+            e.printStackTrace();
+        }
         final IOException excep=mock(IOException.class);
         when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
         doAnswer(
@@ -224,7 +261,11 @@ public class LiAuthRestClientTest {
                     }
                 }
         ).when(call).enqueue(any(Callback.class));
-        liAuthRestClient.refreshTokenAsync(liRefreshTokenRequest,callback);
+        try {
+            liAuthRestClient.refreshTokenAsync(liRefreshTokenRequest,callback);
+        } catch (LiRestResponseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

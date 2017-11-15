@@ -34,6 +34,7 @@ import lithium.community.android.sdk.rest.LiPostClientResponse;
 import lithium.community.android.sdk.rest.LiPutClientResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 /**
  * Abstract Client class which provide implementation to basic methods of {@link LiClient}.
@@ -149,15 +150,23 @@ abstract class LiBaseClient implements LiClient {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
                     if (null != response) {
-                        if (requestType.equals(RequestType.GET)) {
-                            liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
-                        } else if (requestType.equals(RequestType.DELETE)) {
-                            liAsyncRequestCallback.onSuccess(request, new LiDeleteClientResponse(response));
-                        } else if (requestType.equals(RequestType.PUT)) {
-                            liAsyncRequestCallback.onSuccess(request, new LiPutClientResponse(response));
+                        if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                            if (requestType.equals(RequestType.GET)) {
+                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                            } else if (requestType.equals(RequestType.DELETE)) {
+                                liAsyncRequestCallback.onSuccess(request, new LiDeleteClientResponse(response));
+                            } else if (requestType.equals(RequestType.PUT)) {
+                                liAsyncRequestCallback.onSuccess(request, new LiPutClientResponse(response));
+                            } else {
+                                liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                            }
+
                         } else {
-                            liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                            liAsyncRequestCallback.onError(new Exception(response.getMessage()));
                         }
+                    }
+                    else {
+                        liAsyncRequestCallback.onError(new Exception("Server Error"));
                     }
                 }
 
@@ -183,13 +192,21 @@ abstract class LiBaseClient implements LiClient {
             this.liRestV2Request.setPath(basePath);
             LiBaseResponse response = liRestv2Client.processSync(liRestV2Request);
             if (null != response) {
-                if (requestType.equals(RequestType.GET)) {
-                    return new LiGetClientResponse(response, type, responseClass, getGson());
+                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (requestType.equals(RequestType.GET)) {
+                        return new LiGetClientResponse(response, type, responseClass, getGson());
+                    } else if (requestType.equals(RequestType.DELETE)) {
+                        return new LiDeleteClientResponse(response);
+                    } else if (requestType.equals(RequestType.PUT)) {
+                        return new LiPutClientResponse(response);
+                    } else {
+                        return new LiPostClientResponse(response);
+                    }
                 } else {
-                    return new LiPostClientResponse(response);
+                    throw new RuntimeException("Server Error");
                 }
             } else {
-                return null;
+                throw new RuntimeException("response empty");
             }
         } catch (RuntimeException e) {
             throw LiRestResponseException.runtimeError(e.getMessage());
@@ -213,11 +230,17 @@ abstract class LiBaseClient implements LiClient {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
                     if (null != response) {
-                        if (requestType.equals(RequestType.GET)) {
-                            liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                        if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                            if (requestType.equals(RequestType.GET)) {
+                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                            } else {
+                                liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                            }
                         } else {
-                            liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                            liAsyncRequestCallback.onError(new Exception(response.getMessage()));
                         }
+                    } else {
+                        liAsyncRequestCallback.onError(new Exception("Server Error"));
                     }
                 }
 

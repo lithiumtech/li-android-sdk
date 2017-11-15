@@ -65,9 +65,9 @@ public class LiSSOTokenRequestTest {
     @Test
     public void getAcceesCodeTest(){
         liSSOTokenRequest =new LiSSOTokenRequest();
-        liSSOTokenRequest.setAcceesCode(TEST_ACCESS_CODE);
-        assertNotEquals(null, liSSOTokenRequest.getAcceesCode());
-        assertEquals(TEST_ACCESS_CODE, liSSOTokenRequest.getAcceesCode());
+        liSSOTokenRequest.setAccessCode(TEST_ACCESS_CODE);
+        assertNotEquals(null, liSSOTokenRequest.getAccessCode());
+        assertEquals(TEST_ACCESS_CODE, liSSOTokenRequest.getAccessCode());
     }
     @Test
     public void getRedirectUriTest(){
