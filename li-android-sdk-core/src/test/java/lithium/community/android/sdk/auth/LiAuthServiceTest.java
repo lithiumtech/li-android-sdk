@@ -127,7 +127,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, null);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext);
         liAuthService=spy(liAuthService);
         doNothing().when(liAuthService).dispose();
         doNothing().when(liAuthService).performAuthorizationRequest(authorizationRequest);
@@ -150,11 +150,11 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext);
         liAuthService=spy(liAuthService);
         doNothing().when(liAuthService).dispose();
         doNothing().when(liAuthService).performSSOAuthorizationRequest(isA(LiSSOAuthorizationRequest.class));
-        liAuthService.startLoginFlow();
+        liAuthService.startLoginFlow(SSO_TOKEN1);
         verify(liAuthService,times(0)).performAuthorizationRequest(isA(LiSSOAuthorizationRequest.class));
         verify(liAuthService,times(1)).performSSOAuthorizationRequest(isA(LiSSOAuthorizationRequest.class));
     }
@@ -172,7 +172,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext);
         //liAuthService=spy(liAuthService);
 
         liAuthService = spy(liAuthService);
@@ -183,7 +183,7 @@ public class LiAuthServiceTest {
 //                "createCustomTabsIntent");
         doNothing().when(liAuthService,
                 "checkIfDisposed");
-        liAuthService.startLoginFlow();
+        liAuthService.startLoginFlow(SSO_TOKEN);
         doNothing().when(mContext).startActivity(isA(Intent.class));
         verify(mContext, Mockito.atLeastOnce()).startActivity(isA(Intent.class));
         verify(liAuthService,times(1)).performAuthorizationRequest(isA(LiSSOAuthorizationRequest.class));
@@ -204,7 +204,7 @@ public class LiAuthServiceTest {
         field.set(LiSystemClock.class, mock);
         when(mock.getCurrentTimeMillis()).thenReturn(1L);
         //
-        LiAuthService liAuthService = new LiAuthServiceImpl(mContext, SSO_TOKEN1);
+        LiAuthService liAuthService = new LiAuthServiceImpl(mContext);
         liAuthService = spy(liAuthService);
         when(resource.getBoolean(anyInt())).thenReturn(true);
         doNothing().when(liAuthService,
@@ -299,7 +299,7 @@ public class LiAuthServiceTest {
         doNothing().when(mContext).startActivity(isA(Intent.class));
         when(mContext.getString(anyInt())).thenReturn("test");
 
-        liAuthService.startLoginFlow();
+        liAuthService.startLoginFlow(SSO_TOKEN1);
 
 
 

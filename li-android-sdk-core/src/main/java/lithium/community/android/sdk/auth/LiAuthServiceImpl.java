@@ -58,19 +58,7 @@ public class LiAuthServiceImpl implements LiAuthService {
     @VisibleForTesting
     protected Context mContext;
 
-    private String ssoToken;
-
     private boolean mDisposed = false;
-    /**
-     * Constructor for SSO flow.
-     *
-     * @param context  {@link Context}
-     * @param ssoToken This is the SSO Token.
-     */
-    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken) {
-        mContext = LiCoreSDKUtils.checkNotNull(context);
-        this.ssoToken = ssoToken;
-    }
 
     /**
      * Constructor for non SSO flow
@@ -81,11 +69,16 @@ public class LiAuthServiceImpl implements LiAuthService {
         mContext = LiCoreSDKUtils.checkNotNull(context);
     }
 
+    @Override
+    public void startLoginFlow() {
+        startLoginFlow(null);
+    }
+
     /**
      * starts login flow
      */
     @Override
-    public void startLoginFlow() {
+    public void startLoginFlow(String ssoToken) {
         LiAppCredentials liAppCredentials = LiSDKManager.getInstance().getLiAppCredentials();
         LiSSOAuthorizationRequest authorizationRequest = new LiSSOAuthorizationRequest();
         authorizationRequest.setClientId(liAppCredentials.getClientKey());
@@ -138,42 +131,37 @@ public class LiAuthServiceImpl implements LiAuthService {
         final LiAuthRestClient authRestClient = getLiAuthRestClient();
 
         LiAuthRequestStore.getInstance().addAuthRequest(request);
-        try {
-            authRestClient.authorizeAsync(request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
-                @Override
-                public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                        enablePostAuthorizationFlows(false, response.getHttpCode());
-                        return;
-                    }
-                    LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
-                    String state = liSsoAuthResponse.getState();
-                    LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
-                    if (request == null) {
-                        Log.e(LOG_TAG, String.format(
-                                "Response received for unknown request with state %s", state));
-                        enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
-                        return;
-                    }
-                    liSsoAuthResponse.setJsonString(String.valueOf(response.getData().get("data")));
-                    handleAuthorizationResponse(liSsoAuthResponse, authRestClient, new LoginCompleteCallBack() {
-
-                        @Override
-                        public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
-                            enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
-                        }
-                    });
+        authRestClient.authorizeAsync(request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+            @Override
+            public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
+                if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    enablePostAuthorizationFlows(false, response.getHttpCode());
+                    return;
                 }
-
-                @Override
-                public void onError(Exception e) {
-                    enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
-                    Log.e(LOG_TAG, "Error Fetching Auth Code: " + e);
+                LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
+                String state = liSsoAuthResponse.getState();
+                LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
+                if (request == null) {
+                    Log.e(LOG_TAG, String.format(
+                            "Response received for unknown request with state %s", state));
+                    enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
+                    return;
                 }
-            });
-        } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
-        }
+                liSsoAuthResponse.setJsonString(String.valueOf(response.getData().get("data")));
+                handleAuthorizationResponse(liSsoAuthResponse, authRestClient, new LoginCompleteCallBack() {
+                    @Override
+                    public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
+                        enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+                Log.e(LOG_TAG, "Error Fetching Auth Code: " + e);
+            }
+        });
         dispose();
     }
 

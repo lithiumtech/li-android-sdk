@@ -32,6 +32,11 @@ public interface LiAuthService {
     void startLoginFlow();
 
     /**
+     * Initiates Login Flow
+     */
+    void startLoginFlow(String ssoToken);
+
+    /**
      * Initiates Authorization request (Non SSO).
      * @param request {@link LiSSOAuthorizationRequest}
      */

@@ -18,7 +18,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -203,11 +202,16 @@ public abstract class LiRestClient {
 
         try {
             response = clientBuilder.build().newCall(request).execute();
-            if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
-                setVisitorTime(response, baseRestRequest);
-                return new LiBaseResponse(response);
+            if (response != null) {
+                if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                    setVisitorTime(response, baseRestRequest);
+                    return new LiBaseResponse(response);
+                } else {
+                    throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                }
             } else {
-                throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                        "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error making rest call", e);
@@ -277,15 +281,21 @@ public abstract class LiRestClient {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
-                    if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
-                        setVisitorTime(response, baseRestRequest);
-                        callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                    if (response != null) {
+                        if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                            setVisitorTime(response, baseRestRequest);
+                            callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                        } else {
+                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        }
                     } else {
-                        throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                                "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     }
-                } catch (LiRestResponseException e) {
+                } catch(Exception e) {
                     callback.onError(e);
-                } finally {
+                }
+                finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
                     }
@@ -397,13 +407,18 @@ public abstract class LiRestClient {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
-                    if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
-                        Log.i("Image response", response.body().toString());
-                        callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                    if (response != null) {
+                        if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                            Log.i("Image response", response.body().toString());
+                            callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                        } else {
+                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        }
                     } else {
-                        throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                                "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     }
-                } catch (LiRestResponseException e) {
+                } catch (Exception e) {
                     callback.onError(e);
                 } finally {
                     if (response != null && response.body() != null) {

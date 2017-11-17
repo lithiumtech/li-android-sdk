@@ -52,6 +52,7 @@ public class LiRestResponseException extends Exception {
      * Instantiates an authorization request with optional root cause information.
      */
     public LiRestResponseException(int httpCode, @Nullable String error, int code) {
+        super(error);
         this.httpCode = httpCode;
         this.error = error;
         this.liErrorCode = code;

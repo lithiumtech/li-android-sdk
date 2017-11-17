@@ -150,11 +150,7 @@ class LiAuthManager {
     public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
         this.liDeviceTokenProvider = liDeviceTokenProvider;
         if (!isUserLoggedIn()) {
-            if (!TextUtils.isEmpty(ssoToken)) {
-                new LiAuthServiceImpl(context, ssoToken).startLoginFlow();
-            } else {
-                new LiAuthServiceImpl(context).startLoginFlow();
-            }
+            new LiAuthServiceImpl(context).startLoginFlow(ssoToken);
         }
     }
 
