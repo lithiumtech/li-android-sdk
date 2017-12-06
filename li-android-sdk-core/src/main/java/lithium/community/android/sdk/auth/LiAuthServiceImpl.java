@@ -132,7 +132,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         final LiAuthRestClient authRestClient = getLiAuthRestClient();
 
         LiAuthRequestStore.getInstance().addAuthRequest(request);
-        authRestClient.authorizeAsync(request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+        authRestClient.authorizeAsync(mContext, request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
             @Override
             public void onSuccess(LiBaseResponse response) {
                 if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
@@ -220,7 +220,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 }
                 String uri = "https://" + proxyHost + "/auth/v1/accessToken";
                 liSSOTokenRequest.setUri(Uri.parse(uri));
-                authRestClient.accessTokenAsync(liSSOTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+                authRestClient.accessTokenAsync(mContext, liSSOTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
                     @Override
                     public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
                         if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
@@ -387,7 +387,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setUri(Uri.parse(uri));
 
         try {
-            authRestClient.refreshTokenAsync(liRefreshTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+            authRestClient.refreshTokenAsync(mContext, liRefreshTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
 
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
@@ -451,7 +451,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setUri(Uri.parse(uri));
 
         LiTokenResponse tokenResponse = null;
-        LiBaseResponse resp = authRestClient.refreshTokenSync(liRefreshTokenRequest);
+        LiBaseResponse resp = authRestClient.refreshTokenSync(mContext, liRefreshTokenRequest);
         Gson gson = new Gson();
         JsonObject dataObject = resp.getData();
         if (dataObject.has("response")) {

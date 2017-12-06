@@ -27,6 +27,11 @@ android {
         versionName "${version}"
     }
     buildTypes {
+        buildTypes.each {
+            it.resValue "string", "li_sdk_core_version", "${version}"
+            it.buildConfigField "String", "li_sdk_core_version", "\"${version}\""
+        }
+
         debug {
             testCoverageEnabled true
         }
