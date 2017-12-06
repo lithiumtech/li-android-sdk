@@ -39,12 +39,10 @@ public class LiBaseResponse {
     private static final String TYPE = "type";
     private static final String ITEMS = "items";
     private static final String ITEM = "item";
+    private static final String STATUS_CODE = "statusCode";
     private String status;
     private String message;
-
-    @SerializedName("http_code")
     private int httpCode;
-
     private JsonObject data;
 
     public LiBaseResponse() {
@@ -64,14 +62,14 @@ public class LiBaseResponse {
         try {
             data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
             if (httpCode == LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR) {
-                if (data.has("statusCode")) {
-                    httpCode = data.get("statusCode").getAsInt();
+                if (data.has(STATUS_CODE)) {
+                    httpCode = data.get(STATUS_CODE).getAsInt();
                 }
             }
             status = response.isSuccessful() ? "success" : "error";
             message = response.message();
         }
-        catch(JsonSyntaxException ex){
+        catch(Exception ex){
             httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
             status = "error";
             message = ex.getMessage();

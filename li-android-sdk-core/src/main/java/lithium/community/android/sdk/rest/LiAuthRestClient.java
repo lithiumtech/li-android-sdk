@@ -28,6 +28,7 @@ import lithium.community.android.sdk.auth.LiSSOAuthorizationRequest;
 import lithium.community.android.sdk.auth.LiSSOTokenRequest;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiSDKManager;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -76,8 +77,8 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
+                    checkResponse(response, callback, "Error authorizeAsync");
+                } catch (Exception e) {
                     callback.onError(e);
                 }
             }
@@ -150,9 +151,9 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    checkResponse(response, callback, "Error accessTokenAsync");
+                } catch (Exception e) {
+                    callback.onError(e);
                 }
             }
         });
@@ -190,12 +191,25 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    checkResponse(response, callback, "Error refreshTokenAsync");
+                } catch (Exception e) {
+                    callback.onError(e);
                 }
             }
         });
+    }
+
+    private void checkResponse(Response response, @NonNull LiAuthAsyncRequestCallback callback, String error) throws LiRestResponseException, IOException {
+        if (response != null) {
+            if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                callback.onSuccess(getLiBaseResponseFromResponse(response));
+            } else {
+                throw new LiRestResponseException(response.code(), error, response.code());
+            }
+        } else {
+            throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                    error, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+        }
     }
 
     /**
@@ -224,11 +238,19 @@ public class LiAuthRestClient {
 
         try {
             response = getCall(request, client).execute();
-            return getLiBaseResponseFromResponse(response);
-        } catch (IOException e) {
+            if (response != null) {
+                if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                    return getLiBaseResponseFromResponse(response);
+                } else {
+                    throw new LiRestResponseException(response.code(), "Error refreshTokenSync", response.code());
+                }
+            } else {
+                throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                        "Error refreshTokenSync", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            }
+        } catch (Exception e) {
             Log.e("LiAuthRestClient", "Error making rest call", e);
             throw LiRestResponseException.networkError(e.getMessage());
         }
-
     }
 }

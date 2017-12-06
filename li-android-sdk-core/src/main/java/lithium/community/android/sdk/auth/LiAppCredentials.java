@@ -68,6 +68,8 @@ public final class LiAppCredentials {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientAppName, "clientAppName cannot be empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenant ID cannot be empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(apiProxyHost, "apiProxyHost cannot be empty");
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
         this.communityUri = Uri.parse(communityURL);

@@ -26,7 +26,7 @@ import com.google.gson.annotations.SerializedName;
 public class LiSSOTokenRequest {
 
     @SerializedName("code")
-    private String acceesCode;
+    private String accessCode;
     @SerializedName("client_id")
     private String clientId;
     @SerializedName("redirect_uri")
@@ -46,12 +46,12 @@ public class LiSSOTokenRequest {
         this.uri = uri;
     }
 
-    public String getAcceesCode() {
-        return acceesCode;
+    public String getAccessCode() {
+        return accessCode;
     }
 
-    public void setAcceesCode(String acceesCode) {
-        this.acceesCode = acceesCode;
+    public void setAccessCode(String accessCode) {
+        this.accessCode = accessCode;
     }
 
     public String getClientId() {

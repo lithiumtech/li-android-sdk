@@ -52,7 +52,7 @@ public final class LiSDKManager extends LiAuthManager {
 
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager _sdkInstance;
-    private final LiAppCredentials liAppCredentials;
+
     /**
      * Protected constructor.
      *
@@ -61,9 +61,8 @@ public final class LiSDKManager extends LiAuthManager {
      * @throws URISyntaxException {@link URISyntaxException}
      */
     private LiSDKManager(Context context, LiAppCredentials liAppCredentials) throws URISyntaxException {
-        super(context);
+        super(context, liAppCredentials);
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        this.liAppCredentials = liAppCredentials;
     }
 
     /**
@@ -104,6 +103,10 @@ public final class LiSDKManager extends LiAuthManager {
                     context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
 
+        return _sdkInstance;
+    }
+
+    public void syncWithCommunity(final Context context) {
         if (_sdkInstance.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
@@ -179,7 +182,6 @@ public final class LiSDKManager extends LiAuthManager {
             }
 
         }
-        return _sdkInstance;
     }
 
     /**
