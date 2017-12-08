@@ -73,7 +73,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
 
-import static lithium.community.android.sdk.auth.LiAuthConstants.APPLICATION_VERSION_HEADER_VALUE;
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_FORBIDDEN;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL;
@@ -81,6 +80,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_U
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
+import static lithium.community.android.sdk.utils.LiCoreSDKUtils.addLSIRequestHeaders;
 
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
@@ -492,11 +492,7 @@ public abstract class LiRestClient {
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID,
-                LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+        addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;
     }

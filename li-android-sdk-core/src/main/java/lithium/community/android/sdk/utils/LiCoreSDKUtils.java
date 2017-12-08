@@ -23,9 +23,15 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+
+import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.R;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.response.LiBrowse;
+import lithium.community.android.sdk.rest.LiRequestHeaderConstants;
+import okhttp3.Request;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -504,4 +510,11 @@ public class LiCoreSDKUtils {
         context.sendBroadcast(intent);
     }
 
+    public static void addLSIRequestHeaders(@NonNull Context context, Request.Builder builder) {
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
+                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.li_sdk_core_version);
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID,
+                LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+    }
 }

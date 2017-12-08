@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.exception.LiRestResponseException;
@@ -209,7 +210,10 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Checks if it is deferred login.
+     * gets the core sdk version
      */
+    public String getCoreSDKVersion() {
+        return BuildConfig.li_sdk_core_version;
+    }
 }
 
