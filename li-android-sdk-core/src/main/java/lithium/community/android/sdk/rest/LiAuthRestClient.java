@@ -40,6 +40,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.addLSIRequestHeaders;
 
 /**
@@ -200,11 +201,13 @@ public class LiAuthRestClient {
             if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
                 callback.onSuccess(getLiBaseResponseFromResponse(response));
             } else {
-                throw new LiRestResponseException(response.code(), error, response.code());
+                Log.e(LI_LOG_TAG, error);
+                callback.onError(new LiRestResponseException(response.code(), error, response.code()));
             }
         } else {
-            throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
-                    error, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            Log.e(LI_LOG_TAG, error);
+            callback.onError(new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                    error, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR));
         }
     }
 

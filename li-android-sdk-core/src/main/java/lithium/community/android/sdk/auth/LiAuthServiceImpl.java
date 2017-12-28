@@ -49,6 +49,7 @@ import lithium.community.android.sdk.utils.LiUUIDUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 
 /**
  * Implementation class for LiAuthService. Starts login flow, performs authorization, fetches access and refresh tokens.
@@ -409,10 +410,12 @@ public class LiAuthServiceImpl implements LiAuthService {
                                 tokenResponse.setJsonString(String.valueOf(obj));
                                 callback.onTokenRequestCompleted(tokenResponse, null);
                             } else {
-                                throw new RuntimeException("Couldn't fetch access token from access code");
+                                Log.e(LI_LOG_TAG, "Couldn't fetch access token from access code");
+                                callback.onTokenRequestCompleted(null, new RuntimeException("Couldn't fetch access token from access code"));
                             }
                         } else {
-                            throw new RuntimeException("Couldn't fetch access token from access code");
+                            Log.e(LI_LOG_TAG, "Couldn't fetch access token from access code");
+                            callback.onTokenRequestCompleted(null, new RuntimeException("Couldn't fetch access token from access code"));
                         }
                     }
                     catch (RuntimeException e) {
