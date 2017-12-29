@@ -139,7 +139,7 @@ public class LiAuthRestClientTest {
         ).when(call).enqueue(any(Callback.class));
 
         try {
-            liAuthRestClient.authorizeAsync(ssoAuthReq,callback);
+            liAuthRestClient.authorizeAsync(mContext, ssoAuthReq,callback);
         } catch (Exception ignored) {
         }
     }
@@ -203,7 +203,7 @@ public class LiAuthRestClientTest {
         ).when(call).enqueue(any(Callback.class));
 
         try {
-            liAuthRestClient.accessTokenAsync(liSSOTokenRequest,callback);
+            liAuthRestClient.accessTokenAsync(mContext, liSSOTokenRequest,callback);
         } catch (Exception ignored) {
         }
     }
@@ -264,7 +264,7 @@ public class LiAuthRestClientTest {
                 }
         ).when(call).enqueue(any(Callback.class));
         try {
-            liAuthRestClient.refreshTokenAsync(liRefreshTokenRequest,callback);
+            liAuthRestClient.refreshTokenAsync(mContext, liRefreshTokenRequest,callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,7 +300,7 @@ public class LiAuthRestClientTest {
         when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
         try {
             when(call.execute()).thenReturn(response);
-            LiBaseResponse resp = liAuthRestClient.refreshTokenSync(liRefreshTokenRequest);
+            LiBaseResponse resp = liAuthRestClient.refreshTokenSync(mContext, liRefreshTokenRequest);
             Assert.assertEquals(resp.getHttpCode(),200);
             Assert.assertEquals(resp.getMessage(),ITS_A_TEST_MESSAGE);
         } catch (IOException | LiRestResponseException ignored) {

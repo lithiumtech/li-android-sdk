@@ -1,6 +1,7 @@
 package lithium.community.android.sdk.auth;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -34,10 +35,12 @@ import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.api.LiBaseGetClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiSDKManager;
+import lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiAuthRestClient;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiSystemClock;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -298,7 +301,7 @@ public class LiAuthServiceTest {
 
         doNothing().when(mContext).startActivity(isA(Intent.class));
         when(mContext.getString(anyInt())).thenReturn("test");
-
+        when(LiSDKManager.getInstance().getFromSecuredPreferences(mContext, LiCoreSDKConstants.LI_VISITOR_ID)).thenReturn("test");
         liAuthService.startLoginFlow(SSO_TOKEN1);
 
 
@@ -335,7 +338,7 @@ public class LiAuthServiceTest {
                 "}";
         Gson gson=new Gson();
         LiBaseResponse liBaseResponse=gson.fromJson(refreshtokenResponse,LiBaseResponse.class);
-        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(LiRefreshTokenRequest.class));
+        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(Context.class), isA(LiRefreshTokenRequest.class));
 
         LiTokenResponse tokenResponse = liAuthService.performSyncRefreshTokenRequest();
         assert (tokenResponse.getAccessToken().equals(ACCESS_TOKEN));
@@ -369,10 +372,10 @@ public class LiAuthServiceTest {
                 "}";
         Gson gson=new Gson();
         LiBaseResponse liBaseResponse=gson.fromJson(refreshtokenResponse,LiBaseResponse.class);
-        try {
-            doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(LiRefreshTokenRequest.class));
-        } catch (LiRestResponseException ignored) {
-        }
+//        try {
+//            doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenAsync(isA(Context.class), isA(LiRefreshTokenRequest.class), isA(LiAuthAsyncRequestCallback.class));
+//        } catch (LiRestResponseException ignored) {
+//        }
 
         LiAuthService.LiTokenResponseCallback callback=new LiAuthService.LiTokenResponseCallback() {
             @Override
@@ -433,7 +436,7 @@ public class LiAuthServiceTest {
                 "}";
         Gson gson=new Gson();
         LiBaseResponse liBaseResponse=gson.fromJson(refreshtokenResponse,LiBaseResponse.class);
-        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(LiRefreshTokenRequest.class));
+        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(mContext, isA(LiRefreshTokenRequest.class));
 
         LiAuthService.LiTokenResponseCallback callback=new LiAuthService.LiTokenResponseCallback() {
             @Override
