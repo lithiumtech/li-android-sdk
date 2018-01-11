@@ -73,7 +73,7 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             deviceIdFetchClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         LiBaseResponse liBaseResponse = response.getResponse();
                         JsonObject data = liBaseResponse.getData();
                         if (data != null && data.has("data")) {
@@ -109,7 +109,7 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPutClientResponse>() {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPutClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Log.i(LI_LOG_TAG, "Successfully updated device Id");
                     }
                     else {

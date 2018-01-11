@@ -179,7 +179,7 @@ public class LiBaseClientTest {
         liClient.processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
             @Override
             public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) throws LiRestResponseException {
-                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                     Assert.assertEquals(200, response.getHttpCode());
                 }
             }

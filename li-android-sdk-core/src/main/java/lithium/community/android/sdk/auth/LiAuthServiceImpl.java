@@ -57,6 +57,7 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
  */
 public class LiAuthServiceImpl implements LiAuthService {
 
+    private static final String REFRESH_TOKEN_FETCH_ERROR = "Couldn't refresh access token from refresh token";
     @VisibleForTesting
     protected Context mContext;
 
@@ -136,8 +137,12 @@ public class LiAuthServiceImpl implements LiAuthService {
         authRestClient.authorizeAsync(mContext, request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
             @Override
             public void onSuccess(LiBaseResponse response) {
-                if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                    enablePostAuthorizationFlows(false, response.getHttpCode());
+                if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    int httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
+                    if (response != null) {
+                        httpCode = response.getHttpCode();
+                    }
+                    enablePostAuthorizationFlows(false, httpCode);
                     return;
                 }
                 LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
@@ -224,7 +229,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 authRestClient.accessTokenAsync(mContext, liSSOTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
                     @Override
                     public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                        if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                             Log.e(LOG_TAG, "Error fetching access token");
                             loginCompleteCallBack.onLoginComplete(LiAuthorizationException.generalEx(
                                     LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, "Error fetching access token"), false);
@@ -284,7 +289,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 @Override
                 public void onSuccess(LiBaseRestRequest request,
                                       LiGetClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Gson gson = new Gson();
                         JsonObject responseJsonObject = response.getJsonObject();
                         if (responseJsonObject.has("data")) {
@@ -392,8 +397,8 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                        callback.onTokenRequestCompleted(null, new Exception("Couldn't fetch access token from access code"));
+                    if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        callback.onTokenRequestCompleted(null, new Exception(REFRESH_TOKEN_FETCH_ERROR));
                         return;
                     }
                     try {
@@ -410,12 +415,12 @@ public class LiAuthServiceImpl implements LiAuthService {
                                 tokenResponse.setJsonString(String.valueOf(obj));
                                 callback.onTokenRequestCompleted(tokenResponse, null);
                             } else {
-                                Log.e(LI_LOG_TAG, "Couldn't fetch access token from access code");
-                                callback.onTokenRequestCompleted(null, new RuntimeException("Couldn't fetch access token from access code"));
+                                Log.e(LI_LOG_TAG, REFRESH_TOKEN_FETCH_ERROR);
+                                callback.onTokenRequestCompleted(null, new RuntimeException(REFRESH_TOKEN_FETCH_ERROR));
                             }
                         } else {
-                            Log.e(LI_LOG_TAG, "Couldn't fetch access token from access code");
-                            callback.onTokenRequestCompleted(null, new RuntimeException("Couldn't fetch access token from access code"));
+                            Log.e(LI_LOG_TAG, REFRESH_TOKEN_FETCH_ERROR);
+                            callback.onTokenRequestCompleted(null, new RuntimeException(REFRESH_TOKEN_FETCH_ERROR));
                         }
                     }
                     catch (RuntimeException e) {
