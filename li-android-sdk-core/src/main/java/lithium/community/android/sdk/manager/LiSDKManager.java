@@ -119,7 +119,7 @@ public final class LiSDKManager extends LiAuthManager {
                             public void onSuccess(LiBaseRestRequest request,
                                                   LiGetClientResponse response)
                                     throws LiRestResponseException {
-                                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
                                     JsonObject responseJsonObject = response.getJsonObject();
                                     if (responseJsonObject.has("data")) {
