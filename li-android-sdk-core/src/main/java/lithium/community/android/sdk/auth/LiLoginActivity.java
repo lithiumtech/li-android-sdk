@@ -16,7 +16,6 @@ package lithium.community.android.sdk.auth;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -63,11 +62,13 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
     private class LoginWebChromeClient extends WebChromeClient {
         public void onProgressChanged(WebView view, int progress) {
             progBar.setProgress(progress);
         }
     }
+
     private class LoginWebViewClient extends WebViewClient {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {

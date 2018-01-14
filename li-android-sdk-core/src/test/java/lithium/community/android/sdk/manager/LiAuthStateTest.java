@@ -18,8 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.Field;
 
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
-import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
+import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
@@ -31,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
  * Created by kunal.shrivastava on 12/2/16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LiSystemClock.class,LiAuthState.class})
+@PrepareForTest({LiSystemClock.class, LiAuthState.class})
 public class LiAuthStateTest {
 
     public static final String CLIENT_ID = "clientId";
@@ -193,15 +193,15 @@ public class LiAuthStateTest {
 
     @Test
     public void testJsonSerialize() {
-        Gson gson=new Gson();
+        Gson gson = new Gson();
         LiAuthState liAuthState = new LiAuthState();
-        LiRefreshTokenRequest liRefreshTokenRequest=new LiRefreshTokenRequest();
+        LiRefreshTokenRequest liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientId(CLIENT_ID);
         liRefreshTokenRequest.setRefreshToken(REFRESH);
         liRefreshTokenRequest.setClientSecret(CLIENT_SECRET);
         liRefreshTokenRequest.setGrantType(REFRESH_TOKEN);
 
-        LiSSOAuthResponse liSsoAuthResponse =new LiSSOAuthResponse();
+        LiSSOAuthResponse liSsoAuthResponse = new LiSSOAuthResponse();
         liSsoAuthResponse.setAuthCode(AUTH_CODE);
         liSsoAuthResponse.setTenantId(TENANT_ID);
         liSsoAuthResponse.setApiProxyHost(API_PROXY_HOST);
@@ -211,7 +211,7 @@ public class LiAuthStateTest {
         System.out.printf(gson.toJson(liSsoAuthResponse));
         liAuthState.update(liSsoAuthResponse);
 
-        LiTokenResponse liTokenResponse=new LiTokenResponse();
+        LiTokenResponse liTokenResponse = new LiTokenResponse();
         liTokenResponse.setAccessToken(ACCESSTOKEN);
         liTokenResponse.setUserId(USER_ID);
         liTokenResponse.setTokenType(TOKEN_TYPE_BEARER);
@@ -220,7 +220,7 @@ public class LiAuthStateTest {
         liTokenResponse.setExpiresIn(EXPIRES_IN);
         liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(EXPIRES_IN));
 
-        String json=gson.toJson(liTokenResponse);
+        String json = gson.toJson(liTokenResponse);
         liTokenResponse.setJsonString(json);
         liAuthState.update(liTokenResponse);
 

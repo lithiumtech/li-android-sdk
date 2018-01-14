@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="li_theme_loginTabCloseIcon" format="reference"/>
-    <attr name="li_theme_appBarOverlay" format="reference"/>
-    <attr name="li_theme_popupOverlay" format="reference"/>
+    <attr name="li_theme_loginTabCloseIcon" format="reference" />
+    <attr name="li_theme_appBarOverlay" format="reference" />
+    <attr name="li_theme_popupOverlay" format="reference" />
 </resources>

@@ -19,14 +19,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import okhttp3.Response;
@@ -51,6 +50,7 @@ public class LiBaseResponse {
 
     /**
      * Wrapping OkHttp response to LiBaseResponse.
+     *
      * @param response {@link Response}
      * @throws IOException
      * @throws LiRestResponseException
@@ -68,8 +68,7 @@ public class LiBaseResponse {
             }
             status = response.isSuccessful() ? "success" : "error";
             message = response.message();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
             status = "error";
             message = ex.getMessage();

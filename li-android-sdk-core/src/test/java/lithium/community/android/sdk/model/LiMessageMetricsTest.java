@@ -17,7 +17,7 @@ public class LiMessageMetricsTest {
     LiMessageMetrics messageMetrics = new LiMessageMetrics();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         messageMetrics.setViewCount(viewCount);
         assertEquals(viewCount, messageMetrics.getViewCount());
     }

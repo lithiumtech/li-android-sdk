@@ -28,7 +28,7 @@ public class LiAuthorizationExceptionTest {
     @Mock
     private Intent mIntent;
     private String validJson, inValidJson;
-    private final String INVALID_REQUEST="invalid_request";
+    private final String INVALID_REQUEST = "invalid_request";
 
     @Before
     public void setUp() {
@@ -181,7 +181,7 @@ public class LiAuthorizationExceptionTest {
         assertEquals("newErrorDescription", authException.errorDescription);
         assertEquals(5, authException.code);
         assertEquals("newError", authException.error);
-        assertEquals(null,authException.errorUri);
+        assertEquals(null, authException.errorUri);
     }
 
     @Test(expected = NullPointerException.class)
@@ -201,7 +201,7 @@ public class LiAuthorizationExceptionTest {
         LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
         Intent intent = inValidRequestLiAuthorizationException.toIntent();
         String jsonStr = inValidRequestLiAuthorizationException.toJsonString();
-        assertNotEquals(null,intent);
+        assertNotEquals(null, intent);
     }
 
     @Test

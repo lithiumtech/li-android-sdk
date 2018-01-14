@@ -1,7 +1,5 @@
 package lithium.community.android.sdk.model.post;
 
-import lithium.community.android.sdk.model.response.LiMessage;
-
 /**
  * Created by shoureya.kant on 3/30/17.
  */

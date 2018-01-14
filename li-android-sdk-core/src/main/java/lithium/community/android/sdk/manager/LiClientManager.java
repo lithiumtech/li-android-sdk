@@ -102,7 +102,6 @@ public class LiClientManager {
     /**
      * Fetches all articles on the specified board, authored by the user in context. Create parameters with {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams}.
      *
-     *
      * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams} the Android context (required)
      * @param liClientRequestParams the ID of the board from which to fetch the messages (required)
      * @return LiMessage {@link LiMessage}
@@ -446,6 +445,7 @@ public class LiClientManager {
         liBasePutClient.postModel = liPostMessageModel;
         return liBasePutClient;
     }
+
     /**
      * Embeds an image tag into the message body.
      * <p><li-image id=IMAGEID</> width="500" height="500" alt=IAMGEID.png align="inline" size="large" sourcetype="new"></li-image></p>
@@ -512,7 +512,7 @@ public class LiClientManager {
      * @param liClientRequestParams the image title (required)
      * @param liClientRequestParams the image filename (required)
      * @param liClientRequestParams the absolute path to the image (required)
-     * Note: the image filename and the filename in the absolute path param above must be equal.
+     *                              Note: the image filename and the filename in the absolute path param above must be equal.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -539,7 +539,7 @@ public class LiClientManager {
      * Creates an abuse report for the specified message.
      * Create parameters with {@link LiClientRequestParams.LiReportAbuseClientRequestParams}.
      * Uses the {@link LiMarkAbuseModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.0.2
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiReportAbuseClientRequestParams} the Android context (required)
@@ -624,7 +624,7 @@ public class LiClientManager {
      * Creates new user account.
      * Create parameters with {@link LiClientRequestParams.LiCreateUserParams}.
      * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams} the Android context (required)
@@ -635,7 +635,6 @@ public class LiClientManager {
      * @param liClientRequestParams the user's biography
      * @param liClientRequestParams the user's first name
      * @param liClientRequestParams the user's last name
-     *
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -682,7 +681,7 @@ public class LiClientManager {
      * Mark a single message as read or unread
      * Create parameters with {@link LiClientRequestParams.LiMarkMessageParams}.
      * Uses the {@link LiMarkMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams} the Android context (required)
@@ -711,7 +710,7 @@ public class LiClientManager {
      * Marks a set of messages (not necessarily in the same thread) as read or unread. Compare this to getMarkTopicPostClient.
      * Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMarkMessagesParams}.
      * Uses the {@link LiMarkMessagesModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams} the Android context
@@ -740,7 +739,7 @@ public class LiClientManager {
      * Marks a topic message and all its replies as read or unread. Compare this to getMarkMessagesPostClient.
      * Create parameters with {@link LiClientRequestParams.LiMarkTopicParams}.
      * Uses the {@link LiMarkTopicModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams} the Android context (required)
@@ -768,18 +767,18 @@ public class LiClientManager {
     /**
      * Creates a subscription to the specified target (a board or message).
      * Create parameters with {@link LiClientRequestParams.LiPostSubscriptionParams}.
-     *
+     * <p>
      * The parameters can either be a target which is a {@link LiBaseModel} in the form of {@link LiMessage} or {@link LiBrowse}
      * which was selected to be subscribed to and needs to be passed in the constructor
-     *
+     * <p>
      * Alternatively in the parameters "message/boardId" and "type" need to be passed in the constructor.
      * "type" is either "message" or "board" depending upon what was selected.
-     *
+     * <p>
      * If both are set then the target takes precedence and string parameters are ignored.
-     *
+     * <p>
      * Uses the {@link LiSubscriptionPostModel} to build the request body.
      * The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.0.1
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams} the Android context (required)
@@ -790,7 +789,7 @@ public class LiClientManager {
     public static LiClient getSubscriptionPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
         LiClientRequestParams.LiPostSubscriptionParams liPostSubscriptionParams =
-                ((LiClientRequestParams.LiPostSubscriptionParams)liClientRequestParams);
+                ((LiClientRequestParams.LiPostSubscriptionParams) liClientRequestParams);
         LiBaseModel liBaseModel = liPostSubscriptionParams.getTarget();
         LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.Target();
         String targetID = null;
@@ -806,8 +805,7 @@ public class LiClientManager {
                 targetType = "board";
                 targetID = extractBoardId(board.getId());
             }
-        }
-        else {
+        } else {
             targetType = liPostSubscriptionParams.getTargetType();
             targetID = liPostSubscriptionParams.getTargetId();
         }
@@ -832,6 +830,7 @@ public class LiClientManager {
 
         return finalBoardId;
     }
+
     /**
      * Deletes a subscription.
      *
@@ -842,7 +841,7 @@ public class LiClientManager {
      */
     public static LiClient getSubscriptionDeleteClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
-        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams)liClientRequestParams).getSubscriptionId();
+        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams) liClientRequestParams).getSubscriptionId();
         LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.SUBSCRIPTION, id);
         LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(liGenericDeleteClientRequestParams);
         return liBaseDeleteClient;
@@ -851,7 +850,7 @@ public class LiClientManager {
     /**
      * Updates an existing user. Create parameters with {@link LiClientRequestParams.LiUpdateUserParams}.
      * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
-     *
+     * <p>
      * Added 1.1.0
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams} the Android context (required)
@@ -865,7 +864,6 @@ public class LiClientManager {
      * @param liClientRequestParams the user's first name
      * @param liClientRequestParams the user's last name
      * @param liClientRequestParams the user's login
-     *
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
@@ -936,6 +934,7 @@ public class LiClientManager {
 
     /**
      * This is a beacon client which is used to send information to the community backend for analytics aka LSI
+     *
      * @param liClientRequestParams {@link LiClientRequestParams.LiBeaconPostClientRequestParams}
      */
     public static LiClient getBeaconClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
@@ -1025,7 +1024,6 @@ public class LiClientManager {
      * Create parameters with {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams}.
      *
      * @param liClientRequestParams {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams} the Android context
-     *
      * @return LiClient {@link LiClient}
      */
     public static LiClient getGenericQueryParamsGetClient(LiClientRequestParams liClientRequestParams) {
@@ -1142,6 +1140,7 @@ public class LiClientManager {
         LI_MARK_TOPIC_POST_CLIENT,
         LI_UPDATE_MESSAGE_CLIENT
     }
+
     /**
      * Enum of all collection types.
      */

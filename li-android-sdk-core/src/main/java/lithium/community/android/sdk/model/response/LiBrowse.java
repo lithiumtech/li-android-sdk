@@ -28,6 +28,7 @@ public class LiBrowse extends LiBaseModelImpl {
     private LiBrowse parent;
 
     private int depth;
+
     public int getDepth() {
         return depth;
     }

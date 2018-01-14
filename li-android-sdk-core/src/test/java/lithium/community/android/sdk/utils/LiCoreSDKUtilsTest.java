@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-
 /**
  * Created by kunal.shrivastava on 12/1/16.
  */
@@ -132,7 +129,7 @@ public class LiCoreSDKUtilsTest {
     public void testPut() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         JSONObject value = new JSONObject();
-        value.put("hello","world");
+        value.put("hello", "world");
         LiCoreSDKUtils.put(jsonObject, "hello", value);
         Assert.assertEquals("{\"hello\":\"world\"}", jsonObject.get("hello").toString());
     }
@@ -209,7 +206,7 @@ public class LiCoreSDKUtilsTest {
     @Test
     public void testGetLongIfDefined() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        Long l =  new Long("1");
+        Long l = new Long("1");
         jsonObject.put("hello", l);
         Assert.assertEquals(l, LiCoreSDKUtils.getLongIfDefined(jsonObject, "hello"));
     }
@@ -217,7 +214,7 @@ public class LiCoreSDKUtilsTest {
     @Test
     public void testGetLongIfDefinedForUndefinedValue() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        Long l =  new Long("1");
+        Long l = new Long("1");
         jsonObject.put("hello", l);
         Assert.assertEquals(null, LiCoreSDKUtils.getLongIfDefined(jsonObject, "hi"));
     }

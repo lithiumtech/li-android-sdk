@@ -19,15 +19,16 @@ public class LiSubscriptionsTest {
     private LiSubscriptions subscriptions = new LiSubscriptions();
 
     @Test
-    public void getIdTest(){
+    public void getIdTest() {
 
         LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
         liId.setValue(id);
         subscriptions.setId(liId);
         assertEquals(id, subscriptions.getId());
     }
+
     @Test
-    public void getTargetMessageTest(){
+    public void getTargetMessageTest() {
         JsonObject messageObject = new JsonObject();
         messageObject.addProperty("id", id);
         messageObject.addProperty("type", "message");
@@ -36,7 +37,7 @@ public class LiSubscriptionsTest {
     }
 
     @Test
-    public void getTargetBoardest(){
+    public void getTargetBoardest() {
         JsonObject messageObject = new JsonObject();
         messageObject.addProperty("id", id);
         messageObject.addProperty("type", "board");

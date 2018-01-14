@@ -72,6 +72,7 @@ public class LiAvatar extends LiBaseModelImpl {
         LiCoreSDKUtils.put(json, MESSAGE_IMAGE_URL, this.getMessage());
         return json;
     }
+
     public String getInline() {
         return inline;
     }
@@ -95,6 +96,7 @@ public class LiAvatar extends LiBaseModelImpl {
     public void setPrint(String print) {
         this.print = print;
     }
+
     public String getUrl() {
         return url;
     }
@@ -102,6 +104,7 @@ public class LiAvatar extends LiBaseModelImpl {
     public void setUrl(String url) {
         this.url = url;
     }
+
     public String getImage() {
         return image;
     }

@@ -26,12 +26,12 @@ import org.json.JSONObject;
 import java.util.Set;
 
 import lithium.community.android.sdk.auth.LiAuthorizationException;
-import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
+import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiClock;
-import lithium.community.android.sdk.utils.LiSystemClock;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkArgument;
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNull;
@@ -181,6 +181,7 @@ class LiAuthState {
 
     /**
      * provides tenant id fetched during authorization.
+     *
      * @return
      */
     @Nullable

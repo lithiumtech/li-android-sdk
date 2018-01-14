@@ -15,8 +15,8 @@ package lithium.community.android.sdk.auth;
 
 /**
  * Created by Lithium Technologies Inc on 7/10/17.
- *  This is the interface that the app developer should implement for getting the device ID via either Firebase or GCM
- *  for e.g. via Firebase it is like this: <code>FirebaseInstanceId.getInstance().getToken()</code>
+ * This is the interface that the app developer should implement for getting the device ID via either Firebase or GCM
+ * for e.g. via Firebase it is like this: <code>FirebaseInstanceId.getInstance().getToken()</code>
  */
 public interface LiDeviceTokenProvider {
     String getDeviceId();

@@ -245,8 +245,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                                 LiSDKManager.getInstance().persistAuthState(mContext, tokenResponse);
                                 getUserAfterTokenResponse(loginCompleteCallBack);
                             }
-                        }
-                        else {
+                        } else {
                             loginCompleteCallBack.onLoginComplete(LiAuthorizationException.generalEx(
                                     response.getHttpCode(),
                                     "Error fetching accessToken"), false);
@@ -304,8 +303,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
                     }
 
@@ -400,7 +398,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Gson gson = new Gson();
                         JsonObject data = gson.fromJson(response.getData(), JsonObject.class);
                         if (data != null
-                                && data.has("response"))  {
+                                && data.has("response")) {
                             JsonObject responseJsonObj = data.get("response").getAsJsonObject();
                             if (responseJsonObj.has("data")) {
                                 LiTokenResponse tokenResponse = gson.fromJson(responseJsonObj.get("data"), LiTokenResponse.class);
@@ -417,8 +415,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                             Log.e(LI_LOG_TAG, "Couldn't fetch access token from access code");
                             callback.onTokenRequestCompleted(null, new RuntimeException("Couldn't fetch access token from access code"));
                         }
-                    }
-                    catch (RuntimeException e) {
+                    } catch (RuntimeException e) {
                         callback.onTokenRequestCompleted(null, e);
                     }
                 }
@@ -478,7 +475,7 @@ public class LiAuthServiceImpl implements LiAuthService {
      * Process post Authorization.
      *
      * @param isLoginSuccess Checks if login is complete i.e user details has been fetched.
-     * @param  responseCode HTTP error code that gets returned in the intent
+     * @param responseCode   HTTP error code that gets returned in the intent
      */
     @Override
     public void enablePostAuthorizationFlows(boolean isLoginSuccess, int responseCode) {

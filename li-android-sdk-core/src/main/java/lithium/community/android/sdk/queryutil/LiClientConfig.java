@@ -34,6 +34,7 @@ public class LiClientConfig {
 
     /**
      * Returns base LIQL for a client.
+     *
      * @param client {@link Client}
      * @return Base query.
      */
@@ -70,6 +71,7 @@ public class LiClientConfig {
 
     /**
      * Returns client type.
+     *
      * @param client {@link Client}
      * @return Query type.
      */
@@ -106,10 +108,11 @@ public class LiClientConfig {
 
     /**
      * Returns data model for a client.
+     *
      * @param client {@link Client}
      * @return data model
      */
-    public static Class<? extends LiBaseModel>  getResponseClass(Client client) {
+    public static Class<? extends LiBaseModel> getResponseClass(Client client) {
         switch (client) {
             case LI_ARTICLES_BROWSE_CLIENT:
                 return LiMessage.class;

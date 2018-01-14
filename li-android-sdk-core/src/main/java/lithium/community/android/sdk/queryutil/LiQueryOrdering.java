@@ -53,6 +53,7 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_ARTICLES_CLIENT.equals(client);
         }
@@ -73,6 +74,7 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_SEARCH_CLIENT.equals(client);
         }
@@ -93,6 +95,7 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_QUESTIONS_CLIENT.equals(client);
         }
@@ -103,12 +106,14 @@ public class LiQueryOrdering {
 
         /**
          * get value of liQueryOrdering field
+         *
          * @return Value of clause.
          */
         String getValue();
 
         /**
          * Checks if liQueryOrdering filed is correct for the client.
+         *
          * @param client {@link LiClientManager.Client}
          * @return If clause is valid for a client.
          */
@@ -116,7 +121,6 @@ public class LiQueryOrdering {
     }
 
     /**
-     *
      * @return columns on which liQueryOrdering can be done for a client.
      */
     public ClientOrderingColumn getColumn() {
@@ -124,7 +128,6 @@ public class LiQueryOrdering {
     }
 
     /**
-     *
      * @return LiQueryOrdering {@link Order}
      */
     public Order getOrder() {
@@ -132,7 +135,6 @@ public class LiQueryOrdering {
     }
 
     /**
-     *
      * @param client {@link LiClientManager.Client}
      * @return true or false depending on whether column on which liQueryOrdering is applied is allowed for the same
      * for a client.

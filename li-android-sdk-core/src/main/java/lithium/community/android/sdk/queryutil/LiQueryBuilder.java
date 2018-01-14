@@ -15,7 +15,6 @@
 package lithium.community.android.sdk.queryutil;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -27,8 +26,10 @@ import com.google.gson.JsonParser;
 import lithium.community.android.sdk.manager.LiSDKManager;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME;
-import static lithium.community.android.sdk.utils.LiQueryConstant.*;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_FOR_UI_SEARCH;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MARK_AS_READ;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE;
+import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SEARCH_QUERYSETTINGS_TYPE;
 
 /**
  * Created by kunal.shrivastava on 10/19/16.
@@ -194,8 +195,7 @@ public class LiQueryBuilder {
             Log.i("LiQueryBuilder", "Fetched Query Setting, calling buildQuery to build query");
             if (client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)) {
                 return buildQuery(baseQuery, liQuerySetting) + LI_MARK_AS_READ;
-            }
-            else if(client.equals(LI_SEARCH_QUERYSETTINGS_TYPE)) {
+            } else if (client.equals(LI_SEARCH_QUERYSETTINGS_TYPE)) {
                 return buildQuery(baseQuery, liQuerySetting) + LI_FOR_UI_SEARCH;
             }
             return buildQuery(baseQuery, liQuerySetting);
@@ -203,8 +203,7 @@ public class LiQueryBuilder {
         if (client.equals(LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE)) {
             //Temporary addition to figure out if the message has been read by the user
             return (baseQuery + LI_MARK_AS_READ);
-        }
-        else if(client.equals(LI_SEARCH_QUERYSETTINGS_TYPE)) {
+        } else if (client.equals(LI_SEARCH_QUERYSETTINGS_TYPE)) {
             return baseQuery + LI_FOR_UI_SEARCH;
         }
         return baseQuery;

@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import lithium.community.android.sdk.TestHelper;
+import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.response.LiMessage;

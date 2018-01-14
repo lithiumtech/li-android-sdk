@@ -23,48 +23,48 @@ public class LiBoardTest {
     @Test
     public void getBlogTest() {
         LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue( BLOG );
-        liBoard.setBlog( liBoolean );
-        assertEquals( BLOG, liBoard.getBlog() );
+        liBoolean.setValue(BLOG);
+        liBoard.setBlog(liBoolean);
+        assertEquals(BLOG, liBoard.getBlog());
     }
 
     @Test
     public void getIdTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( ID );
-        liBoard.setId( liString );
-        assertEquals( ID, liBoard.getId() );
+        liString.setValue(ID);
+        liBoard.setId(liString);
+        assertEquals(ID, liBoard.getId());
     }
 
     @Test
     public void getInteractionStyleTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( INTERACTION_STYLE );
-        liBoard.setInteractionStyle( liString );
-        assertEquals( INTERACTION_STYLE, liBoard.getInteractionStyle() );
+        liString.setValue(INTERACTION_STYLE);
+        liBoard.setInteractionStyle(liString);
+        assertEquals(INTERACTION_STYLE, liBoard.getInteractionStyle());
     }
 
     @Test
     public void getTitleTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( TITLE );
-        liBoard.setTitle( liString );
-        assertEquals( TITLE, liBoard.getTitle() );
+        liString.setValue(TITLE);
+        liBoard.setTitle(liString);
+        assertEquals(TITLE, liBoard.getTitle());
     }
 
     @Test
     public void getShortTitleTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( SHORT_TITLE );
-        liBoard.setShortTitle( liString );
-        assertEquals( SHORT_TITLE, liBoard.getShortTitle() );
+        liString.setValue(SHORT_TITLE);
+        liBoard.setShortTitle(liString);
+        assertEquals(SHORT_TITLE, liBoard.getShortTitle());
     }
 
     @Test
     public void getDescriptionTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( DESCRIPTION );
-        liBoard.setDescription( liString );
-        assertEquals( DESCRIPTION, liBoard.getDescription() );
+        liString.setValue(DESCRIPTION);
+        liBoard.setDescription(liString);
+        assertEquals(DESCRIPTION, liBoard.getDescription());
     }
 }

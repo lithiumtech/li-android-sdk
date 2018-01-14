@@ -243,8 +243,7 @@ public abstract class LiRestClient {
                                     if (isFetched) {
                                         Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
                                         enqueueCall(baseRestRequest, callback);
-                                    }
-                                    else {
+                                    } else {
                                         callback.onError(LiRestResponseException.networkError("Could not refresh token"));
                                     }
                                 }
@@ -292,10 +291,9 @@ public abstract class LiRestClient {
                         throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
                                 "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     callback.onError(e);
-                }
-                finally {
+                } finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
                     }
@@ -365,7 +363,7 @@ public abstract class LiRestClient {
         }
         JsonObject imgRequestBodyObject = getGson().fromJson(imgRequestBody, JsonObject.class);
         JsonObject dataObj = imgRequestBodyObject.get("nameValuePairs").getAsJsonObject().get("request").getAsJsonObject().get("data").getAsJsonObject();
-        String requestBody = " {\"request\": {\"data\": {\"description\": "+dataObj.get("description")+",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
+        String requestBody = " {\"request\": {\"data\": {\"description\": " + dataObj.get("description") + ",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -437,6 +435,7 @@ public abstract class LiRestClient {
     /**
      * This method checks the response if it is a response from beacon API and a HTTP 200.
      * If it is then it saves the visitor origin time and last issue time in shared preferences
+     *
      * @param response
      * @param baseRestRequest
      */
@@ -596,9 +595,8 @@ public abstract class LiRestClient {
                         if (data.has("statusCode")) {
                             httpCode = data.get("statusCode").getAsInt();
                         }
-                    }
-                    catch(JsonSyntaxException ex){
-                        Log.e(LI_LOG_TAG, "wrong json, not able to parse "+ex.getMessage());
+                    } catch (JsonSyntaxException ex) {
+                        Log.e(LI_LOG_TAG, "wrong json, not able to parse " + ex.getMessage());
                     }
                     if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {

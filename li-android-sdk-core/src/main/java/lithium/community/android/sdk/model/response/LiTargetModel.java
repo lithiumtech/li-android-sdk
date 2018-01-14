@@ -23,5 +23,6 @@ import lithium.community.android.sdk.model.helpers.LiBoard;
 
 public interface LiTargetModel {
     public LiMessage getLiMessage();
+
     public LiBoard getLiBoard();
 }

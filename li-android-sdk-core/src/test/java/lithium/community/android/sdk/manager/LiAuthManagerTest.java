@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.TestHelper;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;

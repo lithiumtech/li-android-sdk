@@ -60,6 +60,7 @@ public class LiTokenResponseTest {
         assertNotEquals(null, liTokenResponse.getExpiresAt());
         assertEquals(Long.valueOf(2001), liTokenResponse.getExpiresAt());
     }
+
     @Test
     public void setExpiresAtTest() {
         liTokenResponse = new LiTokenResponse();
@@ -117,6 +118,7 @@ public class LiTokenResponseTest {
         assertNotEquals(null, liTokenResponse.getJsonString());
         assertEquals(TEST_JSON_STRING, liTokenResponse.getJsonString());
     }
+
     @Test
     public void getUserIdTest() {
         liTokenResponse = new LiTokenResponse();
@@ -124,7 +126,6 @@ public class LiTokenResponseTest {
         assertNotEquals(null, liTokenResponse.getUserId());
         assertEquals(TEST_USER_ID, liTokenResponse.getUserId());
     }
-
 
 
 }

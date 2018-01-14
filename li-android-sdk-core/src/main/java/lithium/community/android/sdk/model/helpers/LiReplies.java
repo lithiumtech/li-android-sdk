@@ -6,6 +6,7 @@ package lithium.community.android.sdk.model.helpers;
 
 public class LiReplies {
     private int count;
+
     public int getCount() {
         return count;
     }

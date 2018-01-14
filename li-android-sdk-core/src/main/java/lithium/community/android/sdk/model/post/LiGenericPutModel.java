@@ -14,9 +14,11 @@ public class LiGenericPutModel extends LiBasePostModel {
     public JsonObject getData() {
         return data;
     }
+
     public void setData(JsonObject data) {
         this.data = data;
     }
+
     @Override
     public JsonObject toJson() {
         return data.getAsJsonObject();

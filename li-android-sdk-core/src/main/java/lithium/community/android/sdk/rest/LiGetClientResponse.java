@@ -17,7 +17,6 @@
 package lithium.community.android.sdk.rest;
 
 import com.google.gson.Gson;
-
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -61,6 +60,7 @@ public class LiGetClientResponse implements LiClientResponse<List<LiBaseModel>> 
 
     /**
      * Returns map containing information of parent and all its child nodes.
+     *
      * @return Map with key as parent node and value as list of children.
      */
     public Map<LiBrowse, List<LiBaseModel>> getTransformedResponse() {

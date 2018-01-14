@@ -51,7 +51,7 @@ public final class LiUUIDUtils {
      * @param uuidString
      * @return the UUID byte array.
      * @throws IllegalArgumentException if name does not conform to the string representation as described in
-     *             {@link UUID#toString}.
+     *                                  {@link UUID#toString}.
      */
     public static final byte[] toBytes(String uuidString) {
         UUID uuid = UUID.fromString(uuidString);

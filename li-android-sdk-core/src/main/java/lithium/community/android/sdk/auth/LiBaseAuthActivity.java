@@ -41,6 +41,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
     /**
      * This method extracts auth code from URI received post authorization process.
      * The auth code will be used to fetch access Tokens.
+     *
      * @param data Its the URI received upon Authorization completion.
      */
     protected void extractAuthCode(Uri data) {

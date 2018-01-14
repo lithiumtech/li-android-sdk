@@ -36,6 +36,7 @@ public class LiPostMessageModelTest {
         liPostMessageModel.setBody(body);
         assertEquals(body, liPostMessageModel.getBody());
     }
+
     @Test
     public void getBoardTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();

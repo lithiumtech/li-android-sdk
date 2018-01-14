@@ -52,9 +52,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_ARTICLES_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_ARTICLES_CLIENT.name();
         }
@@ -77,9 +79,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_BROWSE_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_BROWSE_CLIENT.name();
         }
@@ -105,9 +109,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_SEARCH_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_SEARCH_CLIENT.name();
         }
@@ -129,9 +135,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_SUBSCRIPTION_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_SUBSCRIPTION_CLIENT.name();
         }
@@ -153,9 +161,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_MESSAGE_CHILDREN_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_MESSAGE_CHILDREN_CLIENT.name();
         }
@@ -178,9 +188,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_QUESTIONS_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_QUESTIONS_CLIENT.name();
         }
@@ -202,9 +214,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_CATEGORY_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_CATEGORY_CLIENT.name();
         }
@@ -227,9 +241,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_ARTICLES_BROWSE_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_ARTICLES_BROWSE_CLIENT.name();
         }
@@ -251,9 +267,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_MESSAGE_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_MESSAGE_CLIENT.name();
         }
@@ -275,9 +293,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_USER_DETAILS_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_USER_DETAILS_CLIENT.name();
         }
@@ -299,9 +319,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_MESSAGE_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_MESSAGE_CLIENT.name();
         }
@@ -324,9 +346,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_FLOATED_MESSAGES_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_FLOATED_MESSAGES_CLIENT.name();
         }
@@ -348,9 +372,11 @@ public class LiQueryWhereClause {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(Client client) {
             return Client.LI_SDK_SETTINGS_CLIENT.equals(client);
         }
+
         public String getClient() {
             return Client.LI_SDK_SETTINGS_CLIENT.name();
         }
@@ -370,6 +396,7 @@ public class LiQueryWhereClause {
 
         /**
          * returns if the field which is used in where clause for a client is valid or not.
+         *
          * @param client {@link Client}
          */
         Boolean isVaild(Client client);

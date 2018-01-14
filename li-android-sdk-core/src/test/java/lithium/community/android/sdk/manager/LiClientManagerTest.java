@@ -18,8 +18,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.api.LiClient;
 import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;

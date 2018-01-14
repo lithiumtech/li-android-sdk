@@ -16,7 +16,7 @@ public class LiSearchTest {
     private LiSearch search = new LiSearch();
 
     @Test
-    public void getLiMessage(){
+    public void getLiMessage() {
         LiBaseModelImpl.LiInt id = new LiBaseModelImpl.LiInt();
         id.setValue(100L);
         liMessage.setId(id);

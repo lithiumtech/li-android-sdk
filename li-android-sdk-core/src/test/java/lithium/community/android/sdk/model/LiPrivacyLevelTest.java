@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class LiPrivacyLevelTest {
 
     @Test
-    public void getExternalSourceTest(){
+    public void getExternalSourceTest() {
         assertEquals(LiPrivacyLevel.UNKNOWN, LiPrivacyLevel.getExternalSource("test"));
         assertEquals(LiPrivacyLevel.PRIVATE, LiPrivacyLevel.getExternalSource("private"));
         assertEquals(LiPrivacyLevel.PUBLIC, LiPrivacyLevel.getExternalSource("public"));

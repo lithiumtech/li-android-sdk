@@ -18,7 +18,7 @@ public class LiConversationTest {
     LiConversation liConversation = new LiConversation();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         liConversation.setType(type);
         liConversation.setSolved(solved);
         assertEquals(type, liConversation.getType());

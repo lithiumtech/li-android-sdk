@@ -24,12 +24,10 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 
-import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
 import lithium.community.android.sdk.auth.LiSSOAuthorizationRequest;
 import lithium.community.android.sdk.auth.LiSSOTokenRequest;
 import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -52,8 +50,9 @@ public class LiAuthRestClient {
 
     /**
      * Makes async call to fetch Auth Code.
+     *
      * @param ssoAuthorizationRequest {@link LiSSOAuthorizationRequest}
-     * @param callback {@link LiAuthAsyncRequestCallback}
+     * @param callback                {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void authorizeAsync(@NonNull Context context, @NonNull final LiSSOAuthorizationRequest ssoAuthorizationRequest,
@@ -90,9 +89,10 @@ public class LiAuthRestClient {
 
     /**
      * Wrapping response to LiBaseResponse.
+     *
      * @param response {@link Response}
      * @return LiBaseResponse {@link LiBaseResponse}
-     * @throws IOException {@link IOException}
+     * @throws IOException             {@link IOException}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     @NonNull
@@ -103,8 +103,9 @@ public class LiAuthRestClient {
 
     /**
      * Returns OkHttp call.
+     *
      * @param request {@link Request}
-     * @param client {@link OkHttpClient}
+     * @param client  {@link OkHttpClient}
      * @return Call {@link Call}
      */
     @VisibleForTesting
@@ -114,6 +115,7 @@ public class LiAuthRestClient {
 
     /**
      * Returns OkHttpClient.
+     *
      * @return OkHttpClient {@link OkHttpClient}
      */
     @NonNull
@@ -124,8 +126,9 @@ public class LiAuthRestClient {
 
     /**
      * Makes Asyn call to fetch Tokens.
+     *
      * @param ssoTokenRequest {@link LiSSOTokenRequest}
-     * @param callback {@link LiAuthAsyncRequestCallback}
+     * @param callback        {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void accessTokenAsync(@NonNull Context context, @NonNull final LiSSOTokenRequest ssoTokenRequest,
@@ -161,8 +164,9 @@ public class LiAuthRestClient {
 
     /**
      * Makes Async call to fetch fresh Access token from Refresh Token.
+     *
      * @param refreshTokenRequest {@link LiRefreshTokenRequest}
-     * @param callback {@link LiAuthAsyncRequestCallback}
+     * @param callback            {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void refreshTokenAsync(@NonNull Context context, @NonNull final LiRefreshTokenRequest refreshTokenRequest,
@@ -213,6 +217,7 @@ public class LiAuthRestClient {
 
     /**
      * Makes Sync call to fetch fresh Access token from Refresh Token.
+     *
      * @param refreshTokenRequest {@link LiRefreshTokenRequest}
      * @return LiBaseResponse {@link LiBaseResponse}
      * @throws LiRestResponseException {@link LiRestResponseException}

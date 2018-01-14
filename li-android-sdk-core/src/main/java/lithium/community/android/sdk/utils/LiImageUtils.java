@@ -20,7 +20,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -33,12 +32,13 @@ import lithium.community.android.sdk.manager.LiSDKManager;
 public class LiImageUtils {
     /**
      * Util function for compressing image.
+     *
      * @param filePath
      * @param fileName
-     * @param {@link Context}
+     * @param {@link   Context}
      * @return Absolute Path of compressed image.
      */
-    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality){
+    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality) {
 
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");
@@ -58,8 +58,7 @@ public class LiImageUtils {
             out = new FileOutputStream(compressedFile);
             if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
                 compressedBitmap.compress(Bitmap.CompressFormat.JPEG, imageQuality, out);
-            }
-            else if (fileName.endsWith(".png")) {
+            } else if (fileName.endsWith(".png")) {
                 compressedBitmap.compress(Bitmap.CompressFormat.PNG, imageQuality, out);
             }
             Log.i("compressed Image: ", compressedFile.length() + "");

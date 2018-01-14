@@ -121,7 +121,8 @@ class LiAuthManager {
 
     /**
      * Login flow is initiated from here and then call goes to LiAuthService
-     * @param context Android context
+     *
+     * @param context  Android context
      * @param ssoToken pass the Single Sign-on token if the community uses its own identity provider
      * @throws URISyntaxException
      */
@@ -131,7 +132,8 @@ class LiAuthManager {
 
     /**
      * Login flow is initiated from here and then call goes to LiAuthService
-     * @param context Android context
+     *
+     * @param context               Android context
      * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
      * @throws URISyntaxException
      */
@@ -142,9 +144,10 @@ class LiAuthManager {
 
     /**
      * Login flow is initiated from here and then call goes to LiAuthService
-     * @param ssoToken pass the Single Sign-on token if the community uses its own identity provider
+     *
+     * @param ssoToken              pass the Single Sign-on token if the community uses its own identity provider
      * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
-     * @param context {@link Context}
+     * @param context               {@link Context}
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
@@ -158,8 +161,7 @@ class LiAuthManager {
         if (LiSecuredPrefManager.getInstance() != null) {
             LiSecuredPrefManager.getInstance().remove(context, key);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -168,14 +170,13 @@ class LiAuthManager {
         if (LiSecuredPrefManager.getInstance() != null) {
             LiSecuredPrefManager.getInstance().putString(context, key, value);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
-        return LiSecuredPrefManager.getInstance()==null?null:LiSecuredPrefManager.getInstance().getString(context, key);
+        return LiSecuredPrefManager.getInstance() == null ? null : LiSecuredPrefManager.getInstance().getString(context, key);
     }
 
     /**
@@ -219,9 +220,9 @@ class LiAuthManager {
             CookieManager.getInstance().flush();
         } else {
             Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
-            CookieSyncManager cookieSyncMngr= CookieSyncManager.createInstance(context);
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
             cookieSyncMngr.startSync();
-            CookieManager cookieManager= CookieManager.getInstance();
+            CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.removeAllCookie();
             cookieManager.removeSessionCookie();
             cookieSyncMngr.stopSync();

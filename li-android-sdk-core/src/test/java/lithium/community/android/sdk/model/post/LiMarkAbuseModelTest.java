@@ -1,9 +1,10 @@
 package lithium.community.android.sdk.model.post;
 
+import org.junit.Test;
+
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.response.LiMessage;
 import lithium.community.android.sdk.model.response.LiUser;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +17,7 @@ public class LiMarkAbuseModelTest {
     private Long userId = 100L;
 
     @Test
-    public void testMarkAbuseModel(){
+    public void testMarkAbuseModel() {
 
         LiUser liUser = new LiUser();
         liUser.setId(100L);

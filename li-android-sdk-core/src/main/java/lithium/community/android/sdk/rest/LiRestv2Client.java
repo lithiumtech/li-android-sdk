@@ -47,6 +47,7 @@ public class LiRestv2Client extends LiRestClient {
 
     /**
      * Makes Sync call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
      * @throws LiRestResponseException
      */
@@ -61,6 +62,7 @@ public class LiRestv2Client extends LiRestClient {
 
     /**
      * Wraps LiBaseRestRequest to LiRestV2Request.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
      * @return LiRestV2Request {@link LiRestV2Request}
      * @throws LiRestResponseException
@@ -80,8 +82,9 @@ public class LiRestv2Client extends LiRestClient {
 
     /**
      * Makes Async call.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callBack {@link LiAsyncRequestCallback}
+     * @param callBack        {@link LiAsyncRequestCallback}
      */
     @Override
     public void processAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack) {
@@ -104,11 +107,12 @@ public class LiRestv2Client extends LiRestClient {
 
     /**
      * Makes Async call for uploading an image.
+     *
      * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callBack {@link LiAsyncRequestCallback}
-     * @param imagePath Absolute path of the image file.
-     * @param imageName Name of the image file.
-     * @param requestBody request body for post call to upload image.
+     * @param callBack        {@link LiAsyncRequestCallback}
+     * @param imagePath       Absolute path of the image file.
+     * @param imageName       Name of the image file.
+     * @param requestBody     request body for post call to upload image.
      */
     public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest,
                                    @NonNull LiAsyncRequestCallback callBack, String imagePath, String imageName, String requestBody) {
@@ -133,6 +137,7 @@ public class LiRestv2Client extends LiRestClient {
 
     /**
      * Validating the network response.
+     *
      * @param response {@link LiBaseResponse}
      * @return LiBaseResponse {@link LiBaseResponse}
      * @throws LiRestResponseException

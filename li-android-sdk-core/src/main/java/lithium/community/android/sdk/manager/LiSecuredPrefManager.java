@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
-import android.util.NoSuchPropertyException;
 
 import java.security.Key;
 import java.security.MessageDigest;
@@ -16,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
@@ -44,6 +42,7 @@ class LiSecuredPrefManager {
         }
         return _instance;
     }
+
     private static String encode(byte[] input) {
         return Base64.encodeToString(input, Base64.NO_PADDING | Base64.NO_WRAP);
     }
@@ -99,7 +98,7 @@ class LiSecuredPrefManager {
             _instance.getSecuredPreferences(context).edit().remove(
                     _instance.encrypt(key)).apply();
         } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, "+e.getMessage());
+            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
             _instance.getSecuredPreferences(context).edit().remove(key).apply();
         }
     }
@@ -110,7 +109,7 @@ class LiSecuredPrefManager {
                     _instance.encrypt(key),
                     _instance.encrypt(value)).apply();
         } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, "+e.getMessage());
+            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
             _instance.getSecuredPreferences(context).edit().putString(key, value).apply();
         }
     }
@@ -128,7 +127,7 @@ class LiSecuredPrefManager {
                 securedPreferences.edit().remove(key).apply();
             }
         } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, "+e.getMessage());
+            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
             value = securedPreferences.getString(key, null);
         }
         return value;

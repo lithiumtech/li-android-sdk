@@ -19,7 +19,7 @@ public class LiUploadImageModelTest {
     private LiUploadImageModel liUploadImageModel = new LiUploadImageModel();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         liUploadImageModel.setType(type);
         liUploadImageModel.setVisibility(visibility);
         liUploadImageModel.setField(field);

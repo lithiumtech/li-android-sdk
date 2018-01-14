@@ -164,8 +164,7 @@ abstract class LiBaseClient implements LiClient {
                         } else {
                             liAsyncRequestCallback.onError(new Exception(response.getMessage()));
                         }
-                    }
-                    else {
+                    } else {
                         liAsyncRequestCallback.onError(new Exception("Server Error"));
                     }
                 }

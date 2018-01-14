@@ -53,10 +53,11 @@ public final class LiAppCredentials {
 
     /**
      * private constructor.
-     * @param clientKey This is client Id.
+     *
+     * @param clientKey    This is client Id.
      * @param clientSecret This is client secret.
      * @param communityURL This is the URL of the community.
-     * @param tenantId tenant ID for the community.
+     * @param tenantId     tenant ID for the community.
      * @param apiProxyHost API proxy host.
      * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
@@ -118,7 +119,9 @@ public final class LiAppCredentials {
         return tenantId;
     }
 
-    public String getSsoAuthorizeUri() { return ssoAuthorizeUri; }
+    public String getSsoAuthorizeUri() {
+        return ssoAuthorizeUri;
+    }
 
     public String getApiProxyHost() {
         return apiProxyHost;

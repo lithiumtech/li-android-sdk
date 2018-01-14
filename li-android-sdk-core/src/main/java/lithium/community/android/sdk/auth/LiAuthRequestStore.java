@@ -37,6 +37,7 @@ class LiAuthRequestStore {
 
     /**
      * Adding request for a particular state
+     *
      * @param request {@link LiSSOAuthorizationRequest}
      */
     public void addAuthRequest(LiSSOAuthorizationRequest request) {
@@ -45,7 +46,6 @@ class LiAuthRequestStore {
     }
 
     /**
-     *
      * @param state This is key depicting state of mLiRequests.
      * @return Authorization request for the given state (SSO case).
      */

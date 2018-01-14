@@ -14,7 +14,6 @@
 
 package lithium.community.android.sdk.queryutil;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.NoSuchPropertyException;
 
@@ -36,19 +35,21 @@ public class LiDefaultQueryHelper {
 
     /**
      * private constructor.
+     *
      * @param context {@link Context}
      */
-    private LiDefaultQueryHelper(Context context){
+    private LiDefaultQueryHelper(Context context) {
         defaultSetting = getDefaultQueryJSON(context);
     }
 
     /**
      * Initializes helper class.
+     *
      * @param context {@link Context}
      * @return Singleton instance of this class.
      */
-    public static synchronized LiDefaultQueryHelper initHelper(Context context){
-        if(_helperInstance == null){
+    public static synchronized LiDefaultQueryHelper initHelper(Context context) {
+        if (_helperInstance == null) {
             _helperInstance = new LiDefaultQueryHelper(context);
         }
         return _helperInstance;
@@ -73,6 +74,7 @@ public class LiDefaultQueryHelper {
 
     /**
      * Fetches default settings from 'raw' package
+     *
      * @param context {@link Context}
      * @return default settings in JsonObject form.
      */

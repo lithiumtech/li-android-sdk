@@ -68,6 +68,7 @@ public final class LiSDKManager extends LiAuthManager {
 
     /**
      * Checks whether the SDK is initialized.
+     *
      * @return true or false depending on whether the SDK is initialized
      */
     public static boolean isEnvironmentInitialized() {
@@ -139,15 +140,14 @@ public final class LiSDKManager extends LiAuthManager {
                                             }
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
                                 }
                             }
 
                             @Override
                             public void onError(Exception exception) {
-                                Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: "+exception.getMessage());
+                                Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: " + exception.getMessage());
                             }
                         });
             } catch (LiRestResponseException e) {
@@ -167,8 +167,7 @@ public final class LiSDKManager extends LiAuthManager {
                                         && !liClientResponse.getResponse().isEmpty()) {
                                     LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
                                     _sdkInstance.setLoggedInUser(context, user);
-                                }
-                                else {
+                                } else {
                                     Log.e(LOG_TAG, "No user found while fetching UserDetails");
                                 }
                             }

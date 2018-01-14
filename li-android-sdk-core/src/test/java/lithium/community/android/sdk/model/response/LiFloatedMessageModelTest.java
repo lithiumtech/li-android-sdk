@@ -19,7 +19,7 @@ public class LiFloatedMessageModelTest {
     private LiFloatedMessageModel liFloatedMessageModel = new LiFloatedMessageModel();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
 
         liFloatedMessageModel.setId(id);
         liFloatedMessageModel.setHref(href);

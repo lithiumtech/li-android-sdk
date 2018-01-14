@@ -20,7 +20,7 @@ public class LiUserContextTest {
     private LiUserContext liUserContext = new LiUserContext();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         liUserContext.setKudo(kudo);
         liUserContext.setRead(read);
         liUserContext.setCanKudo(canKudo);

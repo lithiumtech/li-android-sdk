@@ -35,43 +35,48 @@ public class LiSSOTokenRequestTest {
     }
 
     @Test
-    public void getUriTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getUriTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setUri(TEST_URI);
         assertNotEquals(null, liSSOTokenRequest.getUri());
         assertEquals(TEST_URI, liSSOTokenRequest.getUri());
     }
+
     @Test
-    public void getClientIdTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getClientIdTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setClientId(TEST_CLIENT_ID);
         assertNotEquals(null, liSSOTokenRequest.getClientId());
         assertEquals(TEST_CLIENT_ID, liSSOTokenRequest.getClientId());
     }
+
     @Test
-    public void getClientSecretTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getClientSecretTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setClientSecret(TEST_CLIENT_SECRET);
         assertNotEquals(null, liSSOTokenRequest.getClientSecret());
         assertEquals(TEST_CLIENT_SECRET, liSSOTokenRequest.getClientSecret());
     }
+
     @Test
-    public void getGrantTypeTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getGrantTypeTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setGrantType(TEST_GRANT_TYPE);
         assertNotEquals(null, liSSOTokenRequest.getGrantType());
         assertEquals(TEST_GRANT_TYPE, liSSOTokenRequest.getGrantType());
     }
+
     @Test
-    public void getAcceesCodeTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getAcceesCodeTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setAccessCode(TEST_ACCESS_CODE);
         assertNotEquals(null, liSSOTokenRequest.getAccessCode());
         assertEquals(TEST_ACCESS_CODE, liSSOTokenRequest.getAccessCode());
     }
+
     @Test
-    public void getRedirectUriTest(){
-        liSSOTokenRequest =new LiSSOTokenRequest();
+    public void getRedirectUriTest() {
+        liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setRedirectUri(TEST_REDIRECT_URI);
         assertNotEquals(null, liSSOTokenRequest.getRedirectUri());
         assertEquals(TEST_REDIRECT_URI, liSSOTokenRequest.getRedirectUri());

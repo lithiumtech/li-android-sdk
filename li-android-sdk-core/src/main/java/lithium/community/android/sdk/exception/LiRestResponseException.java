@@ -72,6 +72,7 @@ public class LiRestResponseException extends Exception {
 
     /**
      * wrapping network error
+     *
      * @param errorDescription Description for network error.
      * @return networkError wrapped into LiRestResponseException.
      */
@@ -81,6 +82,7 @@ public class LiRestResponseException extends Exception {
 
     /**
      * wrapping json serialization error
+     *
      * @param errorDescription Description for json serialization error.
      * @return jsonSerializationError wrapped into LiRestResponseException.
      */
@@ -91,6 +93,7 @@ public class LiRestResponseException extends Exception {
 
     /**
      * wrapping illegal argument error
+     *
      * @param errorDescription Description for illegal argument error.
      * @return illegalArgumentError wrapped into LiRestResponseException.
      */
@@ -100,6 +103,7 @@ public class LiRestResponseException extends Exception {
 
     /**
      * wrapping json runtime error
+     *
      * @param errorDescription Description for runtime error.
      * @return runtimeError wrapped into LiRestResponseException.
      */
@@ -109,6 +113,7 @@ public class LiRestResponseException extends Exception {
 
     /**
      * wrapping json syntax error
+     *
      * @param errorDescription Description for json syntax error.
      * @return jsonSyntaxError wrapped into LiRestResponseException.
      */
