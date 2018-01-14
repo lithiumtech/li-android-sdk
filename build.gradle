@@ -5,6 +5,10 @@ buildscript {
         mavenLocal()
         jcenter()
         mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -17,10 +21,30 @@ buildscript {
     }
 }
 
+apply plugin: 'checkstyle'
+
 allprojects {
     repositories {
         mavenLocal()
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+
+    task checkstyle(type: Checkstyle) {
+        showViolations = true
+        configFile rootProject.file('configs/style-checks.xml')
+
+        source 'src/main/java'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/R.java'
+        exclude '**/BuildConfig.java'
+
+        // empty classpath
+        classpath = files()
     }
 
 }
