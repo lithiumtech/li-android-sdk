@@ -57,13 +57,13 @@ import okhttp3.Request;
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
-    private static char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     private static final ThreadLocal<SecureRandom> randTl = new ThreadLocal<SecureRandom>() {
         @Override
         protected SecureRandom initialValue() {
             return new SecureRandom();
         }
     };
+    private static char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     private LiCoreSDKUtils() {
     }
@@ -464,7 +464,8 @@ public class LiCoreSDKUtils {
     }
 
     /**
-     * this method creates a Tree like structure depicting parent child relation for the Category and SubCategory in a community.
+     * this method creates a Tree like structure depicting parent child relation for the Category and SubCategory in
+     * a community.
      * //TODO right now it is hardcoded to LiBrowse and it should be generalized to use LiBaseModel
      *
      * @param response

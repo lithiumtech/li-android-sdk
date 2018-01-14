@@ -39,8 +39,9 @@ public class LiGetClientResponse implements LiClientResponse<List<LiBaseModel>> 
     private String type;
     private Class<? extends LiBaseModel> baseModelClass;
 
-    public LiGetClientResponse(final LiBaseResponse liBaseResponse, final String type, final Class<? extends LiBaseModel> baseModelClass,
-                               final Gson gson) {
+    public LiGetClientResponse(final LiBaseResponse liBaseResponse, final String type,
+            final Class<? extends LiBaseModel> baseModelClass,
+            final Gson gson) {
         this.liBaseResponse = liBaseResponse;
         this.type = type;
         this.baseModelClass = baseModelClass;

@@ -38,7 +38,8 @@ public class LiImageUtils {
      * @param {@link   Context}
      * @return Absolute Path of compressed image.
      */
-    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality) {
+    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight,
+            int imageQuality) {
 
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");

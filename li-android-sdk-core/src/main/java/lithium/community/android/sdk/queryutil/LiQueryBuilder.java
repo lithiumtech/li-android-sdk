@@ -167,7 +167,8 @@ public class LiQueryBuilder {
     }
 
     /**
-     * Method to be called by activity client to create LIQL query, corresponding to that client. This method read settings for
+     * Method to be called by activity client to create LIQL query, corresponding to that client. This method read
+     * settings for
      * any activity clients, and then create {@link LiQuerySetting} object from settings.
      * Using LiQuerySetting object, this will create a LIQL query to be used by activity client directly
      *
@@ -180,7 +181,8 @@ public class LiQueryBuilder {
     }
 
     /**
-     * Method to be called by activity client to create LIQL query, corresponding to that client. This method read settings for
+     * Method to be called by activity client to create LIQL query, corresponding to that client. This method read
+     * settings for
      * any activity clients, and then create {@link LiQuerySetting} object from settings.
      * Using LiQuerySetting object, this will create a LIQL query to be used by activity client directly
      *

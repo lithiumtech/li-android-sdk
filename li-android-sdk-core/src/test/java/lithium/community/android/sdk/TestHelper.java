@@ -292,7 +292,8 @@ public class TestHelper {
                 .setTenantId("test").build();
     }
 
-    /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException, URISyntaxException {
+    /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException,
+    URISyntaxException {
         LiClientManager liClientManger = LiClientManager.init(context);
         LiClientManager instance = liClientManger.getInstance();
         return instance;

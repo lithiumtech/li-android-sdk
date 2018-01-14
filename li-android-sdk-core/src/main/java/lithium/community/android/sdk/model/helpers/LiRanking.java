@@ -34,6 +34,8 @@ public class LiRanking extends LiBaseModelImpl {
     private String icon_topic;
     private boolean formula_enabled;
     private boolean bold;
+    @SerializedName("display")
+    private LiRankingDisplay lithiumRankingDisplay;
 
     public boolean isBold() {
         return bold;
@@ -106,9 +108,6 @@ public class LiRanking extends LiBaseModelImpl {
     public void setIcon_left(String icon_left) {
         this.icon_left = icon_left;
     }
-
-    @SerializedName("display")
-    private LiRankingDisplay lithiumRankingDisplay;
 
     public String getHref() {
         return href;

@@ -66,13 +66,6 @@ public class LiDefaultQueryHelper {
     }
 
     /**
-     * @return default settings
-     */
-    public JsonObject getDefaultSetting() {
-        return defaultSetting;
-    }
-
-    /**
      * Fetches default settings from 'raw' package
      *
      * @param context {@link Context}
@@ -93,5 +86,12 @@ public class LiDefaultQueryHelper {
 
         }
         return defaultQuerySettingsJson;
+    }
+
+    /**
+     * @return default settings
+     */
+    public JsonObject getDefaultSetting() {
+        return defaultSetting;
     }
 }

@@ -37,6 +37,13 @@ public class LiQueryWhereClause {
     }
 
     /**
+     * Returns all conditions added in 'where' clause.
+     */
+    public ArrayList<LiQueryClause> getLiQueryClauses() {
+        return liQueryClauses;
+    }
+
+    /**
      * Specifies fields for where clause for LI_ARTICLES_CLIENT.
      */
     public enum Articles implements ClientWhereKeyColumn {
@@ -400,13 +407,6 @@ public class LiQueryWhereClause {
          * @param client {@link Client}
          */
         Boolean isVaild(Client client);
-    }
-
-    /**
-     * Returns all conditions added in 'where' clause.
-     */
-    public ArrayList<LiQueryClause> getLiQueryClauses() {
-        return liQueryClauses;
     }
 
 }

@@ -67,7 +67,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Activity.class, LiAuthService.class, LiAuthServiceImpl.class, LiAuthRestClient.class, OkHttpClient.class, Response.class, Gson.class, JsonObject.class, JsonElement.class, LiSystemClock.class, LiRestv2Client.class, LiBaseGetClient.class, LiRestV2Request.class})
+@PrepareForTest({Activity.class, LiAuthService.class, LiAuthServiceImpl.class, LiAuthRestClient.class,
+        OkHttpClient.class, Response.class, Gson.class, JsonObject.class, JsonElement.class, LiSystemClock.class,
+        LiRestv2Client.class, LiBaseGetClient.class, LiRestV2Request.class})
 public class LiAuthServiceTest {
 
     public static final String COMMUNITY_URI = "http://testuri.com";
@@ -117,7 +119,8 @@ public class LiAuthServiceTest {
     }
 
     @Test
-    public void startLoginFlowTest() throws MalformedURLException, LiRestResponseException, URISyntaxException, IllegalAccessException {
+    public void startLoginFlowTest() throws MalformedURLException, LiRestResponseException, URISyntaxException,
+            IllegalAccessException {
         LiSSOAuthorizationRequest authorizationRequest;
         authorizationRequest = new LiSSOAuthorizationRequest();
         authorizationRequest.setClientId(liAppCredentials.getClientKey());
@@ -139,7 +142,8 @@ public class LiAuthServiceTest {
     }
 
     @Test
-    public void startLoginFlowSSOTest() throws MalformedURLException, LiRestResponseException, URISyntaxException, IllegalAccessException {
+    public void startLoginFlowSSOTest() throws MalformedURLException, LiRestResponseException, URISyntaxException,
+            IllegalAccessException {
 
         LiSSOAuthorizationRequest authorizationRequest;
         authorizationRequest = new LiSSOAuthorizationRequest();
@@ -229,7 +233,8 @@ public class LiAuthServiceTest {
 
         when(liBaseResponse.getData().get("response").getAsJsonObject()).thenReturn(dummyJsonData);
 
-        when(liBaseResponse.getData().get("response").getAsJsonObject().get("data")).thenReturn(jsonStringForBaseResponse);
+        when(liBaseResponse.getData().get("response").getAsJsonObject().get("data")).thenReturn(
+                jsonStringForBaseResponse);
 
         LiSSOAuthResponse liSSOAuthResponse = mock(LiSSOAuthResponse.class);
         when(liSSOAuthResponse.getState()).thenReturn(RANDOM_STATE);
@@ -237,7 +242,9 @@ public class LiAuthServiceTest {
         when(liSSOAuthResponse.getApiProxyHost()).thenReturn(TEST_API_PROXY_HOST);
         when(liSSOAuthResponse.getTenantId()).thenReturn(TEST_TENANT_ID);
         when(liSSOAuthResponse.getUserId()).thenReturn(TEST_USER_ID);
-        when(liSSOAuthResponse.getJsonString()).thenReturn("{\"code\":\"testAuthCode\",\"proxy-host\":\"testApiProxyHost\",\"state\":\"randomState\",\"tenant-id\":\"testTenantId\",\"user-id\":\"testUserId\"}");
+        when(liSSOAuthResponse.getJsonString()).thenReturn(
+                "{\"code\":\"testAuthCode\",\"proxy-host\":\"testApiProxyHost\",\"state\":\"randomState\","
+                        + "\"tenant-id\":\"testTenantId\",\"user-id\":\"testUserId\"}");
         PowerMockito.doReturn(liSSOAuthResponse).when(liAuthService, "getLiSSOAuthResponse", liBaseResponse);
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         PowerMockito.whenNew(OkHttpClient.class).withNoArguments().thenReturn(okHttpClient);
@@ -268,7 +275,10 @@ public class LiAuthServiceTest {
         when(liTokenResponse.getRefreshToken()).thenReturn(TEST_REFRESH_TOKEN);
         when(liTokenResponse.getTokenType()).thenReturn(TEST_TOKEN_TYPE);
         when(liTokenResponse.getAccessToken()).thenReturn(TEST_ACCES_TOKEN);
-        when(liTokenResponse.getJsonString()).thenReturn("{\"lithiumUserId\":\"testLithiumUserId\",\"access_token\":\"testAccesToken\",\"refresh_token\":\"testRefreshToken\",\"expires_in\":86400,\"userId\":\"testUserId\",\"token_type\":\"testTokenType\",\"expiresAt\":86400001}");
+        when(liTokenResponse.getJsonString()).thenReturn(
+                "{\"lithiumUserId\":\"testLithiumUserId\",\"access_token\":\"testAccesToken\","
+                        + "\"refresh_token\":\"testRefreshToken\",\"expires_in\":86400,\"userId\":\"testUserId\","
+                        + "\"token_type\":\"testTokenType\",\"expiresAt\":86400001}");
         when(liTokenResponse.getExpiresAt()).thenReturn(TEST_EXPIRES_AT);
 
 
@@ -291,7 +301,8 @@ public class LiAuthServiceTest {
         PowerMockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(final InvocationOnMock invocation) throws Throwable {
-                LiAuthService.LoginCompleteCallBack callback = (LiAuthService.LoginCompleteCallBack) invocation.getArguments()[0];
+                LiAuthService.LoginCompleteCallBack callback
+                        = (LiAuthService.LoginCompleteCallBack) invocation.getArguments()[0];
                 callback.onLoginComplete(null, true);
                 return null;
             }
@@ -301,7 +312,8 @@ public class LiAuthServiceTest {
 
         doNothing().when(mContext).startActivity(isA(Intent.class));
         when(mContext.getString(anyInt())).thenReturn("test");
-        when(LiSDKManager.getInstance().getFromSecuredPreferences(mContext, LiCoreSDKConstants.LI_VISITOR_ID)).thenReturn("test");
+        when(LiSDKManager.getInstance().getFromSecuredPreferences(mContext,
+                LiCoreSDKConstants.LI_VISITOR_ID)).thenReturn("test");
         liAuthService.startLoginFlow(SSO_TOKEN1);
 
 
@@ -311,7 +323,8 @@ public class LiAuthServiceTest {
     }
 
     @Test
-    public void performSyncRefreshTokenRequestTest() throws MalformedURLException, URISyntaxException, LiRestResponseException {
+    public void performSyncRefreshTokenRequestTest() throws MalformedURLException, URISyntaxException,
+            LiRestResponseException {
         LiSSOAuthorizationRequest authorizationRequest;
         LiAuthServiceImpl liAuthService = new LiAuthServiceImpl(mContext);
         liAuthService = spy(liAuthService);
@@ -337,7 +350,8 @@ public class LiAuthServiceTest {
                 "}";
         Gson gson = new Gson();
         LiBaseResponse liBaseResponse = gson.fromJson(refreshtokenResponse, LiBaseResponse.class);
-        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(Context.class), isA(LiRefreshTokenRequest.class));
+        doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(Context.class),
+                isA(LiRefreshTokenRequest.class));
 
         LiTokenResponse tokenResponse = liAuthService.performSyncRefreshTokenRequest();
         assert (tokenResponse.getAccessToken().equals(ACCESS_TOKEN));
@@ -372,7 +386,8 @@ public class LiAuthServiceTest {
         Gson gson = new Gson();
         LiBaseResponse liBaseResponse = gson.fromJson(refreshtokenResponse, LiBaseResponse.class);
 //        try {
-//            doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenAsync(isA(Context.class), isA(LiRefreshTokenRequest.class), isA(LiAuthAsyncRequestCallback.class));
+//            doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenAsync(isA(Context.class), isA
+// (LiRefreshTokenRequest.class), isA(LiAuthAsyncRequestCallback.class));
 //        } catch (LiRestResponseException ignored) {
 //        }
 
@@ -467,7 +482,9 @@ public class LiAuthServiceTest {
         when(liSSOAuthResponse.getApiProxyHost()).thenReturn(TEST_API_PROXY_HOST);
         when(liSSOAuthResponse.getTenantId()).thenReturn(TEST_TENANT_ID);
         when(liSSOAuthResponse.getUserId()).thenReturn(TEST_USER_ID);
-        when(liSSOAuthResponse.getJsonString()).thenReturn("{\"code\":\"testAuthCode\",\"proxy-host\":\"testApiProxyHost\",\"state\":\"randomState\",\"tenant-id\":\"testTenantId\",\"user-id\":\"testUserId\"}");
+        when(liSSOAuthResponse.getJsonString()).thenReturn(
+                "{\"code\":\"testAuthCode\",\"proxy-host\":\"testApiProxyHost\",\"state\":\"randomState\","
+                        + "\"tenant-id\":\"testTenantId\",\"user-id\":\"testUserId\"}");
         PowerMockito.doReturn(liSSOAuthResponse).when(liAuthService, "getLiSSOAuthResponse", liBaseResponse);
 
 

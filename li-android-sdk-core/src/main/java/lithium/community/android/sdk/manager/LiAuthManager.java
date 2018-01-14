@@ -54,9 +54,14 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER
 
 class LiAuthManager {
 
+    protected final LiAppCredentials liAppCredentials;
     private LiAuthState liAuthState;
     private LiDeviceTokenProvider liDeviceTokenProvider;
-    protected final LiAppCredentials liAppCredentials;
+
+    LiAuthManager(Context context, LiAppCredentials liAppCredentials) {
+        this.liAuthState = restoreAuthState(context);
+        this.liAppCredentials = liAppCredentials;
+    }
 
     public LiDeviceTokenProvider getLiDeviceTokenProvider() {
         return liDeviceTokenProvider;
@@ -64,11 +69,6 @@ class LiAuthManager {
 
     public void setLiDeviceTokenProvider(LiDeviceTokenProvider liDeviceTokenProvider) {
         this.liDeviceTokenProvider = liDeviceTokenProvider;
-    }
-
-    LiAuthManager(Context context, LiAppCredentials liAppCredentials) {
-        this.liAuthState = restoreAuthState(context);
-        this.liAppCredentials = liAppCredentials;
     }
 
     /**
@@ -134,7 +134,8 @@ class LiAuthManager {
      * Login flow is initiated from here and then call goes to LiAuthService
      *
      * @param context               Android context
-     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
+     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using.
+     *                              Either Firebase or GCM
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
@@ -146,11 +147,13 @@ class LiAuthManager {
      * Login flow is initiated from here and then call goes to LiAuthService
      *
      * @param ssoToken              pass the Single Sign-on token if the community uses its own identity provider
-     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using. Either Firebase or GCM
+     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using.
+     *                              Either Firebase or GCM
      * @param context               {@link Context}
      * @throws URISyntaxException
      */
-    public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
+    public void initLoginFlow(Context context, String ssoToken,
+            LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
         this.liDeviceTokenProvider = liDeviceTokenProvider;
         if (!isUserLoggedIn()) {
             new LiAuthServiceImpl(context).startLoginFlow(ssoToken);
@@ -176,7 +179,8 @@ class LiAuthManager {
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
-        return LiSecuredPrefManager.getInstance() == null ? null : LiSecuredPrefManager.getInstance().getString(context, key);
+        return LiSecuredPrefManager.getInstance() == null ? null
+                : LiSecuredPrefManager.getInstance().getString(context, key);
     }
 
     /**
@@ -213,13 +217,16 @@ class LiAuthManager {
         this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
-        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new way of using CookieManager else use the deprecate methods for older versions
+        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new way of using CookieManager
+        // else use the deprecate methods for older versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG,
+                    "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         } else {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG,
+                    "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
             cookieSyncMngr.startSync();
             CookieManager cookieManager = CookieManager.getInstance();
@@ -301,7 +308,7 @@ class LiAuthManager {
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void fetchFreshAccessToken(final Context context,
-                                      final LiAuthService.FreshTokenCallBack mFreshTokenCallBack)
+            final LiAuthService.FreshTokenCallBack mFreshTokenCallBack)
             throws URISyntaxException, LiRestResponseException {
 
         new LiAuthServiceImpl(context).performRefreshTokenRequest(new LiAuthService.LiTokenResponseCallback() {

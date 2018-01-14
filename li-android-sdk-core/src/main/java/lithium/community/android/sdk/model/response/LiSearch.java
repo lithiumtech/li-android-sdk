@@ -29,12 +29,12 @@ public class LiSearch extends LiBaseModelImpl implements LiTargetModel {
         return liMessage;
     }
 
+    public void setLiMessage(LiMessage liMessage) {
+        this.liMessage = liMessage;
+    }
+
     @Override
     public LiBoard getLiBoard() {
         return null;
-    }
-
-    public void setLiMessage(LiMessage liMessage) {
-        this.liMessage = liMessage;
     }
 }

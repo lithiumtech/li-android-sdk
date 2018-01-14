@@ -32,11 +32,35 @@ public class LiQueryOrdering {
     }
 
     /**
+     * @return columns on which liQueryOrdering can be done for a client.
+     */
+    public ClientOrderingColumn getColumn() {
+        return column;
+    }
+
+    /**
+     * @return LiQueryOrdering {@link Order}
+     */
+    public Order getOrder() {
+        return order;
+    }
+
+    /**
+     * @param client {@link LiClientManager.Client}
+     * @return true or false depending on whether column on which liQueryOrdering is applied is allowed for the same
+     * for a client.
+     */
+    public Boolean isVaild(LiClientManager.Client client) {
+        return column.isVaild(client);
+    }
+
+    /**
      * Only two types of liQueryOrdering is supported i.e Ascending or Descending.
      */
     public enum Order {
         ASC, DESC;
     }
+
 
     /**
      * Specifies parameter on which liQueryOrdering is allowed for LI_ARTICLES_CLIENT.
@@ -101,7 +125,6 @@ public class LiQueryOrdering {
         }
     }
 
-
     public interface ClientOrderingColumn {
 
         /**
@@ -118,28 +141,5 @@ public class LiQueryOrdering {
          * @return If clause is valid for a client.
          */
         Boolean isVaild(LiClientManager.Client client);
-    }
-
-    /**
-     * @return columns on which liQueryOrdering can be done for a client.
-     */
-    public ClientOrderingColumn getColumn() {
-        return column;
-    }
-
-    /**
-     * @return LiQueryOrdering {@link Order}
-     */
-    public Order getOrder() {
-        return order;
-    }
-
-    /**
-     * @param client {@link LiClientManager.Client}
-     * @return true or false depending on whether column on which liQueryOrdering is applied is allowed for the same
-     * for a client.
-     */
-    public Boolean isVaild(LiClientManager.Client client) {
-        return column.isVaild(client);
     }
 }

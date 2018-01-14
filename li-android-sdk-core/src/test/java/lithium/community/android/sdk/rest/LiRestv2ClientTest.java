@@ -34,7 +34,8 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LiClientManager.class, LiRestv2Client.class, LiRestClient.class, SSLContext.class, Platform.class, Request.class, LiCoreSDKUtils.class
+@PrepareForTest({LiClientManager.class, LiRestv2Client.class, LiRestClient.class, SSLContext.class, Platform.class,
+        Request.class, LiCoreSDKUtils.class
 })
 public class LiRestv2ClientTest {
 
@@ -56,7 +57,8 @@ public class LiRestv2ClientTest {
         PowerMockito.mockStatic(SSLContext.class);
         SSLContext sslContext = PowerMockito.mock(SSLContext.class);
         when(sslContext.getInstance("SSL")).thenReturn(sslContext);
-        Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class), isA(SecureRandom.class));
+        Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class),
+                isA(SecureRandom.class));
         SSLSocketFactory socketFactory = mock(SSLSocketFactory.class);
         when(sslContext.getSocketFactory()).thenReturn(socketFactory);
 

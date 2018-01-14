@@ -47,7 +47,7 @@ public class LiBaseRestRequest {
     private boolean isAuthenticatedRequest = false;
 
     public LiBaseRestRequest(Context context, RestMethod method, String path, RequestBody requestBody,
-                             Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+            Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
         this.context = context;
         this.method = method;
         this.path = path;
@@ -59,7 +59,7 @@ public class LiBaseRestRequest {
 
 
     public LiBaseRestRequest(Context context, RestMethod method, RequestBody requestBody,
-                             Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+            Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
         this.context = context;
         this.method = method;
         this.requestBody = requestBody;

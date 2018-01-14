@@ -26,6 +26,9 @@ public class LiSubscriptionPostModel extends LiBasePostModel {
     }
 
     public static class Target {
+        private String type;
+        private String id;
+
         public String getType() {
             return type;
         }
@@ -41,9 +44,6 @@ public class LiSubscriptionPostModel extends LiBasePostModel {
         public void setId(String id) {
             this.id = id;
         }
-
-        private String type;
-        private String id;
 
     }
 }

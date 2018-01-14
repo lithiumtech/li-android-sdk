@@ -28,7 +28,8 @@ import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.utils.LiQueryConstant;
 
 /**
- * All "get" clients are implemented in same way. They only vary in their TYPE and LIQL query. This class brings all the common codes together
+ * All "get" clients are implemented in same way. They only vary in their TYPE and LIQL query. This class brings all
+ * the common codes together
  * and provide a layer of abstraction to all of the "get" clients.
  * Created by kunal.shrivastava on 10/19/16.
  */
@@ -39,17 +40,20 @@ public class LiBaseGetClient extends LiBaseClient {
     private LiQueryValueReplacer liQueryValueReplacer;
     private LiQueryRequestParams liQueryRequestParams;
 
-    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass) throws LiRestResponseException {
+    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType,
+            Class<? extends LiBaseModel> responseClass) throws LiRestResponseException {
         super(context, type, querySettingsType, responseClass, RequestType.GET);
         this.activityLIQL = activityLIQL;
     }
 
-    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, String pathParam) throws LiRestResponseException {
+    public LiBaseGetClient(Context context, String activityLIQL, String type, String querySettingsType,
+            Class<? extends LiBaseModel> responseClass, String pathParam) throws LiRestResponseException {
         super(context, type, querySettingsType, responseClass, RequestType.GET, pathParam);
         this.activityLIQL = activityLIQL;
     }
 
-    public LiBaseGetClient(Context context, String activityLIQL, String type, Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
+    public LiBaseGetClient(Context context, String activityLIQL, String type,
+            Class<? extends LiBaseModel> responseClass, LiQueryRequestParams liQueryRequestParams) {
         super(context, type, responseClass);
         this.activityLIQL = activityLIQL;
         this.liQueryRequestParams = liQueryRequestParams;
@@ -99,12 +103,15 @@ public class LiBaseGetClient extends LiBaseClient {
                 int startOfOrderByClause = query.indexOf("ORDER BY");
                 int startOfLimitClause = query.indexOf("LIMIT");
                 int length = query.length();
-                String newOrderClause = " ORDER BY " + liQueryOrdering.getColumn() + " " + liQueryOrdering.getOrder() + " ";
+                String newOrderClause = " ORDER BY " + liQueryOrdering.getColumn() + " " + liQueryOrdering.getOrder()
+                        + " ";
 
                 if (startOfOrderByClause > 0 && startOfLimitClause > 0) {
-                    query = query.substring(0, startOfOrderByClause - 1) + newOrderClause + query.substring(startOfLimitClause, length);
+                    query = query.substring(0, startOfOrderByClause - 1) + newOrderClause + query.substring(
+                            startOfLimitClause, length);
                 } else if (startOfOrderByClause < 0 && startOfLimitClause > 0) {
-                    query = query.substring(0, startOfLimitClause - 1) + newOrderClause + query.substring(startOfLimitClause, length);
+                    query = query.substring(0, startOfLimitClause - 1) + newOrderClause + query.substring(
+                            startOfLimitClause, length);
                 } else if (startOfOrderByClause > 0 && startOfLimitClause < 0) {
                     query = query.substring(0, startOfOrderByClause - 1) + newOrderClause;
                 } else {

@@ -19,11 +19,10 @@ import static org.mockito.Mockito.mock;
 
 public class LiRestV2RequestTest {
 
-    private Map<String, String> mParams;
     private final String LI_QL = "Select * from Customers";
     private final String TYPE = "getRequest";
     private final String requestBody = "request";
-
+    private Map<String, String> mParams;
     @Mock
     private Activity mContext;
 
@@ -61,7 +60,8 @@ public class LiRestV2RequestTest {
 
     @Test
     public void postRequestTest() {
-        LiRestV2Request liRestV2Request = new LiRestV2Request(mContext, LiBaseRestRequest.RestMethod.POST, requestBody, null);
+        LiRestV2Request liRestV2Request = new LiRestV2Request(mContext, LiBaseRestRequest.RestMethod.POST, requestBody,
+                null);
         assertEquals(null, liRestV2Request.getType());
     }
 }

@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class LiAuthorizationExceptionTest {
 
+    private final String INVALID_REQUEST = "invalid_request";
     @Mock
     private Intent mIntent;
     private String validJson, inValidJson;
-    private final String INVALID_REQUEST = "invalid_request";
 
     @Before
     public void setUp() {
@@ -78,43 +78,50 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void byStringAuthRequestErrorsTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.AuthorizationRequestErrors.byString(INVALID_REQUEST);
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.AuthorizationRequestErrors.byString(INVALID_REQUEST);
         assertEquals(1, inValidRequestLiAuthorizationException.type);
         assertEquals(INVALID_REQUEST, inValidRequestLiAuthorizationException.error);
         assertEquals(1000, inValidRequestLiAuthorizationException.code);
         assertEquals(null, inValidRequestLiAuthorizationException.errorDescription);
         assertEquals(null, inValidRequestLiAuthorizationException.errorUri);
-        LiAuthorizationException inValidRequestLiAuthorizationException2 = LiAuthorizationException.AuthorizationRequestErrors.byString("invalid_request2");
+        LiAuthorizationException inValidRequestLiAuthorizationException2
+                = LiAuthorizationException.AuthorizationRequestErrors.byString("invalid_request2");
         assertEquals(1008, inValidRequestLiAuthorizationException2.code);
     }
 
     @Test
     public void byStringTokenRequestErrorsTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.TokenRequestErrors.byString("invalid_client");
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.TokenRequestErrors.byString("invalid_client");
         assertEquals(2, inValidRequestLiAuthorizationException.type);
         assertEquals("invalid_client", inValidRequestLiAuthorizationException.error);
         assertEquals(2001, inValidRequestLiAuthorizationException.code);
         assertEquals(null, inValidRequestLiAuthorizationException.errorDescription);
         assertEquals(null, inValidRequestLiAuthorizationException.errorUri);
-        LiAuthorizationException inValidRequestLiAuthorizationException2 = LiAuthorizationException.TokenRequestErrors.byString("invalid_client2");
+        LiAuthorizationException inValidRequestLiAuthorizationException2
+                = LiAuthorizationException.TokenRequestErrors.byString("invalid_client2");
         assertEquals(2007, inValidRequestLiAuthorizationException2.code);
     }
 
     @Test
     public void byStringRegistrationRequestErrorsTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.RegistrationRequestErrors.byString("invalid_redirect_uri");
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.RegistrationRequestErrors.byString("invalid_redirect_uri");
         assertEquals(4, inValidRequestLiAuthorizationException.type);
         assertEquals("invalid_redirect_uri", inValidRequestLiAuthorizationException.error);
         assertEquals(4001, inValidRequestLiAuthorizationException.code);
         assertEquals(null, inValidRequestLiAuthorizationException.errorDescription);
         assertEquals(null, inValidRequestLiAuthorizationException.errorUri);
-        LiAuthorizationException inValidRequestLiAuthorizationException2 = LiAuthorizationException.RegistrationRequestErrors.byString("invalid_redirect_uri2");
+        LiAuthorizationException inValidRequestLiAuthorizationException2
+                = LiAuthorizationException.RegistrationRequestErrors.byString("invalid_redirect_uri2");
         assertEquals(4004, inValidRequestLiAuthorizationException2.code);
     }
 
     @Test
     public void generalExTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
         assertEquals(0, inValidRequestLiAuthorizationException.type);
         assertEquals("JSON deserialization error", inValidRequestLiAuthorizationException.errorDescription);
         assertEquals(5, inValidRequestLiAuthorizationException.code);
@@ -124,7 +131,8 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void authExTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
         assertEquals(1, inValidRequestLiAuthorizationException.type);
         assertEquals(INVALID_REQUEST, inValidRequestLiAuthorizationException.error);
         assertEquals(1000, inValidRequestLiAuthorizationException.code);
@@ -134,7 +142,8 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void tokenExTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.TokenRequestErrors.INVALID_CLIENT;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.TokenRequestErrors.INVALID_CLIENT;
         assertEquals(2, inValidRequestLiAuthorizationException.type);
         assertEquals("invalid_client", inValidRequestLiAuthorizationException.error);
         assertEquals(2001, inValidRequestLiAuthorizationException.code);
@@ -144,7 +153,8 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void registrationExTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.RegistrationRequestErrors.INVALID_REDIRECT_URI;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.RegistrationRequestErrors.INVALID_REDIRECT_URI;
         assertEquals(4, inValidRequestLiAuthorizationException.type);
         assertEquals("invalid_redirect_uri", inValidRequestLiAuthorizationException.error);
         assertEquals(4001, inValidRequestLiAuthorizationException.code);
@@ -159,8 +169,10 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void fromTemplateNonNullTest() {
-        LiAuthorizationException liAuthorizationException = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
-        LiAuthorizationException authException = LiAuthorizationException.fromTemplate(liAuthorizationException, new Throwable());
+        LiAuthorizationException liAuthorizationException
+                = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
+        LiAuthorizationException authException = LiAuthorizationException.fromTemplate(liAuthorizationException,
+                new Throwable());
         assertEquals(0, authException.type);
         assertEquals("JSON deserialization error", authException.errorDescription);
         assertEquals(5, authException.code);
@@ -175,8 +187,10 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void fromOAuthTemplateNonNullTest() {
-        LiAuthorizationException liAuthorizationException = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
-        LiAuthorizationException authException = LiAuthorizationException.fromOAuthTemplate(liAuthorizationException, "newError", "newErrorDescription", null);
+        LiAuthorizationException liAuthorizationException
+                = LiAuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR;
+        LiAuthorizationException authException = LiAuthorizationException.fromOAuthTemplate(liAuthorizationException,
+                "newError", "newErrorDescription", null);
         assertEquals(0, authException.type);
         assertEquals("newErrorDescription", authException.errorDescription);
         assertEquals(5, authException.code);
@@ -198,7 +212,8 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void toIntentTest() {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
         Intent intent = inValidRequestLiAuthorizationException.toIntent();
         String jsonStr = inValidRequestLiAuthorizationException.toJsonString();
         assertNotEquals(null, intent);
@@ -206,7 +221,8 @@ public class LiAuthorizationExceptionTest {
 
     @Test
     public void toJsonTest() throws JSONException {
-        LiAuthorizationException inValidRequestLiAuthorizationException = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
+        LiAuthorizationException inValidRequestLiAuthorizationException
+                = LiAuthorizationException.AuthorizationRequestErrors.INVALID_REQUEST;
         JSONObject jsonObj = inValidRequestLiAuthorizationException.toJson();
         assertEquals(1, jsonObj.get("type"));
     }

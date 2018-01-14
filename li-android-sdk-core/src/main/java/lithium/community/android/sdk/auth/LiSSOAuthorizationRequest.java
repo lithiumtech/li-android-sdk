@@ -104,19 +104,28 @@ public class LiSSOAuthorizationRequest {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || !(o instanceof LiSSOAuthorizationRequest)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || !(o instanceof LiSSOAuthorizationRequest)) {
+            return false;
+        }
 
         LiSSOAuthorizationRequest that = (LiSSOAuthorizationRequest) o;
 
-        if (getSsoToken() != null ? !getSsoToken().equals(that.getSsoToken()) : that.getSsoToken() != null)
+        if (getSsoToken() != null ? !getSsoToken().equals(that.getSsoToken()) : that.getSsoToken() != null) {
             return false;
-        if (getClientId() != null ? !getClientId().equals(that.getClientId()) : that.getClientId() != null)
+        }
+        if (getClientId() != null ? !getClientId().equals(that.getClientId()) : that.getClientId() != null) {
             return false;
-        if (getRedirectUri() != null ? !getRedirectUri().equals(that.getRedirectUri()) : that.getRedirectUri() != null)
+        }
+        if (getRedirectUri() != null ? !getRedirectUri().equals(that.getRedirectUri())
+                : that.getRedirectUri() != null) {
             return false;
-        if (getState() != null ? !getState().equals(that.getState()) : that.getState() != null)
+        }
+        if (getState() != null ? !getState().equals(that.getState()) : that.getState() != null) {
             return false;
+        }
         return getUri() != null ? getUri().equals(that.getUri()) : that.getUri() == null;
 
     }

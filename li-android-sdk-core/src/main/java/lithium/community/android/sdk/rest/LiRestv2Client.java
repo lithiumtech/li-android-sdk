@@ -68,12 +68,14 @@ public class LiRestv2Client extends LiRestClient {
      * @throws LiRestResponseException
      */
     @NonNull
-    private LiRestV2Request getLiRestV2Request(@NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
+    private LiRestV2Request getLiRestV2Request(
+            @NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
         LiCoreSDKUtils.checkNotNull(baseRestRequest);
 
         if (baseRestRequest instanceof LiBaseRestRequest == false) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            throw LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter");
+            throw LiRestResponseException.illegalArgumentError(
+                    "Rest v2 request should pass a liql query request parameter");
         }
 
         LiRestV2Request restV2Request = (LiRestV2Request) baseRestRequest;
@@ -93,7 +95,8 @@ public class LiRestv2Client extends LiRestClient {
 
         if (baseRestRequest instanceof LiBaseRestRequest == false) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            callBack.onError(LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter"));
+            callBack.onError(LiRestResponseException.illegalArgumentError(
+                    "Rest v2 request should pass a liql query request parameter"));
         }
 
         LiRestV2Request restV2Request = null;
@@ -115,13 +118,14 @@ public class LiRestv2Client extends LiRestClient {
      * @param requestBody     request body for post call to upload image.
      */
     public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest,
-                                   @NonNull LiAsyncRequestCallback callBack, String imagePath, String imageName, String requestBody) {
+            @NonNull LiAsyncRequestCallback callBack, String imagePath, String imageName, String requestBody) {
 
         LiCoreSDKUtils.checkNotNull(baseRestRequest, callBack);
 
         if (baseRestRequest instanceof LiBaseRestRequest == false) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            callBack.onError(LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter"));
+            callBack.onError(LiRestResponseException.illegalArgumentError(
+                    "Rest v2 request should pass a liql query request parameter"));
         }
 
         LiRestV2Request restV2Request = null;

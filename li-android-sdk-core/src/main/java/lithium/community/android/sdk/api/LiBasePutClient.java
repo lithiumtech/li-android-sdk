@@ -24,7 +24,8 @@ import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 
 /**
- * All "put" clients are implemented in same way. They only vary in their requestBody. This class brings all the common codes together
+ * All "put" clients are implemented in same way. They only vary in their requestBody. This class brings all the
+ * common codes together
  * and provide a layer of abstraction to all of the "put" clients.
  * Created by shoureya.kant on 12/28/16.
  */
@@ -39,7 +40,8 @@ public class LiBasePutClient extends LiBaseClient {
         this.additionalHttpHeaders = additionalHttpHeaders;
     }
 
-    public LiBasePutClient(Context context, String basePath, Map<String, String> additionalHttpHeaders) throws LiRestResponseException {
+    public LiBasePutClient(Context context, String basePath,
+            Map<String, String> additionalHttpHeaders) throws LiRestResponseException {
         super(context, basePath, RequestType.PUT);
         this.additionalHttpHeaders = additionalHttpHeaders;
     }
@@ -50,7 +52,8 @@ public class LiBasePutClient extends LiBaseClient {
     @Override
     public void setLiRestV2Request() {
         this.requestBody = postModel.toJsonString();
-        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.PUT, requestBody, additionalHttpHeaders);
+        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.PUT, requestBody,
+                additionalHttpHeaders);
     }
 
     @Override

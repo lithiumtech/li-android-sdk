@@ -33,10 +33,13 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LiDefaultQueryHelper.class)
 public class LiQueryBuilderTest {
-    private static final String BASE_TEST_QUERY = "SELECT id, body, subject, post_time, kudos.sum(weight), conversation.style FROM TEST";
+    private static final String BASE_TEST_QUERY
+            = "SELECT id, body, subject, post_time, kudos.sum(weight), conversation.style FROM TEST";
     private static final String TEST_TYPE = "test";
     private static final String TYPE_HAVING_NO_CONFIG = "noconfig";
-    private static final String RESULTANT_TEST_QUERY = "SELECT id, body, subject, post_time, kudos.sum(weight), conversation.style FROM TEST WHERE target.type = 'test' LIMIT 25";
+    private static final String RESULTANT_TEST_QUERY
+            = "SELECT id, body, subject, post_time, kudos.sum(weight), conversation.style FROM TEST WHERE target.type"
+            + " = 'test' LIMIT 25";
     private Activity mContext;
     private LiSDKManager liSDKManager;
     private SharedPreferences mMockSharedPreferences;

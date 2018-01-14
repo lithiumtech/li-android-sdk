@@ -62,8 +62,8 @@ public final class LiAppCredentials {
      * @throws MalformedURLException If the community URL is not valid this exception is thrown
      */
     private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret,
-                             @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost,
-                             @NonNull String clientAppName)
+            @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost,
+            @NonNull String clientAppName)
             throws MalformedURLException {
         LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
         LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");

@@ -24,13 +24,21 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
  */
 
 class LiSecuredPrefManager {
+    private static final String ENCRYPTION_ALGORITHM = "AES";
+    private static final int ENCRYPTION_LENGTH = 16;
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSecuredPrefManager _instance;
     private MessageDigest sha;
     private Key aesKey;
-    private static final String ENCRYPTION_ALGORITHM = "AES";
-    private static final int ENCRYPTION_LENGTH = 16;
     private byte[] encryptionKey;
+
+    private LiSecuredPrefManager(Context context) throws NoSuchAlgorithmException {
+        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        encryptionKey = encryptionStr.getBytes();
+        sha = MessageDigest.getInstance("SHA-1");
+        aesKey = new SecretKeySpec(Arrays.copyOf(sha.digest(encryptionKey), ENCRYPTION_LENGTH), ENCRYPTION_ALGORITHM);
+    }
 
     /**
      * Instance of this.
@@ -49,14 +57,6 @@ class LiSecuredPrefManager {
 
     private static byte[] decode(String input) {
         return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
-    }
-
-    private LiSecuredPrefManager(Context context) throws NoSuchAlgorithmException {
-        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        encryptionKey = encryptionStr.getBytes();
-        sha = MessageDigest.getInstance("SHA-1");
-        aesKey = new SecretKeySpec(Arrays.copyOf(sha.digest(encryptionKey), ENCRYPTION_LENGTH), ENCRYPTION_ALGORITHM);
     }
 
     public static synchronized LiSecuredPrefManager init(Context context) {
@@ -121,7 +121,8 @@ class LiSecuredPrefManager {
         try {
             value = _instance.decrypt(securedPreferences.getString(_instance.encrypt(key), null));
             if (value == null) {
-                //if not present then check in old unencrypted preferences and then move it new encrypted preferences file
+                //if not present then check in old unencrypted preferences and then move it new encrypted preferences
+                // file
                 value = securedPreferences.getString(key, null);
                 putString(context, key, value);
                 securedPreferences.edit().remove(key).apply();

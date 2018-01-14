@@ -32,7 +32,7 @@ public class LiRestV2Request extends LiBaseRestRequest {
      * Preparing rest v2 request for GET call.
      */
     public LiRestV2Request(Context context, String liql, String type, Map<String, String> additionalHttpHeaders,
-                           boolean isAuthenticatedRequest) {
+            boolean isAuthenticatedRequest) {
         super(context, RestMethod.GET, null, additionalHttpHeaders, isAuthenticatedRequest);
         addQueryParam(liql);
         this.type = type;
@@ -50,8 +50,10 @@ public class LiRestV2Request extends LiBaseRestRequest {
     /**
      * Preparing rest v2 request for POST call.
      */
-    public LiRestV2Request(Context context, RestMethod restMethod, String requestBody, Map<String, String> additionalHttpHeaders) {
-        super(context, restMethod, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestBody), additionalHttpHeaders, true);
+    public LiRestV2Request(Context context, RestMethod restMethod, String requestBody,
+            Map<String, String> additionalHttpHeaders) {
+        super(context, restMethod, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestBody),
+                additionalHttpHeaders, true);
         this.type = null;
     }
 
