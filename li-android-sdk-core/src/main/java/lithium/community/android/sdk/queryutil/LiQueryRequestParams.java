@@ -40,12 +40,12 @@ public class LiQueryRequestParams {
         this.limit = builder.limit;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
     public static Builder getBuilder() {
         return new Builder();
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     /**
@@ -112,11 +112,13 @@ public class LiQueryRequestParams {
         public LiQueryRequestParams build() {
             for (LiQueryClause liQueryClause : liQueryWhereClause.getLiQueryClauses()) {
                 if (!liQueryClause.isValid(client)) {
-                    throw new RuntimeException(String.format("Invalid liQueryClause !!! LiQueryClause of %s used in %s", liQueryClause.getKey().getClient(), client));
+                    throw new RuntimeException(String.format("Invalid liQueryClause !!! LiQueryClause of %s used in %s",
+                            liQueryClause.getKey().getClient(), client));
                 }
             }
             if (!liQueryOrdering.isVaild(client)) {
-                throw new RuntimeException(String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
+                throw new RuntimeException(
+                        String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
             }
             return new LiQueryRequestParams(this);
         }

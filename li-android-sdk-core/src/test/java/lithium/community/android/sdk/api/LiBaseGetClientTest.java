@@ -36,11 +36,13 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LiRestv2Client.class, LiClientManager.class, LiDefaultQueryHelper.class})
 public class LiBaseGetClientTest {
-    private static final String LI_ARTICLES_CLIENT_BASE_LIQL = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
+    private static final String LI_ARTICLES_CLIENT_BASE_LIQL
+            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
     private static final String LI_ARTICLES_QUERYSETTINGS_TYPE = "article";
 
-    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
+    private static final String EXPECTED_QUERY
+            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private LiBaseGetClient liClient;
     private LiRestv2Client liRestv2Client;
     private Activity mContext;
@@ -67,7 +69,8 @@ public class LiBaseGetClientTest {
 //        when(liSDKManager.getTenant()).thenReturn("test");
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
-        liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE,
+                LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
 
 
     }

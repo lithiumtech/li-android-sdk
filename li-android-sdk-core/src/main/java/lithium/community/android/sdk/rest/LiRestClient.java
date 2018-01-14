@@ -94,40 +94,50 @@ public abstract class LiRestClient {
 
     public LiRestClient() throws LiRestResponseException {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiDateInstant.class, new JsonDeserializer<LiBaseModelImpl.LiDateInstant>() {
+        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiDateInstant.class,
+                new JsonDeserializer<LiBaseModelImpl.LiDateInstant>() {
 
-            @Override
-            public LiBaseModelImpl.LiDateInstant deserialize(JsonElement json, Type typeOfT,
-                                                             JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiDateInstant dateInstant = new LiBaseModelImpl.LiDateInstant();
-                dateInstant.setValue(json.getAsString());
-                return dateInstant;
-            }
-        }).registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
-            @Override
-            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                    throws JsonParseException {
-                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-                liString.setValue(json.getAsString());
-                return liString;
-            }
-        }).registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
-            @Override
-            public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                    throws JsonParseException {
-                LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-                liBoolean.setValue(json.getAsBoolean());
-                return liBoolean;
-            }
-        }).registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
-            @Override
-            public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                    throws JsonParseException {
-                LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
-                liBoolean.setValue(json.getAsLong());
-                return liBoolean;
-            }
-        });
+                    @Override
+                    public LiBaseModelImpl.LiDateInstant deserialize(JsonElement json, Type typeOfT,
+                            JsonDeserializationContext context) throws JsonParseException {
+                        LiBaseModelImpl.LiDateInstant dateInstant = new LiBaseModelImpl.LiDateInstant();
+                        dateInstant.setValue(json.getAsString());
+                        return dateInstant;
+                    }
+                })
+                .registerTypeAdapter(LiBaseModelImpl.LiString.class,
+                        new JsonDeserializer<LiBaseModelImpl.LiString>() {
+                            @Override
+                            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT,
+                                    JsonDeserializationContext context)
+                                    throws JsonParseException {
+                                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
+                                liString.setValue(json.getAsString());
+                                return liString;
+                            }
+                        })
+                .registerTypeAdapter(LiBaseModelImpl.LiBoolean.class,
+                        new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
+                            @Override
+                            public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT,
+                                    JsonDeserializationContext context)
+                                    throws JsonParseException {
+                                LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
+                                liBoolean.setValue(json.getAsBoolean());
+                                return liBoolean;
+                            }
+                        })
+                .registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
+                    @Override
+                    public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT,
+                            JsonDeserializationContext context)
+                            throws JsonParseException {
+                        LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
+                        liBoolean.setValue(json.getAsLong());
+                        return liBoolean;
+                    }
+                });
+
         gson = gsonBuilder.create();
         ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                 .tlsVersions(TlsVersion.TLS_1_1, TlsVersion.TLS_1_2, TlsVersion.TLS_1_0, TlsVersion.SSL_3_0)
@@ -136,11 +146,13 @@ public abstract class LiRestClient {
         try {
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
                 }
 
                 @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
                 }
 
                 @Override
@@ -185,8 +197,10 @@ public abstract class LiRestClient {
         LiCoreSDKUtils.checkNotNull(baseRestRequest);
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
-                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
-                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext()).performSyncRefreshTokenRequest();
+                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: "
+                        + LiSDKManager.getInstance().getNewAuthToken());
+                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(
+                        baseRestRequest.getContext()).performSyncRefreshTokenRequest();
                 LiSDKManager.getInstance().persistAuthState(
                         baseRestRequest.getContext(), liTokenResponse);
 
@@ -230,21 +244,24 @@ public abstract class LiRestClient {
      * @param callback        {@link LiAsyncRequestCallback}
      */
     public void processAsync(@NonNull final LiBaseRestRequest baseRestRequest,
-                             @NonNull final LiAsyncRequestCallback callback) {
+            @NonNull final LiAsyncRequestCallback callback) {
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: "
+                            + LiSDKManager.getInstance().getNewAuthToken());
                     LiSDKManager.getInstance().fetchFreshAccessToken(
                             baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
                                     if (isFetched) {
-                                        Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                        Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: "
+                                                + LiSDKManager.getInstance().getNewAuthToken());
                                         enqueueCall(baseRestRequest, callback);
                                     } else {
-                                        callback.onError(LiRestResponseException.networkError("Could not refresh token"));
+                                        callback.onError(
+                                                LiRestResponseException.networkError("Could not refresh token"));
                                     }
                                 }
                             });
@@ -265,7 +282,8 @@ public abstract class LiRestClient {
      * @param baseRestRequest {@link LiBaseRestRequest}
      * @param callback        {@link LiAsyncRequestCallback}
      */
-    private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
+    private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest,
+            @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
         clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
@@ -285,7 +303,8 @@ public abstract class LiRestClient {
                             setVisitorTime(response, baseRestRequest);
                             callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
                         } else {
-                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                            throw new LiRestResponseException(response.code(), "Error processing REST call",
+                                    response.code());
                         }
                     } else {
                         throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
@@ -312,17 +331,20 @@ public abstract class LiRestClient {
      * @param requestBody     Request body of image upload API.
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest,
-                                        @NonNull final LiAsyncRequestCallback callback, final String imagePath, final String imageName, final String requestBody) {
+            @NonNull final LiAsyncRequestCallback callback, final String imagePath, final String imageName,
+            final String requestBody) {
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: "
+                            + LiSDKManager.getInstance().getNewAuthToken());
                     LiSDKManager.getInstance().fetchFreshAccessToken(
                             baseRestRequest.getContext(),
                             new LiAuthServiceImpl.FreshTokenCallBack() {
                                 @Override
                                 public void onFreshTokenFetched(boolean isFetched) {
-                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                    Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: "
+                                            + LiSDKManager.getInstance().getNewAuthToken());
                                     uploadEnqueueCall(baseRestRequest, callback, imagePath, imageName, requestBody);
                                 }
                             });
@@ -344,8 +366,9 @@ public abstract class LiRestClient {
      * @param imageName       Name of the image file.
      * @param imgRequestBody  Request body of image upload API.
      */
-    private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
-                                   String imagePath, String imageName, String imgRequestBody) {
+    private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest,
+            @NonNull final LiAsyncRequestCallback callback,
+            String imagePath, String imageName, String imgRequestBody) {
 
         final MediaType MEDIA_TYPE = MediaType.parse("image/*");
         File originalFile = new File(imagePath);
@@ -356,14 +379,18 @@ public abstract class LiRestClient {
             Context context = baseRestRequest.getContext();
             int imageCompressionSize = context.getResources().getDimensionPixelSize(R.dimen.li_image_compression_size);
             int imageQuality = context.getResources().getInteger(R.integer.li_image_compression_quality);
-            file = LiImageUtils.compressImage(imagePath, imageName, context, imageCompressionSize, imageCompressionSize, imageQuality);
+            file = LiImageUtils.compressImage(imagePath, imageName, context, imageCompressionSize, imageCompressionSize,
+                    imageQuality);
         } else {
             isCompressed = false;
             file = new File(imagePath);
         }
         JsonObject imgRequestBodyObject = getGson().fromJson(imgRequestBody, JsonObject.class);
-        JsonObject dataObj = imgRequestBodyObject.get("nameValuePairs").getAsJsonObject().get("request").getAsJsonObject().get("data").getAsJsonObject();
-        String requestBody = " {\"request\": {\"data\": {\"description\": " + dataObj.get("description") + ",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
+        JsonObject dataObj = imgRequestBodyObject.get("nameValuePairs").getAsJsonObject().get(
+                "request").getAsJsonObject().get("data").getAsJsonObject();
+        String requestBody = " {\"request\": {\"data\": {\"description\": " + dataObj.get("description")
+                + ",\"field\": \"image.content\",\"title\": \"" + imageName
+                + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -393,7 +420,8 @@ public abstract class LiRestClient {
                 request.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS).build();
+        OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT,
+                TimeUnit.SECONDS).build();
         Call call = clientBuilder.newCall(request.build());
         call.enqueue(new Callback() {
             @Override
@@ -410,7 +438,8 @@ public abstract class LiRestClient {
                             Log.i("Image response", response.body().toString());
                             callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
                         } else {
-                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                            throw new LiRestResponseException(response.code(), "Error processing REST call",
+                                    response.code());
                         }
                     } else {
                         throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
@@ -441,7 +470,8 @@ public abstract class LiRestClient {
      */
     private void setVisitorTime(Response response, @NonNull LiBaseRestRequest baseRestRequest) {
         String requestUrl = response.header("http.request");
-        if (requestUrl != null && requestUrl.contains("/beacon") && response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+        if (requestUrl != null && requestUrl.contains("/beacon")
+                && response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
             String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
             LiSDKManager.getInstance().putInSecuredPreferences(
                     baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
@@ -490,7 +520,8 @@ public abstract class LiRestClient {
                     LiSDKManager.getInstance().getNewAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID,
+                LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;

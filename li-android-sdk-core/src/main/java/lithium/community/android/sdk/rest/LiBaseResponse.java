@@ -113,13 +113,14 @@ public class LiBaseResponse {
      * @throws LiRestResponseException
      */
     public List<LiBaseModel> toEntityList(final String type, final Class<? extends LiBaseModel> baseModelClass,
-                                          final Gson gson) throws LiRestResponseException {
+            final Gson gson) throws LiRestResponseException {
         final String objectNamePlural = type + "s";
         return singleEntityOrListFromJson(data, objectNamePlural, type, baseModelClass, gson);
     }
 
     private List<LiBaseModel> singleEntityOrListFromJson(final JsonElement node, final String objectNamePlural,
-                                                         final String objectName, final Class<? extends LiBaseModel> baseModelClass, final Gson gson) throws LiRestResponseException {
+            final String objectName, final Class<? extends LiBaseModel> baseModelClass,
+            final Gson gson) throws LiRestResponseException {
         if (node != null && node.getAsJsonObject().has(DATA)) {
             JsonObject response = node.getAsJsonObject().get(DATA).getAsJsonObject();
             if (!response.has(TYPE)) {
@@ -139,7 +140,8 @@ public class LiBaseResponse {
                     try {
                         elementList.add(gson.fromJson(element, baseModelClass));
                     } catch (IllegalStateException | JsonSyntaxException exception) {
-                        throw LiRestResponseException.jsonSerializationError("Bad json response:" + exception.getMessage());
+                        throw LiRestResponseException.jsonSerializationError(
+                                "Bad json response:" + exception.getMessage());
                     }
                 }
                 return elementList;

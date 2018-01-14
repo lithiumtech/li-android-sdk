@@ -26,7 +26,8 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 /**
  * Wrapper rest api error responses.
  *
- * @see <ahref="http://community.lithium.com/t5/Developer-Documentation/bd-p/dev-doc-portal?section=commv2&v2.main=errorresponses"
+ * @see <ahref="http://community.lithium.com/t5/Developer-Documentation/bd-p/dev-doc-portal?section=commv2&v2.main
+ * =errorresponses"
  * Rest v2 error responses </a>
  */
 
@@ -77,7 +78,8 @@ public class LiRestResponseException extends Exception {
      * @return networkError wrapped into LiRestResponseException.
      */
     public static LiRestResponseException networkError(@Nullable String errorDescription) {
-        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVICE_UNAVAILABLE, errorDescription, LiSDKErrorCodes.NETWORK_ERROR);
+        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVICE_UNAVAILABLE, errorDescription,
+                LiSDKErrorCodes.NETWORK_ERROR);
     }
 
     /**
@@ -98,7 +100,8 @@ public class LiRestResponseException extends Exception {
      * @return illegalArgumentError wrapped into LiRestResponseException.
      */
     public static LiRestResponseException illegalArgumentError(@Nullable String errorDescription) {
-        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR, errorDescription, LiSDKErrorCodes.ILLEGAL_ARG_ERROR);
+        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR, errorDescription,
+                LiSDKErrorCodes.ILLEGAL_ARG_ERROR);
     }
 
     /**
@@ -108,7 +111,8 @@ public class LiRestResponseException extends Exception {
      * @return runtimeError wrapped into LiRestResponseException.
      */
     public static LiRestResponseException runtimeError(@Nullable String errorDescription) {
-        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVICE_UNAVAILABLE, errorDescription, LiSDKErrorCodes.RUNTIME_ERROR);
+        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVICE_UNAVAILABLE, errorDescription,
+                LiSDKErrorCodes.RUNTIME_ERROR);
     }
 
     /**
@@ -118,7 +122,8 @@ public class LiRestResponseException extends Exception {
      * @return jsonSyntaxError wrapped into LiRestResponseException.
      */
     public static LiRestResponseException jsonSyntaxError(@Nullable String errorDescription) {
-        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR, errorDescription, LiSDKErrorCodes.JSON_SYNTAX_ERROR);
+        return new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR, errorDescription,
+                LiSDKErrorCodes.JSON_SYNTAX_ERROR);
     }
 
     /**

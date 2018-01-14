@@ -108,17 +108,28 @@ public final class LiSDKManager extends LiAuthManager {
         return _sdkInstance;
     }
 
+    /**
+     * Instance of this.
+     */
+    public static LiSDKManager getInstance() {
+        if (_sdkInstance == null) {
+            throw new NoSuchPropertyException("SDK not intialized. Call init method first");
+        }
+        return _sdkInstance;
+    }
+
     public void syncWithCommunity(final Context context) {
         if (_sdkInstance.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
-                LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
+                LiClientRequestParams liClientRequestParams
+                        = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
                 LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
                         new LiAsyncRequestCallback<LiGetClientResponse>() {
 
                             @Override
                             public void onSuccess(LiBaseRestRequest request,
-                                                  LiGetClientResponse response)
+                                    LiGetClientResponse response)
                                     throws LiRestResponseException {
                                 if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
@@ -147,7 +158,8 @@ public final class LiSDKManager extends LiAuthManager {
 
                             @Override
                             public void onError(Exception exception) {
-                                Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: " + exception.getMessage());
+                                Log.e(LiCoreSDKConstants.LI_LOG_TAG,
+                                        "Error getting SDK settings: " + exception.getMessage());
                             }
                         });
             } catch (LiRestResponseException e) {
@@ -155,7 +167,8 @@ public final class LiSDKManager extends LiAuthManager {
             }
             //get logged in user details
             try {
-                LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUserDetailsClientRequestParams(context, "self");
+                LiClientRequestParams liClientRequestParams
+                        = new LiClientRequestParams.LiUserDetailsClientRequestParams(context, "self");
                 LiClientManager.getUserDetailsClient(liClientRequestParams)
                         .processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
                             @Override
@@ -182,16 +195,6 @@ public final class LiSDKManager extends LiAuthManager {
             }
 
         }
-    }
-
-    /**
-     * Instance of this.
-     */
-    public static LiSDKManager getInstance() {
-        if (_sdkInstance == null) {
-            throw new NoSuchPropertyException("SDK not intialized. Call init method first");
-        }
-        return _sdkInstance;
     }
 
     /**

@@ -31,7 +31,10 @@ public class LiUploadImageModelTest {
         assertEquals(field, liUploadImageModel.getField());
         assertEquals(visibility, liUploadImageModel.getVisibility());
         assertEquals(description, liUploadImageModel.getDescription());
-        assertEquals("{\"nameValuePairs\":{\"request\":{\"data\":{\"type\":\"Image\",\"title\":\"getUploadImageClient\",\"field\":\"image.content\",\"visibility\":\"public\",\"description\":\"TestImage\"}}}}", liUploadImageModel.toJsonString());
+        assertEquals(
+                "{\"nameValuePairs\":{\"request\":{\"data\":{\"type\":\"Image\",\"title\":\"getUploadImageClient\","
+                        + "\"field\":\"image.content\",\"visibility\":\"public\",\"description\":\"TestImage\"}}}}",
+                liUploadImageModel.toJsonString());
 
     }
 }

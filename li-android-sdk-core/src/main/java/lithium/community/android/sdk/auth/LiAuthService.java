@@ -60,7 +60,8 @@ public interface LiAuthService {
      * @param loginCompleteCallBack {@link LoginCompleteCallBack}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    void handleAuthorizationResponse(LiSSOAuthResponse response, LiAuthRestClient authRestClient, LoginCompleteCallBack loginCompleteCallBack) throws LiRestResponseException;
+    void handleAuthorizationResponse(LiSSOAuthResponse response, LiAuthRestClient authRestClient,
+            LoginCompleteCallBack loginCompleteCallBack) throws LiRestResponseException;
 
     /**
      * Fetching details of User after login is completed.
@@ -127,6 +128,6 @@ public interface LiAuthService {
          * @see LiAuthorizationException.TokenRequestErrors
          */
         void onTokenRequestCompleted(@Nullable LiTokenResponse response,
-                                     @Nullable Exception ex);
+                @Nullable Exception ex);
     }
 }

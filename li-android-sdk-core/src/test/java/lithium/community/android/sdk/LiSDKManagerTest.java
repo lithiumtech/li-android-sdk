@@ -36,14 +36,11 @@ import static org.mockito.Mockito.when;
 public class LiSDKManagerTest {
 
 
-    private Activity mContext;
-
-    private SharedPreferences mMockSharedPreferences;
-
-    private Resources resource;
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private Activity mContext;
+    private SharedPreferences mMockSharedPreferences;
+    private Resources resource;
 
     @Before
     public void setUpTest() throws Exception {

@@ -35,6 +35,8 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(LiRestv2Client.class)
 public class LiClientManagerTest {
 
+    public static final String LI_GENERIC_TYPE = "generic_get";
+    public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
     private static final String LI_ACCEPT_SOLUTION_TYPE = "solution_data";
     private static final String LI_KUDO_TYPE = "kudo";
     private static final String LI_POST_QUESTION_TYPE = "message";
@@ -49,9 +51,6 @@ public class LiClientManagerTest {
     private static final String LI_ARTICLES_BROWSE_CLIENT_TYPE = "message";
     private static final String LI_USER_DETAILS_CLIENT_TYPE = "user";
     private static final String LI_MESSAGE_CLIENT_TYPE = "message";
-    public static final String LI_GENERIC_TYPE = "generic_get";
-    public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
-
     private static final String GET = "GET";
     private static final String DELETE = "DELETE";
     private static final String POST = "POST";
@@ -108,7 +107,8 @@ public class LiClientManagerTest {
 
     @Test
     public void testGetMessagesByBoardIdClient() {
-        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessagesByBoardIdClientRequestParams(mContext, "1");
+        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessagesByBoardIdClientRequestParams(
+                mContext, "1");
         LiClient liClient = null;
         LiRestV2Request liRestV2Request = mock(LiRestV2Request.class);
         LiBaseResponse liBaseResponse = new LiBaseResponse();
@@ -127,7 +127,8 @@ public class LiClientManagerTest {
     @Test
     public void testDeleteMessageClient() {
         String id = "33";
-        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessageDeleteClientRequestParams(mContext, id);
+        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessageDeleteClientRequestParams(
+                mContext, id);
         LiClient liClient = null;
         try {
             liClient = LiClientManager.getMessageDeleteClient(liClientRequestParams);
@@ -144,7 +145,8 @@ public class LiClientManagerTest {
         String messageId = "33";
         String subject = "Test";
         String body = "This is test";
-        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUpdateMessageClientRequestParams(mContext, messageId, subject, body);
+        LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUpdateMessageClientRequestParams(
+                mContext, messageId, subject, body);
         LiClient liClient = null;
         try {
             liClient = LiClientManager.getUpdateMessageClient(liClientRequestParams);
@@ -344,8 +346,10 @@ public class LiClientManagerTest {
         LiQueryRequestParams.Builder builder = LiQueryRequestParams.getBuilder();
         builder.setClient(LiClientManager.Client.LI_ARTICLES_CLIENT);
         builder.setLimit(10);
-        LiQueryOrdering liQueryOrdering = new LiQueryOrdering(LiQueryOrdering.Articles.POST_TIME, LiQueryOrdering.Order.ASC);
-        LiQueryClause liQueryClause = new LiQueryClause(LiQuerySetting.LiWhereClause.EQUALS, LiQueryWhereClause.Articles.DEPTH, "1", "AND");
+        LiQueryOrdering liQueryOrdering = new LiQueryOrdering(LiQueryOrdering.Articles.POST_TIME, LiQueryOrdering
+        .Order.ASC);
+        LiQueryClause liQueryClause = new LiQueryClause(LiQuerySetting.LiWhereClause.EQUALS, LiQueryWhereClause
+        .Articles.DEPTH, "1", "AND");
         LiQueryWhereClause liQueryWhereClause = new LiQueryWhereClause();
         liQueryWhereClause.addClause(liQueryClause);
         builder.setLiQueryOrdering(liQueryOrdering);

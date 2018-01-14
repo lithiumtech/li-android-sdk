@@ -49,11 +49,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LiAuthRestClient.class, OkHttpClient.class, Response.class, ResponseBody.class})
 public class LiAuthRestClientTest {
-    @Mock
-    private Activity mContext;
-    private SharedPreferences mMockSharedPreferences;
-    private Resources resource;
-    private LiSDKManager liSDKManager;
     public static final String CLIENT_ID = "clientId";
     public static final String SSO_TOKEN = "ssoToken";
     public static final String STATE = "state";
@@ -65,6 +60,11 @@ public class LiAuthRestClientTest {
     public static final String GRANT_TYPE = "grantType";
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String REFRESH_TOKEN = "refreshToken";
+    @Mock
+    private Activity mContext;
+    private SharedPreferences mMockSharedPreferences;
+    private Resources resource;
+    private LiSDKManager liSDKManager;
 
     @Before
     public void setUpTest() throws Exception {

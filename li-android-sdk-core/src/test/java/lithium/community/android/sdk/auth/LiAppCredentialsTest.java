@@ -33,7 +33,9 @@ public class LiAppCredentialsTest {
         Assert.assertEquals(clientSecret, liAppCredentials.getClientSecret());
         Assert.assertEquals(Uri.parse(communityUri), liAppCredentials.getCommunityUri());
         Assert.assertEquals(ssoAuthorizeUri, liAppCredentials.getSsoAuthorizeUri());
-        Assert.assertEquals(Uri.parse(communityUri).buildUpon().path("auth/oauth2/authorize").build(), liAppCredentials.getAuthorizeUri());
-        Assert.assertEquals(LiUriUtils.reverseDomainName(Uri.parse(communityUri)) + "://oauth2callback", liAppCredentials.getRedirectUri());
+        Assert.assertEquals(Uri.parse(communityUri).buildUpon().path("auth/oauth2/authorize").build(),
+                liAppCredentials.getAuthorizeUri());
+        Assert.assertEquals(LiUriUtils.reverseDomainName(Uri.parse(communityUri)) + "://oauth2callback",
+                liAppCredentials.getRedirectUri());
     }
 }

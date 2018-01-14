@@ -79,7 +79,8 @@ public class LiSSOAuthorizationRequestTest {
         liSSOAuthorizationRequest.setRedirectUri(TEST_REDIRECT_URI);
         liSSOAuthorizationRequest.setState(TEST_STATE);
         assertNotEquals(null, liSSOAuthorizationRequest.toUri());
-        assertEquals(TEST_URI + "?redirect_uri=" + TEST_REDIRECT_URI + "&client_id=" + TEST_CLIENT_ID + "&response_type=code&state=" + TEST_STATE, liSSOAuthorizationRequest.toUri().toString());
+        assertEquals(TEST_URI + "?redirect_uri=" + TEST_REDIRECT_URI + "&client_id=" + TEST_CLIENT_ID
+                + "&response_type=code&state=" + TEST_STATE, liSSOAuthorizationRequest.toUri().toString());
     }
 
 }

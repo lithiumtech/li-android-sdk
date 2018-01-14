@@ -32,13 +32,15 @@ public class LiAcceptSolutionModelTest {
     public void testToJson() {
         liAcceptSolutionModel.setType(type);
         liAcceptSolutionModel.setMessageid(messageId);
-        Assert.assertEquals("{\"data\":{\"type\":\"accept_solution\",\"message_id\":\"100\"}}", liAcceptSolutionModel.toJson().toString());
+        Assert.assertEquals("{\"data\":{\"type\":\"accept_solution\",\"message_id\":\"100\"}}",
+                liAcceptSolutionModel.toJson().toString());
     }
 
     @Test
     public void testToJsonString() {
         liAcceptSolutionModel.setType(type);
         liAcceptSolutionModel.setMessageid(messageId);
-        Assert.assertEquals("{\"data\":{\"type\":\"accept_solution\",\"message_id\":\"100\"}}", liAcceptSolutionModel.toJsonString().toString());
+        Assert.assertEquals("{\"data\":{\"type\":\"accept_solution\",\"message_id\":\"100\"}}",
+                liAcceptSolutionModel.toJsonString().toString());
     }
 }

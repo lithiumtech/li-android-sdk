@@ -20,12 +20,7 @@ import lithium.community.android.sdk.model.response.LiBrowse;
 
 public class LiGetClientResponseTest {
 
-    private LiBaseResponse liBaseResponse;
-    private String type;
-    private Class<? extends LiBaseModel> baseModelClass;
-    private LiGetClientResponse liGetClientResponse;
     Gson gson;
-
     JsonObject jsonObject = new Gson().fromJson("{\n" +
             "  \"status\" : \"success\",\n" +
             "  \"message\" : \"\",\n" +
@@ -42,7 +37,9 @@ public class LiGetClientResponseTest {
             "      \"conversation_style\" : \"blog\",\n" +
             "      \"title\" : \"Best Practice: the Community Blog\",\n" +
             "      \"short_title\" : \"BP\",\n" +
-            "      \"description\" : \"Exploring interactions of organizations, individuals and ideas on the outer edge of the enterprise.\",\n" +
+            "      \"description\" : \"Exploring interactions of organizations, individuals and ideas on the outer "
+            + "edge of the enterprise.\",\n"
+            +
             "      \"parent\" : {\n" +
             "        \"type\" : \"node\",\n" +
             "        \"id\" : \"category:Blogs\",\n" +
@@ -63,6 +60,10 @@ public class LiGetClientResponseTest {
             "    } ]\n" +
             "  },\n  \"metadata\" : { }\n" +
             "}", JsonObject.class);
+    private LiBaseResponse liBaseResponse;
+    private String type;
+    private Class<? extends LiBaseModel> baseModelClass;
+    private LiGetClientResponse liGetClientResponse;
 
     @Before
     public void setUp() throws LiRestResponseException {
