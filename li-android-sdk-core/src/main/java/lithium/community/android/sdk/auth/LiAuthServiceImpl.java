@@ -462,16 +462,21 @@ public class LiAuthServiceImpl implements LiAuthService {
         LiBaseResponse resp = authRestClient.refreshTokenSync(mContext, liRefreshTokenRequest);
         Gson gson = new Gson();
         JsonObject dataObject = resp.getData();
-        if (dataObject.has("response")) {
-            JsonObject responseObj = dataObject.get("response").getAsJsonObject();
-            if (responseObj.has("data")) {
-                JsonElement dataJsonElement = responseObj.get("data");
-                tokenResponse = gson.fromJson(dataJsonElement, LiTokenResponse.class);
-                tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
-                JsonObject obj = dataJsonElement.getAsJsonObject();
-                obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
-                tokenResponse.setJsonString(String.valueOf(obj));
+        try {
+            if (dataObject.has("response")) {
+                JsonObject responseObj = dataObject.get("response").getAsJsonObject();
+                if (responseObj.has("data")) {
+                    JsonElement dataJsonElement = responseObj.get("data");
+                    tokenResponse = gson.fromJson(dataJsonElement, LiTokenResponse.class);
+                    tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                    JsonObject obj = dataJsonElement.getAsJsonObject();
+                    obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
+                    tokenResponse.setJsonString(String.valueOf(obj));
+                }
             }
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw LiRestResponseException.runtimeError("Error refreshing access token");
         }
         if (tokenResponse == null) {
             throw LiRestResponseException.runtimeError("Error refreshing access token");

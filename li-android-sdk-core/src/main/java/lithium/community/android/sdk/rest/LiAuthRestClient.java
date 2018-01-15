@@ -199,7 +199,12 @@ public class LiAuthRestClient {
     private void checkResponse(Response response, @NonNull LiAuthAsyncRequestCallback callback, String error) throws LiRestResponseException, IOException {
         if (response != null) {
             if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
-                callback.onSuccess(getLiBaseResponseFromResponse(response));
+                try {
+                    callback.onSuccess(getLiBaseResponseFromResponse(response));
+                } catch (RuntimeException ex) {
+                    ex.printStackTrace();
+                    throw LiRestResponseException.runtimeError(ex.getMessage());
+                }
             } else {
                 Log.e(LI_LOG_TAG, error);
                 callback.onError(new LiRestResponseException(response.code(), error, response.code()));
