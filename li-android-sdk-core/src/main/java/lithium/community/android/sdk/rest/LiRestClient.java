@@ -73,13 +73,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
 
-import static lithium.community.android.sdk.auth.LiAuthConstants.APPLICATION_VERSION_HEADER_VALUE;
+import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_FORBIDDEN;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.HTTP_CODE_UNAUTHORIZED;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY;
+import static lithium.community.android.sdk.utils.LiCoreSDKUtils.addLSIRequestHeaders;
 
 /**
  * Base rest client. Provides all the generic request response rest call implementation.
@@ -88,7 +89,6 @@ public abstract class LiRestClient {
 
     public static final String TOKEN_REFRESH_TAG = "TOKEN_REFRESH_TAG";
     public static final int SERVER_TIMEOUT = 1000;
-    private static final String LOG_TAG = "LiRestClient";
     private final Gson gson;
     private OkHttpClient httpClient;
 
@@ -202,7 +202,17 @@ public abstract class LiRestClient {
 
         try {
             response = clientBuilder.build().newCall(request).execute();
-            return new LiBaseResponse(response);
+            if (response != null) {
+                if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                    setVisitorTime(response, baseRestRequest);
+                    return new LiBaseResponse(response);
+                } else {
+                    throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                }
+            } else {
+                throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                        "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error making rest call", e);
             throw LiRestResponseException.networkError(e.getMessage());
@@ -271,20 +281,21 @@ public abstract class LiRestClient {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
-                    String requestUrl = response.header("http.request");
-                    if (requestUrl != null && requestUrl.contains("/beacon")) {
-                        String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
-                        LiSDKManager.getInstance().putInSecuredPreferences(
-                                baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
-                        String visitOriginTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME);
-                        LiSDKManager.getInstance().putInSecuredPreferences(
-                                baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
+                    if (response != null) {
+                        if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                            setVisitorTime(response, baseRestRequest);
+                            callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                        } else {
+                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        }
+                    } else {
+                        throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                                "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     }
-
-                    callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
-                } catch (LiRestResponseException e) {
+                } catch(Exception e) {
                     callback.onError(e);
-                } finally {
+                }
+                finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
                     }
@@ -352,8 +363,9 @@ public abstract class LiRestClient {
             isCompressed = false;
             file = new File(imagePath);
         }
-
-        String requestBody = " {\"request\": {\"data\": {\"description\": \"Uploaded from community android app.\",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
+        JsonObject imgRequestBodyObject = getGson().fromJson(imgRequestBody, JsonObject.class);
+        JsonObject dataObj = imgRequestBodyObject.get("nameValuePairs").getAsJsonObject().get("request").getAsJsonObject().get("data").getAsJsonObject();
+        String requestBody = " {\"request\": {\"data\": {\"description\": "+dataObj.get("description")+",\"field\": \"image.content\",\"title\": \"" + imageName + "\",\"type\": \"image\",\"visibility\": \"public\"}}}";
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -395,10 +407,19 @@ public abstract class LiRestClient {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
-                    Log.i("Image response", response.body().toString());
-                    callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
-                } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    if (response != null) {
+                        if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                            Log.i("Image response", response.body().toString());
+                            callback.onSuccess(baseRestRequest, new LiBaseResponse(response));
+                        } else {
+                            throw new LiRestResponseException(response.code(), "Error processing REST call", response.code());
+                        }
+                    } else {
+                        throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                                "Error processing REST call", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+                    }
+                } catch (Exception e) {
+                    callback.onError(e);
                 } finally {
                     if (response != null && response.body() != null) {
                         response.body().close();
@@ -414,6 +435,24 @@ public abstract class LiRestClient {
     }
 
     /**
+     * This method checks the response if it is a response from beacon API and a HTTP 200.
+     * If it is then it saves the visitor origin time and last issue time in shared preferences
+     * @param response
+     * @param baseRestRequest
+     */
+    private void setVisitorTime(Response response, @NonNull LiBaseRestRequest baseRestRequest) {
+        String requestUrl = response.header("http.request");
+        if (requestUrl != null && requestUrl.contains("/beacon") && response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+            String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
+            LiSDKManager.getInstance().putInSecuredPreferences(
+                    baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
+            String visitOriginTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME);
+            LiSDKManager.getInstance().putInSecuredPreferences(
+                    baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
+        }
+    }
+
+    /**
      * Helper to build okHttp Request from RestRequest
      *
      * @param baseRestRequest {@link LiBaseRestRequest}
@@ -421,10 +460,8 @@ public abstract class LiRestClient {
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = TextUtils.isEmpty(LiSDKManager.getInstance().getProxyHost())
-                ?LiSDKManager.getInstance().getLiAppCredentials().getApiProxyHost():LiSDKManager.getInstance().getProxyHost();
         Context context = baseRestRequest.getContext();
-        uriBuilder.authority(proxyHost);
+        uriBuilder.authority(LiSDKManager.getInstance().getProxyHost());
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
@@ -455,10 +492,7 @@ public abstract class LiRestClient {
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+        addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;
     }
@@ -559,7 +593,7 @@ public abstract class LiRestClient {
                     String responseStr = response.body().string();
                     try {
                         data = new Gson().fromJson(responseStr, JsonObject.class);
-                        if (data.has("statusCode")) {
+                        if (data != null && data.has("statusCode")) {
                             httpCode = data.get("statusCode").getAsInt();
                         }
                     }

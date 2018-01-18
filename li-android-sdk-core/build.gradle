@@ -8,7 +8,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 group = 'lithium.community.android.sdk'
-version = '1.2.4'
+version = '1.2.5'
 def artifactId = 'li-android-sdk-core'
 def localReleaseDest = "${buildDir}/release/${version}"
 def repositoryName = 'li-android-sdk'
@@ -27,6 +27,11 @@ android {
         versionName "${version}"
     }
     buildTypes {
+        buildTypes.each {
+            it.resValue "string", "li_sdk_core_version", "${version}"
+            it.buildConfigField "String", "li_sdk_core_version", "\"${version}\""
+        }
+
         debug {
             testCoverageEnabled true
         }
@@ -147,7 +152,7 @@ uploadArchives {
     repositories.mavenDeployer {
         pom.groupId = "lithium.community.android.sdk"
         pom.artifactId = "li-android-sdk-core"
-        pom.version = "1.2.4"
+        pom.version = "1.2.5"
         // Add other pom properties here if you want (developer details / licenses)
         repository(url: "file://${localReleaseDest}")
     }

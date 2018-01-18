@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.exception.LiRestResponseException;
@@ -52,7 +53,7 @@ public final class LiSDKManager extends LiAuthManager {
 
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager _sdkInstance;
-    private final LiAppCredentials liAppCredentials;
+
     /**
      * Protected constructor.
      *
@@ -61,9 +62,8 @@ public final class LiSDKManager extends LiAuthManager {
      * @throws URISyntaxException {@link URISyntaxException}
      */
     private LiSDKManager(Context context, LiAppCredentials liAppCredentials) throws URISyntaxException {
-        super(context);
+        super(context, liAppCredentials);
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        this.liAppCredentials = liAppCredentials;
     }
 
     /**
@@ -104,6 +104,10 @@ public final class LiSDKManager extends LiAuthManager {
                     context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
 
+        return _sdkInstance;
+    }
+
+    public void syncWithCommunity(final Context context) {
         if (_sdkInstance.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
@@ -115,7 +119,7 @@ public final class LiSDKManager extends LiAuthManager {
                             public void onSuccess(LiBaseRestRequest request,
                                                   LiGetClientResponse response)
                                     throws LiRestResponseException {
-                                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
                                     JsonObject responseJsonObject = response.getJsonObject();
                                     if (responseJsonObject.has("data")) {
@@ -179,7 +183,6 @@ public final class LiSDKManager extends LiAuthManager {
             }
 
         }
-        return _sdkInstance;
     }
 
     /**
@@ -207,7 +210,10 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Checks if it is deferred login.
+     * gets the core sdk version
      */
+    public String getCoreSDKVersion() {
+        return BuildConfig.li_sdk_core_version;
+    }
 }
 

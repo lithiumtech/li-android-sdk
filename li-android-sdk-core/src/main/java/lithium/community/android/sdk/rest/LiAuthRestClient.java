@@ -14,6 +14,7 @@
 
 package lithium.community.android.sdk.rest;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -23,11 +24,13 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 
+import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
 import lithium.community.android.sdk.auth.LiSSOAuthorizationRequest;
 import lithium.community.android.sdk.auth.LiSSOTokenRequest;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiSDKManager;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -37,7 +40,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static lithium.community.android.sdk.auth.LiAuthConstants.APPLICATION_VERSION_HEADER_VALUE;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
+import static lithium.community.android.sdk.utils.LiCoreSDKUtils.addLSIRequestHeaders;
 
 /**
  * This client is used for catering to Authorization request.
@@ -52,17 +56,17 @@ public class LiAuthRestClient {
      * @param callback {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public void authorizeAsync(@NonNull final LiSSOAuthorizationRequest ssoAuthorizationRequest,
+    public void authorizeAsync(@NonNull Context context, @NonNull final LiSSOAuthorizationRequest ssoAuthorizationRequest,
                                @NonNull final LiAuthAsyncRequestCallback callback) throws LiRestResponseException {
 
         Gson gson = new Gson();
 
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(String.valueOf(ssoAuthorizationRequest.getUri()))))
-                .method(LiBaseRestRequest.RestMethod.POST.name(), RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(ssoAuthorizationRequest)));
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
+                .method(LiBaseRestRequest.RestMethod.POST.name(),
+                        RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                                gson.toJson(ssoAuthorizationRequest)));
+        addLSIRequestHeaders(context, builder);
         Request request = builder.build();
 
         OkHttpClient client = getOkHttpClient();
@@ -76,8 +80,8 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
+                    checkResponse(response, callback, "Error authorizeAsync");
+                } catch (Exception e) {
                     callback.onError(e);
                 }
             }
@@ -124,7 +128,7 @@ public class LiAuthRestClient {
      * @param callback {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public void accessTokenAsync(@NonNull final LiSSOTokenRequest ssoTokenRequest,
+    public void accessTokenAsync(@NonNull Context context, @NonNull final LiSSOTokenRequest ssoTokenRequest,
                                  @NonNull final LiAuthAsyncRequestCallback callback) throws LiRestResponseException {
 
         Gson gson = new Gson();
@@ -132,10 +136,7 @@ public class LiAuthRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(String.valueOf(ssoTokenRequest.getUri()))))
                 .method(LiBaseRestRequest.RestMethod.POST.name(), RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(ssoTokenRequest)));
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
-
+        addLSIRequestHeaders(context, builder);
         builder.addHeader("client-id", ssoTokenRequest.getClientId());
         Request request = builder.build();
 
@@ -150,9 +151,9 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    checkResponse(response, callback, "Error accessTokenAsync");
+                } catch (Exception e) {
+                    callback.onError(e);
                 }
             }
         });
@@ -164,7 +165,7 @@ public class LiAuthRestClient {
      * @param callback {@link LiAuthAsyncRequestCallback}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public void refreshTokenAsync(@NonNull final LiRefreshTokenRequest refreshTokenRequest,
+    public void refreshTokenAsync(@NonNull Context context, @NonNull final LiRefreshTokenRequest refreshTokenRequest,
                                   @NonNull final LiAuthAsyncRequestCallback callback) throws LiRestResponseException {
 
         Gson gson = new Gson();
@@ -172,10 +173,7 @@ public class LiAuthRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(String.valueOf(refreshTokenRequest.getUri()))))
                 .method(LiBaseRestRequest.RestMethod.POST.name(), RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(refreshTokenRequest)));
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
-
+        addLSIRequestHeaders(context, builder);
         builder.addHeader("client-id", refreshTokenRequest.getClientId());
         Request request = builder.build();
 
@@ -190,12 +188,32 @@ public class LiAuthRestClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    callback.onSuccess(getLiBaseResponseFromResponse(response));
-                } catch (LiRestResponseException e) {
-                    throw new RuntimeException(e.getMessage());
+                    checkResponse(response, callback, "Error refreshTokenAsync");
+                } catch (Exception e) {
+                    callback.onError(e);
                 }
             }
         });
+    }
+
+    private void checkResponse(Response response, @NonNull LiAuthAsyncRequestCallback callback, String error) throws LiRestResponseException, IOException {
+        if (response != null) {
+            if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                try {
+                    callback.onSuccess(getLiBaseResponseFromResponse(response));
+                } catch (RuntimeException ex) {
+                    ex.printStackTrace();
+                    throw LiRestResponseException.runtimeError(ex.getMessage());
+                }
+            } else {
+                Log.e(LI_LOG_TAG, error);
+                callback.onError(new LiRestResponseException(response.code(), error, response.code()));
+            }
+        } else {
+            Log.e(LI_LOG_TAG, error);
+            callback.onError(new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                    error, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR));
+        }
     }
 
     /**
@@ -204,17 +222,14 @@ public class LiAuthRestClient {
      * @return LiBaseResponse {@link LiBaseResponse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public LiBaseResponse refreshTokenSync(@NonNull final LiRefreshTokenRequest refreshTokenRequest) throws LiRestResponseException {
+    public LiBaseResponse refreshTokenSync(@NonNull Context context, @NonNull final LiRefreshTokenRequest refreshTokenRequest) throws LiRestResponseException {
 
         Gson gson = new Gson();
 
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(String.valueOf(refreshTokenRequest.getUri()))))
                 .method(LiBaseRestRequest.RestMethod.POST.name(), RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(refreshTokenRequest)));
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, APPLICATION_VERSION_HEADER_VALUE);
-
+        addLSIRequestHeaders(context, builder);
         builder.addHeader("client-id", refreshTokenRequest.getClientId());
         Request request = builder.build();
 
@@ -224,11 +239,19 @@ public class LiAuthRestClient {
 
         try {
             response = getCall(request, client).execute();
-            return getLiBaseResponseFromResponse(response);
-        } catch (IOException e) {
+            if (response != null) {
+                if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
+                    return getLiBaseResponseFromResponse(response);
+                } else {
+                    throw new LiRestResponseException(response.code(), "Error refreshTokenSync", response.code());
+                }
+            } else {
+                throw new LiRestResponseException(LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR,
+                        "Error refreshTokenSync", LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            }
+        } catch (Exception e) {
             Log.e("LiAuthRestClient", "Error making rest call", e);
             throw LiRestResponseException.networkError(e.getMessage());
         }
-
     }
 }

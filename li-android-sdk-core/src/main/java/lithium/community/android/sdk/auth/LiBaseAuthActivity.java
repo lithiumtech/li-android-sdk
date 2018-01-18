@@ -73,7 +73,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
             response2.setUserId(data.getQueryParameter("user-id"));
             response2.setApiProxyHost(data.getQueryParameter("proxy-host"));
             response2.setTenantId(data.getQueryParameter("tenant-id"));
-            response2.setState(data.getQueryParameter("state"));
+            response2.setState(state);
         }
 
         try {

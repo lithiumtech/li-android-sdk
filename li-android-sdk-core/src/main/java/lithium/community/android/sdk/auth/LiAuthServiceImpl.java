@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.UUID;
@@ -48,6 +49,7 @@ import lithium.community.android.sdk.utils.LiUUIDUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 
 /**
  * Implementation class for LiAuthService. Starts login flow, performs authorization, fetches access and refresh tokens.
@@ -55,22 +57,11 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_
  */
 public class LiAuthServiceImpl implements LiAuthService {
 
+    private static final String REFRESH_TOKEN_FETCH_ERROR = "Couldn't refresh access token from refresh token";
     @VisibleForTesting
     protected Context mContext;
 
-    private String ssoToken;
-
     private boolean mDisposed = false;
-    /**
-     * Constructor for SSO flow.
-     *
-     * @param context  {@link Context}
-     * @param ssoToken This is the SSO Token.
-     */
-    public LiAuthServiceImpl(@NonNull Context context, @NonNull String ssoToken) {
-        mContext = LiCoreSDKUtils.checkNotNull(context);
-        this.ssoToken = ssoToken;
-    }
 
     /**
      * Constructor for non SSO flow
@@ -81,11 +72,16 @@ public class LiAuthServiceImpl implements LiAuthService {
         mContext = LiCoreSDKUtils.checkNotNull(context);
     }
 
+    @Override
+    public void startLoginFlow() {
+        startLoginFlow(null);
+    }
+
     /**
      * starts login flow
      */
     @Override
-    public void startLoginFlow() {
+    public void startLoginFlow(String ssoToken) {
         LiAppCredentials liAppCredentials = LiSDKManager.getInstance().getLiAppCredentials();
         LiSSOAuthorizationRequest authorizationRequest = new LiSSOAuthorizationRequest();
         authorizationRequest.setClientId(liAppCredentials.getClientKey());
@@ -138,42 +134,46 @@ public class LiAuthServiceImpl implements LiAuthService {
         final LiAuthRestClient authRestClient = getLiAuthRestClient();
 
         LiAuthRequestStore.getInstance().addAuthRequest(request);
-        try {
-            authRestClient.authorizeAsync(request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
-                @Override
-                public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                        enablePostAuthorizationFlows(false, response.getHttpCode());
-                        return;
+        authRestClient.authorizeAsync(mContext, request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+            @Override
+            public void onSuccess(LiBaseResponse response) {
+                if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    int httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
+                    if (response != null) {
+                        httpCode = response.getHttpCode();
                     }
-                    LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
-                    String state = liSsoAuthResponse.getState();
-                    LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
-                    if (request == null) {
-                        Log.e(LOG_TAG, String.format(
-                                "Response received for unknown request with state %s", state));
-                        enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
-                        return;
-                    }
-                    liSsoAuthResponse.setJsonString(String.valueOf(response.getData().get("data")));
+                    enablePostAuthorizationFlows(false, httpCode);
+                    return;
+                }
+                LiSSOAuthResponse liSsoAuthResponse = getLiSSOAuthResponse(response);
+                String state = liSsoAuthResponse.getState();
+                LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
+                if (request == null) {
+                    Log.e(LOG_TAG, String.format(
+                            "Response received for unknown request with state %s", state));
+                    enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
+                    return;
+                }
+                liSsoAuthResponse.setJsonString(String.valueOf(response.getData().get("data")));
+                try {
                     handleAuthorizationResponse(liSsoAuthResponse, authRestClient, new LoginCompleteCallBack() {
-
                         @Override
                         public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
                             enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
                         }
                     });
-                }
-
-                @Override
-                public void onError(Exception e) {
+                } catch (LiRestResponseException e) {
                     enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
                     Log.e(LOG_TAG, "Error Fetching Auth Code: " + e);
                 }
-            });
-        } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
-        }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+                Log.e(LOG_TAG, "Error Fetching Auth Code: " + e);
+            }
+        });
         dispose();
     }
 
@@ -213,39 +213,48 @@ public class LiAuthServiceImpl implements LiAuthService {
         LiSSOTokenRequest liSSOTokenRequest = new LiSSOTokenRequest();
         liSSOTokenRequest.setClientId(LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         liSSOTokenRequest.setRedirectUri(LiSDKManager.getInstance().getLiAppCredentials().getRedirectUri());
-        liSSOTokenRequest.setAcceesCode(response.getAuthCode());
+        liSSOTokenRequest.setAccessCode(response.getAuthCode());
         liSSOTokenRequest.setClientSecret(LiSDKManager.getInstance().getLiAppCredentials().getClientSecret());
         liSSOTokenRequest.setGrantType("authorization_code");
-        String proxyHost = null;
-        if (response.getApiProxyHost() == null) {
-            proxyHost = LiSDKManager.getInstance().getLiAppCredentials().getApiProxyHost();
-        }
-        else {
-            proxyHost = response.getApiProxyHost();
-        }
-        String uri = "https://" + proxyHost + "/auth/v1/accessToken";
-        liSSOTokenRequest.setUri(Uri.parse(uri));
-
         if (response != null) {
             try {
-                authRestClient.accessTokenAsync(liSSOTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+                String proxyHost;
+                if (response.getApiProxyHost() == null) {
+                    proxyHost = LiSDKManager.getInstance().getLiAppCredentials().getApiProxyHost();
+                } else {
+                    proxyHost = response.getApiProxyHost();
+                }
+                String uri = "https://" + proxyHost + "/auth/v1/accessToken";
+                liSSOTokenRequest.setUri(Uri.parse(uri));
+                authRestClient.accessTokenAsync(mContext, liSSOTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
                     @Override
                     public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
+                        if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                            Log.e(LOG_TAG, "Error fetching access token");
+                            loginCompleteCallBack.onLoginComplete(LiAuthorizationException.generalEx(
+                                    LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, "Error fetching access token"), false);
+                            return;
+                        }
                         Gson gson = new Gson();
                         JsonObject data = LiClientManager.getRestClient().getGson().fromJson(response.getData(), JsonObject.class);
-                        if (data != null && data.has("response") && data.get("response").getAsJsonObject().has("data")) {
-                            LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
-                            JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
-                            obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
-                            tokenResponse.setJsonString(String.valueOf(obj));
-                            LiSDKManager.getInstance().persistAuthState(mContext, tokenResponse);
-                            getUserAfterTokenResponse(loginCompleteCallBack);
+                        if (data != null
+                                && data.has("response")) {
+                            JsonObject responseObject = data.get("response").getAsJsonObject();
+                            if (responseObject.has("data")) {
+                                JsonElement dataObjElement = responseObject.get("data");
+                                LiTokenResponse tokenResponse = gson.fromJson(dataObjElement, LiTokenResponse.class);
+                                tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                                JsonObject dataJsonObject = dataObjElement.getAsJsonObject();
+                                dataJsonObject.addProperty("expiresAt", tokenResponse.getExpiresAt());
+                                tokenResponse.setJsonString(String.valueOf(dataJsonObject));
+                                LiSDKManager.getInstance().persistAuthState(mContext, tokenResponse);
+                                getUserAfterTokenResponse(loginCompleteCallBack);
+                            }
                         }
                         else {
                             loginCompleteCallBack.onLoginComplete(LiAuthorizationException.generalEx(
-                                    data.get("statusCode").getAsInt(),
-                                    data.get("message").getAsString()), false);
+                                    response.getHttpCode(),
+                                    "Error fetching accessToken"), false);
                         }
                     }
 
@@ -258,6 +267,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                     }
                 });
             } catch (RuntimeException e) {
+                Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
                 throw LiRestResponseException.runtimeError(e.getMessage());
             }
         } else {
@@ -279,7 +289,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 @Override
                 public void onSuccess(LiBaseRestRequest request,
                                       LiGetClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Gson gson = new Gson();
                         JsonObject responseJsonObject = response.getJsonObject();
                         if (responseJsonObject.has("data")) {
@@ -383,22 +393,38 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setUri(Uri.parse(uri));
 
         try {
-            authRestClient.refreshTokenAsync(liRefreshTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
+            authRestClient.refreshTokenAsync(mContext, liRefreshTokenRequest, new LiAuthAsyncRequestCallback<LiBaseResponse>() {
 
                 @Override
                 public void onSuccess(LiBaseResponse response) throws LiRestResponseException {
-                    Gson gson = new Gson();
-                    JsonObject data = gson.fromJson(response.getData(), JsonObject.class);
-                    if (data.has("response") && data.get("response").getAsJsonObject().has("data")) {
-                        LiTokenResponse tokenResponse = gson.fromJson(response.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-                        tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
-                        JsonObject obj = response.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
-                        obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
-                        tokenResponse.setJsonString(String.valueOf(obj));
-                        callback.onTokenRequestCompleted(tokenResponse, null);
+                    if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        callback.onTokenRequestCompleted(null, new Exception(REFRESH_TOKEN_FETCH_ERROR));
+                        return;
                     }
-                    else {
-                        callback.onTokenRequestCompleted(null, new Exception("Couldn't fetch access token from access code"));
+                    try {
+                        Gson gson = new Gson();
+                        JsonObject data = gson.fromJson(response.getData(), JsonObject.class);
+                        if (data != null
+                                && data.has("response"))  {
+                            JsonObject responseJsonObj = data.get("response").getAsJsonObject();
+                            if (responseJsonObj.has("data")) {
+                                LiTokenResponse tokenResponse = gson.fromJson(responseJsonObj.get("data"), LiTokenResponse.class);
+                                tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                                JsonObject obj = responseJsonObj.get("data").getAsJsonObject();
+                                obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
+                                tokenResponse.setJsonString(String.valueOf(obj));
+                                callback.onTokenRequestCompleted(tokenResponse, null);
+                            } else {
+                                Log.e(LI_LOG_TAG, REFRESH_TOKEN_FETCH_ERROR);
+                                callback.onTokenRequestCompleted(null, new RuntimeException(REFRESH_TOKEN_FETCH_ERROR));
+                            }
+                        } else {
+                            Log.e(LI_LOG_TAG, REFRESH_TOKEN_FETCH_ERROR);
+                            callback.onTokenRequestCompleted(null, new RuntimeException(REFRESH_TOKEN_FETCH_ERROR));
+                        }
+                    }
+                    catch (RuntimeException e) {
+                        callback.onTokenRequestCompleted(null, e);
                     }
                 }
 
@@ -409,13 +435,13 @@ public class LiAuthServiceImpl implements LiAuthService {
 
             });
         } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
+            callback.onTokenRequestCompleted(null, e);
         }
         dispose();
     }
 
     /**
-     * Fetching fresh access token from refresh token. Its Syn call.
+     * Fetching fresh access token from refresh token. Its a Sync call.
      *
      * @return Refresh Token {@link LiTokenResponse}
      * @throws LiRestResponseException {@link LiRestResponseException}
@@ -431,18 +457,31 @@ public class LiAuthServiceImpl implements LiAuthService {
         liRefreshTokenRequest.setRefreshToken(LiSDKManager.getInstance().getRefreshToken());
         String uri = "https://" + LiSDKManager.getInstance().getProxyHost() + "/auth/v1/refreshToken";
         liRefreshTokenRequest.setUri(Uri.parse(uri));
+
+        LiTokenResponse tokenResponse = null;
+        LiBaseResponse resp = authRestClient.refreshTokenSync(mContext, liRefreshTokenRequest);
+        Gson gson = new Gson();
+        JsonObject dataObject = resp.getData();
         try {
-            LiBaseResponse resp = authRestClient.refreshTokenSync(liRefreshTokenRequest);
-            Gson gson = new Gson();
-            LiTokenResponse tokenResponse = gson.fromJson(resp.getData().get("response").getAsJsonObject().get("data"), LiTokenResponse.class);
-            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
-            JsonObject obj = resp.getData().get("response").getAsJsonObject().get("data").getAsJsonObject();
-            obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
-            tokenResponse.setJsonString(String.valueOf(obj));
-            return tokenResponse;
-        } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
+            if (dataObject.has("response")) {
+                JsonObject responseObj = dataObject.get("response").getAsJsonObject();
+                if (responseObj.has("data")) {
+                    JsonElement dataJsonElement = responseObj.get("data");
+                    tokenResponse = gson.fromJson(dataJsonElement, LiTokenResponse.class);
+                    tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
+                    JsonObject obj = dataJsonElement.getAsJsonObject();
+                    obj.addProperty("expiresAt", tokenResponse.getExpiresAt());
+                    tokenResponse.setJsonString(String.valueOf(obj));
+                }
+            }
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw LiRestResponseException.runtimeError("Error refreshing access token");
         }
+        if (tokenResponse == null) {
+            throw LiRestResponseException.runtimeError("Error refreshing access token");
+        }
+        return tokenResponse;
     }
 
     /**

@@ -1,10 +1,17 @@
 package lithium.community.android.sdk.rest;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -12,10 +19,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
+import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
 import lithium.community.android.sdk.auth.LiSSOAuthorizationRequest;
 import lithium.community.android.sdk.auth.LiSSOTokenRequest;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -24,18 +33,14 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
-
-//import static org.mockito.Mockito.doReturn;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.spy;
-//import static org.mockito.Mockito.when;
-
 
 /**
  * Created by saiteja.tokala on 12/15/16.
@@ -44,7 +49,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LiAuthRestClient.class,OkHttpClient.class,Response.class,ResponseBody.class})
 public class LiAuthRestClientTest {
-
+    @Mock
+    private Activity mContext;
+    private SharedPreferences mMockSharedPreferences;
+    private Resources resource;
+    private LiSDKManager liSDKManager;
     public static final String CLIENT_ID = "clientId";
     public static final String SSO_TOKEN = "ssoToken";
     public static final String STATE = "state";
@@ -56,10 +65,25 @@ public class LiAuthRestClientTest {
     public static final String GRANT_TYPE = "grantType";
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String REFRESH_TOKEN = "refreshToken";
+    @Before
+    public void setUpTest() throws Exception {
+        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
+        // inject the mocks in the test the initMocks method needs to be called.
+        MockitoAnnotations.initMocks(this);
+
+        mContext = Mockito.mock(Activity.class);
+        mMockSharedPreferences = Mockito.mock(SharedPreferences.class);
+        resource = Mockito.mock(Resources.class);
+        Mockito.when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
+        Mockito.when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
+        Mockito.when(mContext.getResources()).thenReturn(resource);
+        Mockito.when(resource.getBoolean(anyInt())).thenReturn(true);
+        liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
+    }
 
 
     @Test
-    public void authorizeAsyncFailureCallback() throws LiRestResponseException, IOException {
+    public void authorizeAsyncFailureCallback() {
         LiSSOAuthorizationRequest ssoAuthReq=new LiSSOAuthorizationRequest();
         ssoAuthReq.setClientId(CLIENT_ID);
         ssoAuthReq.setSsoToken(SSO_TOKEN);
@@ -77,7 +101,7 @@ public class LiAuthRestClientTest {
             @Override
             public void onError(Exception exception) {
                 System.out.println(exception.getMessage());
-                Assert.assertEquals(EXCEPTION_CAUSE,exception.getMessage());
+                Assert.assertEquals("Error authorizeAsync",exception.getMessage());
                 System.out.println("-----ITS FAILURE-----"+exception.getMessage());
             }
         };
@@ -95,9 +119,12 @@ public class LiAuthRestClientTest {
         ResponseBody body=mock(ResponseBody.class);
         doReturn(body).when(response).body();
         final Response finalResponse = response;
-        doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(response);
+        try {
+            doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(response);
+        } catch (IOException | LiRestResponseException ignored) {
+        }
         final IOException excep=mock(IOException.class);
-        when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
+        when(excep.getMessage()).thenReturn("Error authorizeAsync");
         doAnswer(
                 new Answer<Void>() {
                     @Override
@@ -111,13 +138,16 @@ public class LiAuthRestClientTest {
                 }
         ).when(call).enqueue(any(Callback.class));
 
-        liAuthRestClient.authorizeAsync(ssoAuthReq,callback);
+        try {
+            liAuthRestClient.authorizeAsync(mContext, ssoAuthReq,callback);
+        } catch (Exception ignored) {
+        }
     }
 
     @Test
-    public void accessTokenAsyncSuccess() throws IOException, LiRestResponseException {
+    public void accessTokenAsyncSuccess() {
         LiSSOTokenRequest liSSOTokenRequest=new LiSSOTokenRequest();
-        liSSOTokenRequest.setAcceesCode(ACCESS_CODE);
+        liSSOTokenRequest.setAccessCode(ACCESS_CODE);
         liSSOTokenRequest.setRedirectUri(REDIRECT_URI);
         liSSOTokenRequest.setUri(Uri.parse(URI));
         liSSOTokenRequest.setGrantType(GRANT_TYPE);
@@ -135,7 +165,7 @@ public class LiAuthRestClientTest {
             @Override
             public void onError(Exception exception) {
                 System.out.println(exception.getMessage());
-                Assert.assertEquals(EXCEPTION_CAUSE,exception.getMessage());
+                Assert.assertEquals("Error accessTokenAsync",exception.getMessage());
                 System.out.println("-----ITS FAILURE-----"+exception.getMessage());
             }
         };
@@ -153,9 +183,12 @@ public class LiAuthRestClientTest {
         ResponseBody body=mock(ResponseBody.class);
         doReturn(body).when(response).body();
         final Response finalResponse = response;
-        doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        try {
+            doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        } catch (Exception ignored) {
+        }
         final IOException excep=mock(IOException.class);
-        when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
+        when(excep.getMessage()).thenReturn("Error accessTokenAsync");
         doAnswer(
                 new Answer<Void>() {
                     @Override
@@ -169,11 +202,14 @@ public class LiAuthRestClientTest {
                 }
         ).when(call).enqueue(any(Callback.class));
 
-        liAuthRestClient.accessTokenAsync(liSSOTokenRequest,callback);
+        try {
+            liAuthRestClient.accessTokenAsync(mContext, liSSOTokenRequest,callback);
+        } catch (Exception ignored) {
+        }
     }
 
     @Test
-    public void refreshTokenAsyncTest() throws IOException, LiRestResponseException {
+    public void refreshTokenAsyncTest() {
         LiRefreshTokenRequest liRefreshTokenRequest=new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientSecret(CLIENT_SECRET);
         liRefreshTokenRequest.setGrantType(GRANT_TYPE);
@@ -191,7 +227,7 @@ public class LiAuthRestClientTest {
             @Override
             public void onError(Exception exception) {
                 System.out.println(exception.getMessage());
-                Assert.assertEquals(EXCEPTION_CAUSE,exception.getMessage());
+                Assert.assertEquals("Error refreshTokenAsync",exception.getMessage());
                 System.out.println("-----ITS FAILURE-----"+exception.getMessage());
             }
         };
@@ -209,9 +245,12 @@ public class LiAuthRestClientTest {
         ResponseBody body=mock(ResponseBody.class);
         doReturn(body).when(response).body();
         final Response finalResponse = response;
-        doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        try {
+            doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        } catch (Exception ignored) {
+        }
         final IOException excep=mock(IOException.class);
-        when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
+        when(excep.getMessage()).thenReturn("Error refreshTokenAsync");
         doAnswer(
                 new Answer<Void>() {
                     @Override
@@ -224,11 +263,15 @@ public class LiAuthRestClientTest {
                     }
                 }
         ).when(call).enqueue(any(Callback.class));
-        liAuthRestClient.refreshTokenAsync(liRefreshTokenRequest,callback);
+        try {
+            liAuthRestClient.refreshTokenAsync(mContext, liRefreshTokenRequest,callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void refreshTokenSyncTest() throws IOException, LiRestResponseException {
+    public void refreshTokenSyncTest() {
         LiRefreshTokenRequest liRefreshTokenRequest=new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientSecret(CLIENT_SECRET);
         liRefreshTokenRequest.setGrantType(GRANT_TYPE);
@@ -249,13 +292,18 @@ public class LiAuthRestClientTest {
         ResponseBody body=mock(ResponseBody.class);
         doReturn(body).when(response).body();
         final Response finalResponse = response;
-        doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        try {
+            doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
+        } catch (IOException | LiRestResponseException ignored) {
+        }
         final IOException excep=mock(IOException.class);
         when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);
-        when(call.execute()).thenReturn(response);
-        LiBaseResponse resp = liAuthRestClient.refreshTokenSync(liRefreshTokenRequest);
-        Assert.assertEquals(resp.getHttpCode(),200);
-        Assert.assertEquals(resp.getMessage(),ITS_A_TEST_MESSAGE);
-
+        try {
+            when(call.execute()).thenReturn(response);
+            LiBaseResponse resp = liAuthRestClient.refreshTokenSync(mContext, liRefreshTokenRequest);
+            Assert.assertEquals(resp.getHttpCode(),200);
+            Assert.assertEquals(resp.getMessage(),ITS_A_TEST_MESSAGE);
+        } catch (IOException | LiRestResponseException ignored) {
+        }
     }
 }

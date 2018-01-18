@@ -14,10 +14,14 @@
 
 package lithium.community.android.sdk.model.post;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import lithium.community.android.sdk.auth.LiAuthConstants;
 
 /**
  * Request body for POST call to upload an image to the community.
@@ -81,7 +85,7 @@ public class LiUploadImageModel extends LiBasePostModel {
         try {
             jsonObject.put("request", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
         }
         return gson.toJson(jsonObject);
     }
