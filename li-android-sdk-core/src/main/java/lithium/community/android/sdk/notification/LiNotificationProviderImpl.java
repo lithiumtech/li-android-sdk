@@ -62,21 +62,18 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                 JsonElement jsonElement = new JsonParser().parse(settingFromServer);
                 if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
                     settingFromServerJson = jsonElement.getAsJsonObject();
-                    if (settingFromServerJson.has(PUSH_NOTIFICATION_ADAPTER)
-                            && settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER) != null) {
+                    if (settingFromServerJson.has(PUSH_NOTIFICATION_ADAPTER) && settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER) != null) {
                         pushNotificationAdapter = settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER).getAsString();
                     }
                 }
             }
 
-            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(
-                    context, deviceId, pushNotificationAdapter);
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, pushNotificationAdapter);
             LiClient deviceIdFetchClient = LiClientManager.getDeviceIdFetchClient(liClientRequestParams);
             deviceIdFetchClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request,
-                        LiPostClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         LiBaseResponse liBaseResponse = response.getResponse();
                         JsonObject data = liBaseResponse.getData();
                         if (data != null && data.has("data")) {
@@ -84,11 +81,11 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                             if (dataObj.has("id")) {
                                 String id = dataObj.get("id").getAsString();
                                 LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
-                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID,
-                                        deviceId);
+                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
                             }
                         }
-                    } else {
+                    }
+                    else {
                         Log.e(LI_LOG_TAG, "Unable to fetch device id");
                     }
                 }
@@ -100,25 +97,22 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
             });
         }
         /**
-         * If 'id' is present then device id corresponding to it on the community end is update with the passed
-         * device id.
+         * If 'id' is present then device id corresponding to it on the community end is update with the passed device id.
          */
         else {
-            String deviceIdFromPref = LiSDKManager.getInstance().getFromSecuredPreferences(context,
-                    LI_RECEIVER_DEVICE_ID);
+            String deviceIdFromPref = LiSDKManager.getInstance().getFromSecuredPreferences(context,LI_RECEIVER_DEVICE_ID);
             if (deviceId.equals(deviceIdFromPref)) {
                 return;
             }
-            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdUpdateClientRequestParams(
-                    context, deviceId, savedId);
+            LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiDeviceIdUpdateClientRequestParams(context, deviceId, savedId);
             LiClient deviceIdUpdateClient = LiClientManager.getDeviceIdUpdateClient(liClientRequestParams);
             deviceIdUpdateClient.processAsync(new LiAsyncRequestCallback<LiPutClientResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request,
-                        LiPutClientResponse response) throws LiRestResponseException {
-                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                public void onSuccess(LiBaseRestRequest request, LiPutClientResponse response) throws LiRestResponseException {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                         Log.i(LI_LOG_TAG, "Successfully updated device Id");
-                    } else {
+                    }
+                    else {
                         Log.e(LI_LOG_TAG, "Unable to update device Id");
                     }
                 }
