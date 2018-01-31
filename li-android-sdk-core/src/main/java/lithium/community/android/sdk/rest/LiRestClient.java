@@ -623,7 +623,7 @@ public abstract class LiRestClient {
                     String responseStr = response.body().string();
                     try {
                         data = new Gson().fromJson(responseStr, JsonObject.class);
-                        if (data.has("statusCode")) {
+                        if (data != null && data.has("statusCode")) {
                             httpCode = data.get("statusCode").getAsInt();
                         }
                     } catch (JsonSyntaxException ex) {
