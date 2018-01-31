@@ -186,38 +186,6 @@ abstract class LiBaseClient implements LiClient {
     }
 
     /**
-     * This method is for making a sync network call.
-     * {@link LiClient#processSync()}
-     */
-    @Override
-    public LiClientResponse processSync() throws LiRestResponseException {
-        try {
-            setLiRestV2Request();
-            this.liRestV2Request.setPath(basePath);
-            LiBaseResponse response = liRestv2Client.processSync(liRestV2Request);
-            if (null != response) {
-                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                    if (requestType.equals(RequestType.GET)) {
-                        return new LiGetClientResponse(response, type, responseClass, getGson());
-                    } else if (requestType.equals(RequestType.DELETE)) {
-                        return new LiDeleteClientResponse(response);
-                    } else if (requestType.equals(RequestType.PUT)) {
-                        return new LiPutClientResponse(response);
-                    } else {
-                        return new LiPostClientResponse(response);
-                    }
-                } else {
-                    throw new RuntimeException("Server Error");
-                }
-            } else {
-                throw new RuntimeException("response empty");
-            }
-        } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
-        }
-    }
-
-    /**
      * processSync call to upload files
      *
      * @param liAsyncRequestCallback {@link LiAsyncRequestCallback}
@@ -225,8 +193,8 @@ abstract class LiBaseClient implements LiClient {
      * @param imageName              this is the name of the image file.
      */
     @Override
-    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath,
-            final String imageName) throws LiRestResponseException {
+    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath, final String imageName)
+            throws LiRestResponseException {
         try {
             setLiRestV2Request();
             this.liRestV2Request.setPath(basePath);
@@ -257,6 +225,38 @@ abstract class LiBaseClient implements LiClient {
                 }
             };
             liRestv2Client.uploadProcessAsync(liRestV2Request, callback, imagePath, imageName, requestBody);
+        } catch (RuntimeException e) {
+            throw LiRestResponseException.runtimeError(e.getMessage());
+        }
+    }
+
+    /**
+     * This method is for making a sync network call.
+     * {@link LiClient#processSync()}
+     */
+    @Override
+    public LiClientResponse processSync() throws LiRestResponseException {
+        try {
+            setLiRestV2Request();
+            this.liRestV2Request.setPath(basePath);
+            LiBaseResponse response = liRestv2Client.processSync(liRestV2Request);
+            if (null != response) {
+                if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                    if (requestType.equals(RequestType.GET)) {
+                        return new LiGetClientResponse(response, type, responseClass, getGson());
+                    } else if (requestType.equals(RequestType.DELETE)) {
+                        return new LiDeleteClientResponse(response);
+                    } else if (requestType.equals(RequestType.PUT)) {
+                        return new LiPutClientResponse(response);
+                    } else {
+                        return new LiPostClientResponse(response);
+                    }
+                } else {
+                    throw new RuntimeException("Server Error");
+                }
+            } else {
+                throw new RuntimeException("response empty");
+            }
         } catch (RuntimeException e) {
             throw LiRestResponseException.runtimeError(e.getMessage());
         }

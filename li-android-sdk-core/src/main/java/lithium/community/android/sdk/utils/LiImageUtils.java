@@ -35,22 +35,18 @@ public class LiImageUtils {
      *
      * @param filePath
      * @param fileName
-     * @param {@link   Context}
+     * @param context  {@link Context} The Android context.
      * @return Absolute Path of compressed image.
      */
-    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight,
-            int imageQuality) {
+    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality) {
 
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");
 
         Bitmap compressedBitmap = getCompressedBitmap(filePath, reqWidth, reqHeight);
 
-        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) +
-                File.separator +
-                LiSDKManager.getInstance().getLiAppCredentials().getTenantId() +
-                "-community" +
-                File.separator;
+        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) + File.separator
+                + LiSDKManager.getInstance().getLiAppCredentials().getTenantId() + "-community" + File.separator;
         final File communityRoot = new File(fileDirectory);
         communityRoot.mkdirs();
         File compressedFile = new File(fileDirectory + "/" + fileName);

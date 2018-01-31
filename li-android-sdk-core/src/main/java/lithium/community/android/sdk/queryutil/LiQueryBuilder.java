@@ -37,11 +37,13 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_SEARCH_QUER
  */
 
 public class LiQueryBuilder {
+
     private static final String WHERE = "WHERE";
     private static final String SPACE = " ";
     private static final String ORDER_BY = "ORDER BY";
     private static final String LIMIT = "LIMIT";
-    private static volatile LiQuerySetting liQuerySetting;
+
+    private static volatile LiQuerySetting LI_QUERY_SETTING;
 
     private static JsonObject getDefault(String client) {
         JsonObject jsonObject = LiDefaultQueryHelper.getInstance().getDefaultSetting();
@@ -121,11 +123,11 @@ public class LiQueryBuilder {
         JsonObject clientSettings = getClientJsonSetting(client, context);
         Gson gson = new Gson();
         try {
-            liQuerySetting = gson.fromJson(clientSettings, LiQuerySetting.class);
+            LI_QUERY_SETTING = gson.fromJson(clientSettings, LiQuerySetting.class);
         } catch (Exception exception) {
             Log.e("LiQueryBuilder", "Error parsing client setting json: " + clientSettings.toString());
         }
-        return liQuerySetting;
+        return LI_QUERY_SETTING;
     }
 
     /**

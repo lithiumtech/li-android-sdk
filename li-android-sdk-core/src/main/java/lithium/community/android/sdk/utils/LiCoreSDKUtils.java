@@ -275,35 +275,11 @@ public class LiCoreSDKUtils {
         }
     }
 
-    /**
-     * Checks if json, field and value are non null and inserts into JSONObject.
-     *
-     * @param json
-     * @param field
-     * @param value
-     */
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull JSONObject value) {
-        LiCoreSDKUtils.checkNotNull(json, "json must not be null");
-        LiCoreSDKUtils.checkNotNull(field, "field must not be null");
-        LiCoreSDKUtils.checkNotNull(value, "value must not be null");
-        try {
-            json.put(field, value);
-        } catch (JSONException ex) {
-            throw new IllegalStateException("JSONException thrown in violation of contract", ex);
-        }
-    }
-
     /*
     Below are general checks on JSONObject.
      */
 
-    public static void putIfNotNull(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @Nullable Long value) {
+    public static void putIfNotNull(@NonNull JSONObject json, @NonNull String field, @Nullable Long value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (value == null) {
@@ -316,10 +292,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void putIfNotNull(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @Nullable Uri value) {
+    public static void putIfNotNull(@NonNull JSONObject json, @NonNull String field, @Nullable Uri value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (value == null) {
@@ -332,9 +305,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static String getStringIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field) throws JSONException {
+    public static String getStringIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -349,10 +320,7 @@ public class LiCoreSDKUtils {
     }
 
     @Nullable
-    public static Long getLongIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static Long getLongIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -382,10 +350,25 @@ public class LiCoreSDKUtils {
         return TextUtils.join(" ", stringSet);
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull int value) {
+    /**
+     * Checks if json, field and value are non null and inserts into JSONObject.
+     *
+     * @param json
+     * @param field
+     * @param value
+     */
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull JSONObject value) {
+        LiCoreSDKUtils.checkNotNull(json, "json must not be null");
+        LiCoreSDKUtils.checkNotNull(field, "field must not be null");
+        LiCoreSDKUtils.checkNotNull(value, "value must not be null");
+        try {
+            json.put(field, value);
+        } catch (JSONException ex) {
+            throw new IllegalStateException("JSONException thrown in violation of contract", ex);
+        }
+    }
+
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull int value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -397,10 +380,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull String value) {
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull String value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -411,10 +391,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull JSONArray value) {
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull JSONArray value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -426,10 +403,7 @@ public class LiCoreSDKUtils {
     }
 
     @NonNull
-    public static String getString(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static String getString(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -445,10 +419,7 @@ public class LiCoreSDKUtils {
 
 
     @Nullable
-    public static Uri getUriIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static Uri getUriIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {

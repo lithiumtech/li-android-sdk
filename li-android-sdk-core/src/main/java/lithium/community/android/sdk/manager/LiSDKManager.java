@@ -51,8 +51,8 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_
  */
 public final class LiSDKManager extends LiAuthManager {
 
-    private static AtomicBoolean isInitialized = new AtomicBoolean(false);
-    private static LiSDKManager _sdkInstance;
+    private static AtomicBoolean IS_INITIALIZED = new AtomicBoolean(false);
+    private static LiSDKManager INSTANCE;
 
     /**
      * Protected constructor.
@@ -72,7 +72,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @return true or false depending on whether the SDK is initialized
      */
     public static boolean isEnvironmentInitialized() {
-        if (isInitialized.get() && _sdkInstance != null) {
+        if (IS_INITIALIZED.get() && INSTANCE != null) {
             return true;
         }
         return false;
@@ -89,14 +89,14 @@ public final class LiSDKManager extends LiAuthManager {
     public static synchronized LiSDKManager init(final Context context, final LiAppCredentials liAppCredentials)
             throws URISyntaxException {
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        if (isInitialized.compareAndSet(false, true)) {
+        if (IS_INITIALIZED.compareAndSet(false, true)) {
             if (LiDefaultQueryHelper.initHelper(context) == null) {
                 return null;
             }
             if (LiSecuredPrefManager.init(context) == null) {
                 return null;
             }
-            _sdkInstance = new LiSDKManager(context, liAppCredentials);
+            INSTANCE = new LiSDKManager(context, liAppCredentials);
         }
         LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
         if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
@@ -105,21 +105,21 @@ public final class LiSDKManager extends LiAuthManager {
                     context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
 
-        return _sdkInstance;
+        return INSTANCE;
     }
 
     /**
      * Instance of this.
      */
     public static LiSDKManager getInstance() {
-        if (_sdkInstance == null) {
+        if (INSTANCE == null) {
             throw new NoSuchPropertyException("SDK not intialized. Call init method first");
         }
-        return _sdkInstance;
+        return INSTANCE;
     }
 
     public void syncWithCommunity(final Context context) {
-        if (_sdkInstance.isUserLoggedIn()) {
+        if (INSTANCE.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams
@@ -179,7 +179,7 @@ public final class LiSDKManager extends LiAuthManager {
                                         && liClientResponse.getResponse() != null
                                         && !liClientResponse.getResponse().isEmpty()) {
                                     LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
-                                    _sdkInstance.setLoggedInUser(context, user);
+                                    INSTANCE.setLoggedInUser(context, user);
                                 } else {
                                     Log.e(LOG_TAG, "No user found while fetching UserDetails");
                                 }

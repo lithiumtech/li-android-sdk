@@ -20,7 +20,7 @@ package lithium.community.android.sdk.auth;
  */
 public class LiAuthConstants {
 
-    public final static String LOG_TAG = "LiSDKAuth";
+    public static final String LOG_TAG = "LiSDKAuth";
     public static final String LOGIN_RESULT = "LOGIN_RESULT";
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";

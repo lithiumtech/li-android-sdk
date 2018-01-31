@@ -95,11 +95,10 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                     Log.e(LI_LOG_TAG, "Unable to fetch device id");
                 }
             });
-        }
-        /**
-         * If 'id' is present then device id corresponding to it on the community end is update with the passed device id.
-         */
-        else {
+        } else {
+            /*
+             * If 'id' is present then device id corresponding to it on the community end is update with the passed device id.
+             */
             String deviceIdFromPref = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
             if (deviceId.equals(deviceIdFromPref)) {
                 return;

@@ -57,11 +57,6 @@ public class LiQueryClause {
 
     @Override
     public String toString() {
-        return "LiQueryClause{" +
-                "clause=" + clause +
-                ", key=" + key +
-                ", value='" + value + '\'' +
-                ", operator='" + operator + '\'' +
-                '}';
+        return "LiQueryClause{" + "clause=" + clause + ", key=" + key + ", value='" + value + '\'' + ", operator='" + operator + '\'' + '}';
     }
 }

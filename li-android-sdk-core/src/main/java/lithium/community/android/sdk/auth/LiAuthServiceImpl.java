@@ -94,8 +94,7 @@ public class LiAuthServiceImpl implements LiAuthService {
             try {
                 performSSOAuthorizationRequest(authorizationRequest);
             } catch (LiRestResponseException e) {
-                enablePostAuthorizationFlows(false
-                        , LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+                enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
             }
         } else {
             performAuthorizationRequest(authorizationRequest);
