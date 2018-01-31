@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import lithium.community.android.sdk.TestHelper;
+import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.response.LiMessage;
@@ -57,11 +57,14 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LiRestv2Client.class, LiBaseClient.class, LiClientManager.class, LiBaseResponse.class, LiMessage.class, LiGetClientResponse.class})
 public class LiBaseClientTest {
-    private static final String LI_ARTICLES_CLIENT_BASE_LIQL = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
+    private static final String LI_ARTICLES_CLIENT_BASE_LIQL
+            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
     private static final String LI_ARTICLES_QUERYSETTINGS_TYPE = "article";
 
-    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages WHERE conversation.style in ('forum') AND depth = ## ORDER BY post_time desc LIMIT 50";
+    private static final String EXPECTED_QUERY
+            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages WHERE conversation.style in ('forum') "
+            + "AND depth = ## ORDER BY post_time desc LIMIT 50";
     private LiRestv2Client liRestv2Client;
     private LiClientManager liClientManager;
     private LiRestV2Request liRestV2Request;
@@ -99,7 +102,8 @@ public class LiBaseClientTest {
 
     @Test
     public void testBaseGetClientCreation() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         Assert.assertEquals(LI_ARTICLES_CLIENT_TYPE, liClient.type);
         Assert.assertEquals(LI_ARTICLES_QUERYSETTINGS_TYPE, liClient.querySettingsType);
         PowerMockito.verifyStatic();
@@ -107,7 +111,8 @@ public class LiBaseClientTest {
 
     @Test
     public void testSetLiRestV2Request() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         liClient.setLiRestV2Request();
         Assert.assertEquals(LI_ARTICLES_CLIENT_TYPE, liClient.liRestV2Request.getType());
         PowerMockito.verifyStatic();
@@ -115,7 +120,8 @@ public class LiBaseClientTest {
 
     @Test
     public void testGetGson() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         Assert.assertEquals(null, liClient.getGson());
         PowerMockito.verifyStatic();
     }
@@ -125,7 +131,8 @@ public class LiBaseClientTest {
         LiRestv2Client liRestv2Client = null;
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         Assert.assertEquals(null, liClient.getGson());
         PowerMockito.verifyStatic();
     }
@@ -146,7 +153,8 @@ public class LiBaseClientTest {
         PowerMockito.when(liBaseResponse.getHttpCode()).thenReturn(200);
         PowerMockito.when(liBaseResponse.getMessage()).thenReturn("success");
         PowerMockito.when(liBaseResponse.getStatus()).thenReturn("success");
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         LiClientResponse response = liClient.processSync();
         LinkedList<LiMessage> responseList = (LinkedList<LiMessage>) response.getResponse();
         Assert.assertEquals(200, response.getHttpCode());
@@ -175,7 +183,8 @@ public class LiBaseClientTest {
                 }
         ).when(liRestv2Client).processAsync(isA(LiBaseRestRequest.class), any(LiAsyncRequestCallback.class));
 
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+                LiMessage.class);
         liClient.processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
             @Override
             public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) throws LiRestResponseException {
