@@ -33,7 +33,10 @@ import lithium.community.android.sdk.model.helpers.LiUserContext;
 public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
 
     private String href;
-    private String view_href;
+
+    @SerializedName("view_href")
+    private String viewHref;
+
     private LiBoard board;
 
     @SerializedName("parent")
@@ -206,7 +209,7 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
     }
 
     public String getViewHref() {
-        return view_href;
+        return viewHref;
     }
 
     public void setIsAcceptedSolution(Boolean isAcceptedSolution) {

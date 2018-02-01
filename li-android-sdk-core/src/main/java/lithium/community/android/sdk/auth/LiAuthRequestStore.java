@@ -22,17 +22,18 @@ import java.util.Map;
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 
 class LiAuthRequestStore {
-    private static LiAuthRequestStore sInstance;
+    private static LiAuthRequestStore INSTANCE;
+
     private Map<String, LiSSOAuthorizationRequest> mLiRequests = new HashMap<>();
 
     private LiAuthRequestStore() {
     }
 
     public static synchronized LiAuthRequestStore getInstance() {
-        if (sInstance == null) {
-            sInstance = new LiAuthRequestStore();
+        if (INSTANCE == null) {
+            INSTANCE = new LiAuthRequestStore();
         }
-        return sInstance;
+        return INSTANCE;
     }
 
     /**

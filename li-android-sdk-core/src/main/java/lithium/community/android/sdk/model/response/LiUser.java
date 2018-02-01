@@ -283,8 +283,8 @@ public class LiUser extends LiBaseModelImpl {
         return profilePageUrl;
     }
 
-    public void setProfilePageUrl(final String view_href) {
-        profilePageUrl = view_href;
+    public void setProfilePageUrl(final String url) {
+        profilePageUrl = url;
     }
 
     public LiBaseModelImpl.LiString getLoginAsLiString() {

@@ -22,18 +22,30 @@ import lithium.community.android.sdk.model.LiBaseModelImpl;
  * A rank model represents a way to recognize and reward community members' achievements.
  */
 public class LiRanking extends LiBaseModelImpl {
-    private String href;
-    private String name;
+
     private Long id;
     private String type;
+    private String name;
     private int position;
     private String color;
-    private String icon_left;
-    private String icon_right;
+    private String href;
+
+    @SerializedName("icon_left")
+    private String iconLeft;
+
+    @SerializedName("icon_right")
+    private String iconRight;
+
     private String formula;
-    private String icon_topic;
-    private boolean formula_enabled;
+
+    @SerializedName("icon_topic")
+    private String iconTopic;
+
+    @SerializedName("formula_enabled")
+    private boolean formulaEnabled;
+
     private boolean bold;
+
     @SerializedName("display")
     private LiRankingDisplay lithiumRankingDisplay;
 
@@ -46,19 +58,19 @@ public class LiRanking extends LiBaseModelImpl {
     }
 
     public String getIcon_topic() {
-        return icon_topic;
+        return iconTopic;
     }
 
-    public void setIcon_topic(String icon_topic) {
-        this.icon_topic = icon_topic;
+    public void setIcon_topic(String iconTopic) {
+        this.iconTopic = iconTopic;
     }
 
     public String getIcon_right() {
-        return icon_right;
+        return iconRight;
     }
 
-    public void setIcon_right(String icon_right) {
-        this.icon_right = icon_right;
+    public void setIcon_right(String iconRight) {
+        this.iconRight = iconRight;
     }
 
     public String getFormula() {
@@ -70,11 +82,11 @@ public class LiRanking extends LiBaseModelImpl {
     }
 
     public boolean isFormula_enabled() {
-        return formula_enabled;
+        return formulaEnabled;
     }
 
-    public void setFormula_enabled(boolean formula_enabled) {
-        this.formula_enabled = formula_enabled;
+    public void setFormula_enabled(boolean formulaEnabled) {
+        this.formulaEnabled = formulaEnabled;
     }
 
     public String getType() {
@@ -102,11 +114,11 @@ public class LiRanking extends LiBaseModelImpl {
     }
 
     public String getIcon_left() {
-        return icon_left;
+        return iconLeft;
     }
 
-    public void setIcon_left(String icon_left) {
-        this.icon_left = icon_left;
+    public void setIcon_left(String iconLeft) {
+        this.iconLeft = iconLeft;
     }
 
     public String getHref() {

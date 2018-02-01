@@ -150,8 +150,7 @@ public class LiBaseResponse {
                 objects.add(gson.fromJson(response.get(ITEM).getAsJsonObject(), baseModelClass));
                 return objects;
             } else {
-                throw LiRestResponseException.jsonSerializationError("Unable to parse " + objectName + " or " +
-                        objectNamePlural + " from json:" + node);
+                throw LiRestResponseException.jsonSerializationError("Unable to parse " + objectName + " or " + objectNamePlural + " from json:" + node);
             }
         } else {
             throw LiRestResponseException.jsonSerializationError("Server Error. Please check logs");

@@ -82,10 +82,6 @@ public class LiBrowse extends LiBaseModelImpl {
 
     @Override
     public String toString() {
-        return "LiBrowse{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", parent=" + parent +
-                '}';
+        return "LiBrowse{" + "id='" + id + '\'' + ", title='" + title + '\'' + ", parent=" + parent + '}';
     }
 }

@@ -44,7 +44,8 @@ import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotE
 @VisibleForTesting
 class LiAuthState {
 
-    private final static String LOG_TAG = "LiSDKAuth";
+    private static final String LOG_TAG = "LiSDKAuth";
+
     /**
      * Tokens which have less time than this value left before expiry will be considered to be
      * expired for the purposes of calls to

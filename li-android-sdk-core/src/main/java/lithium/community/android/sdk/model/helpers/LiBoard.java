@@ -27,7 +27,8 @@ public class LiBoard extends LiBaseModelImpl {
 
     private Boolean blog;
     private String href;
-    private String view_href;
+    @SerializedName("view_href")
+    private String viewHref;
     private String id;
     private String type;
     @SerializedName("interaction_style")
@@ -58,7 +59,7 @@ public class LiBoard extends LiBaseModelImpl {
     }
 
     public String getView_href() {
-        return view_href;
+        return viewHref;
     }
 
     public String getId() {

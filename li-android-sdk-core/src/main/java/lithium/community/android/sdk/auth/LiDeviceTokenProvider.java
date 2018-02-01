@@ -11,6 +11,7 @@
  * use  it  only in  accordance  with  the terms of  the  license
  * agreement you entered into with Lithium.
  */
+
 package lithium.community.android.sdk.auth;
 
 /**
