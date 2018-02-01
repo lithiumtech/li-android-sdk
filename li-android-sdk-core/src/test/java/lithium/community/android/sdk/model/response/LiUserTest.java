@@ -10,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;
 import lithium.community.android.sdk.model.helpers.LiRanking;
 
@@ -26,11 +26,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class LiUserTest {
 
-    @Mock
-    private LiImage avatarImage;
-    @Mock
-    private LiRanking ranking;
-
     private final Boolean ANONYMOUS = true;
     private final Float AVERAGE_MESSAGE_RATING = 3.2f;
     private final Float AVERAGE_RATING = 3.6f;
@@ -38,7 +33,6 @@ public class LiUserTest {
     private final Boolean DELETED = false;
     private final String EMAIL = "lithium@lithium.com";
     private final String HREF = "//messages//213824";
-    private LiBaseModelImpl.LiString login;
     private final Long ID = 123456L;
     private final String PROFILE_PAGE_URL = "http://community.lithium.com/t5/user/viewprofilepage/user-id/52295";
     private final Boolean REGISTERED = true;
@@ -47,6 +41,11 @@ public class LiUserTest {
     private final String LI_RANKER = "Li_Ranker";
     private final String LI_LOGIN = "Li_Login";
     private final String LI_DATE_INSTANT = "HH:mm:ss.SSS";
+    @Mock
+    private LiImage avatarImage;
+    @Mock
+    private LiRanking ranking;
+    private LiBaseModelImpl.LiString login;
     private LiUser liUser;
 
     @Before
@@ -218,7 +217,13 @@ public class LiUserTest {
         email.setValue(EMAIL);
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
-        Assert.assertEquals("{\"USER_EMAIL\":\"lithium@lithium.com\",\"USER_LOGIN\":\"Li_Login\",\"USER_VIEW_HREF\":\"http:\\/\\/community.lithium.com\\/t5\\/user\\/viewprofilepage\\/user-id\\/52295\",\"USER_ID\":\"123456\",\"USER_AVATAR\":{\"MESSAGE_IMAGE_URL\":\"AVATAR\",\"PROFILE_IMAGE_URL\":\"null\"},\"USER_HREF\":\"\\/\\/messages\\/\\/213824\"}", liUser.jsonSerialize().toString());
+        Assert.assertEquals(
+                "{\"USER_EMAIL\":\"lithium@lithium.com\",\"USER_LOGIN\":\"Li_Login\","
+                        + "\"USER_VIEW_HREF\":\"http:\\/\\/community.lithium"
+                        + ".com\\/t5\\/user\\/viewprofilepage\\/user-id\\/52295\",\"USER_ID\":\"123456\","
+                        + "\"USER_AVATAR\":{\"MESSAGE_IMAGE_URL\":\"AVATAR\",\"PROFILE_IMAGE_URL\":\"null\"},"
+                        + "\"USER_HREF\":\"\\/\\/messages\\/\\/213824\"}",
+                liUser.jsonSerialize().toString());
 
     }
 

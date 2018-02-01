@@ -32,7 +32,6 @@ import lithium.community.android.sdk.model.response.LiBrowse;
  */
 
 
-
 public class LiPostClientResponse implements LiClientResponse<LiBaseResponse> {
     private LiBaseResponse liBaseResponse;
 
@@ -64,7 +63,7 @@ public class LiPostClientResponse implements LiClientResponse<LiBaseResponse> {
     }
 
     @Override
-    public JsonObject getJsonObject(){
+    public JsonObject getJsonObject() {
         return liBaseResponse.getData();
     }
 }

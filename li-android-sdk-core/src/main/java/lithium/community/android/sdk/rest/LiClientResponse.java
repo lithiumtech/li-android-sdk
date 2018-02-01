@@ -15,6 +15,7 @@
 package lithium.community.android.sdk.rest;
 
 import com.google.gson.JsonObject;
+
 import java.util.List;
 import java.util.Map;
 

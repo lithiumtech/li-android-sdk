@@ -38,6 +38,7 @@ public interface LiAuthService {
 
     /**
      * Initiates Authorization request (Non SSO).
+     *
      * @param request {@link LiSSOAuthorizationRequest}
      */
     void performAuthorizationRequest(
@@ -45,6 +46,7 @@ public interface LiAuthService {
 
     /**
      * Initiates Authorization request for SSO case.
+     *
      * @param request {@link LiSSOAuthorizationRequest}
      * @throws LiRestResponseException
      */
@@ -52,15 +54,18 @@ public interface LiAuthService {
 
     /**
      * Handles what to do after authorization response.
-     * @param response {@link LiSSOAuthResponse}
-     * @param authRestClient {@link LiAuthRestClient}
+     *
+     * @param response              {@link LiSSOAuthResponse}
+     * @param authRestClient        {@link LiAuthRestClient}
      * @param loginCompleteCallBack {@link LoginCompleteCallBack}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    void handleAuthorizationResponse(LiSSOAuthResponse response, LiAuthRestClient authRestClient, LoginCompleteCallBack loginCompleteCallBack) throws LiRestResponseException;
+    void handleAuthorizationResponse(LiSSOAuthResponse response, LiAuthRestClient authRestClient,
+            LoginCompleteCallBack loginCompleteCallBack) throws LiRestResponseException;
 
     /**
      * Fetching details of User after login is completed.
+     *
      * @param loginCompleteCallBack {@link LoginCompleteCallBack}
      */
     @VisibleForTesting
@@ -68,6 +73,7 @@ public interface LiAuthService {
 
     /**
      * Use to fetch Refresh token in an Async call.
+     *
      * @param callback {@link LiTokenResponseCallback}
      * @throws LiRestResponseException
      */
@@ -75,6 +81,7 @@ public interface LiAuthService {
 
     /**
      * Use to fetch Refresh token in an Sync call.
+     *
      * @return The Token response {@link LiTokenResponse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
@@ -82,8 +89,9 @@ public interface LiAuthService {
 
     /**
      * Performs post authorization flow.
+     *
      * @param isLoginSuccess Says whether login is success and user data has been retrieved.
-     * @param  responseCode HTTP error code that gets returned in the intent
+     * @param responseCode   HTTP error code that gets returned in the intent
      */
     void enablePostAuthorizationFlows(boolean isLoginSuccess, int responseCode);
 
@@ -120,6 +128,6 @@ public interface LiAuthService {
          * @see LiAuthorizationException.TokenRequestErrors
          */
         void onTokenRequestCompleted(@Nullable LiTokenResponse response,
-                                     @Nullable Exception ex);
+                @Nullable Exception ex);
     }
 }

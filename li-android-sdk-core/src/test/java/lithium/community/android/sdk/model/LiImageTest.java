@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 
 import lithium.community.android.sdk.model.helpers.LiImage;
 import lithium.community.android.sdk.model.helpers.LiImageMetaData;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,68 +29,68 @@ public class LiImageTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks( this );
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void getHeightTest() {
         LiBaseModelImpl.LiInteger liInteger = new LiBaseModelImpl.LiInteger();
-        liInteger.setValue( HEIGHT );
-        liImage.setHeight( liInteger );
-        assertEquals( HEIGHT, liImage.getHeight() );
-        assertTrue( liImage.getHeightAsLiInteger() instanceof LiBaseModelImpl.LiInteger );
-        assertEquals( HEIGHT, liImage.getHeightAsLiInteger().getValue() );
+        liInteger.setValue(HEIGHT);
+        liImage.setHeight(liInteger);
+        assertEquals(HEIGHT, liImage.getHeight());
+        assertTrue(liImage.getHeightAsLiInteger() instanceof LiBaseModelImpl.LiInteger);
+        assertEquals(HEIGHT, liImage.getHeightAsLiInteger().getValue());
     }
 
     @Test
     public void getUrlTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( URL );
-        liImage.setUrl( liString );
-        assertEquals( URL, liImage.getUrl() );
-        assertTrue( liImage.getUrlAsLiString() instanceof LiBaseModelImpl.LiString );
-        assertEquals( URL, liImage.getUrlAsLiString().getValue() );
+        liString.setValue(URL);
+        liImage.setUrl(liString);
+        assertEquals(URL, liImage.getUrl());
+        assertTrue(liImage.getUrlAsLiString() instanceof LiBaseModelImpl.LiString);
+        assertEquals(URL, liImage.getUrlAsLiString().getValue());
     }
 
     @Test
     public void getViewHrefTest() {
-        liImage.setViewHref( VIEW_HREF );
-        assertEquals( VIEW_HREF, liImage.getViewHref() );
+        liImage.setViewHref(VIEW_HREF);
+        assertEquals(VIEW_HREF, liImage.getViewHref());
     }
 
     @Test
     public void getTitleTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( TITLE );
-        liImage.setTitle( liString );
-        assertEquals( TITLE, liImage.getTitle() );
-        assertTrue( liImage.getTitleAsLiString() instanceof LiBaseModelImpl.LiString );
-        assertEquals( TITLE, liImage.getTitleAsLiString().getValue() );
+        liString.setValue(TITLE);
+        liImage.setTitle(liString);
+        assertEquals(TITLE, liImage.getTitle());
+        assertTrue(liImage.getTitleAsLiString() instanceof LiBaseModelImpl.LiString);
+        assertEquals(TITLE, liImage.getTitleAsLiString().getValue());
     }
 
     @Test
     public void getDescriptionTest() {
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue( DESCRIPTION );
-        liImage.setDescription( liString );
-        assertEquals( DESCRIPTION, liImage.getDescription() );
-        assertTrue( liImage.getDescriptionAsLiString() instanceof LiBaseModelImpl.LiString );
-        assertEquals( DESCRIPTION, liImage.getDescriptionAsLiString().getValue() );
+        liString.setValue(DESCRIPTION);
+        liImage.setDescription(liString);
+        assertEquals(DESCRIPTION, liImage.getDescription());
+        assertTrue(liImage.getDescriptionAsLiString() instanceof LiBaseModelImpl.LiString);
+        assertEquals(DESCRIPTION, liImage.getDescriptionAsLiString().getValue());
     }
 
     @Test
     public void getWidthTest() {
         LiBaseModelImpl.LiInteger liInteger = new LiBaseModelImpl.LiInteger();
-        liInteger.setValue( WIDTH );
-        liImage.setWidth( liInteger );
-        assertEquals( WIDTH, liImage.getWidth() );
-        assertTrue( liImage.getWidthAsLiInteger() instanceof LiBaseModelImpl.LiInteger );
-        assertEquals( WIDTH, liImage.getWidthAsLiInteger().getValue() );
+        liInteger.setValue(WIDTH);
+        liImage.setWidth(liInteger);
+        assertEquals(WIDTH, liImage.getWidth());
+        assertTrue(liImage.getWidthAsLiInteger() instanceof LiBaseModelImpl.LiInteger);
+        assertEquals(WIDTH, liImage.getWidthAsLiInteger().getValue());
     }
 
     @Test
     public void getMetaDataTest() {
-        liImage.setMetaData( metaData );
-        assertEquals( metaData, liImage.getMetaData() );
+        liImage.setMetaData(metaData);
+        assertEquals(metaData, liImage.getMetaData());
     }
 }

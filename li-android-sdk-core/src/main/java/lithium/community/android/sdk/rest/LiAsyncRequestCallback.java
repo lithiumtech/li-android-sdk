@@ -24,14 +24,16 @@ public interface LiAsyncRequestCallback<T> {
 
     /**
      * This call back is used when Async request is successful.
-     * @param request {@link LiBaseRestRequest}
+     *
+     * @param request  {@link LiBaseRestRequest}
      * @param response Generic success response.
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     void onSuccess(LiBaseRestRequest request, T response) throws LiRestResponseException;
 
     /**
-     *This call back is used when Async request is not successful.
+     * This call back is used when Async request is not successful.
+     *
      * @param exception {@link Exception}
      */
     void onError(Exception exception);

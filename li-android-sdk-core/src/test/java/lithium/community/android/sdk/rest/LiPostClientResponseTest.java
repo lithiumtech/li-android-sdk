@@ -15,14 +15,14 @@ public class LiPostClientResponseTest {
     private LiPostClientResponse liPostClientResponse;
 
     @Test
-    public void getResponseTest(){
+    public void getResponseTest() {
         liBaseResponse = PowerMockito.mock(LiBaseResponse.class);
         liPostClientResponse = new LiPostClientResponse(liBaseResponse);
         Assert.assertEquals(liBaseResponse, liPostClientResponse.getResponse());
     }
 
     @Test
-    public void trahsformedResponseTest(){
+    public void trahsformedResponseTest() {
         liBaseResponse = PowerMockito.mock(LiBaseResponse.class);
         liPostClientResponse = new LiPostClientResponse(liBaseResponse);
         Assert.assertNull(liPostClientResponse.getTransformedResponse());

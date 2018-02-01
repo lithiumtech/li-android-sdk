@@ -22,10 +22,10 @@ import static org.mockito.Mockito.mock;
 
 public class LiBaseRequestTest {
 
+    private final String PATH = "Li_Path";
     @Mock
     private RequestBody requestBody;
     private LiBaseRestRequest.RestMethod method;
-    private final String PATH = "Li_Path";
     private Map<String, String> additionalHttpHeaders;
     private Map<String, String> queryParams;
     private LiBaseRestRequest liBaseRestRequest;

@@ -26,7 +26,8 @@ public class LiAvatarTest {
         liAvatar.setMessage(message);
         assertEquals(profile, liAvatar.getProfile());
         assertEquals(message, liAvatar.getMessage());
-        assertEquals("{\"MESSAGE_IMAGE_URL\":\"This is Avatar\",\"PROFILE_IMAGE_URL\":\"profile\"}", liAvatar.jsonSerialize().toString());
+        assertEquals("{\"MESSAGE_IMAGE_URL\":\"This is Avatar\",\"PROFILE_IMAGE_URL\":\"profile\"}",
+                liAvatar.jsonSerialize().toString());
         LiAvatar liAvatar1 = new LiAvatar();
         liAvatar1 = LiAvatar.jsonDeserialize(liAvatar.jsonSerialize());
         assertEquals(profile, liAvatar1.getProfile());

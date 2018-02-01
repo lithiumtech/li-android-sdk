@@ -27,9 +27,16 @@ public class LiBoard extends LiBaseModelImpl {
 
     private Boolean blog;
     private String href;
-    private String view_href;
+    @SerializedName("view_href")
+    private String viewHref;
     private String id;
     private String type;
+    @SerializedName("interaction_style")
+    private String interactionStyle;
+    private String title;
+    @SerializedName("short_title")
+    private String shortTitle;
+    private String description;
 
     public String getType() {
         return type;
@@ -38,15 +45,6 @@ public class LiBoard extends LiBaseModelImpl {
     public void setType(String type) {
         this.type = type;
     }
-
-    @SerializedName("interaction_style")
-    private String interactionStyle;
-
-    private String title;
-
-    @SerializedName("short_title")
-    private String shortTitle;
-    private String description;
 
     public Boolean getBlog() {
         return blog;
@@ -61,7 +59,7 @@ public class LiBoard extends LiBaseModelImpl {
     }
 
     public String getView_href() {
-        return view_href;
+        return viewHref;
     }
 
     public String getId() {

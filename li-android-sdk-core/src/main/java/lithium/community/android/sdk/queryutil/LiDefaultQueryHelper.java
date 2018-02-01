@@ -14,7 +14,6 @@
 
 package lithium.community.android.sdk.queryutil;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.NoSuchPropertyException;
 
@@ -31,48 +30,44 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 public class LiDefaultQueryHelper {
 
-    private static LiDefaultQueryHelper _helperInstance;
+    private static LiDefaultQueryHelper INSTANCE;
     private JsonObject defaultSetting;
 
     /**
      * private constructor.
+     *
      * @param context {@link Context}
      */
-    private LiDefaultQueryHelper(Context context){
+    private LiDefaultQueryHelper(Context context) {
         defaultSetting = getDefaultQueryJSON(context);
     }
 
     /**
      * Initializes helper class.
+     *
      * @param context {@link Context}
      * @return Singleton instance of this class.
      */
-    public static synchronized LiDefaultQueryHelper initHelper(Context context){
-        if(_helperInstance == null){
-            _helperInstance = new LiDefaultQueryHelper(context);
+    public static synchronized LiDefaultQueryHelper initHelper(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new LiDefaultQueryHelper(context);
         }
-        return _helperInstance;
+        return INSTANCE;
     }
 
     /**
      * @return Instance of this class.
      */
     public static LiDefaultQueryHelper getInstance() {
-        if (_helperInstance == null) {
+        if (INSTANCE == null) {
             throw new NoSuchPropertyException("Helper not intialized. Call init method first");
         }
-        return _helperInstance;
-    }
-
-    /**
-     * @return default settings
-     */
-    public JsonObject getDefaultSetting() {
-        return defaultSetting;
+        return INSTANCE;
     }
 
     /**
      * Fetches default settings from 'raw' package
+     *
      * @param context {@link Context}
      * @return default settings in JsonObject form.
      */
@@ -91,5 +86,12 @@ public class LiDefaultQueryHelper {
 
         }
         return defaultQuerySettingsJson;
+    }
+
+    /**
+     * @return default settings
+     */
+    public JsonObject getDefaultSetting() {
+        return defaultSetting;
     }
 }

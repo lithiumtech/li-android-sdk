@@ -26,12 +26,12 @@ import org.json.JSONObject;
 import java.util.Set;
 
 import lithium.community.android.sdk.auth.LiAuthorizationException;
-import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
+import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiClock;
-import lithium.community.android.sdk.utils.LiSystemClock;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkArgument;
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNull;
@@ -44,7 +44,8 @@ import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotE
 @VisibleForTesting
 class LiAuthState {
 
-    private final static String LOG_TAG = "LiSDKAuth";
+    private static final String LOG_TAG = "LiSDKAuth";
+
     /**
      * Tokens which have less time than this value left before expiry will be considered to be
      * expired for the purposes of calls to
@@ -181,6 +182,7 @@ class LiAuthState {
 
     /**
      * provides tenant id fetched during authorization.
+     *
      * @return
      */
     @Nullable

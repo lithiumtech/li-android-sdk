@@ -30,6 +30,7 @@ public class LiGenericPostModel extends LiBasePostModel {
     public JsonElement getData() {
         return data;
     }
+
     public void setData(JsonElement data) {
         this.data = data;
     }

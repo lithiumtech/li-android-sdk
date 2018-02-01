@@ -53,11 +53,7 @@ public class LiQuerySetting {
 
     @Override
     public String toString() {
-        return "LiQuerySetting{" +
-                ", whereClauses=" + whereClauses +
-                ", orderObject=" + ordering +
-                ", limit=" + limit +
-                '}';
+        return "LiQuerySetting{" + ", whereClauses=" + whereClauses + ", orderObject=" + ordering + ", limit=" + limit + '}';
     }
 
     /**
@@ -181,12 +177,7 @@ public class LiQuerySetting {
 
         @Override
         public String toString() {
-            return "LiQueryWhereClause{" +
-                    "clause=" + clause +
-                    ", key='" + key + '\'' +
-                    ", value='" + value + '\'' +
-                    ", operator='" + operator + '\'' +
-                    '}';
+            return "LiQueryWhereClause{" + "clause=" + clause + ", key='" + key + '\'' + ", value='" + value + '\'' + ", operator='" + operator + '\'' + '}';
         }
     }
 
@@ -215,10 +206,7 @@ public class LiQuerySetting {
 
         @Override
         public String toString() {
-            return "LiQueryOrdering{" +
-                    "key='" + key + '\'' +
-                    ", type='" + type + '\'' +
-                    '}';
+            return "LiQueryOrdering{" + "key='" + key + '\'' + ", type='" + type + '\'' + '}';
         }
     }
 }

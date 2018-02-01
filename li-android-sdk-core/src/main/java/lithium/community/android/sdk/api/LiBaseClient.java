@@ -44,20 +44,18 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 abstract class LiBaseClient implements LiClient {
 
+    protected final String type;
     private final LiRestv2Client liRestv2Client;
     private final Class<? extends LiBaseModel> responseClass;
-    protected final String type;
-    private String imagePath;
-
-    private String imageName;
     protected String querySettingsType;
-
     protected Context context;
     protected LiRestV2Request liRestV2Request;
     protected String basePath;
     protected RequestType requestType;
     protected LiQueryOrdering liQueryOrdering;
     protected LiQueryRequestParams liQueryRequestParams;
+    private String imagePath;
+    private String imageName;
 
     public LiBaseClient(Context context, String type, Class<? extends LiBaseModel> responseClass) {
         this.context = context;
@@ -66,7 +64,8 @@ abstract class LiBaseClient implements LiClient {
         this.liRestv2Client = LiRestv2Client.getInstance();
     }
 
-    public LiBaseClient(Context context, String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String basePath, String type, String querySettingsType,
+            Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -77,7 +76,8 @@ abstract class LiBaseClient implements LiClient {
     }
 
 
-    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType,
+            Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -91,7 +91,9 @@ abstract class LiBaseClient implements LiClient {
         this.requestType = requestType;
     }
 
-    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType, String pathParam) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType,
+            Class<? extends LiBaseModel> responseClass, RequestType requestType,
+            String pathParam) throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -129,7 +131,8 @@ abstract class LiBaseClient implements LiClient {
     }
 
     /**
-     * Abstract method to set LiRestV2Request which will be passed as parameter in {@link LiRestv2Client#processSync(LiBaseRestRequest)} and
+     * Abstract method to set LiRestV2Request which will be passed as parameter in
+     * {@link LiRestv2Client#processSync(LiBaseRestRequest)} and
      * {@link LiRestv2Client#processAsync(LiBaseRestRequest, LiAsyncRequestCallback)} call.
      */
     public abstract void setLiRestV2Request();
@@ -148,11 +151,13 @@ abstract class LiBaseClient implements LiClient {
             this.liRestV2Request.setPath(basePath);
             final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
+                public void onSuccess(LiBaseRestRequest request,
+                        LiBaseResponse response) throws LiRestResponseException {
                     if (null != response) {
                         if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                             if (requestType.equals(RequestType.GET)) {
-                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
+                                liAsyncRequestCallback.onSuccess(request,
+                                        new LiGetClientResponse(response, type, responseClass, getGson()));
                             } else if (requestType.equals(RequestType.DELETE)) {
                                 liAsyncRequestCallback.onSuccess(request, new LiDeleteClientResponse(response));
                             } else if (requestType.equals(RequestType.PUT)) {
@@ -164,8 +169,7 @@ abstract class LiBaseClient implements LiClient {
                         } else {
                             liAsyncRequestCallback.onError(new Exception(response.getMessage()));
                         }
-                    }
-                    else {
+                    } else {
                         liAsyncRequestCallback.onError(new Exception("Server Error"));
                     }
                 }
@@ -176,6 +180,51 @@ abstract class LiBaseClient implements LiClient {
                 }
             };
             liRestv2Client.processAsync(liRestV2Request, callback);
+        } catch (RuntimeException e) {
+            throw LiRestResponseException.runtimeError(e.getMessage());
+        }
+    }
+
+    /**
+     * processSync call to upload files
+     *
+     * @param liAsyncRequestCallback {@link LiAsyncRequestCallback}
+     * @param imagePath              this is the absolute path of the image.
+     * @param imageName              this is the name of the image file.
+     */
+    @Override
+    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath, final String imageName)
+            throws LiRestResponseException {
+        try {
+            setLiRestV2Request();
+            this.liRestV2Request.setPath(basePath);
+            String requestBody = getRequestBody();
+            final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
+                @Override
+                public void onSuccess(LiBaseRestRequest request,
+                        LiBaseResponse response) throws LiRestResponseException {
+                    if (null != response) {
+                        if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                            if (requestType.equals(RequestType.GET)) {
+                                liAsyncRequestCallback.onSuccess(request,
+                                        new LiGetClientResponse(response, type, responseClass, getGson()));
+                            } else {
+                                liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
+                            }
+                        } else {
+                            liAsyncRequestCallback.onError(new Exception(response.getMessage()));
+                        }
+                    } else {
+                        liAsyncRequestCallback.onError(new Exception("Server Error"));
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    liAsyncRequestCallback.onError(e);
+                }
+            };
+            liRestv2Client.uploadProcessAsync(liRestV2Request, callback, imagePath, imageName, requestBody);
         } catch (RuntimeException e) {
             throw LiRestResponseException.runtimeError(e.getMessage());
         }
@@ -214,48 +263,6 @@ abstract class LiBaseClient implements LiClient {
     }
 
     /**
-     * processSync call to upload files
-     *
-     * @param liAsyncRequestCallback {@link LiAsyncRequestCallback}
-     * @param imagePath              this is the absolute path of the image.
-     * @param imageName              this is the name of the image file.
-     */
-    @Override
-    public void processAsync(final LiAsyncRequestCallback liAsyncRequestCallback, final String imagePath, final String imageName) throws LiRestResponseException {
-        try {
-            setLiRestV2Request();
-            this.liRestV2Request.setPath(basePath);
-            String requestBody = getRequestBody();
-            final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
-                @Override
-                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
-                    if (null != response) {
-                        if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                            if (requestType.equals(RequestType.GET)) {
-                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
-                            } else {
-                                liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
-                            }
-                        } else {
-                            liAsyncRequestCallback.onError(new Exception(response.getMessage()));
-                        }
-                    } else {
-                        liAsyncRequestCallback.onError(new Exception("Server Error"));
-                    }
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    liAsyncRequestCallback.onError(e);
-                }
-            };
-            liRestv2Client.uploadProcessAsync(liRestV2Request, callback, imagePath, imageName, requestBody);
-        } catch (RuntimeException e) {
-            throw LiRestResponseException.runtimeError(e.getMessage());
-        }
-    }
-
-    /**
      * Fetches Gson from {@link LiRestv2Client}
      * {@link LiClient#getGson()}
      */
@@ -280,18 +287,18 @@ abstract class LiBaseClient implements LiClient {
     }
 
     /**
-     * Enum to classify Request Type
-     */
-
-    protected enum RequestType {
-        GET, POST, DELETE, PUT;
-    }
-
-    /**
      * Use to set liQueryOrdering in LIQL if any
      */
     public LiClient setOrdering(LiQueryOrdering liQueryOrdering) {
         this.liQueryOrdering = liQueryOrdering;
         return this;
+    }
+
+    /**
+     * Enum to classify Request Type
+     */
+
+    protected enum RequestType {
+        GET, POST, DELETE, PUT;
     }
 }

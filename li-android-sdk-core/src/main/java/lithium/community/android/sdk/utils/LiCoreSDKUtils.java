@@ -24,6 +24,26 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.manager.LiSDKManager;
@@ -32,26 +52,18 @@ import lithium.community.android.sdk.model.response.LiBrowse;
 import lithium.community.android.sdk.rest.LiRequestHeaderConstants;
 import okhttp3.Request;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-
 /**
  * Utility class for common operations.
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
-    private static char[] HEX_CHAR = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
     private static final ThreadLocal<SecureRandom> randTl = new ThreadLocal<SecureRandom>() {
         @Override
         protected SecureRandom initialValue() {
             return new SecureRandom();
         }
     };
+    private static char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     private LiCoreSDKUtils() {
     }
@@ -242,6 +254,7 @@ public class LiCoreSDKUtils {
 
     /**
      * Checks if json and field are non null and inserts into JSONObject.
+     *
      * @param json
      * @param field
      * @param value
@@ -262,34 +275,11 @@ public class LiCoreSDKUtils {
         }
     }
 
-    /**
-     * Checks if json, field and value are non null and inserts into JSONObject.
-     * @param json
-     * @param field
-     * @param value
-     */
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull JSONObject value) {
-        LiCoreSDKUtils.checkNotNull(json, "json must not be null");
-        LiCoreSDKUtils.checkNotNull(field, "field must not be null");
-        LiCoreSDKUtils.checkNotNull(value, "value must not be null");
-        try {
-            json.put(field, value);
-        } catch (JSONException ex) {
-            throw new IllegalStateException("JSONException thrown in violation of contract", ex);
-        }
-    }
-
     /*
     Below are general checks on JSONObject.
      */
 
-    public static void putIfNotNull(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @Nullable Long value) {
+    public static void putIfNotNull(@NonNull JSONObject json, @NonNull String field, @Nullable Long value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (value == null) {
@@ -302,10 +292,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void putIfNotNull(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @Nullable Uri value) {
+    public static void putIfNotNull(@NonNull JSONObject json, @NonNull String field, @Nullable Uri value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (value == null) {
@@ -318,9 +305,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static String getStringIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field) throws JSONException {
+    public static String getStringIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -335,10 +320,7 @@ public class LiCoreSDKUtils {
     }
 
     @Nullable
-    public static Long getLongIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static Long getLongIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -368,10 +350,25 @@ public class LiCoreSDKUtils {
         return TextUtils.join(" ", stringSet);
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull int value) {
+    /**
+     * Checks if json, field and value are non null and inserts into JSONObject.
+     *
+     * @param json
+     * @param field
+     * @param value
+     */
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull JSONObject value) {
+        LiCoreSDKUtils.checkNotNull(json, "json must not be null");
+        LiCoreSDKUtils.checkNotNull(field, "field must not be null");
+        LiCoreSDKUtils.checkNotNull(value, "value must not be null");
+        try {
+            json.put(field, value);
+        } catch (JSONException ex) {
+            throw new IllegalStateException("JSONException thrown in violation of contract", ex);
+        }
+    }
+
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull int value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -383,10 +380,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull String value) {
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull String value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -397,10 +391,7 @@ public class LiCoreSDKUtils {
         }
     }
 
-    public static void put(
-            @NonNull JSONObject json,
-            @NonNull String field,
-            @NonNull JSONArray value) {
+    public static void put(@NonNull JSONObject json, @NonNull String field, @NonNull JSONArray value) {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         LiCoreSDKUtils.checkNotNull(value, "value must not be null");
@@ -412,10 +403,7 @@ public class LiCoreSDKUtils {
     }
 
     @NonNull
-    public static String getString(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static String getString(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -431,10 +419,7 @@ public class LiCoreSDKUtils {
 
 
     @Nullable
-    public static Uri getUriIfDefined(
-            @NonNull JSONObject json,
-            @NonNull String field)
-            throws JSONException {
+    public static Uri getUriIfDefined(@NonNull JSONObject json, @NonNull String field) throws JSONException {
         LiCoreSDKUtils.checkNotNull(json, "json must not be null");
         LiCoreSDKUtils.checkNotNull(field, "field must not be null");
         if (!json.has(field)) {
@@ -450,8 +435,10 @@ public class LiCoreSDKUtils {
     }
 
     /**
-     * this method creates a Tree like structure depicting parent child relation for the Category and SubCategory in a community.
+     * this method creates a Tree like structure depicting parent child relation for the Category and SubCategory in
+     * a community.
      * //TODO right now it is hardcoded to LiBrowse and it should be generalized to use LiBaseModel
+     *
      * @param response
      * @return Map with Key as Parent node and vlaues as list of children.
      */
@@ -474,6 +461,7 @@ public class LiCoreSDKUtils {
 
     /**
      * Computes default json as string from raw folder.
+     *
      * @param context
      * @param rawResId
      * @return String is the raw file.
@@ -499,7 +487,7 @@ public class LiCoreSDKUtils {
         return defaultJsonString;
     }
 
-    public static Long getTime(Long time){
+    public static Long getTime(Long time) {
         return (time != null ? (time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
     }
 

@@ -18,8 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.Field;
 
 import lithium.community.android.sdk.auth.LiRefreshTokenRequest;
-import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
+import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
@@ -31,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
  * Created by kunal.shrivastava on 12/2/16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LiSystemClock.class,LiAuthState.class})
+@PrepareForTest({LiSystemClock.class, LiAuthState.class})
 public class LiAuthStateTest {
 
     public static final String CLIENT_ID = "clientId";
@@ -92,7 +92,8 @@ public class LiAuthStateTest {
 //        HashMap<String, String> set = new HashMap<String, String>();
 //        set.put("proxy-host", "proxy-host");
 //        set.put("tenant-id", "tenant-id");
-//        AuthorizationResponse authorizationResponse = new AuthorizationResponse.Builder(authorizationRequest).setScope("test").setAdditionalParameters(set).build();
+//        AuthorizationResponse authorizationResponse = new AuthorizationResponse.Builder(authorizationRequest)
+// .setScope("test").setAdditionalParameters(set).build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(authorizationResponse, authorizationException);
 //        Assert.assertEquals(null, authState.getAccessToken());
@@ -105,7 +106,8 @@ public class LiAuthStateTest {
 //        HashMap<String, String> set = new HashMap<String, String>();
 //        set.put("proxy-host", "proxy-host");
 //        set.put("tenant-id", "tenant-id");
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test").setAdditionalParameters(set).build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test")
+// .setAdditionalParameters(set).build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertEquals(null, authState.getAccessTokenExpirationTime());
@@ -127,7 +129,8 @@ public class LiAuthStateTest {
 //        HashMap<String, String> set = new HashMap<String, String>();
 //        set.put("proxy-host", "proxy-host");
 //        set.put("tenant-id", "tenant-id");
-//        AuthorizationResponse authorizationResponse = new AuthorizationResponse.Builder(authorizationRequest).setScope("test").setAdditionalParameters(set).build();
+//        AuthorizationResponse authorizationResponse = new AuthorizationResponse.Builder(authorizationRequest)
+// .setScope("test").setAdditionalParameters(set).build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(authorizationResponse, authorizationException);
 //        authState.setBadToken();
@@ -142,7 +145,8 @@ public class LiAuthStateTest {
 //        HashMap<String, String> set = new HashMap<String, String>();
 //        set.put("proxy-host", "proxy-host");
 //        set.put("tenant-id", "tenant-id");
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test").setAdditionalParameters(set).setRefreshToken("refresh").build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test")
+// .setAdditionalParameters(set).setRefreshToken("refresh").build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertEquals("refresh", authState.getRefreshToken());
@@ -155,7 +159,8 @@ public class LiAuthStateTest {
 //        HashMap<String, String> set = new HashMap<String, String>();
 //        set.put("proxy-host", "proxy-host");
 //        set.put("tenant-id", "tenant-id");
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test").setAdditionalParameters(set).setRefreshToken("refresh").build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test")
+// .setAdditionalParameters(set).setRefreshToken("refresh").build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertEquals("test", authState.getScope());
@@ -165,7 +170,8 @@ public class LiAuthStateTest {
 //    public void testGetScopeSet() {
 //        LiAuthState authState = new LiAuthState();
 //        TokenRequest tokenRequest = PowerMockito.mock(TokenRequest.class);
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test scope").setRefreshToken("refresh").build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test scope")
+// .setRefreshToken("refresh").build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertEquals("[test, scope]", authState.getScopeSet().toString());
@@ -175,7 +181,8 @@ public class LiAuthStateTest {
 //    public void testGetLastTokenReponse() {
 //        LiAuthState authState = new LiAuthState();
 //        TokenRequest tokenRequest = PowerMockito.mock(TokenRequest.class);
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test scope").setRefreshToken("refresh").build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setScope("test scope")
+// .setRefreshToken("refresh").build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertTrue(tokenResponse.equals(authState.getLastTokenResponse()));
@@ -185,7 +192,8 @@ public class LiAuthStateTest {
 //    public void testGetIdTokenTest() {
 //        LiAuthState authState = new LiAuthState();
 //        TokenRequest tokenRequest = PowerMockito.mock(TokenRequest.class);
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setRefreshToken("refresh").setIdToken("token").build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setRefreshToken("refresh").setIdToken
+// ("token").build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        Assert.assertEquals("token", authState.getIdToken());
@@ -193,15 +201,15 @@ public class LiAuthStateTest {
 
     @Test
     public void testJsonSerialize() {
-        Gson gson=new Gson();
+        Gson gson = new Gson();
         LiAuthState liAuthState = new LiAuthState();
-        LiRefreshTokenRequest liRefreshTokenRequest=new LiRefreshTokenRequest();
+        LiRefreshTokenRequest liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientId(CLIENT_ID);
         liRefreshTokenRequest.setRefreshToken(REFRESH);
         liRefreshTokenRequest.setClientSecret(CLIENT_SECRET);
         liRefreshTokenRequest.setGrantType(REFRESH_TOKEN);
 
-        LiSSOAuthResponse liSsoAuthResponse =new LiSSOAuthResponse();
+        LiSSOAuthResponse liSsoAuthResponse = new LiSSOAuthResponse();
         liSsoAuthResponse.setAuthCode(AUTH_CODE);
         liSsoAuthResponse.setTenantId(TENANT_ID);
         liSsoAuthResponse.setApiProxyHost(API_PROXY_HOST);
@@ -211,7 +219,7 @@ public class LiAuthStateTest {
         System.out.printf(gson.toJson(liSsoAuthResponse));
         liAuthState.update(liSsoAuthResponse);
 
-        LiTokenResponse liTokenResponse=new LiTokenResponse();
+        LiTokenResponse liTokenResponse = new LiTokenResponse();
         liTokenResponse.setAccessToken(ACCESSTOKEN);
         liTokenResponse.setUserId(USER_ID);
         liTokenResponse.setTokenType(TOKEN_TYPE_BEARER);
@@ -220,17 +228,32 @@ public class LiAuthStateTest {
         liTokenResponse.setExpiresIn(EXPIRES_IN);
         liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(EXPIRES_IN));
 
-        String json=gson.toJson(liTokenResponse);
+        String json = gson.toJson(liTokenResponse);
         liTokenResponse.setJsonString(json);
         liAuthState.update(liTokenResponse);
 
-        Assert.assertEquals("{\"lastSSOAuthorizationResponse\":\"{\\\"code\\\":\\\"AuthCode\\\",\\\"proxy-host\\\":\\\"ApiProxyHost\\\",\\\"state\\\":\\\"State\\\",\\\"tenant-id\\\":\\\"TenantId\\\",\\\"user-id\\\":\\\"UserId\\\"}\",\"mLastLiTokenResponse\":\"{\\\"lithiumUserId\\\":\\\"LithiumUserId\\\",\\\"access_token\\\":\\\"ACCESSTOKEN\\\",\\\"refresh_token\\\":\\\"NewRefreshToken\\\",\\\"expires_in\\\":1,\\\"userId\\\":\\\"UserId\\\",\\\"token_type\\\":\\\"TokenTypeBearer\\\",\\\"expiresAt\\\":1001}\",\"refreshToken\":\"NewRefreshToken\"}", liAuthState.jsonSerializeString());
+        Assert.assertEquals(
+                "{\"lastSSOAuthorizationResponse\":\"{\\\"code\\\":\\\"AuthCode\\\","
+                        + "\\\"proxy-host\\\":\\\"ApiProxyHost\\\",\\\"state\\\":\\\"State\\\","
+                        + "\\\"tenant-id\\\":\\\"TenantId\\\",\\\"user-id\\\":\\\"UserId\\\"}\","
+                        + "\"mLastLiTokenResponse\":\"{\\\"lithiumUserId\\\":\\\"LithiumUserId\\\","
+                        + "\\\"access_token\\\":\\\"ACCESSTOKEN\\\",\\\"refresh_token\\\":\\\"NewRefreshToken\\\","
+                        + "\\\"expires_in\\\":1,\\\"userId\\\":\\\"UserId\\\","
+                        + "\\\"token_type\\\":\\\"TokenTypeBearer\\\",\\\"expiresAt\\\":1001}\","
+                        + "\"refreshToken\":\"NewRefreshToken\"}",
+                liAuthState.jsonSerializeString());
 
     }
 
     @Test
     public void testJsonDeserialize() throws JSONException {
-        LiAuthState liAuthState = LiAuthState.jsonDeserialize("{\"mLastTokenResponse\":{\"access_token\":\"accessToken\",\"request\":{\"clientId\":\"clientId\",\"configuration\":{\"authorizationEndpoint\":\"http:\\/\\/localhost:8080\"},\"additionalParameters\":{},\"client_secret\":\"clientSecret\",\"grantType\":\"refresh_token\",\"refreshToken\":\"referesh\"},\"refresh_token\":\"refresh\",\"id_token\":\"token\",\"additionalParameters\":{},\"token_type\":\"tokenType\"},\"refreshToken\":\"refresh\"}");
+        LiAuthState liAuthState = LiAuthState.jsonDeserialize(
+                "{\"mLastTokenResponse\":{\"access_token\":\"accessToken\",\"request\":{\"clientId\":\"clientId\","
+                        + "\"configuration\":{\"authorizationEndpoint\":\"http:\\/\\/localhost:8080\"},"
+                        + "\"additionalParameters\":{},\"client_secret\":\"clientSecret\","
+                        + "\"grantType\":\"refresh_token\",\"refreshToken\":\"referesh\"},"
+                        + "\"refresh_token\":\"refresh\",\"id_token\":\"token\",\"additionalParameters\":{},"
+                        + "\"token_type\":\"tokenType\"},\"refreshToken\":\"refresh\"}");
         Assert.assertEquals("refresh", liAuthState.getRefreshToken());
     }
 
@@ -247,7 +270,8 @@ public class LiAuthStateTest {
 //    public void testGetNeedsTokenRefresh() {
 //        LiAuthState authState = new LiAuthState();
 //        TokenRequest tokenRequest = PowerMockito.mock(TokenRequest.class);
-//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setRefreshToken("refresh").setIdToken("token").setAccessToken("token").setAccessTokenExpirationTime(1L).build();
+//        TokenResponse tokenResponse = new TokenResponse.Builder(tokenRequest).setRefreshToken("refresh").setIdToken
+// ("token").setAccessToken("token").setAccessTokenExpirationTime(1L).build();
 //        LiAuthorizationException authorizationException = null;
 //        authState.update(tokenResponse, authorizationException);
 //        LiClock clock = new LiClock() {

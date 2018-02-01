@@ -19,12 +19,13 @@ import lithium.community.android.sdk.R;
 public class LiFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "LiFirebaseMessagingService";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> map = remoteMessage.getData();
         String notificationSrc = map.get("source");
         if (notificationSrc != null && notificationSrc.equals("community")) {
-            LiNotificationPayload notificationPayload= new LiNotificationPayload();
+            LiNotificationPayload notificationPayload = new LiNotificationPayload();
             notificationPayload.setFromId(map.get("fromId"));
             notificationPayload.setFromName(map.get("fromName"));
             notificationPayload.setType(map.get("type"));
@@ -35,7 +36,8 @@ public class LiFirebaseMessagingService extends FirebaseMessagingService {
 
     /**
      * This method displays community specific notifications.
-     * @param context {@link Context}
+     *
+     * @param context             {@link Context}
      * @param notificationPayload {@link LiNotificationPayload}
      */
     private void showCommunityNotification(Context context, LiNotificationPayload notificationPayload) {
@@ -45,15 +47,13 @@ public class LiFirebaseMessagingService extends FirebaseMessagingService {
         String fromName = notificationPayload.getFromName();
         if (type.equals("kudos")) {
             contentText = String.format(getString(R.string.li_message_kudo_notif_content_text),
-                    fromName );
+                    fromName);
             alertTitle = getString(R.string.li_message_kudo_notif_alert_text);
-        }
-        else if(type.equals("solutions")) {
+        } else if (type.equals("solutions")) {
             contentText = String.format(getString(R.string.li_message_solution_notif_content_text),
-                    fromName );
+                    fromName);
             alertTitle = getString(R.string.li_message_solution_notif_alert_text);
-        }
-        else {
+        } else {
             contentText = String.format(getString(R.string.li_message_messages_notif_content_text),
                     fromName);
             alertTitle = getString(R.string.li_message_messages_notif_alert_text);

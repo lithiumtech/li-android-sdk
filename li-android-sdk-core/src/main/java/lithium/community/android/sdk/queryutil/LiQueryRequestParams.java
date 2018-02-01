@@ -40,16 +40,17 @@ public class LiQueryRequestParams {
         this.limit = builder.limit;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
     public static Builder getBuilder() {
         return new Builder();
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     /**
      * Computes where clause, liQueryOrdering and limit.
+     *
      * @return Model representing setting for API provider query.
      */
     public LiQuerySetting getQuerySetting() {
@@ -71,7 +72,7 @@ public class LiQueryRequestParams {
             ordering.setType(this.liQueryOrdering.getOrder().name());
         }
 
-        if (limit<1) {
+        if (limit < 1) {
             limit = DEFAULT_LIQL_QUERY_LIMIT;
         }
         LiQuerySetting liQuerySetting = new LiQuerySetting(whereClauses, ordering, limit);
@@ -111,11 +112,13 @@ public class LiQueryRequestParams {
         public LiQueryRequestParams build() {
             for (LiQueryClause liQueryClause : liQueryWhereClause.getLiQueryClauses()) {
                 if (!liQueryClause.isValid(client)) {
-                    throw new RuntimeException(String.format("Invalid liQueryClause !!! LiQueryClause of %s used in %s", liQueryClause.getKey().getClient(), client));
+                    throw new RuntimeException(String.format("Invalid liQueryClause !!! LiQueryClause of %s used in %s",
+                            liQueryClause.getKey().getClient(), client));
                 }
             }
-            if(!liQueryOrdering.isVaild(client)) {
-                throw new RuntimeException(String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
+            if (!liQueryOrdering.isVaild(client)) {
+                throw new RuntimeException(
+                        String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
             }
             return new LiQueryRequestParams(this);
         }

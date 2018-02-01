@@ -21,8 +21,8 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
+import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;
 import lithium.community.android.sdk.model.helpers.LiRanking;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
@@ -283,8 +283,8 @@ public class LiUser extends LiBaseModelImpl {
         return profilePageUrl;
     }
 
-    public void setProfilePageUrl(final String view_href) {
-        profilePageUrl = view_href;
+    public void setProfilePageUrl(final String url) {
+        profilePageUrl = url;
     }
 
     public LiBaseModelImpl.LiString getLoginAsLiString() {

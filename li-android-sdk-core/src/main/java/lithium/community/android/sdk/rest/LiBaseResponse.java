@@ -19,14 +19,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import okhttp3.Response;
@@ -51,6 +50,7 @@ public class LiBaseResponse {
 
     /**
      * Wrapping OkHttp response to LiBaseResponse.
+     *
      * @param response {@link Response}
      * @throws IOException
      * @throws LiRestResponseException
@@ -68,8 +68,7 @@ public class LiBaseResponse {
             }
             status = response.isSuccessful() ? "success" : "error";
             message = response.message();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
             status = "error";
             message = ex.getMessage();
@@ -114,13 +113,14 @@ public class LiBaseResponse {
      * @throws LiRestResponseException
      */
     public List<LiBaseModel> toEntityList(final String type, final Class<? extends LiBaseModel> baseModelClass,
-                                          final Gson gson) throws LiRestResponseException {
+            final Gson gson) throws LiRestResponseException {
         final String objectNamePlural = type + "s";
         return singleEntityOrListFromJson(data, objectNamePlural, type, baseModelClass, gson);
     }
 
     private List<LiBaseModel> singleEntityOrListFromJson(final JsonElement node, final String objectNamePlural,
-                                                         final String objectName, final Class<? extends LiBaseModel> baseModelClass, final Gson gson) throws LiRestResponseException {
+            final String objectName, final Class<? extends LiBaseModel> baseModelClass,
+            final Gson gson) throws LiRestResponseException {
         if (node != null && node.getAsJsonObject().has(DATA)) {
             JsonObject response = node.getAsJsonObject().get(DATA).getAsJsonObject();
             if (!response.has(TYPE)) {
@@ -140,7 +140,8 @@ public class LiBaseResponse {
                     try {
                         elementList.add(gson.fromJson(element, baseModelClass));
                     } catch (IllegalStateException | JsonSyntaxException exception) {
-                        throw LiRestResponseException.jsonSerializationError("Bad json response:" + exception.getMessage());
+                        throw LiRestResponseException.jsonSerializationError(
+                                "Bad json response:" + exception.getMessage());
                     }
                 }
                 return elementList;
@@ -149,8 +150,7 @@ public class LiBaseResponse {
                 objects.add(gson.fromJson(response.get(ITEM).getAsJsonObject(), baseModelClass));
                 return objects;
             } else {
-                throw LiRestResponseException.jsonSerializationError("Unable to parse " + objectName + " or " +
-                        objectNamePlural + " from json:" + node);
+                throw LiRestResponseException.jsonSerializationError("Unable to parse " + objectName + " or " + objectNamePlural + " from json:" + node);
             }
         } else {
             throw LiRestResponseException.jsonSerializationError("Server Error. Please check logs");

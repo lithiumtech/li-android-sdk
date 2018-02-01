@@ -17,7 +17,7 @@ public class LiKudoMetricesTest {
     private LiKudoMetrics liKudoMetrics = new LiKudoMetrics();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
 
         sum = new LiBaseModelImpl.LiSum();
         LiBaseModelImpl.LiInt value = new LiBaseModelImpl.LiInt();
@@ -26,7 +26,7 @@ public class LiKudoMetricesTest {
 
         liKudoMetrics.setSum(sum);
 
-        assertEquals(value, liKudoMetrics.getSum().getWeight() );
+        assertEquals(value, liKudoMetrics.getSum().getWeight());
 
     }
 }

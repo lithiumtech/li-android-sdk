@@ -25,7 +25,8 @@ public class LiQueryValueReplacer {
 
     /**
      * Populates replacer map with character to replave and the value to be added.
-     * @param regex The regex expression which are to be replaced.
+     *
+     * @param regex       The regex expression which are to be replaced.
      * @param replacement Text to be added.
      * @return {@link LiQueryValueReplacer}
      */
@@ -36,6 +37,7 @@ public class LiQueryValueReplacer {
 
     /**
      * Returns replacement map.
+     *
      * @return HashMap with key as character to be replaced and value is the value which replaces the character.
      */
     public HashMap<String, String> getReplacementMap() {

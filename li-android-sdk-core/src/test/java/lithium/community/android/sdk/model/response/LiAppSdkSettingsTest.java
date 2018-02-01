@@ -19,7 +19,7 @@ public class LiAppSdkSettingsTest {
     private LiAppSdkSettings liAppSdkSettings = new LiAppSdkSettings();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
         liAppSdkSettings.setType(type);
         liAppSdkSettings.setId(id);
         liAppSdkSettings.setAdditionalInformation(additionalInformation);

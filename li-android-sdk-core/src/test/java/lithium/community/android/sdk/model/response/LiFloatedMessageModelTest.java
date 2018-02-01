@@ -12,14 +12,13 @@ public class LiFloatedMessageModelTest {
 
     private final String id = "100";
     private final String href = "href";
+    private final String scope = "scope";
     private LiUser user = new LiUser();
     private LiMessage message = new LiMessage();
-    private final String scope = "scope";
-
     private LiFloatedMessageModel liFloatedMessageModel = new LiFloatedMessageModel();
 
     @Test
-    public void getParamsTest(){
+    public void getParamsTest() {
 
         liFloatedMessageModel.setId(id);
         liFloatedMessageModel.setHref(href);

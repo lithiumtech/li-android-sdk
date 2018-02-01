@@ -24,18 +24,21 @@ public interface LiAuthTokenProvider {
 
     /**
      * provides community Uri.
+     *
      * @return community uri
      */
     Uri getCommunityUrl();
 
     /**
      * provides Access Token.
+     *
      * @return access token
      */
     String getNewAuthToken();
 
     /**
      * provides Refresh Token
+     *
      * @return refresh token
      */
     String getRefreshToken();

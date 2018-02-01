@@ -21,8 +21,10 @@ import com.google.gson.JsonObject;
 /**
  * Created by kunal.shrivastava on 10/26/16.
  * <p>
- * Base class for post request model, implement {@link LiPostModel}. This class provides implementation of toJsonString() method and toJson() method,
- * to help in serialization and deserialization of post model object. All post request model must extend this base class,
+ * Base class for post request model, implement {@link LiPostModel}. This class provides implementation of
+ * toJsonString() method and toJson() method,
+ * to help in serialization and deserialization of post model object. All post request model must extend this base
+ * class,
  * to take advantage of serialization and deserialization.
  */
 

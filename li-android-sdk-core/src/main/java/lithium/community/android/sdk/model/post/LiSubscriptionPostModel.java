@@ -1,7 +1,5 @@
 package lithium.community.android.sdk.model.post;
 
-import lithium.community.android.sdk.model.response.LiMessage;
-
 /**
  * Created by shoureya.kant on 3/30/17.
  */
@@ -28,6 +26,9 @@ public class LiSubscriptionPostModel extends LiBasePostModel {
     }
 
     public static class Target {
+        private String type;
+        private String id;
+
         public String getType() {
             return type;
         }
@@ -43,9 +44,6 @@ public class LiSubscriptionPostModel extends LiBasePostModel {
         public void setId(String id) {
             this.id = id;
         }
-
-        private String type;
-        private String id;
 
     }
 }

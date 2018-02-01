@@ -17,14 +17,10 @@ package lithium.community.android.sdk.rest;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.w3c.dom.Text;
-
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 
-import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -51,7 +47,7 @@ public class LiBaseRestRequest {
     private boolean isAuthenticatedRequest = false;
 
     public LiBaseRestRequest(Context context, RestMethod method, String path, RequestBody requestBody,
-                             Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+            Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
         this.context = context;
         this.method = method;
         this.path = path;
@@ -63,7 +59,7 @@ public class LiBaseRestRequest {
 
 
     public LiBaseRestRequest(Context context, RestMethod method, RequestBody requestBody,
-                             Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
+            Map<String, String> additionalHttpHeaders, boolean isAuthenticatedRequest) {
         this.context = context;
         this.method = method;
         this.requestBody = requestBody;
@@ -106,22 +102,22 @@ public class LiBaseRestRequest {
         if (TextUtils.isEmpty(queryParameters)) {
             return;
         }
-        if(queryParameters.toUpperCase().startsWith("SELECT ")) {
+        if (queryParameters.toUpperCase().startsWith("SELECT ")) {
             if (queryParameters.contains("&")) {
                 String[] queryParamsArr = queryParameters.split("&");
-                queryParams.put("q",queryParamsArr[0]);
-                for (int i=1;i<queryParamsArr.length;i++) {
+                queryParams.put("q", queryParamsArr[0]);
+                for (int i = 1; i < queryParamsArr.length; i++) {
                     String[] qParams = queryParamsArr[i].split("=");
                     String key = qParams[0];
-                    String value = (qParams.length > 1)? qParams[1]: null;
+                    String value = (qParams.length > 1) ? qParams[1] : null;
                     queryParams.put(key, value);
                 }
             } else {
-                queryParams.put("q",queryParameters);
+                queryParams.put("q", queryParameters);
             }
         } else {
             String[] queryParamsArr = queryParameters.split("&");
-            for (String temp: queryParamsArr) {
+            for (String temp : queryParamsArr) {
                 String[] qParams = temp.split("=");
                 String key = qParams[0];
                 String value = (qParams.length > 1) ? qParams[1] : null;

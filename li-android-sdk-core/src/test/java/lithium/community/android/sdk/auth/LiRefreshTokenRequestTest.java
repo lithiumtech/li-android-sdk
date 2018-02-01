@@ -34,36 +34,40 @@ public class LiRefreshTokenRequestTest {
     }
 
     @Test
-    public void getUriTest(){
-        liRefreshTokenRequest=new LiRefreshTokenRequest();
+    public void getUriTest() {
+        liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setUri(TEST_URI);
         assertNotEquals(null, liRefreshTokenRequest.getUri());
         assertEquals(TEST_URI, liRefreshTokenRequest.getUri());
     }
+
     @Test
-    public void getClientIdTest(){
-        liRefreshTokenRequest=new LiRefreshTokenRequest();
+    public void getClientIdTest() {
+        liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientId(TEST_CLIENT_ID);
         assertNotEquals(null, liRefreshTokenRequest.getClientId());
         assertEquals(TEST_CLIENT_ID, liRefreshTokenRequest.getClientId());
     }
+
     @Test
-    public void getClientSecretTest(){
-        liRefreshTokenRequest=new LiRefreshTokenRequest();
+    public void getClientSecretTest() {
+        liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setClientSecret(TEST_CLIENT_SECRET);
         assertNotEquals(null, liRefreshTokenRequest.getClientSecret());
         assertEquals(TEST_CLIENT_SECRET, liRefreshTokenRequest.getClientSecret());
     }
+
     @Test
-    public void getGrantTypeTest(){
-        liRefreshTokenRequest=new LiRefreshTokenRequest();
+    public void getGrantTypeTest() {
+        liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setGrantType(TEST_GRANT_TYPE);
         assertNotEquals(null, liRefreshTokenRequest.getGrantType());
         assertEquals(TEST_GRANT_TYPE, liRefreshTokenRequest.getGrantType());
     }
+
     @Test
-    public void getRefreshTokenTest(){
-        liRefreshTokenRequest=new LiRefreshTokenRequest();
+    public void getRefreshTokenTest() {
+        liRefreshTokenRequest = new LiRefreshTokenRequest();
         liRefreshTokenRequest.setRefreshToken(TEST_REFRESH_TOKEN);
         assertNotEquals(null, liRefreshTokenRequest.getRefreshToken());
         assertEquals(TEST_REFRESH_TOKEN, liRefreshTokenRequest.getRefreshToken());

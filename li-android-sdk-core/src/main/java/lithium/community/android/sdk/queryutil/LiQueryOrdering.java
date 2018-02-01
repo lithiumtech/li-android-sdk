@@ -32,11 +32,35 @@ public class LiQueryOrdering {
     }
 
     /**
+     * @return columns on which liQueryOrdering can be done for a client.
+     */
+    public ClientOrderingColumn getColumn() {
+        return column;
+    }
+
+    /**
+     * @return LiQueryOrdering {@link Order}
+     */
+    public Order getOrder() {
+        return order;
+    }
+
+    /**
+     * @param client {@link LiClientManager.Client}
+     * @return true or false depending on whether column on which liQueryOrdering is applied is allowed for the same
+     * for a client.
+     */
+    public Boolean isVaild(LiClientManager.Client client) {
+        return column.isVaild(client);
+    }
+
+    /**
      * Only two types of liQueryOrdering is supported i.e Ascending or Descending.
      */
     public enum Order {
         ASC, DESC;
     }
+
 
     /**
      * Specifies parameter on which liQueryOrdering is allowed for LI_ARTICLES_CLIENT.
@@ -53,6 +77,7 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_ARTICLES_CLIENT.equals(client);
         }
@@ -73,6 +98,7 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_SEARCH_CLIENT.equals(client);
         }
@@ -93,51 +119,27 @@ public class LiQueryOrdering {
         public String getValue() {
             return this.value;
         }
+
         public Boolean isVaild(LiClientManager.Client client) {
             return LiClientManager.Client.LI_QUESTIONS_CLIENT.equals(client);
         }
     }
 
-
     public interface ClientOrderingColumn {
 
         /**
          * get value of liQueryOrdering field
+         *
          * @return Value of clause.
          */
         String getValue();
 
         /**
          * Checks if liQueryOrdering filed is correct for the client.
+         *
          * @param client {@link LiClientManager.Client}
          * @return If clause is valid for a client.
          */
         Boolean isVaild(LiClientManager.Client client);
-    }
-
-    /**
-     *
-     * @return columns on which liQueryOrdering can be done for a client.
-     */
-    public ClientOrderingColumn getColumn() {
-        return column;
-    }
-
-    /**
-     *
-     * @return LiQueryOrdering {@link Order}
-     */
-    public Order getOrder() {
-        return order;
-    }
-
-    /**
-     *
-     * @param client {@link LiClientManager.Client}
-     * @return true or false depending on whether column on which liQueryOrdering is applied is allowed for the same
-     * for a client.
-     */
-    public Boolean isVaild(LiClientManager.Client client) {
-        return column.isVaild(client);
     }
 }

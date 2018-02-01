@@ -16,7 +16,7 @@ public class LiGenericPostModelTest {
     private LiGenericPostModel liGenericPostModel;
 
     @Test
-    public void testParams(){
+    public void testParams() {
         data = new JsonObject();
         data.addProperty("test", "test value");
         liGenericPostModel = new LiGenericPostModel();

@@ -16,8 +16,6 @@ package lithium.community.android.sdk.auth;
 
 import com.google.gson.annotations.SerializedName;
 
-import lithium.community.android.sdk.utils.LiSystemClock;
-
 /**
  * Response class for LiSSOTokenRequest.
  * Created by saiteja.tokala on 12/2/16.

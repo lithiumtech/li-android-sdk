@@ -17,6 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({LiSystemClock.class, System.class})
 public class LiSystemClockTest {
     private long currentTime;
+
     @Before
     public void setUp() {
         currentTime = 1L;

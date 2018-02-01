@@ -24,12 +24,15 @@ public interface LiAuthAsyncRequestCallback<T> {
 
     /**
      * This call back is used when Async auth request is successful.
+     *
      * @param response Generic response.
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     void onSuccess(T response) throws LiRestResponseException;
+
     /**
      * This call back is used when Async auth request is not successful.
+     *
      * @param exception {@link Exception}
      */
     void onError(Exception exception);

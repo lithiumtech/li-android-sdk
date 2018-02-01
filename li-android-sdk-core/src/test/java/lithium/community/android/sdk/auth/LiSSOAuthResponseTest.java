@@ -24,6 +24,7 @@ public class LiSSOAuthResponseTest {
     public static final String TEST_AUTH_CODE = "testAuthCode";
     public static final String TEST_TENANT_ID = "testTenantId";
     private LiSSOAuthResponse liSsoAuthResponse;
+
     @Before
     public void setupRequest() throws Exception {
         // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
@@ -80,7 +81,6 @@ public class LiSSOAuthResponseTest {
         assertNotEquals(null, liSsoAuthResponse.getTenantId());
         assertEquals(TEST_TENANT_ID, liSsoAuthResponse.getTenantId());
     }
-
 
 
 }

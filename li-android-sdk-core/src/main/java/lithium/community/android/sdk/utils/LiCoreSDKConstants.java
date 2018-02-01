@@ -28,5 +28,5 @@ public class LiCoreSDKConstants {
     public static final int HTTP_CODE_UNAUTHORIZED = 401;
     public static final int HTTP_CODE_SERVER_ERROR = 500;
     public static final int HTTP_CODE_SERVICE_UNAVAILABLE = 503;
-    public static final long LI_MIN_IMAGE_SIZE_TO_COMPRESS = 1024*1024;
+    public static final long LI_MIN_IMAGE_SIZE_TO_COMPRESS = 1024 * 1024;
 }

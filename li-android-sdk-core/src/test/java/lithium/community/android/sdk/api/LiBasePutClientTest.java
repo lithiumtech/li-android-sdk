@@ -26,9 +26,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -59,9 +57,9 @@ public class LiBasePutClientTest {
     public void testBasePostClientCreation() throws LiRestResponseException {
         Assert.assertEquals(null, liClient.querySettingsType);
         Assert.assertEquals(null, liClient.type);
-        Assert.assertEquals(BASE_PATH,liClient.basePath);
-        Assert.assertEquals(LiBaseClient.RequestType.PUT,liClient.requestType);
-        Assert.assertEquals(null,liClient.getRequestBody());
+        Assert.assertEquals(BASE_PATH, liClient.basePath);
+        Assert.assertEquals(LiBaseClient.RequestType.PUT, liClient.requestType);
+        Assert.assertEquals(null, liClient.getRequestBody());
     }
 
 }

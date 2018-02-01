@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import lithium.community.android.sdk.TestHelper;
-import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;
@@ -33,17 +32,6 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({LiSDKManager.class, SharedPreferences.class})
 public class LiAuthManagerTest {
 
-    private static final String communityUrl = "http://community.lithium.com";
-    private static final String authStateJson = "{\"lastSSOAuthorizationResponse\":\"{\\\"code\\\":\\\"AuthCode\\\",\\\"proxy-host\\\":\\\"ApiProxyHost\\\",\\\"state\\\":\\\"State\\\",\\\"tenant-id\\\":\\\"TenantId\\\",\\\"user-id\\\":\\\"UserId\\\"}\",\"mLastLiTokenResponse\":\"{\\\"lithiumUserId\\\":\\\"LithiumUserId\\\",\\\"access_token\\\":\\\"ACCESSTOKEN\\\",\\\"refresh_token\\\":\\\"NewRefreshToken\\\",\\\"expires_in\\\":1,\\\"userId\\\":\\\"UserId\\\",\\\"token_type\\\":\\\"TokenTypeBearer\\\",\\\"expiresAt\\\":1001}\",\"refreshToken\":\"NewRefreshToken\"}";
-    private static final String AVATAR_IMAGE_DESC = "avatarImageDescription";
-    private static final String EMAIL = "liuser@test.com";
-    private static final String AVATAR_PROFILE = "profile";
-    private static final String AVATAR_MESSAGE = "message";
-    private static final String LOGIN = "login";
-    private static final String HREF = "href";
-    private static final String PROFILE_PAGE_URL = "profile_page_url";
-    private static final String SSO_TOKEN = "sso_token";
-
     //
     public static final String CLIENT_ID = "clientId";
     public static final String CLIENT_SECRET = "clientSecret";
@@ -59,7 +47,23 @@ public class LiAuthManagerTest {
     public static final String TENANT_ID = "TenantId";
     public static final String API_PROXY_HOST = "ApiProxyHost";
     public static final String STATE = "State";
-
+    private static final String communityUrl = "http://community.lithium.com";
+    private static final String authStateJson
+            = "{\"lastSSOAuthorizationResponse\":\"{\\\"code\\\":\\\"AuthCode\\\","
+            + "\\\"proxy-host\\\":\\\"ApiProxyHost\\\",\\\"state\\\":\\\"State\\\","
+            + "\\\"tenant-id\\\":\\\"TenantId\\\",\\\"user-id\\\":\\\"UserId\\\"}\","
+            + "\"mLastLiTokenResponse\":\"{\\\"lithiumUserId\\\":\\\"LithiumUserId\\\","
+            + "\\\"access_token\\\":\\\"ACCESSTOKEN\\\",\\\"refresh_token\\\":\\\"NewRefreshToken\\\","
+            + "\\\"expires_in\\\":1,\\\"userId\\\":\\\"UserId\\\",\\\"token_type\\\":\\\"TokenTypeBearer\\\","
+            + "\\\"expiresAt\\\":1001}\",\"refreshToken\":\"NewRefreshToken\"}";
+    private static final String AVATAR_IMAGE_DESC = "avatarImageDescription";
+    private static final String EMAIL = "liuser@test.com";
+    private static final String AVATAR_PROFILE = "profile";
+    private static final String AVATAR_MESSAGE = "message";
+    private static final String LOGIN = "login";
+    private static final String HREF = "href";
+    private static final String PROFILE_PAGE_URL = "profile_page_url";
+    private static final String SSO_TOKEN = "sso_token";
     //
     private Activity activity;
 

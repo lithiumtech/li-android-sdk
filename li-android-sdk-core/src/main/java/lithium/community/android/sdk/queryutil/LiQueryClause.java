@@ -27,7 +27,8 @@ public class LiQueryClause {
     private String value;
     private String operator;
 
-    public LiQueryClause(LiQuerySetting.LiWhereClause clause, LiQueryWhereClause.ClientWhereKeyColumn key, String value, String operator) {
+    public LiQueryClause(LiQuerySetting.LiWhereClause clause, LiQueryWhereClause.ClientWhereKeyColumn key, String value,
+            String operator) {
         this.clause = clause;
         this.key = key;
         this.value = value;
@@ -56,11 +57,6 @@ public class LiQueryClause {
 
     @Override
     public String toString() {
-        return "LiQueryClause{" +
-                "clause=" + clause +
-                ", key=" + key +
-                ", value='" + value + '\'' +
-                ", operator='" + operator + '\'' +
-                '}';
+        return "LiQueryClause{" + "clause=" + clause + ", key=" + key + ", value='" + value + '\'' + ", operator='" + operator + '\'' + '}';
     }
 }

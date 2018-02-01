@@ -90,7 +90,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getSdkSettingsClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context  the Android context (required)
          * @param clientId the client ID for the app generated in Community Admin > System > API Apps (required)
          */
 
@@ -132,7 +132,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getCategoryBoardsClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context    the Android context (required)
          * @param categoryId the ID of the category from which to fetch a board list (required)
          */
         public LiCategoryBoardsClientRequestParams(Context context, String categoryId) {
@@ -159,7 +159,8 @@ public class LiClientRequestParams {
          * Builds the parameters for {@link LiClientManager#getBoardsByDepthClient(LiClientRequestParams)}.
          *
          * @param context the Android context (required)
-         * @param depth the depth from which to pull boards from the Community structure. 0 is the highest level in the structure. (required)
+         * @param depth   the depth from which to pull boards from the Community structure. 0 is the highest level in
+         *                the structure. (required)
          */
         public LiBoardsByDepthClientRequestParams(Context context, int depth) {
             super(context);
@@ -184,7 +185,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getRepliesClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context  the Android context (required)
          * @param parentId the ID of the parent message (required)
          */
         public LiRepliesClientRequestParams(Context context, Long parentId) {
@@ -211,7 +212,8 @@ public class LiClientRequestParams {
          * Builds the parameters for {@link LiClientManager#getSearchClient(LiClientRequestParams)}.
          *
          * @param context the Android context (required)
-         * @param query the search string to query. The query is compared against the body and subject of messages. (required)
+         * @param query   the search string to query. The query is compared against the body and subject of messages.
+         *                (required)
          */
         public LiSearchClientRequestParams(Context context, String query) {
             super(context);
@@ -237,9 +239,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getUserMessagesClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context  the Android context (required)
          * @param authorId the ID of the user for whom to get messages
-         * @param depth the location of messages in a thread, where 0 equals a topic message, 1 is a first-level reply or comment, and so on (required)
+         * @param depth    the location of messages in a thread, where 0 equals a topic message, 1 is a first-level
+         *                 reply or comment, and so on (required)
          */
 
         public LiUserMessagesClientRequestParams(Context context, Long authorId, String depth) {
@@ -291,7 +294,7 @@ public class LiClientRequestParams {
          * Builds the parameters for {@link LiClientManager#getUserDetailsClient(LiClientRequestParams)}.
          *
          * @param context the Android context (required)
-         * @param userId the ID of the user for which to fetch details (required)
+         * @param userId  the ID of the user for which to fetch details (required)
          */
         public LiUserDetailsClientRequestParams(Context context, String userId) {
             super(context);
@@ -316,7 +319,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMessageClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to retrieve (required)
          */
         public LiMessageClientRequestParams(Context context, Long messageId) {
@@ -345,7 +348,9 @@ public class LiClientRequestParams {
          *
          * @param context the Android context
          * @param boardId the ID of the board from which to pull floated (or 'pinned') messages
-         * @param scope the scope of floated messages to retreive. Supported value is 'local'. Local scope retrieves messages that the user in context floated/pinned, rather than an administrator who might have pinned a message to the top of a board globally for the community.
+         * @param scope   the scope of floated messages to retreive. Supported value is 'local'. Local scope
+         *                retrieves messages that the user in context floated/pinned, rather than an administrator
+         *                who might have pinned a message to the top of a board globally for the community.
          */
         public LiFloatedMessagesClientRequestParams(Context context, String boardId, String scope) {
             super(context);
@@ -380,7 +385,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMessagesByIdsClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context    the Android context (required)
          * @param messageIds - the IDs of the messages to retrieve, passed as a set (required)
          */
         public LiMessagesByIdsClientRequestParams(Context context, Set<String> messageIds) {
@@ -404,9 +409,9 @@ public class LiClientRequestParams {
         private String messageId;
 
         /**
-         *  Builds the parameters for {@link LiClientManager#getKudoClient(LiClientRequestParams)}.
+         * Builds the parameters for {@link LiClientManager#getKudoClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to kudo (required)
          */
         public LiKudoClientRequestParams(Context context, String messageId) {
@@ -430,9 +435,9 @@ public class LiClientRequestParams {
         private String messageId;
 
         /**
-         *  Builds the parameters for {@link LiClientManager#getUnKudoClient(LiClientRequestParams)}.
+         * Builds the parameters for {@link LiClientManager#getUnKudoClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to unkudo (required)
          */
         public LiUnKudoClientRequestParams(Context context, String messageId) {
@@ -460,7 +465,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMessageDeleteClient}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to delete (required)
          */
         public LiMessageDeleteClientRequestParams(Context context, String messageId) {
@@ -472,8 +477,8 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMessageDeleteClient}.
          *
-         * @param context the Android context (required)
-         * @param messageId the ID of the message to delete (required)
+         * @param context        the Android context (required)
+         * @param messageId      the ID of the message to delete (required)
          * @param includeReplies whether or not to delete associated replies/comments (optional)
          */
         public LiMessageDeleteClientRequestParams(Context context, String messageId, boolean includeReplies) {
@@ -509,7 +514,7 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getAcceptSolutionClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to accept as a solution (required)
          */
         public LiAcceptSolutionClientRequestParams(Context context, Long messageId) {
@@ -539,14 +544,15 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getCreateMessageClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param subject the subject of the message (required)
-         * @param body the body of the message (optional)
-         * @param boardId the board ID of the board in which to post the message (required)
-         * @param imageId the ID of the image included with the message, if one exists (optional)
+         * @param context   the Android context (required)
+         * @param subject   the subject of the message (required)
+         * @param body      the body of the message (optional)
+         * @param boardId   the board ID of the board in which to post the message (required)
+         * @param imageId   the ID of the image included with the message, if one exists (optional)
          * @param imageName the file of the image included with the message, if one exists (optional)
          */
-        public LiCreateMessageClientRequestParams(Context context, String subject, String body, String boardId, String imageId, String imageName) {
+        public LiCreateMessageClientRequestParams(Context context, String subject, String body, String boardId,
+                String imageId, String imageName) {
             super(context);
             this.subject = subject;
             this.body = body;
@@ -612,12 +618,12 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getUpdateMessageClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to update (optional)
-         * @param subject the subject of the message (optional)
-         * @param body the body of the message (optional)
+         * @param subject   the subject of the message (optional)
+         * @param body      the body of the message (optional)
          */
-        public LiUpdateMessageClientRequestParams(Context context, String messageId, String subject, String body){
+        public LiUpdateMessageClientRequestParams(Context context, String messageId, String subject, String body) {
             super(context);
             this.messageId = messageId;
             this.body = body;
@@ -625,29 +631,29 @@ public class LiClientRequestParams {
             this.client = LiClientManager.Client.LI_UPDATE_MESSAGE_CLIENT;
         }
 
-        public String getMessageId(){
+        public String getMessageId() {
             return messageId;
         }
 
-        public LiUpdateMessageClientRequestParams setMessageId(String messageId){
+        public LiUpdateMessageClientRequestParams setMessageId(String messageId) {
             this.messageId = messageId;
             return this;
         }
 
-        public String getBody(){
+        public String getBody() {
             return body;
         }
 
-        public LiUpdateMessageClientRequestParams setBody(String body){
+        public LiUpdateMessageClientRequestParams setBody(String body) {
             this.body = body;
             return this;
         }
 
-        public String getSubject(){
+        public String getSubject() {
             return subject;
         }
 
-        public LiUpdateMessageClientRequestParams setSubject(String subject){
+        public LiUpdateMessageClientRequestParams setSubject(String subject) {
             this.subject = subject;
             return this;
         }
@@ -664,13 +670,14 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getCreateReplyClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param body the body of the reply/comment (optional)
+         * @param context   the Android context (required)
+         * @param body      the body of the reply/comment (optional)
          * @param messageId the ID of the parent message (required)
-         * @param imageId the ID of the image included with the reply/comment, if one exists (optional)
+         * @param imageId   the ID of the image included with the reply/comment, if one exists (optional)
          * @param imageName the filename of the image included with the reply/comment, if one exists (optional)
          */
-        public LiCreateReplyClientRequestParams(Context context, String subject, String body, Long messageId, String imageId, String imageName) {
+        public LiCreateReplyClientRequestParams(Context context, String subject, String body, Long messageId,
+                String imageId, String imageName) {
             super(context);
             this.subject = subject;
             this.body = body;
@@ -736,13 +743,14 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getUploadImageClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param title the title of the image (required)
+         * @param context     the Android context (required)
+         * @param title       the title of the image (required)
          * @param description the description for the image (required)
-         * @param imageName the filename of the image (required)
-         * @param path the path to the image (required)
+         * @param imageName   the filename of the image (required)
+         * @param path        the path to the image (required)
          */
-        public LiUploadImageClientRequestParams(Context context, String title, String description, String imageName, String path) {
+        public LiUploadImageClientRequestParams(Context context, String title, String description, String imageName,
+                String path) {
             super(context);
             this.title = title;
             this.description = description;
@@ -798,10 +806,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getReportAbuseClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context   the Android context (required)
          * @param messageId the ID of the message to report (required)
-         * @param userId the ID of the user making the abuse report (required)
-         * @param body the body of the message being reported (required)
+         * @param userId    the ID of the user making the abuse report (required)
+         * @param body      the body of the message being reported (required)
          */
         public LiReportAbuseClientRequestParams(Context context, String messageId, String userId, String body) {
             super(context);
@@ -847,9 +855,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getDeviceIdFetchClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param deviceId the device ID registered with the push notificaiton provider (required)
-         * @param pushNotificationProvider the Global provider for push notification. Support values: "GCM" and "FIREBASE" (required)
+         * @param context                  the Android context (required)
+         * @param deviceId                 the device ID registered with the push notificaiton provider (required)
+         * @param pushNotificationProvider the Global provider for push notification. Support values: "GCM" and
+         *                                 "FIREBASE" (required)
          */
         public LiDeviceIdFetchClientRequestParams(Context context, String deviceId, String pushNotificationProvider) {
             super(context);
@@ -885,9 +894,9 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getDeviceIdUpdateClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context  the Android context (required)
          * @param deviceId the device ID registered with the push notification provider (required)
-         * @param id the ID corresponding to device ID in the community (required)
+         * @param id       the ID corresponding to device ID in the community (required)
          */
         public LiDeviceIdUpdateClientRequestParams(Context context, String deviceId, String id) {
             super(context);
@@ -921,22 +930,24 @@ public class LiClientRequestParams {
         private LiBaseModel target;
         private String targetId;
         private String targetType;
+
         /**
          * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
          *
          * @param context the Android context (required)
-         * @param target the ID of the target of the subscription, either a message ID or a board ID (required)
+         * @param target  the ID of the target of the subscription, either a message ID or a board ID (required)
          */
         public LiPostSubscriptionParams(Context context, LiBaseModel target) {
             super(context);
             this.target = target;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
+
         /**
          * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param targetId the ID of the target of the subscription, either a message ID or a board ID (required)
+         * @param context    the Android context (required)
+         * @param targetId   the ID of the target of the subscription, either a message ID or a board ID (required)
          * @param targetType the type of the target of the subscription, either a "message" or a "board" (required)
          */
         public LiPostSubscriptionParams(Context context, String targetId, String targetType) {
@@ -944,9 +955,11 @@ public class LiClientRequestParams {
             this.target = target;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
+
         public LiBaseModel getTarget() {
             return target;
         }
+
         public String getTargetId() {
             return targetId;
         }
@@ -966,9 +979,9 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMarkMessagePostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param userId the ID of the user marking the message as read or unread (required)
-         * @param messageId the ID of the message being marked read or unread (required)
+         * @param context    the Android context (required)
+         * @param userId     the ID of the user marking the message as read or unread (required)
+         * @param messageId  the ID of the message being marked read or unread (required)
          * @param markUnread pass 'true' to mark the message as unread, pass 'false' to mark as read (required)
          */
         public LiMarkMessageParams(Context context, String userId, String messageId, boolean markUnread) {
@@ -1002,8 +1015,8 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMarkMessagesPostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param userId the ID of the user marking the messages as read or unread (required)
+         * @param context    the Android context (required)
+         * @param userId     the ID of the user marking the messages as read or unread (required)
          * @param messageIds the IDs of the messages being marked. Pass in a comma-separated list (required)
          * @param markUnread pass 'true' to mark the messages as unread, pass 'false' to mark as read (required)
          */
@@ -1038,10 +1051,11 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getMarkTopicPostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param userId the ID of the user marking the messages as read or unread (required)
-         * @param topicId the ID of the topic being marked (required)
-         * @param markUnread pass 'true' to mark the topic message and all of its replies/comments as unread, pass 'false' to mark as read (required)
+         * @param context    the Android context (required)
+         * @param userId     the ID of the user marking the messages as read or unread (required)
+         * @param topicId    the ID of the topic being marked (required)
+         * @param markUnread pass 'true' to mark the topic message and all of its replies/comments as unread, pass
+         *                   'false' to mark as read (required)
          */
         public LiMarkTopicParams(Context context, String userId, String topicId, boolean markUnread) {
             super(context);
@@ -1074,6 +1088,7 @@ public class LiClientRequestParams {
             this.subscriptionId = subscriptionId;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_DELETE_CLIENT;
         }
+
         public String getSubscriptionId() {
             return subscriptionId;
         }
@@ -1097,8 +1112,8 @@ public class LiClientRequestParams {
          * Builds the parameters for {@link LiClientManager#getCreateUserClient(LiClientRequestParams)}.
          *
          * @param context the Android context (required)
-         * @param email the email address of the user being created (required)
-         * @param login the login of the user being created (required)
+         * @param email   the email address of the user being created (required)
+         * @param login   the login of the user being created (required)
          */
         public LiCreateUserParams(Context context, String email, String login) {
             super(context);
@@ -1111,33 +1126,13 @@ public class LiClientRequestParams {
             return biography;
         }
 
-        public String getCoverImage() {
-            return coverImage;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
         public LiCreateUserParams setBiography(String biography) {
             this.biography = biography;
             return this;
+        }
+
+        public String getCoverImage() {
+            return coverImage;
         }
 
         public LiCreateUserParams setCoverImage(String coverImage) {
@@ -1145,9 +1140,17 @@ public class LiClientRequestParams {
             return this;
         }
 
+        public String getEmail() {
+            return email;
+        }
+
         public LiCreateUserParams setEmail(String email) {
             this.email = email;
             return this;
+        }
+
+        public String getFirstName() {
+            return firstName;
         }
 
         public LiCreateUserParams setFirstName(String firstName) {
@@ -1155,9 +1158,17 @@ public class LiClientRequestParams {
             return this;
         }
 
+        public String getLastName() {
+            return lastName;
+        }
+
         public LiCreateUserParams setLastName(String lastName) {
             this.lastName = lastName;
             return this;
+        }
+
+        public String getLogin() {
+            return login;
         }
 
         public LiCreateUserParams setLogin(String login) {
@@ -1165,10 +1176,15 @@ public class LiClientRequestParams {
             return this;
         }
 
+        public String getPassword() {
+            return password;
+        }
+
         public LiCreateUserParams setPassword(String password) {
             this.password = password;
             return this;
         }
+
         public String getAvatarUrl() {
             return avatarUrl;
         }
@@ -1234,24 +1250,54 @@ public class LiClientRequestParams {
             return biography;
         }
 
+        public LiUpdateUserParams setBiography(String biography) {
+            this.biography = biography;
+            return this;
+        }
+
         public String getCoverImage() {
             return coverImage;
+        }
+
+        public LiUpdateUserParams setCoverImage(String coverImage) {
+            this.coverImage = coverImage;
+            return this;
         }
 
         public String getEmail() {
             return email;
         }
 
+        public LiUpdateUserParams setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
         public String getFirstName() {
             return firstName;
+        }
+
+        public LiUpdateUserParams setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
         }
 
         public String getLastName() {
             return lastName;
         }
 
+        public LiUpdateUserParams setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
         public String getLogin() {
             return login;
+        }
+
+        public LiUpdateUserParams setLogin(String login) {
+            this.login = login;
+            return this;
         }
 
         public String getId() {
@@ -1263,35 +1309,6 @@ public class LiClientRequestParams {
             return this;
         }
 
-        public LiUpdateUserParams setBiography(String biography) {
-            this.biography = biography;
-            return this;
-        }
-
-        public LiUpdateUserParams setCoverImage(String coverImage) {
-            this.coverImage = coverImage;
-            return this;
-        }
-
-        public LiUpdateUserParams setEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public LiUpdateUserParams setFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public LiUpdateUserParams setLastName(String lastName) {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public LiUpdateUserParams setLogin(String login) {
-            this.login = login;
-            return this;
-        }
         public String getAvatarUrl() {
             return avatarUrl;
         }
@@ -1335,6 +1352,7 @@ public class LiClientRequestParams {
 
         /**
          * Builds the params for {@link LiClientManager#getBeaconClient(LiClientRequestParams)}
+         *
          * @param context Android context
          */
         public LiBeaconPostClientRequestParams(Context context) {
@@ -1343,6 +1361,7 @@ public class LiClientRequestParams {
             this.targetId = targetId;
             this.targetType = targetType;
         }
+
         public String getTargetType() {
             return targetType;
         }
@@ -1371,11 +1390,14 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context
-         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param context     the Android context
+         * @param path        the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI.
+         *                    This first portion of the URL is generated automatically for you. For example, for the
+         *                    endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
-        public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody, Map<String, String> additionalHttpHeaders) {
+        public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody,
+                Map<String, String> additionalHttpHeaders) {
             super(context);
             this.path = path;
             this.requestBody = requestBody;
@@ -1386,8 +1408,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPostClient(LiClientRequestParams)}.
          *
-         * @param context the Android context
-         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param context     the Android context
+         * @param path        the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI.
+         *                    This first portion of the URL is generated automatically for you. For example, for the
+         *                    endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
         public LiGenericPostClientRequestParams(Context context, String path, JsonElement requestBody) {
@@ -1414,6 +1438,7 @@ public class LiClientRequestParams {
             this.requestBody = requestBody;
             return this;
         }
+
         public Map<String, String> getAdditionalHttpHeaders() {
             return additionalHttpHeaders;
         }
@@ -1433,8 +1458,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPutClient(LiClientRequestParams)}.
          *
-         * @param context the Android context
-         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param context     the Android context
+         * @param path        the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI.
+         *                    This first portion of the URL is generated automatically for you. For example, for the
+         *                    endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
         public LiGenericPutClientRequestParams(Context context, String path, JsonObject requestBody) {
@@ -1447,11 +1474,14 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericPutClient(LiClientRequestParams)}.
          *
-         * @param context the Android context
-         * @param path the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI. This first portion of the URL is generated automatically for you. For example, for the endpoint /community/2.0/<tenant_id>/messages, pass "messages"
+         * @param context     the Android context
+         * @param path        the endpoint path. Begin path after the /community/2.0/<tenant_ID>/ portion of the URI.
+         *                    This first portion of the URL is generated automatically for you. For example, for the
+         *                    endpoint /community/2.0/<tenant_id>/messages, pass "messages"
          * @param requestBody a {@link JsonObject} representing the request body
          */
-        public LiGenericPutClientRequestParams(Context context, String path, JsonObject requestBody, Map<String, String> additionalHttpHeaders) {
+        public LiGenericPutClientRequestParams(Context context, String path, JsonObject requestBody,
+                Map<String, String> additionalHttpHeaders) {
             super(context);
             this.path = path;
             this.requestBody = requestBody;
@@ -1477,6 +1507,7 @@ public class LiClientRequestParams {
             this.requestBody = requestBody;
             return this;
         }
+
         public Map<String, String> getAdditionalHttpHeaders() {
             return additionalHttpHeaders;
         }
@@ -1486,6 +1517,7 @@ public class LiClientRequestParams {
             return this;
         }
     }
+
     //Request params class for LiGenericLiqlClient
     public static class LiGenericLiqlClientRequestParams extends LiClientRequestParams {
         private String liQuery;
@@ -1520,9 +1552,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericLiqlGetClient(LiClientRequestParams)}.
          *
-         * @param context the Android context
+         * @param context     the Android context
          * @param queryParams request query params for e.g. "method=post&board.id=someBoard"
-         * @param pathParam path param other than "search" for e.g. "allowed" to check if certain action is allowed on a resource or not
+         * @param pathParam   path param other than "search" for e.g. "allowed" to check if certain action is allowed
+         *                    on a resource or not
          */
         public LiGenericNoLiqlClientRequestParams(Context context, String queryParams, String pathParam) {
             super(context);
@@ -1534,14 +1567,16 @@ public class LiClientRequestParams {
         public String getQueryParams() {
             return queryParams;
         }
-        public String getPathParam() {
-            return pathParam;
-        }
 
         public LiGenericNoLiqlClientRequestParams setQueryParams(String queryParams) {
             this.queryParams = queryParams;
             return this;
         }
+
+        public String getPathParam() {
+            return pathParam;
+        }
+
         public LiGenericNoLiqlClientRequestParams setPathParam(String pathParam) {
             this.pathParam = pathParam;
             return this;
@@ -1555,8 +1590,10 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericQueryParamsGetClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
-         * @param liQueryRequestParams the customized WHERE, ORDER-BY, and LIMIT definitions for the API provider. Build 'liQueryRequestParams' with {@link LiQueryRequestParams#getBuilder()}. (required)
+         * @param context              the Android context (required)
+         * @param liQueryRequestParams the customized WHERE, ORDER-BY, and LIMIT definitions for the API provider.
+         *                             Build 'liQueryRequestParams' with {@link LiQueryRequestParams#getBuilder()}.
+         *                             (required)
          */
         public LiGenericQueryParamsClientRequestParams(Context context, LiQueryRequestParams liQueryRequestParams) {
             super(context);
@@ -1568,7 +1605,8 @@ public class LiClientRequestParams {
             return liQueryRequestParams;
         }
 
-        public LiGenericQueryParamsClientRequestParams setLiQueryRequestParams(LiQueryRequestParams liQueryRequestParams) {
+        public LiGenericQueryParamsClientRequestParams setLiQueryRequestParams(
+                LiQueryRequestParams liQueryRequestParams) {
             this.liQueryRequestParams = liQueryRequestParams;
             return this;
         }
@@ -1585,28 +1623,32 @@ public class LiClientRequestParams {
         /**
          * Builds the parameters for {@link LiClientManager#getGenericQueryDeleteClient(LiClientRequestParams)}.
          *
-         * @param context the Android context (required)
+         * @param context         the Android context (required)
          * @param collectionsType the collection type of the item being deleted (required)
-         * @param id the ID of the item being deleted (required)
+         * @param id              the ID of the item being deleted (required)
          */
-        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType,
+                String id) {
             super(context);
             this.id = id;
             this.collectionsType = collectionsType;
             this.client = LiClientManager.Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT;
         }
 
-        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, Map<String, String> liQueryRequestParams) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType,
+                String id, Map<String, String> liQueryRequestParams) {
             this(context, collectionsType, id);
             this.liQueryRequestParams = liQueryRequestParams;
         }
 
-        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType,
+                String id, String subResourcePath) {
             this(context, collectionsType, id);
             this.subResourcePath = subResourcePath;
         }
 
-        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType, String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
+        public LiGenericDeleteClientRequestParams(Context context, LiClientManager.CollectionsType collectionsType,
+                String id, String subResourcePath, Map<String, String> liQueryRequestParams) {
             this(context, collectionsType, id, liQueryRequestParams);
             this.subResourcePath = subResourcePath;
         }

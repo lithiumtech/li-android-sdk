@@ -37,23 +37,23 @@ public interface LiClient {
     public void processAsync(LiAsyncRequestCallback callback) throws LiRestResponseException;
 
     /**
+     * Method to make client request to upload an image in a  async call
+     *
+     * @param callback  {@link LiAsyncRequestCallback}
+     * @param imageName This is name of the image file.
+     * @param imagePath This is absolute path of image.
+     *                  Note: the imageName and the filename in the absolute path param above must be equal.
+     * @throws LiRestResponseException
+     */
+    public void processAsync(LiAsyncRequestCallback callback, String imagePath, String imageName) throws LiRestResponseException;
+
+    /**
      * Method to make client request a sync call
      *
      * @return LiBaseResponse This is OkHttp reponse wrapped into LiBaseResponse.
      * @throws LiRestResponseException
      */
     public LiClientResponse processSync() throws LiRestResponseException;
-
-    /**
-     * Method to make client request to upload an image in a  async call
-     *
-     * @param callback {@link LiAsyncRequestCallback}
-     * @param imageName This is name of the image file.
-     * @param imagePath This is absolute path of image.
-     * Note: the imageName and the filename in the absolute path param above must be equal.
-     * @throws LiRestResponseException
-     */
-    public void processAsync(LiAsyncRequestCallback callback, String imagePath, String imageName) throws LiRestResponseException;
 
     /**
      * Method to return {@link lithium.community.android.sdk.rest.LiRestClient#gson}
@@ -78,6 +78,7 @@ public interface LiClient {
 
     /**
      * Method to set Ordering in LIQL where clause.
+     *
      * @param liQueryOrdering {@link LiQueryOrdering}
      */
     public LiClient setOrdering(LiQueryOrdering liQueryOrdering);

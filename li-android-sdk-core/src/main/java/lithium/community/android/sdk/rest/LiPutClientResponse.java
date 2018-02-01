@@ -44,7 +44,7 @@ public class LiPutClientResponse implements LiClientResponse<LiBaseResponse> {
     }
 
     @Override
-    public JsonObject getJsonObject(){
+    public JsonObject getJsonObject() {
         return liBaseResponse.getData();
     }
 }

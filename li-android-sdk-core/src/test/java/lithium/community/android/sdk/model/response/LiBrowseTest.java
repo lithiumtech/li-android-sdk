@@ -16,17 +16,19 @@ public class LiBrowseTest {
     private LiBrowse liBrowse = new LiBrowse();
 
     @Test
-    public void getId(){
+    public void getId() {
         liBrowse.setId(id);
         assertEquals(id, liBrowse.getId());
     }
+
     @Test
-    public void getTitle(){
+    public void getTitle() {
         liBrowse.setTitle(title);
         assertEquals(title, liBrowse.getTitle());
     }
+
     @Test
-    public void getParent(){
+    public void getParent() {
         liParent.setId("99");
         liBrowse.setParent(liParent);
         assertEquals("99", liBrowse.getParent().getId());

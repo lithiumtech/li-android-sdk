@@ -6,9 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /**
  * Created by kunal.shrivastava on 12/8/16.
  */
@@ -19,7 +16,7 @@ public class LiBaseResponseTest {
     private LiBaseResponse liBaseResponse;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         liBaseResponse = new LiBaseResponse();
     }
 

@@ -24,7 +24,8 @@ import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 
 /**
- * All "post" clients are implemented in same way. They only vary in their requestBody. This class brings all the common codes together
+ * All "post" clients are implemented in same way. They only vary in their requestBody. This class brings all the
+ * common codes together
  * and provide a layer of abstraction to all of the "post" clients.
  * Created by kunal.shrivastava on 10/19/16.
  */
@@ -33,6 +34,7 @@ public class LiBasePostClient extends LiBaseClient {
     public LiPostModel postModel;
     private String requestBody;
     private Map<String, String> additionalHttpHeaders;
+
     /**
      * Constructor used for normal POST call.
      *
@@ -49,7 +51,8 @@ public class LiBasePostClient extends LiBaseClient {
      * @param basePath Api end point.
      * @throws LiRestResponseException
      */
-    public LiBasePostClient(Context context, String basePath, Map<String, String> additionalHttpHeaders) throws LiRestResponseException {
+    public LiBasePostClient(Context context, String basePath,
+            Map<String, String> additionalHttpHeaders) throws LiRestResponseException {
         super(context, basePath, RequestType.POST);
         this.additionalHttpHeaders = additionalHttpHeaders;
     }
@@ -62,7 +65,8 @@ public class LiBasePostClient extends LiBaseClient {
      * @param imageName Name of the image file.
      * @throws LiRestResponseException
      */
-    public LiBasePostClient(Context context, String basePath, String imagePath, String imageName) throws LiRestResponseException {
+    public LiBasePostClient(Context context, String basePath, String imagePath,
+            String imageName) throws LiRestResponseException {
         super(context, basePath, RequestType.POST, imagePath, imageName);
     }
 
@@ -72,7 +76,8 @@ public class LiBasePostClient extends LiBaseClient {
     @Override
     public void setLiRestV2Request() {
         this.requestBody = postModel.toJsonString();
-        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.POST, requestBody, additionalHttpHeaders);
+        this.liRestV2Request = new LiRestV2Request(context, LiBaseRestRequest.RestMethod.POST, requestBody,
+                additionalHttpHeaders);
     }
 
     @Override

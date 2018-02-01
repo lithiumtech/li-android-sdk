@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class LiSDKErrorCodesTest {
 
     @Test
-    public void codesTest(){
+    public void codesTest() {
         assertEquals(100, LiSDKErrorCodes.NETWORK_ERROR);
         assertEquals(101, LiSDKErrorCodes.JSON_SERIALIZATION_ERROR);
         assertEquals(102, LiSDKErrorCodes.ILLEGAL_ARG_ERROR);

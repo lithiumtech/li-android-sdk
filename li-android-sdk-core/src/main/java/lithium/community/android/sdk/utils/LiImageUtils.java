@@ -20,7 +20,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -33,23 +32,21 @@ import lithium.community.android.sdk.manager.LiSDKManager;
 public class LiImageUtils {
     /**
      * Util function for compressing image.
+     *
      * @param filePath
      * @param fileName
-     * @param {@link Context}
+     * @param context  {@link Context} The Android context.
      * @return Absolute Path of compressed image.
      */
-    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality){
+    public static File compressImage(String filePath, String fileName, Context context, int reqWidth, int reqHeight, int imageQuality) {
 
         File originalFile = new File(filePath);
         Log.i("Original Image: ", originalFile.length() + "");
 
         Bitmap compressedBitmap = getCompressedBitmap(filePath, reqWidth, reqHeight);
 
-        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) +
-                File.separator +
-                LiSDKManager.getInstance().getLiAppCredentials().getTenantId() +
-                "-community" +
-                File.separator;
+        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) + File.separator
+                + LiSDKManager.getInstance().getLiAppCredentials().getTenantId() + "-community" + File.separator;
         final File communityRoot = new File(fileDirectory);
         communityRoot.mkdirs();
         File compressedFile = new File(fileDirectory + "/" + fileName);
@@ -58,8 +55,7 @@ public class LiImageUtils {
             out = new FileOutputStream(compressedFile);
             if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
                 compressedBitmap.compress(Bitmap.CompressFormat.JPEG, imageQuality, out);
-            }
-            else if (fileName.endsWith(".png")) {
+            } else if (fileName.endsWith(".png")) {
                 compressedBitmap.compress(Bitmap.CompressFormat.PNG, imageQuality, out);
             }
             Log.i("compressed Image: ", compressedFile.length() + "");
