@@ -15,9 +15,11 @@ def localReleaseDest = "${buildDir}/release/${version}"
 def repositoryName = 'li-android-sdk'
 
 android {
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
@@ -27,6 +29,7 @@ android {
         versionCode 3
         versionName "${version}"
     }
+
     buildTypes {
         buildTypes.each {
             it.resValue "string", "li_sdk_core_version", "${version}"
@@ -43,25 +46,23 @@ android {
             testCoverageEnabled false
         }
     }
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
-
 }
 
 unMock {
-    // URI to download the android-all.jar from. e.g. https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/
-//    downloadFrom 'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/4.3_r2-robolectric-0/android-all-4.3_r2-robolectric-0.jar'
-
     keep "android.widget.BaseAdapter"
     keep "android.widget.ArrayAdapter"
     keep "android.os.Bundle"
-    keepStartingWith "android.database.MatrixCursor"
     keep "android.database.AbstractCursor"
     keep "android.database.CrossProcessCursor"
+    keep "android.location.Location"
+    keep "android.net.Uri"
+    keepStartingWith "android.database.MatrixCursor"
     keepStartingWith "android.text.TextUtils"
-
     keepStartingWith "android.util."
     keepStartingWith "android.text."
     keepStartingWith "android.content.ContentValues"
@@ -71,48 +72,31 @@ unMock {
     keepStartingWith "android.content.ContentProviderResult"
     keepStartingWith "android.content.UriMatcher"
     keepStartingWith "android.content.Intent"
-    keep "android.location.Location"
     keepStartingWith "android.content.res.Configuration"
     keepStartingWith "org."
     keepStartingWith "libcore."
     keepStartingWith "com.android.internal.R"
     keepStartingWith "com.android.internal.util."
-    keep "android.net.Uri"
-
     keepAndRename "java.nio.charset.Charsets" to "xjava.nio.charset.Charsets"
 }
+
 dependencies {
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.firebase:firebase-messaging:11.0.2'
 
-
     // Dependencies for local unit tests
+    testCompile 'junit:junit:4.12'
     testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1.2'
     testCompile 'com.squareup.assertj:assertj-android:1.1.1'
-
-
-    // Android Testing Support Library's runner and rules
-    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
-    androidTestCompile "com.android.support.test:rules:$rootProject.ext.rulesVersion"
-    testCompile "org.jacoco:org.jacoco.agent:0.7.7.201606060606"
-}
-
-configurations {
-    all {
-        resolutionStrategy {
-            force "org.jacoco:org.jacoco.agent:0.7.7.201606060606"
-        }
-    }
 }
 
 preBuild.dependsOn('checkstyle')
@@ -186,6 +170,7 @@ artifacts {
 
 def siteUrl = 'https://github.com/lithiumtech/li-android-sdk-core'      // Homepage URL of the library
 def gitUrl = 'https://github.com/lithiumtech/li-android-sdk-core.git'   // Git repository URL
+
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
@@ -204,6 +189,7 @@ install {
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
+
                 scm {
                     connection gitUrl
                     developerConnection gitUrl
