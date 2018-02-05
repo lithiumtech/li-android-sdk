@@ -33,6 +33,27 @@ allprojects {
         }
     }
 
+    // All SDK, tools and dependency versions
+    project.ext {
+        // Sdk and tools
+        minSdkVersion = 19
+        targetSdkVersion = 27
+        compileSdkVersion = 27
+        buildToolsVersion = '27.0.3'
+
+        // App dependencies
+        supportLibraryVersion = '27.0.2'
+        gsonVersion = '2.8.0'
+        okhttpVersion = '3.4.1'
+        firebaseMessagingVersion = '11.8.0'
+
+        // Test dependencies
+        junitVersion = '4.12'
+        mockitoVersion = '1.10.19'
+        powerMockito = '1.6.2'
+        assertjAndroidVersion = '1.1.1'
+    }
+
     task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile rootProject.file('configs/style-checks.xml')
@@ -51,19 +72,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-// All SDK, tools and dependency versions
-ext {
-    // Sdk and tools
-    // minSdkVersion = 10
-    // targetSdkVersion = 22
-    // compileSdkVersion = 23
-    // buildToolsVersion = '23.0.3'
-
-    // App dependencies
-    supportLibraryVersion = '23.4.0'
-    junitVersion = '4.12'
-    mockitoVersion = '1.10.19'
-    powerMockito = '1.6.2'
 }

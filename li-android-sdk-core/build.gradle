@@ -1,18 +1,27 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'de.mobilej.unmock'
-apply plugin: 'jacoco'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'checkstyle'
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-group = 'lithium.community.android.sdk'
-version = '1.2.5'
-def artifactId = 'li-android-sdk-core'
-def localReleaseDest = "${buildDir}/release/${version}"
-def repositoryName = 'li-android-sdk'
+project.ext.set('groupId', 'lithium.community.android.sdk')
+project.ext.set('artifactId', 'li-android-sdk-core')
+
+project.ext.set('versionCode', 120500)
+project.ext.set('versionName', '1.2.5')
+
+project.ext.set('repositoryName', 'li-android-sdk')
+project.ext.set('localReleaseDest', "${buildDir}/release/${project.ext.versionName}")
+
+project.ext.set('siteUrl', 'https://github.com/lithiumtech/li-android-sdk-core')
+project.ext.set('gitUrl', 'https://github.com/lithiumtech/li-android-sdk-core.git')
+
+version = project.ext.versionName
+group = project.ext.groupId
 
 android {
 
@@ -20,20 +29,20 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 25
-        versionCode 3
-        versionName "${version}"
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
     }
 
     buildTypes {
         buildTypes.each {
-            it.resValue "string", "li_sdk_core_version", "${version}"
-            it.buildConfigField "String", "li_sdk_core_version", "\"${version}\""
+            it.resValue "string", "li_sdk_core_version", "${project.ext.versionName}"
+            it.buildConfigField "String", "li_sdk_core_version", "\"${project.ext.versionName}\""
         }
 
         debug {
@@ -84,19 +93,21 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.google.firebase:firebase-messaging:11.0.2'
+    compile "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    /* support v4 added to avoid miss matches from firebase-messaging:11.8.0 dependencies */
+    compile "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+    compile "com.google.code.gson:gson:$project.ext.gsonVersion"
+    compile "com.squareup.okhttp3:okhttp:$project.ext.okhttpVersion"
+    compile "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
 
     // Dependencies for local unit tests
     testCompile 'junit:junit:4.12'
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
-    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
-    testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
-    testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
-    testCompile 'com.squareup.assertj:assertj-android:1.1.1'
+    testCompile "junit:junit:$project.ext.junitVersion"
+    testCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
+    testCompile "org.mockito:mockito-all:$project.ext.mockitoVersion"
+    testCompile "org.powermock:powermock-module-junit4:$project.ext.powerMockito"
+    testCompile "org.powermock:powermock-api-mockito:$project.ext.powerMockito"
+    testCompile "com.squareup.assertj:assertj-android:$project.ext.assertjAndroidVersion"
 }
 
 preBuild.dependsOn('checkstyle')
@@ -140,23 +151,23 @@ task uploadLocalArchives(type: Upload) {
 
 uploadArchives {
     repositories.mavenDeployer {
-        pom.groupId = "lithium.community.android.sdk"
-        pom.artifactId = "li-android-sdk-core"
-        pom.version = "1.2.5"
+        pom.groupId = project.ext.groupId
+        pom.artifactId = project.ext.artifactId
+        pom.version = project.ext.versionName
         // Add other pom properties here if you want (developer details / licenses)
-        repository(url: "file://${localReleaseDest}")
+        repository(url: "file://${project.ext.localReleaseDest}")
     }
 }
 
 task zipRelease(type: Zip) {
-    from localReleaseDest
+    from project.ext.localReleaseDest
     destinationDir buildDir
-    archiveName "${artifactId}-${version}.zip"
+    archiveName "${project.ext.artifactId}-${project.ext.versionName}.zip"
 }
 
 task generateRelease << {
-    println "Release ${version} can be found at ${localReleaseDest}/"
-    println "Release ${version} zipped can be found ${buildDir}/release-${version}.zip"
+    println "Release ${project.ext.versionName} can be found at ${project.ext.localReleaseDest}/"
+    println "Release ${project.ext.versionName} zipped can be found ${buildDir}/release-${project.ext.versionName}.zip"
 }
 
 generateRelease.dependsOn(uploadArchives)
@@ -168,9 +179,6 @@ artifacts {
     archives androidJavadocsJar
 }
 
-def siteUrl = 'https://github.com/lithiumtech/li-android-sdk-core'      // Homepage URL of the library
-def gitUrl = 'https://github.com/lithiumtech/li-android-sdk-core.git'   // Git repository URL
-
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
@@ -179,8 +187,8 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'li-android-sdk-core'
-                url siteUrl
+                name project.ext.artifactId
+                url project.ext.siteUrl
 
                 // Set your license
                 licenses {
@@ -191,9 +199,9 @@ install {
                 }
 
                 scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
+                    connection project.ext.gitUrl
+                    developerConnection project.ext.gitUrl
+                    url project.ext.siteUrl
                 }
             }
         }
@@ -205,10 +213,10 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = "${repositoryName}"
-        name = "${artifactId}"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
+        repo = project.ext.repositoryName
+        name = project.ext.artifactId
+        websiteUrl = project.ext.siteUrl
+        vcsUrl = project.ext.gitUrl
         licenses = ["Apache-2.0"]
         publish = true
     }
