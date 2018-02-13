@@ -17,6 +17,7 @@
 package lithium.community.android.sdk.queryutil;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.NoSuchPropertyException;
 
 import com.google.gson.JsonObject;
@@ -82,10 +83,9 @@ public class LiDefaultQueryHelper {
 
         try {
             // Parse the data into jsonobject to get original data in form of json.
-            defaultQuerySettingsJson = new JsonParser()
-                    .parse(defaultJsonString).getAsJsonObject();
+            defaultQuerySettingsJson = new JsonParser().parse(defaultJsonString).getAsJsonObject();
         } catch (Exception e) {
-
+            Log.e("LiDefaultQueryHelper", "Could not parse default query settings");
         }
         return defaultQuerySettingsJson;
     }

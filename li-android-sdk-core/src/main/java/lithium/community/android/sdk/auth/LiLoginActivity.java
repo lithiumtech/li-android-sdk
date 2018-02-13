@@ -49,11 +49,11 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
  */
 @SuppressLint("Registered")
 public class LiLoginActivity extends LiBaseAuthActivity {
-    boolean isAccessTokenSaved = false;
-    private ProgressBar progBar;
-    private WebView webViewOauth;
-    private TextView loginInProgTxt;
 
+    private boolean isAccessTokenSaved = false;
+    private ProgressBar progressBar;
+    private WebView webViewOauth;
+    private TextView tvLoginInProgress;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,40 +70,60 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         super.onCreate(savedInstanceBundle);
 
         setContentView(R.layout.li_login_activity);
-        Intent intent = getIntent();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.li_toolbar);
+
+        Toolbar toolbar = findViewById(R.id.li_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         service = new LiAuthServiceImpl(this);
 
-        webViewOauth = (WebView) findViewById(R.id.li_web_oauth);
-        progBar = (ProgressBar) findViewById(R.id.li_login_page_prog_bar);
-        loginInProgTxt = (TextView) findViewById(R.id.li_login_in_prog_txt);
-        String authUrl = intent.getData().toString();
-        progBar.setVisibility(View.VISIBLE);
+        webViewOauth = findViewById(R.id.li_web_oauth);
+        progressBar = findViewById(R.id.li_login_page_prog_bar);
+        tvLoginInProgress = findViewById(R.id.li_login_in_prog_txt);
+
+        progressBar.setVisibility(View.VISIBLE);
         webViewOauth.setVisibility(View.INVISIBLE);
-        loginInProgTxt.setText(getString(R.string.li_openingLoginPage));
-        loginInProgTxt.setVisibility(View.VISIBLE);
+        tvLoginInProgress.setText(getString(R.string.li_openingLoginPage));
+        tvLoginInProgress.setVisibility(View.VISIBLE);
+
         isAccessTokenSaved = false;
+
         webViewOauth.clearHistory();
         webViewOauth.clearFormData();
         webViewOauth.clearCache(true);
-        setTitle(authUrl);
-        //set the web client
-        webViewOauth.setWebViewClient(new LoginWebViewClient());
-        webViewOauth.setWebChromeClient(new LoginWebChromeClient());
-        //activates JavaScript (just in case)
-        WebSettings webSettings = webViewOauth.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setAppCacheEnabled(false);
-        //load the url of the oAuth login page
-        webViewOauth.loadUrl(authUrl);
+
+        Intent intent = getIntent();
+        Uri uri = intent.getData();
+
+        if (uri != null) {
+            String url = intent.getData().toString();
+            setTitle(url);
+
+            //set the web client
+            webViewOauth.setWebViewClient(new LoginWebViewClient());
+            webViewOauth.setWebChromeClient(new LoginWebChromeClient());
+
+            //activates JavaScript (just in case)
+            WebSettings webSettings = webViewOauth.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+            webSettings.setAppCacheEnabled(false);
+
+            //load the url of the oAuth login page
+            webViewOauth.loadUrl(url);
+        } else {
+            tvLoginInProgress.setText(R.string.li_login_error_missing_url);
+            Log.e("LiLoginActivity", "Login page url is null.");
+        }
+
     }
 
     private class LoginWebChromeClient extends WebChromeClient {
         public void onProgressChanged(WebView view, int progress) {
-            progBar.setProgress(progress);
+            progressBar.setProgress(progress);
         }
     }
 
@@ -120,12 +140,12 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             if (!isAccessTokenSaved) {
-                progBar.setVisibility(View.GONE);
-                loginInProgTxt.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                tvLoginInProgress.setVisibility(View.GONE);
                 webViewOauth.setVisibility(View.VISIBLE);
             }
-            progBar.setVisibility(View.GONE);
-            progBar.setProgress(100);
+            progressBar.setVisibility(View.GONE);
+            progressBar.setProgress(100);
         }
 
         @Override
@@ -145,8 +165,8 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            progBar.setVisibility(View.VISIBLE);
-            progBar.setProgress(0);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(0);
         }
     }
 }

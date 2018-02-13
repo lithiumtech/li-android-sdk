@@ -415,9 +415,8 @@ public class LiClientManager {
     public static LiClient getKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_KUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format("/community/2.0/%s/messages/%s/kudos", LiSDKManager.getInstance().getTenant(),
-                        messageId));
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+                String.format("/community/2.0/%s/messages/%s/kudos", LiSDKManager.getInstance().getTenant(), messageId));
         LiPostKudoModel liPostKudoModel = new LiPostKudoModel();
         LiMessage liMessage = new LiMessage();
         LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
@@ -444,12 +443,9 @@ public class LiClientManager {
     public static LiClient getUnKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams
-                = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(),
-                CollectionsType.MESSAGE, messageId, "/kudos");
-        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(
-                liGenericDeleteClientRequestParams);
-        return liBaseDeleteClient;
+        LiClientRequestParams.LiGenericDeleteClientRequestParams requestParams =
+                new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+        return getGenericQueryDeleteClient(requestParams);
     }
 
     /**
@@ -464,11 +460,9 @@ public class LiClientManager {
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getAcceptSolutionClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getAcceptSolutionClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_ACCEPT_SOLUTION_CLIENT);
-        Long messageId
-                = ((LiClientRequestParams.LiAcceptSolutionClientRequestParams) liClientRequestParams).getMessageId();
+        Long messageId = ((LiClientRequestParams.LiAcceptSolutionClientRequestParams) liClientRequestParams).getMessageId();
         LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/solutions_data", LiSDKManager.getInstance().getTenant()));
         LiAcceptSolutionModel liAcceptSolutionModel = new LiAcceptSolutionModel();
@@ -494,21 +488,16 @@ public class LiClientManager {
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getCreateMessageClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getCreateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_CREATE_MESSAGE_CLIENT);
-        String subject
-                = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getSubject();
-        String body = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBody();
-        String boardId
-                = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBoardId();
-        String imageId
-                = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageId();
-        String imageName
-                = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageName();
+        final String subject = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getSubject();
+        final String boardId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBoardId();
+        final String imageId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageId();
+        final String imageName = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageName();
 
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenant()));
+
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         LiBoard liBoard = new LiBoard();
         LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
@@ -516,6 +505,8 @@ public class LiClientManager {
         liBoard.setId(liString);
         liPostMessageModel.setType(LiQueryConstant.LI_POST_QUESTION_TYPE);
         liPostMessageModel.setSubject(subject);
+
+        String body = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBody();
         body = embedImageTag(body, imageId, imageName);
         liPostMessageModel.setBody(body);
         liPostMessageModel.setBoard(liBoard);
@@ -537,16 +528,13 @@ public class LiClientManager {
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUpdateMessageClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getUpdateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UPDATE_MESSAGE_CLIENT);
-        String subject
-                = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getSubject();
-        String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getBody();
-        String messageId
-                = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getMessageId();
+        final String subject = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getSubject();
+        final String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getBody();
+        final String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getMessageId();
 
-        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/messages/%s", LiSDKManager.getInstance().getTenant(), messageId));
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         liPostMessageModel.setType(LI_POST_QUESTION_TYPE);
@@ -592,30 +580,29 @@ public class LiClientManager {
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException LiClient {@link LiRestResponseException}
      */
-    public static LiClient getCreateReplyClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getCreateReplyClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_CREATE_REPLY_CLIENT);
-        String subject = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getSubject();
-        String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getBody();
-        Long messageId
-                = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getMessageId();
-        String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageId();
-        String imageName
-                = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageName();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format("/community/2.0/%s/messages",
-                        LiSDKManager.getInstance().getTenant()));
-        LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
+        final String subject = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getSubject();
+        final Long messageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getMessageId();
+        final String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageId();
+        final String imageName = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageName();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+                String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenant()));
+
+        final LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
         LiMessage parent = new LiMessage();
         LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
         liId.setValue(Long.valueOf(messageId));
         parent.setId(liId);
+
+        String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getBody();
         body = embedImageTag(body, imageId, imageName);
         liReplyMessage.setSubject(subject);
         liReplyMessage.setBody(body);
         liReplyMessage.setType(LiQueryConstant.LI_REPLY_MESSAGE_TYPE);
         liReplyMessage.setParent(parent);
         liBasePostClient.postModel = liReplyMessage;
+
         return liBasePostClient;
     }
 
@@ -636,18 +623,16 @@ public class LiClientManager {
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUploadImageClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getUploadImageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UPLOAD_IMAGE_CLIENT);
-        String title = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getTitle();
-        String description
-                = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getDescription();
-        String imageName
-                = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getImageName();
-        String path = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getPath();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format("/community/2.0/%s/images",
-                        LiSDKManager.getInstance().getTenant()), path, imageName);
+
+        final String title = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getTitle();
+        final String description = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getDescription();
+        final String imageName = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getImageName();
+        final String path = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getPath();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+                String.format("/community/2.0/%s/images", LiSDKManager.getInstance().getTenant()), path, imageName);
+
         LiUploadImageModel uploadImageModel = new LiUploadImageModel();
         uploadImageModel.setType(LiQueryConstant.LI_IMAGE_TYPE);
         uploadImageModel.setTitle(title);
@@ -655,6 +640,7 @@ public class LiClientManager {
         uploadImageModel.setField("image.content");
         uploadImageModel.setVisibility("public");
         liBasePostClient.postModel = uploadImageModel;
+
         return liBasePostClient;
     }
 
@@ -674,27 +660,31 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getReportAbuseClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getReportAbuseClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_MARK_ABUSE_CLIENT);
-        String messageId
-                = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getMessageId();
-        String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getUserId();
-        String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getBody();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+
+        final String messageId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getMessageId();
+        final String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getUserId();
+        final String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getBody();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/abuse_reports", LiSDKManager.getInstance().getTenant()));
+
         LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
         liMarkAbuseModel.setType(LiQueryConstant.LI_MARK_ABUSE_TYPE);
+
         LiMessage liMessage = new LiMessage();
+
         LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
         liInt.setValue(Long.valueOf(messageId));
         liMessage.setId(liInt);
+
         LiUser liUser = new LiUser();
         liUser.setId(Long.valueOf(userId));
         liMarkAbuseModel.setMessage(liMessage);
         liMarkAbuseModel.setReporter(liUser);
         liMarkAbuseModel.setBody(body);
         liBasePostClient.postModel = liMarkAbuseModel;
+
         return liBasePostClient;
     }
 
@@ -710,24 +700,23 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getDeviceIdFetchClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getDeviceIdFetchClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_DEVICE_ID_FETCH_CLIENT);
-        String deviceId
-                = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams).getDeviceId();
-        String pushNotificationProvider
-                = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams)
+
+        final String deviceId = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams).getDeviceId();
+        final String pushNotificationProvider = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams)
                 .getPushNotificationProvider();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format("/community/2.0/%s/user_device_data",
-                        LiSDKManager.getInstance().getTenant()));
-        LiUserDeviceDataModel liUserDeviceDataModel = new LiUserDeviceDataModel();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+                String.format("/community/2.0/%s/user_device_data", LiSDKManager.getInstance().getTenant()));
+
+        final LiUserDeviceDataModel liUserDeviceDataModel = new LiUserDeviceDataModel();
         liUserDeviceDataModel.setType(LiQueryConstant.LI_USER_DEVICE_ID_FETCH_TYPE);
         liUserDeviceDataModel.setDeviceId(deviceId);
         liUserDeviceDataModel.setClientId(LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
         liUserDeviceDataModel.setApplicationType(LiQueryConstant.LI_APPLICATION_TYPE);
         liUserDeviceDataModel.setPushNotificationProvider(pushNotificationProvider);
         liBasePostClient.postModel = liUserDeviceDataModel;
+
         return liBasePostClient;
     }
 
@@ -778,12 +767,12 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getCreateUserClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getCreateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_CREATE_USER_CLIENT);
-        LiClientRequestParams.LiCreateUserParams liCreateUserParams
-                = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams);
-        LiAvatar avatar = new LiAvatar();
+
+        final LiClientRequestParams.LiCreateUserParams liCreateUserParams = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams);
+        final LiAvatar avatar = new LiAvatar();
+
         if (!TextUtils.isEmpty(liCreateUserParams.getAvatarUrl())) {
             avatar.setUrl(liCreateUserParams.getAvatarUrl());
         }
@@ -797,16 +786,18 @@ public class LiClientManager {
             avatar.setImage(liCreateUserParams.getAvatarImageId());
         }
 
-        String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
-        String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
-        String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
-        String firstName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getFirstName();
-        String lastName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLastName();
-        String login = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLogin();
-        String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
+        final String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
+        final String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
+        final String firstName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getFirstName();
+        final String lastName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLastName();
+        final String login = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLogin();
+        final String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
+
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
-        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+
+        final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
         liCreateUpdateUserModel.setBiography(biography);
@@ -817,6 +808,7 @@ public class LiClientManager {
         liCreateUpdateUserModel.setLogin(login);
         liCreateUpdateUserModel.setPassword(password);
         liBasePostClient.postModel = liCreateUpdateUserModel;
+
         return liBasePostClient;
     }
 
@@ -836,20 +828,23 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkMessagePostClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getMarkMessagePostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_MARK_MESSAGE_POST_CLIENT);
-        String userId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getUserId();
-        String messageId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getMessageId();
-        boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).isMarkUnread();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+
+        final String userId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getUserId();
+        final String messageId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getMessageId();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).isMarkUnread();
+
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
-        LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
+
+        final LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
         liMarkMessageModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
         liMarkMessageModel.setUser(userId);
         liMarkMessageModel.setMessageId(messageId);
         liMarkMessageModel.setMarkUnread(markUnread);
         liBasePostClient.postModel = liMarkMessageModel;
+
         return liBasePostClient;
     }
 
@@ -871,20 +866,23 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkMessagesPostClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getMarkMessagesPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_MARK_MESSAGES_POST_CLIENT);
-        String userId = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getUserId();
-        String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getMessageIds();
-        boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).isMarkUnread();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+
+        final String userId = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getUserId();
+        final String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getMessageIds();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).isMarkUnread();
+
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
-        LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
+
+        final LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
         liMarkMessagesModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
         liMarkMessagesModel.setUser(userId);
         liMarkMessagesModel.setMessageIds(messageIds);
         liMarkMessagesModel.setMarkUnread(markUnread);
         liBasePostClient.postModel = liMarkMessagesModel;
+
         return liBasePostClient;
     }
 
@@ -903,20 +901,23 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkTopicPostClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getMarkTopicPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_MARK_TOPIC_POST_CLIENT);
-        String userId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getUserId();
-        String topicId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getTopicId();
-        boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).isMarkUnread();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+
+        final String userId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getUserId();
+        final String topicId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getTopicId();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).isMarkUnread();
+
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
+
         LiMarkTopicModel liMarkTopicModel = new LiMarkTopicModel();
         liMarkTopicModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
         liMarkTopicModel.setUser(userId);
         liMarkTopicModel.setTopicId(topicId);
         liMarkTopicModel.setMarkUnread(markUnread);
         liBasePostClient.postModel = liMarkTopicModel;
+
         return liBasePostClient;
     }
 
@@ -1033,13 +1034,13 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getUpdateUserClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getUpdateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_UPDATE_USER_CLIENT);
-        LiClientRequestParams.LiUpdateUserParams liUpdateUserParams
-                = (LiClientRequestParams.LiUpdateUserParams) liClientRequestParams;
 
-        LiAvatar avatar = new LiAvatar();
+        final LiClientRequestParams.LiUpdateUserParams liUpdateUserParams = (LiClientRequestParams.LiUpdateUserParams) liClientRequestParams;
+
+        final LiAvatar avatar = new LiAvatar();
+
         if (!TextUtils.isEmpty(liUpdateUserParams.getAvatarUrl())) {
             avatar.setUrl(liUpdateUserParams.getAvatarUrl());
         }
@@ -1053,16 +1054,18 @@ public class LiClientManager {
             avatar.setImage(liUpdateUserParams.getAvatarImageId());
         }
 
-        String biography = liUpdateUserParams.getBiography();
-        String coverImage = liUpdateUserParams.getCoverImage();
-        String email = liUpdateUserParams.getEmail();
-        String firstName = liUpdateUserParams.getFirstName();
-        String lastName = liUpdateUserParams.getLastName();
-        String login = liUpdateUserParams.getLogin();
-        String id = liUpdateUserParams.getId();
-        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+        final String biography = liUpdateUserParams.getBiography();
+        final String coverImage = liUpdateUserParams.getCoverImage();
+        final String email = liUpdateUserParams.getEmail();
+        final String firstName = liUpdateUserParams.getFirstName();
+        final String lastName = liUpdateUserParams.getLastName();
+        final String login = liUpdateUserParams.getLogin();
+        final String id = liUpdateUserParams.getId();
+
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
                 String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenant(), id));
-        LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
+
+        final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
         liCreateUpdateUserModel.setAvatar(avatar);
         liCreateUpdateUserModel.setBiography(biography);
@@ -1072,6 +1075,7 @@ public class LiClientManager {
         liCreateUpdateUserModel.setLastName(lastName);
         liCreateUpdateUserModel.setLogin(login);
         liBasePutClient.postModel = liCreateUpdateUserModel;
+
         return liBasePutClient;
     }
 
@@ -1085,23 +1089,24 @@ public class LiClientManager {
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getGenericPostClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
+    public static LiClient getGenericPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
         liClientRequestParams.validate(Client.LI_GENERIC_POST_CLIENT);
-        String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getPath();
-        JsonElement requestBody
-                = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
-        Map<String, String> additionalHeaders
-                = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams)
-                .getAdditionalHttpHeaders();
-        String requestPath = "/community/2.0/%s/" + path;
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format(requestPath,
-                        LiSDKManager.getInstance().getTenant()), additionalHeaders);
 
-        LiGenericPostModel genericPostModel = new LiGenericPostModel();
+        final String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getPath();
+        final JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
+
+        final Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams)
+                .getAdditionalHttpHeaders();
+
+        final String requestPath = "/community/2.0/%s/" + path;
+
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+                String.format(requestPath, LiSDKManager.getInstance().getTenant()), additionalHeaders);
+
+        final LiGenericPostModel genericPostModel = new LiGenericPostModel();
         genericPostModel.setData(requestBody);
         liBasePostClient.postModel = genericPostModel;
+
         return liBasePostClient;
     }
 
