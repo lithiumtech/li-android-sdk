@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Lithium Technologies Pvt Ltd
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextAppearance="@style/Toolbar.TitleText"
-            app:popupTheme="?attr/li_theme_popupOverlay" />
+            app:popupTheme="?attr/li_theme_popupOverlay"
+            app:titleTextAppearance="@style/Toolbar.TitleText" />
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
@@ -41,27 +40,27 @@
         android:paddingTop="?android:attr/actionBarSize">
 
         <ProgressBar
+            android:id="@+id/li_login_page_prog_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/li_login_page_prog_bar"
             android:progressTint="@color/li_horiz_prog_colorPrimaryDark"
             android:visibility="invisible" />
 
         <TextView
+            android:id="@+id/li_login_in_prog_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/li_login_in_prog_txt"
-            android:text="@string/li_login_in_progress"
             android:layout_centerInParent="true"
-            android:textStyle="bold"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:text="@string/li_login_in_progress"
+            android:textStyle="bold" />
 
         <WebView
             android:id="@+id/li_web_oauth"
-            android:paddingTop="?android:attr/actionBarSize"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="match_parent" />
+            android:paddingTop="?android:attr/actionBarSize" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

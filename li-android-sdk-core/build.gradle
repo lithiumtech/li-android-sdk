@@ -145,7 +145,7 @@ task androidJavadocs(type: Javadoc) {
     classpath += files(ext.androidJar)
 }
 
-task androidJavadocsJar(type: Jar, dependsOn: [javadoc, androidJavadocs]) {
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
     classifier = 'javadoc'
     from androidJavadocs.destinationDir
 }

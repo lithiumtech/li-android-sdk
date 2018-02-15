@@ -45,8 +45,9 @@ public class LiCoreSDKUtilsTest {
 
     @Test
     public void testCheckNotNullSingleArgument() {
-        thrown.expect(NullPointerException.class);
-        LiCoreSDKUtils.checkNotNull(null);
+        thrown.expect(IllegalArgumentException.class);
+        Object o = null;
+        LiCoreSDKUtils.checkNotNull(o);
     }
 
     @Test

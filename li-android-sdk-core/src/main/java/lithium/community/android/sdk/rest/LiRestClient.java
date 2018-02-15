@@ -308,7 +308,7 @@ public abstract class LiRestClient {
      * @param requestBody     Request body of image upload API.
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
-            final String imagePath, final String imageName, final String requestBody) {
+                                        final String imagePath, final String imageName, final String requestBody) {
         if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
             if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
                 try {
@@ -339,7 +339,7 @@ public abstract class LiRestClient {
      * @param imgRequestBody  Request body of image upload API.
      */
     private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback, String imagePath,
-            String imageName, String imgRequestBody) {
+                                   String imageName, String imgRequestBody) {
 
         final MediaType MEDIA_TYPE = MediaType.parse("image/*");
         File originalFile = new File(imagePath);
@@ -355,6 +355,18 @@ public abstract class LiRestClient {
             isCompressed = false;
             file = new File(imagePath);
         }
+
+        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
+        String proxyHost = LiSDKManager.getInstance().getProxyHost();
+
+        uriBuilder.authority(proxyHost);
+        uriBuilder.appendEncodedPath(baseRestRequest.getPath());
+        if (baseRestRequest.getQueryParams() != null) {
+            for (String param : baseRestRequest.getQueryParams().keySet()) {
+                LiUriUtils.appendQueryParameterIfNotNull(uriBuilder, param, baseRestRequest.getQueryParams().get(param));
+            }
+        }
+
         JsonObject imgRequestBodyObject = getGson().fromJson(imgRequestBody, JsonObject.class);
         JsonObject dataObj = imgRequestBodyObject.get("nameValuePairs").getAsJsonObject().get("request").getAsJsonObject().get("data").getAsJsonObject();
         String requestBody = " {\"request\": {\"data\": {\"description\": " + dataObj.get("description")
@@ -367,21 +379,11 @@ public abstract class LiRestClient {
                 .addFormDataPart("image.content", imageName, MultipartBody.create(MEDIA_TYPE, file))
                 .addFormDataPart("payload", "")
                 .build();
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = LiSDKManager.getInstance().getProxyHost();
-        Context context = baseRestRequest.getContext();
-        uriBuilder.authority(proxyHost);
-        uriBuilder.appendEncodedPath(baseRestRequest.getPath());
-        if (baseRestRequest.getQueryParams() != null) {
-            for (String param : baseRestRequest.getQueryParams().keySet()) {
-                LiUriUtils.appendQueryParameterIfNotNull(uriBuilder, param,
-                        baseRestRequest.getQueryParams().get(param));
-            }
-        }
+
         Request.Builder request = new Request.Builder();
         request.url(HttpUrl.get(URI.create(uriBuilder.build().toString())));
         request.post(multipartBody);
-        request = buildRequestHeaders(context, request);
+        request = buildRequestHeaders(baseRestRequest.getContext(), request);
 
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
@@ -453,7 +455,6 @@ public abstract class LiRestClient {
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        Context context = baseRestRequest.getContext();
         uriBuilder.authority(LiSDKManager.getInstance().getProxyHost());
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
@@ -464,7 +465,7 @@ public abstract class LiRestClient {
         Request.Builder builder = new Request.Builder()
                 .url(HttpUrl.get(URI.create(uriBuilder.build().toString())))
                 .method(baseRestRequest.getMethod().toString(), baseRestRequest.getRequestBody());
-        builder = buildRequestHeaders(context, builder);
+        builder = buildRequestHeaders(baseRestRequest.getContext(), builder);
         // Adding addition headers
         final Map<String, String> additionalHttpHeaders = baseRestRequest.getAdditionalHttpHeaders();
         if (additionalHttpHeaders != null) {
