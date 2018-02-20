@@ -55,7 +55,7 @@ public final class LiAppCredentials {
     private final String ssoAuthorizeUri;
 
     /**
-     * Default public constructor for Lia SDK Credentials.
+     * Default private constructor for Lia SDK Credentials.
      *
      * @param clientName     The client name.
      * @param clientKey      The client Id.
