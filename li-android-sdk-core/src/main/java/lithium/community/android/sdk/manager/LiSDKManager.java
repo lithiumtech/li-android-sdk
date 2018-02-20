@@ -18,8 +18,9 @@ package lithium.community.android.sdk.manager;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.NoSuchPropertyException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
+import lithium.community.android.sdk.exception.LiExceptionInInitializerError;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
@@ -48,24 +50,24 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
- * Interface to Lithium Community Android SDK. Provides the entry point into the Community REST api v2 using
- * OAuth2 implementation.
+ * Interface to Lithium Community Android SDK. Provides the entry point into
+ * the Community REST API v2 using OAuth2.
  */
 public final class LiSDKManager extends LiAuthManager {
 
-    private static AtomicBoolean IS_INITIALIZED = new AtomicBoolean(false);
-    private static LiSDKManager INSTANCE;
+    private static final String COMPONENT_NAME = LiSDKManager.class.getName();
+
+    private static AtomicBoolean isInitialized = new AtomicBoolean(false);
+    private static LiSDKManager instance;
 
     /**
-     * Protected constructor.
+     * Default private constructor.
      *
-     * @param context          {@link Context}
-     * @param liAppCredentials {@link LiAppCredentials}
-     * @throws URISyntaxException {@link URISyntaxException}
+     * @param context     The Android context
+     * @param credentials The credentials to be used to authenticate the SDK.
      */
-    private LiSDKManager(Context context, LiAppCredentials liAppCredentials) throws URISyntaxException {
-        super(context, liAppCredentials);
-        LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
+    private LiSDKManager(Context context, LiAppCredentials credentials) {
+        super(context, credentials);
     }
 
     /**
@@ -74,54 +76,86 @@ public final class LiSDKManager extends LiAuthManager {
      * @return true or false depending on whether the SDK is initialized
      */
     public static boolean isEnvironmentInitialized() {
-        if (IS_INITIALIZED.get() && INSTANCE != null) {
-            return true;
-        }
-        return false;
+        return isInitialized.get() && instance != null;
     }
 
     /**
-     * Initiales LiSDKManager and initiates the login flow. This also fetches SDK settings after login.
+     * Initializes the SDK. If the initialization is successful {@link #getInstance()} will return an initialized SDK Manager. This
+     * function may or may not create a new instance or reinitialize the SDK Manager with subsequent calls.
      *
-     * @param context          {@link Context}
-     * @param liAppCredentials {@link LiAppCredentials}
-     * @return Instance of LiSDKManager
-     * @throws URISyntaxException {@link URISyntaxException}
+     * @param context     The android {@link Context} to be used by the SDK.
+     * @param credentials The {@link LiAppCredentials} for authenticating the SDK.
      */
-    public static synchronized LiSDKManager init(final Context context, final LiAppCredentials liAppCredentials)
-            throws URISyntaxException {
-        LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        if (IS_INITIALIZED.compareAndSet(false, true)) {
+    public static synchronized void initialize(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws ExceptionInInitializerError {
+
+        LiCoreSDKUtils.checkNotNull(context, "context was null");
+        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
+
+        if (isInitialized.compareAndSet(false, true)) {
+            if (LiDefaultQueryHelper.initHelper(context) == null) {
+                throw new LiExceptionInInitializerError(null, COMPONENT_NAME);
+            }
+            if (LiSecuredPrefManager.init(context) == null) {
+                throw new LiExceptionInInitializerError(null, COMPONENT_NAME);
+            }
+            instance = new LiSDKManager(context, credentials);
+        }
+
+        LiCoreSDKUtils.checkNotNull(context, "context was null");
+        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
+        if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
+
+            // Generate a visitor ID and save it in secure preferences
+            getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
+        }
+    }
+
+    /**
+     * Returns an instance of the {@link LiSDKManager}.
+     *
+     * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
+     */
+    @Nullable
+    public static LiSDKManager getInstance() {
+        return instance;
+    }
+
+    /**
+     * Initializes LiSDKManager.
+     *
+     * @param context     The android context.
+     * @param credentials The credentials for authentication.
+     * @return An instance of LiSDKManager
+     * @throws URISyntaxException Does not throw a URISyntaxException but still here for legacy support.
+     * @deprecated It is recommended to use {@link #initialize(Context, LiAppCredentials)} instead.
+     */
+    @Nullable
+    public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws URISyntaxException {
+
+        LiCoreSDKUtils.checkNotNull(context, "context was null");
+        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
+        if (isInitialized.compareAndSet(false, true)) {
             if (LiDefaultQueryHelper.initHelper(context) == null) {
                 return null;
             }
             if (LiSecuredPrefManager.init(context) == null) {
                 return null;
             }
-            INSTANCE = new LiSDKManager(context, liAppCredentials);
+            instance = new LiSDKManager(context, credentials);
         }
-        LiCoreSDKUtils.checkNotNull(context, liAppCredentials);
-        if (getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
+
+        LiCoreSDKUtils.checkNotNull(context, "context was null");
+        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
+        if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
             //Generate a visitor ID and save it in secure preferences
-            getInstance().putInSecuredPreferences(
-                    context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
+            getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
 
-        return INSTANCE;
-    }
-
-    /**
-     * Instance of this.
-     */
-    public static LiSDKManager getInstance() {
-        if (INSTANCE == null) {
-            throw new NoSuchPropertyException("SDK not intialized. Call init method first");
-        }
-        return INSTANCE;
+        return instance;
     }
 
     public void syncWithCommunity(final Context context) {
-        if (INSTANCE.isUserLoggedIn()) {
+        if (instance.isUserLoggedIn()) {
             try {
                 String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams
@@ -131,7 +165,7 @@ public final class LiSDKManager extends LiAuthManager {
 
                             @Override
                             public void onSuccess(LiBaseRestRequest request,
-                                    LiGetClientResponse response)
+                                                  LiGetClientResponse response)
                                     throws LiRestResponseException {
                                 if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                                     Gson gson = new Gson();
@@ -181,7 +215,7 @@ public final class LiSDKManager extends LiAuthManager {
                                         && liClientResponse.getResponse() != null
                                         && !liClientResponse.getResponse().isEmpty()) {
                                     LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
-                                    INSTANCE.setLoggedInUser(context, user);
+                                    instance.setLoggedInUser(context, user);
                                 } else {
                                     Log.e(LOG_TAG, "No user found while fetching UserDetails");
                                 }

@@ -52,29 +52,33 @@ public class TestHelper {
     public static final String ID_TOKEN = "id_token";
 
     public static final String APPLICATION_TYPE_NATIVE = "native";
+
+    public static final String TEST_CLIENT_NAME = "test";
     public static final String TEST_CLIENT_ID = "mj2gw0IYuoo33m0rKxuX4KpxUfsy7Q0rcBJhq34GHgs=";
+    public static final String TEST_API_GATEWAY_HOST = "api.qa.aws.lcloud.com";
+    public static final String TEST_TENANT_ID = "test";
+    public static final String TEST_CLIENT_SECRET = "test_client_secret";
+    public static final String TEST_COMMUNITY_URL = "http://community.lithium.com";
+
     public static final String TEST_STATE = "$TAT3";
     public static final String TEST_APP_SCHEME = "com.test.app";
+
     public static final Uri TEST_APP_REDIRECT_URI = Uri.parse(TEST_APP_SCHEME + ":/oidc_callback");
+
     public static final String TEST_SCOPE = "openid email";
-    public static final Uri TEST_IDP_AUTH_ENDPOINT =
-            Uri.parse("https://testidp.example.com/authorize");
-    public static final Uri TEST_IDP_TOKEN_ENDPOINT =
-            Uri.parse("https://testidp.example.com/token");
-    public static final Uri TEST_IDP_REGISTRATION_ENDPOINT =
-            Uri.parse("https://testidp.example.com/token");
+
+    public static final Uri TEST_IDP_AUTH_ENDPOINT = Uri.parse("https://testidp.example.com/authorize");
+    public static final Uri TEST_IDP_TOKEN_ENDPOINT = Uri.parse("https://testidp.example.com/token");
+    public static final Uri TEST_IDP_REGISTRATION_ENDPOINT = Uri.parse("https://testidp.example.com/token");
 
     public static final String TEST_CODE_VERIFIER = "0123456789_0123456789_0123456789_0123456789";
     public static final String TEST_AUTH_CODE = "zxcvbnmjk";
     public static final String TEST_ACCESS_TOKEN = "aaabbbccc";
-    public static final Long TEST_ACCESS_TOKEN_EXPIRATION_TIME = 120000L; // two minutes
     public static final String TEST_ID_TOKEN = "abc.def.ghi";
     public static final String TEST_REFRESH_TOKEN = "asdfghjkl";
+    public static final Long TEST_ACCESS_TOKEN_EXPIRATION_TIME = 120000L; // two minutes
 
     public static final Long TEST_CLIENT_SECRET_EXPIRES_AT = 78L;
-    public static final String TEST_CLIENT_SECRET = "test_client_secret";
-
-    public static final String TEST_COMMUNITY_URL = "http://community.lithium.com";
 
     public static final String TEST_EMAIL_ADDRESS = "test@example.com";
 
@@ -280,18 +284,25 @@ public class TestHelper {
             "}";
 
     public static LiAppCredentials getTestAppCredentials() throws MalformedURLException {
-        return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
+        return new LiAppCredentials.Builder()
+                .setClientName(TEST_CLIENT_NAME)
+                .setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL).setApiProxyHost("api.qa.aws.lcloud.com")
-                .setTenantId("test").build();
+                .setCommunityUri(TEST_COMMUNITY_URL)
+                .setApiGatewayUri(TEST_API_GATEWAY_HOST)
+                .setTenantId(TEST_TENANT_ID)
+                .build();
     }
 
     public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
-        return new LiAppCredentials.Builder().setClientKey(TEST_CLIENT_ID)
+        return new LiAppCredentials.Builder()
+                .setClientName(TEST_CLIENT_NAME)
+                .setClientKey(TEST_CLIENT_ID)
                 .setClientSecret(TEST_CLIENT_SECRET)
                 .setCommunityUri(TEST_COMMUNITY_URL)
-                .setApiProxyHost("api.qa.aws.lcloud.com")
-                .setTenantId("test").build();
+                .setApiGatewayUri(TEST_API_GATEWAY_HOST)
+                .setTenantId(TEST_TENANT_ID)
+                .build();
     }
 
     /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException,

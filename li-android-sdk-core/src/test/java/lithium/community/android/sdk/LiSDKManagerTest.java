@@ -19,7 +19,6 @@ package lithium.community.android.sdk;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.util.NoSuchPropertyException;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -70,12 +69,6 @@ public class LiSDKManagerTest {
         when(mContext.getResources()).thenReturn(resource);
 
 
-    }
-
-    @Test
-    public void testALiSDKManagerTestGetInstanceException() {
-        thrown.expect(NoSuchPropertyException.class);
-        LiSDKManager.getInstance();
     }
 
     @Test(expected = IllegalArgumentException.class)

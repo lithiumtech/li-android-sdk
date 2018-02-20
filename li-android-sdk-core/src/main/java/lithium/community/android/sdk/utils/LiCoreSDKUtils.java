@@ -124,22 +124,7 @@ public class LiCoreSDKUtils {
      * @throws IllegalArgumentException if the argument value is {@code null}.
      */
     public static <ArgT> ArgT checkNotNull(ArgT argValue) {
-        return checkNotNull(argValue, "Argument cannot be null");
-    }
-
-    /**
-     * Check that the specified argument value is not {@code null}.
-     * If it is {@code null}, throw a {@link IllegalArgumentException}
-     *
-     * @param argValue the argument value to check.
-     * @throws IllegalArgumentException if the argument value is {@code null}.
-     */
-    public static <ArgT> void checkNotNull(ArgT... argValue) {
-        for (ArgT arg : argValue) {
-            if (arg == null) {
-                throw new IllegalArgumentException("Argument cannot be null");
-            }
-        }
+        return checkNotNull(argValue, "Argument was null");
     }
 
     /**
@@ -151,8 +136,7 @@ public class LiCoreSDKUtils {
      */
     public static <ArgT> ArgT checkNotNull(ArgT argValue, @Nullable String errorMessage) {
         if (argValue == null) {
-            throw new IllegalArgumentException((errorMessage == null ? "Argument cannot be null" :
-                    errorMessage));
+            throw new IllegalArgumentException((errorMessage == null ? "Argument was null" : errorMessage));
         }
         return argValue;
     }
@@ -161,8 +145,7 @@ public class LiCoreSDKUtils {
      * Ensures that a collection is not null or empty.
      */
     @NonNull
-    public static <T extends Collection<?>> T checkCollectionNotEmpty(
-            T collection, @Nullable String errorMessage) {
+    public static <T extends Collection<?>> T checkCollectionNotEmpty(T collection, @Nullable String errorMessage) {
         LiCoreSDKUtils.checkNotNull(collection, errorMessage);
         checkNotNull(!collection.isEmpty(), errorMessage);
         return collection;
@@ -172,26 +155,11 @@ public class LiCoreSDKUtils {
      * Ensures that the string is either null, or a non-empty string.
      */
     @NonNull
-    public static String checkNullOrNotEmpty(String str, @Nullable Object errorMessage) {
-        if (str != null) {
-            checkNotEmpty(str, errorMessage);
-        }
-        return str;
+    public static String checkNullOrNotEmpty(String input, @Nullable String errorMessage) {
+        checkNotNull(input, errorMessage);
+        checkArgument(!TextUtils.isEmpty(input), errorMessage != null ? errorMessage : "Argument was an empty string");
+        return input;
     }
-
-
-    /**
-     * Ensures that a string is not null or empty.
-     */
-    @NonNull
-    public static String checkNotEmpty(String str, @Nullable Object errorMessage) {
-        // ensure that we throw NullPointerException if the value is null, otherwise,
-        // IllegalArgumentException if it is empty
-        checkNotNull(str, errorMessage);
-        checkArgument(!TextUtils.isEmpty(str), String.valueOf(errorMessage));
-        return str;
-    }
-
 
     public static void checkArgument(boolean expression, @NonNull String errorTemplate, Object... params) {
         if (!expression) {

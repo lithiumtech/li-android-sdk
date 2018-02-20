@@ -65,7 +65,7 @@ public class LiAuthorizationExceptionTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void fromJsonNullTest() throws JSONException {
         String json = null;
         LiAuthorizationException.fromJson(json);
@@ -214,7 +214,7 @@ public class LiAuthorizationExceptionTest {
         assertEquals(null, authException.errorUri);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void fromIntentNonNullTest() throws JSONException {
         when(mIntent.hasExtra(anyString())).thenReturn(true);
         when(LiAuthorizationException.fromJson(mIntent.getStringExtra(anyString()))).thenThrow(JSONException.class);

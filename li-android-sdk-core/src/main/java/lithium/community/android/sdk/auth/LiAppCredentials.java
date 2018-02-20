@@ -18,26 +18,32 @@ package lithium.community.android.sdk.auth;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-
-import java.net.MalformedURLException;
 
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUriUtils;
 
 /**
- * A credentials object representing client application developer key and secret. It also includes
- * which community the developer app wishes to connect to.
+ * The credentials for initializing the LIA SDK.
  */
 public final class LiAppCredentials {
 
-    public static final String SDK_SUFFIX = "-sdk";
+    @NonNull
+    private final String clientName;
+
+    @NonNull
+    private final String tenantId;
+
     @NonNull
     private final String clientKey;
+
     @NonNull
     private final String clientSecret;
+
     @NonNull
     private final Uri communityUri;
+
+    @NonNull
+    private final Uri apiGatewayHost;
 
     @NonNull
     private final Uri authorizeUri;
@@ -45,69 +51,77 @@ public final class LiAppCredentials {
     @NonNull
     private final String redirectUri;
 
+    @NonNull
     private final String ssoAuthorizeUri;
 
-    private final String tenantId;
-
-    private final String apiProxyHost;
-
-    private final String clientAppName;
-
     /**
-     * private constructor.
+     * Default public constructor for Lia SDK Credentials.
      *
-     * @param clientKey    This is client Id.
-     * @param clientSecret This is client secret.
-     * @param communityURL This is the URL of the community.
-     * @param tenantId     tenant ID for the community.
-     * @param apiProxyHost API proxy host.
-     * @throws MalformedURLException If the community URL is not valid this exception is thrown
+     * @param clientName     The client name.
+     * @param clientKey      The client Id.
+     * @param clientSecret   The client secret.
+     * @param tenantId       tenant ID of the community.
+     * @param communityURL   The LIA community's URL.
+     * @param apiGatewayHost API gateway host.
      */
-    private LiAppCredentials(@NonNull String clientKey, @NonNull String clientSecret,
-            @NonNull String communityURL, @NonNull String tenantId, @NonNull String apiProxyHost,
-            @NonNull String clientAppName)
-            throws MalformedURLException {
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey cannot be empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientKey cannot be empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL cannot be empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientAppName, "clientAppName cannot be empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenant ID cannot be empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(apiProxyHost, "apiProxyHost cannot be empty");
+    private LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
+                             @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
+
+        LiCoreSDKUtils.checkNullOrNotEmpty(clientName, "clientName was empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey was empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientSecret was empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenantId was empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL was empty");
+        LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, "apiGatewayHost was empty");
+
+        this.clientName = clientName;
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
+        this.tenantId = tenantId;
+
         this.communityUri = Uri.parse(communityURL);
-        this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
+        this.apiGatewayHost = Uri.parse(apiGatewayHost);
+
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + "api/2.0/auth/authorize";
-        this.tenantId = tenantId;
-        this.apiProxyHost = apiProxyHost;
-        if (!TextUtils.isEmpty(clientAppName)) {
-            this.clientAppName = clientAppName;
-        } else {
-            this.clientAppName = tenantId + SDK_SUFFIX;
-        }
+        this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
     }
 
     private static String buildRedirectUri(Uri communityUri) {
         return LiUriUtils.reverseDomainName(communityUri) + "://oauth2callback";
     }
 
-    public String getClientAppName() {
-        return clientAppName;
+    @NonNull
+    public String getClientName() {
+        return clientName;
     }
 
+    @NonNull
     public String getClientKey() {
         return clientKey;
     }
 
+    @NonNull
     public String getClientSecret() {
         return clientSecret;
     }
 
+    @NonNull
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    @NonNull
     public Uri getCommunityUri() {
         return communityUri;
     }
 
+    @NonNull
+    public Uri getApiGatewayHost() {
+        return apiGatewayHost;
+    }
+
+    @NonNull
     public Uri getAuthorizeUri() {
         return authorizeUri;
     }
@@ -117,105 +131,182 @@ public final class LiAppCredentials {
         return redirectUri;
     }
 
-    public String getTenantId() {
-        return tenantId;
-    }
-
+    @NonNull
     public String getSsoAuthorizeUri() {
         return ssoAuthorizeUri;
     }
 
+    /**
+     * @return The client name
+     * @deprecated Use {@link #getClientName()} instead.
+     */
+    @NonNull
+    public String getClientAppName() {
+        return clientName;
+    }
+
+    /**
+     * @return the API Gateways host address
+     * @deprecated Use {@link #getApiGatewayHost()}
+     */
+    @NonNull
     public String getApiProxyHost() {
-        return apiProxyHost;
+        return getApiGatewayHost().toString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         LiAppCredentials that = (LiAppCredentials) o;
 
-        if (!clientKey.equals(that.clientKey)) {
-            return false;
-        }
-        if (!clientSecret.equals(that.clientSecret)) {
-            return false;
-        }
-        if (!communityUri.equals(that.communityUri)) {
-            return false;
-        }
-        if (!authorizeUri.equals(that.authorizeUri)) {
-            return false;
-        }
-        return redirectUri.equals(that.redirectUri);
-
+        if (!clientName.equals(that.clientName)) return false;
+        if (!tenantId.equals(that.tenantId)) return false;
+        if (!clientKey.equals(that.clientKey)) return false;
+        if (!clientSecret.equals(that.clientSecret)) return false;
+        if (!communityUri.equals(that.communityUri)) return false;
+        if (!apiGatewayHost.equals(that.apiGatewayHost)) return false;
+        if (!authorizeUri.equals(that.authorizeUri)) return false;
+        if (!redirectUri.equals(that.redirectUri)) return false;
+        return ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
     }
 
     @Override
     public int hashCode() {
-        int result = clientKey.hashCode();
+        int result = clientName.hashCode();
+        result = 31 * result + tenantId.hashCode();
+        result = 31 * result + clientKey.hashCode();
         result = 31 * result + clientSecret.hashCode();
         result = 31 * result + communityUri.hashCode();
+        result = 31 * result + apiGatewayHost.hashCode();
         result = 31 * result + authorizeUri.hashCode();
         result = 31 * result + redirectUri.hashCode();
+        result = 31 * result + ssoAuthorizeUri.hashCode();
         return result;
     }
 
     /**
-     * Creates instances of {@link LiAppCredentials}.
+     * Builder to create instances of {@link LiAppCredentials}.
      */
     public static final class Builder {
+
+        private String clientName;
         private String clientKey;
         private String clientSecret;
-        private String communityUri;
         private String tenantId;
-        private String apiProxyHost;
-        private String clientAppName;
+        private String communityUri;
+        private String apiGatewayUri;
 
+        /**
+         * Default public constructor for the builder.
+         */
         public Builder() {
         }
 
+        /**
+         * Set the client name.
+         *
+         * @param clientName the client name.
+         * @return this builder.
+         */
+        public Builder setClientName(@NonNull String clientName) {
+            this.clientName = clientName;
+            return this;
+        }
+
+        /**
+         * Set the client key.
+         *
+         * @param clientKey the client key.
+         * @return this builder.
+         */
         @NonNull
         public Builder setClientKey(@NonNull String clientKey) {
             this.clientKey = clientKey;
             return this;
         }
 
+        /**
+         * Set the client secret.
+         *
+         * @param clientSecret the client secret.
+         * @return this builder.
+         */
         @NonNull
         public Builder setClientSecret(@NonNull String clientSecret) {
             this.clientSecret = clientSecret;
             return this;
         }
 
+        /**
+         * Set the tenant Id.
+         *
+         * @param tenantId the tenant Id.
+         * @return this builder.
+         */
         @NonNull
-        public Builder setTenantId(String tenantId) {
+        public Builder setTenantId(@NonNull String tenantId) {
             this.tenantId = tenantId;
             return this;
         }
 
+        /**
+         * Set the LIA community URL.
+         *
+         * @param communityUri the LIA community URL.
+         * @return this builder.
+         */
         @NonNull
         public Builder setCommunityUri(@NonNull String communityUri) {
             this.communityUri = communityUri;
             return this;
         }
 
-        public Builder setApiProxyHost(String apiProxyHost) {
-            this.apiProxyHost = apiProxyHost;
+        /**
+         * Set default API Gateway host address.
+         *
+         * @param apiGatewayUri the API Gateway host address.
+         * @return this builder.
+         */
+        @NonNull
+        public Builder setApiGatewayUri(String apiGatewayUri) {
+            this.apiGatewayUri = apiGatewayUri;
             return this;
         }
 
-        public Builder setClientAppName(String clientAppName) {
-            this.clientAppName = clientAppName;
+        /**
+         * Set the API gateways host address.
+         *
+         * @param apiProxyHost The API gateways host address.
+         * @return this builder.
+         * @deprecated Use {@link #getApiGatewayHost()} instead.
+         */
+        public Builder setApiProxyHost(@NonNull String apiProxyHost) {
+            this.apiGatewayUri = apiProxyHost;
             return this;
         }
 
-        public LiAppCredentials build() throws MalformedURLException {
-            return new LiAppCredentials(clientKey, clientSecret, communityUri, tenantId, apiProxyHost, clientAppName);
+        /**
+         * Set the client name.
+         *
+         * @param clientAppName The client name to set
+         * @return this builder
+         * @deprecated Use {@link #setClientName(String)}
+         */
+        public Builder setClientAppName(@NonNull String clientAppName) {
+            this.clientName = clientAppName;
+            return this;
+        }
+
+        /**
+         * Build and return a new instance of {@link LiAppCredentials}.
+         *
+         * @return a new instance of {@link LiAppCredentials}.
+         */
+        @NonNull
+        public LiAppCredentials build() {
+            return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, apiGatewayUri);
         }
     }
 }
