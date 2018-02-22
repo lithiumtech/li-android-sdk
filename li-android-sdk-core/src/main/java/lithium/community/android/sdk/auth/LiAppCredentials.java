@@ -66,21 +66,13 @@ public final class LiAppCredentials {
      */
     private LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
                              @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
+        this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, "clientName was empty");
+        this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey was empty");
+        this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientSecret was empty");
+        this.tenantId = LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenantId was empty");
 
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientName, "clientName was empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey was empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientSecret was empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenantId was empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL was empty");
-        LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, "apiGatewayHost was empty");
-
-        this.clientName = clientName;
-        this.clientKey = clientKey;
-        this.clientSecret = clientSecret;
-        this.tenantId = tenantId;
-
-        this.communityUri = Uri.parse(communityURL);
-        this.apiGatewayHost = Uri.parse(apiGatewayHost);
+        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL was empty"));
+        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, "apiGatewayHost was empty"));
 
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + "api/2.0/auth/authorize";

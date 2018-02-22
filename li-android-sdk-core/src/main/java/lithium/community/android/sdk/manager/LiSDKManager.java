@@ -66,7 +66,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @param context     The Android context
      * @param credentials The credentials to be used to authenticate the SDK.
      */
-    private LiSDKManager(Context context, LiAppCredentials credentials) {
+    private LiSDKManager(@NonNull Context context, @NonNull LiAppCredentials credentials) {
         super(context, credentials);
     }
 
@@ -92,8 +92,6 @@ public final class LiSDKManager extends LiAuthManager {
             instance = new LiSDKManager(context, credentials);
         }
 
-        LiCoreSDKUtils.checkNotNull(context, "context was null");
-        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
         if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
 
             // Generate a visitor ID and save it in secure preferences
