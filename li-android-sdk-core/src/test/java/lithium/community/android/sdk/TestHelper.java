@@ -18,8 +18,6 @@ package lithium.community.android.sdk;
 
 import android.net.Uri;
 
-import java.net.MalformedURLException;
-
 import lithium.community.android.sdk.auth.LiAppCredentials;
 
 /**
@@ -283,7 +281,7 @@ public class TestHelper {
             "\t}\n" +
             "}";
 
-    public static LiAppCredentials getTestAppCredentials() throws MalformedURLException {
+    public static LiAppCredentials getTestAppCredentials() {
         return new LiAppCredentials.Builder()
                 .setClientName(TEST_CLIENT_NAME)
                 .setClientKey(TEST_CLIENT_ID)
@@ -294,7 +292,7 @@ public class TestHelper {
                 .build();
     }
 
-    public static LiAppCredentials getTestAppSSOCredentials() throws MalformedURLException {
+    public static LiAppCredentials getTestAppSSOCredentials() {
         return new LiAppCredentials.Builder()
                 .setClientName(TEST_CLIENT_NAME)
                 .setClientKey(TEST_CLIENT_ID)
@@ -304,11 +302,4 @@ public class TestHelper {
                 .setTenantId(TEST_TENANT_ID)
                 .build();
     }
-
-    /*public static LiClientManager getTestLiaClientManager(Activity context) throws MalformedURLException,
-    URISyntaxException {
-        LiClientManager liClientManger = LiClientManager.init(context);
-        LiClientManager instance = liClientManger.getInstance();
-        return instance;
-    }*/
 }
