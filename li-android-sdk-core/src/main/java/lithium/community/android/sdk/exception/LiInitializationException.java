@@ -17,42 +17,39 @@
 package lithium.community.android.sdk.exception;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
- * This exception is sugar for {@link ExceptionInInitializerError} exceptions
- * which may be thrown by static component initializer in the SDK.
+ * This exception in line with {@link ExceptionInInitializerError} but
+ * is not a type of runtime exception and is required to be caught
+ * which may be thrown by component initializer in the SDK.
  *
  * @author adityasharat
  */
-public class LiExceptionInInitializerError extends ExceptionInInitializerError {
+public class LiInitializationException extends Exception {
 
     @NonNull
     private final String name;
 
-    @NonNull
-    private final String message;
-
     /**
      * Default public constructor.
      *
-     * @param cause The error or exceptions because of which the component could not be initialized.
      * @param name  The name of the component which could not be initialized.
+     * @param cause The error or exceptions because of which the component could not be initialized.
      */
-    public LiExceptionInInitializerError(@NonNull Throwable cause, @NonNull String name) {
-        super(cause);
+    public LiInitializationException(@NonNull String name, @Nullable Throwable cause) {
+        super(String.format("%s failed to initialize.", name), cause);
         this.name = name;
-        this.message = String.format("%s failed to initialize.", this.name);
     }
 
     /**
-     * The pretty message for the exception.
+     * Overridden public constructor to be used if the cause of the initialization
+     * exceptions is not known.
      *
-     * @return the exception message.
+     * @param name The name of the component which could not be initialized.
      */
-    @NonNull
-    @Override
-    public String getMessage() {
-        return message;
+    public LiInitializationException(@NonNull String name) {
+        this(name, null);
     }
 
     /**

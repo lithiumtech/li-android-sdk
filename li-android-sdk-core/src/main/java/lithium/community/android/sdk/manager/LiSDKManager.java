@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
-import lithium.community.android.sdk.exception.LiExceptionInInitializerError;
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
@@ -71,32 +71,23 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Checks whether the SDK is initialized.
-     *
-     * @return true or false depending on whether the SDK is initialized
-     */
-    public static boolean isEnvironmentInitialized() {
-        return isInitialized.get() && instance != null;
-    }
-
-    /**
      * Initializes the SDK. If the initialization is successful {@link #getInstance()} will return an initialized SDK Manager. This
      * function may or may not create a new instance or reinitialize the SDK Manager with subsequent calls.
      *
      * @param context     The android {@link Context} to be used by the SDK.
      * @param credentials The {@link LiAppCredentials} for authenticating the SDK.
      */
-    public static synchronized void initialize(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws ExceptionInInitializerError {
+    public static synchronized void initialize(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws LiInitializationException {
 
         LiCoreSDKUtils.checkNotNull(context, "context was null");
         LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
 
         if (isInitialized.compareAndSet(false, true)) {
             if (LiDefaultQueryHelper.initHelper(context) == null) {
-                throw new LiExceptionInInitializerError(null, COMPONENT_NAME);
+                throw new LiInitializationException(COMPONENT_NAME);
             }
             if (LiSecuredPrefManager.init(context) == null) {
-                throw new LiExceptionInInitializerError(null, COMPONENT_NAME);
+                throw new LiInitializationException(COMPONENT_NAME);
             }
             instance = new LiSDKManager(context, credentials);
         }
@@ -111,23 +102,13 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Returns an instance of the {@link LiSDKManager}.
-     *
-     * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
-     */
-    @Nullable
-    public static LiSDKManager getInstance() {
-        return instance;
-    }
-
-    /**
      * Initializes LiSDKManager.
      *
      * @param context     The android context.
      * @param credentials The credentials for authentication.
      * @return An instance of LiSDKManager
      * @throws URISyntaxException Does not throw a URISyntaxException but still here for legacy support.
-     * @deprecated It is recommended to use {@link #initialize(Context, LiAppCredentials)} instead.
+     * @deprecated Use {@link #initialize(Context, LiAppCredentials)} instead.
      */
     @Nullable
     public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws URISyntaxException {
@@ -154,6 +135,42 @@ public final class LiSDKManager extends LiAuthManager {
         return instance;
     }
 
+    /**
+     * To check if the the SDK is initialized correctly. Should be used before invoking
+     * APIs of the SDK or components which depend on it.
+     *
+     * @return {@code true} iff SDK is fully initialized, otherwise {@code false}.
+     */
+    public static boolean isInitialized() {
+        return isInitialized.get() && instance != null;
+    }
+
+    /**
+     * Checks whether the SDK is initialized.
+     *
+     * @return true or false depending on whether the SDK is initialized
+     * @deprecated Use {@link #isInitialized()} instead.
+     */
+    public static boolean isEnvironmentInitialized() {
+        return isInitialized.get() && instance != null;
+    }
+
+    /**
+     * Returns an instance of the {@link LiSDKManager}.
+     *
+     * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
+     */
+    @Nullable
+    public static LiSDKManager getInstance() {
+        return instance;
+    }
+
+    /**
+     * This method is used to pull configurations from the community and
+     * update the local configurations.
+     *
+     * @param context The android context.
+     */
     public void syncWithCommunity(final Context context) {
         if (instance.isUserLoggedIn()) {
             try {

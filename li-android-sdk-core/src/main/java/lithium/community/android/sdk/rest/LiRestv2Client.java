@@ -93,7 +93,8 @@ public class LiRestv2Client extends LiRestClient {
     @Override
     public void processAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack) {
 
-        LiCoreSDKUtils.checkNotNull(baseRestRequest, callBack);
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, "baseRestRequest was null");
+        LiCoreSDKUtils.checkNotNull(callBack, "callback was null");
 
         if (baseRestRequest instanceof LiBaseRestRequest == false) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
@@ -119,10 +120,11 @@ public class LiRestv2Client extends LiRestClient {
      * @param imageName       Name of the image file.
      * @param requestBody     request body for post call to upload image.
      */
-    public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest,
-            @NonNull LiAsyncRequestCallback callBack, String imagePath, String imageName, String requestBody) {
+    public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack, String imagePath,
+                                   String imageName, String requestBody) {
 
-        LiCoreSDKUtils.checkNotNull(baseRestRequest, callBack);
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, "baseRestRequest was null");
+        LiCoreSDKUtils.checkNotNull(callBack, "callback was null");
 
         if (baseRestRequest instanceof LiBaseRestRequest == false) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
