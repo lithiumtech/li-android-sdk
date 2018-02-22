@@ -27,6 +27,18 @@ import lithium.community.android.sdk.utils.LiUriUtils;
  */
 public final class LiAppCredentials {
 
+    /**
+     * The API end point for authorizing SSO login.
+     */
+    @NonNull
+    private static final String SSO_AUTH_END_POINT = "api/2.0/auth/authorize";
+
+    /**
+     * The API end point for authorizing login using OAuth 2.0.
+     */
+    @NonNull
+    private static final String OAUTH_END_POINT = "auth/oauth2/authorize";
+
     @NonNull
     private final String clientName;
 
@@ -75,8 +87,8 @@ public final class LiAppCredentials {
         this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, "apiGatewayHost was empty"));
 
         this.redirectUri = buildRedirectUri(communityUri);
-        this.ssoAuthorizeUri = communityURL + "api/2.0/auth/authorize";
-        this.authorizeUri = this.communityUri.buildUpon().path("auth/oauth2/authorize").build();
+        this.ssoAuthorizeUri = communityURL + SSO_AUTH_END_POINT;
+        this.authorizeUri = this.communityUri.buildUpon().path(OAUTH_END_POINT).build();
     }
 
     private static String buildRedirectUri(Uri communityUri) {
