@@ -113,6 +113,7 @@ public final class LiSDKManager extends LiAuthManager {
 
         LiCoreSDKUtils.checkNotNull(context, "context was null");
         LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
+
         if (isInitialized.compareAndSet(false, true)) {
             if (LiDefaultQueryHelper.initHelper(context) == null) {
                 return null;
@@ -123,8 +124,6 @@ public final class LiSDKManager extends LiAuthManager {
             instance = new LiSDKManager(context, credentials);
         }
 
-        LiCoreSDKUtils.checkNotNull(context, "context was null");
-        LiCoreSDKUtils.checkNotNull(credentials, "credentials was null");
         if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
             //Generate a visitor ID and save it in secure preferences
             getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
