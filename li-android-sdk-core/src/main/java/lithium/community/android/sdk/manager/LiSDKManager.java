@@ -91,12 +91,7 @@ public final class LiSDKManager extends LiAuthManager {
             }
             instance = new LiSDKManager(context, credentials);
         }
-
-        if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
-
-            // Generate a visitor ID and save it in secure preferences
-            getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
-        }
+        updatePreferences(context);
     }
 
     /**
@@ -123,12 +118,7 @@ public final class LiSDKManager extends LiAuthManager {
             }
             instance = new LiSDKManager(context, credentials);
         }
-
-        if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
-            //Generate a visitor ID and save it in secure preferences
-            getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
-        }
-
+        updatePreferences(context);
         return instance;
     }
 
@@ -160,6 +150,12 @@ public final class LiSDKManager extends LiAuthManager {
     @Nullable
     public static LiSDKManager getInstance() {
         return instance;
+    }
+
+    private static void updatePreferences(@NonNull Context context) {
+        if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LI_VISITOR_ID) == null) {
+            getInstance().putInSecuredPreferences(context, LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString()); // generate a visitor ID and save it
+        }
     }
 
     /**
