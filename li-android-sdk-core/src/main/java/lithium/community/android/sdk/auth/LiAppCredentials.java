@@ -262,7 +262,7 @@ public final class LiAppCredentials {
          * @return this builder.
          */
         @NonNull
-        public Builder setApiGatewayUri(String apiGatewayUri) {
+        public Builder setApiGatewayUri(@NonNull String apiGatewayUri) {
             this.apiGatewayUri = apiGatewayUri;
             return this;
         }
