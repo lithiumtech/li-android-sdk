@@ -23,7 +23,10 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUriUtils;
 
 /**
- * The credentials for initializing the LIA SDK.
+ * The credentials for initializing the LIA SDK Manager. The client name, client Id, client secret,
+ * and tenant Id can be found in the Community Admin page; under the System category choose Api Apps.
+ * Make sure that the credentials are for Android. The community URL is the public domain where your
+ * community is hosted. The default API gateway host is "api.lithium.com".
  */
 public final class LiAppCredentials {
 
