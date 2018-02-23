@@ -164,20 +164,19 @@ public final class LiAppCredentials {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         LiAppCredentials that = (LiAppCredentials) o;
 
-        if (!clientName.equals(that.clientName)) return false;
-        if (!tenantId.equals(that.tenantId)) return false;
-        if (!clientKey.equals(that.clientKey)) return false;
-        if (!clientSecret.equals(that.clientSecret)) return false;
-        if (!communityUri.equals(that.communityUri)) return false;
-        if (!apiGatewayHost.equals(that.apiGatewayHost)) return false;
-        if (!authorizeUri.equals(that.authorizeUri)) return false;
-        if (!redirectUri.equals(that.redirectUri)) return false;
-        return ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
+        return clientName.equals(that.clientName) && tenantId.equals(that.tenantId) && clientKey.equals(that.clientKey)
+                && clientSecret.equals(that.clientSecret) && communityUri.equals(that.communityUri) && apiGatewayHost.equals(that.apiGatewayHost)
+                && authorizeUri.equals(that.authorizeUri) && redirectUri.equals(that.redirectUri) && ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
     }
 
     @Override
