@@ -70,7 +70,7 @@ public final class LiAppCredentials {
     private final String ssoAuthorizeUri;
 
     /**
-     * Default private constructor for Lia SDK Credentials.
+     * Default public constructor for Lia SDK Credentials.
      *
      * @param clientName     The client name.
      * @param clientKey      The client Id.
@@ -79,8 +79,8 @@ public final class LiAppCredentials {
      * @param communityURL   The LIA community's URL.
      * @param apiGatewayHost API gateway host.
      */
-    private LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-                             @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
+    public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
+                            @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
         this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, "clientName was empty");
         this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey was empty");
         this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientSecret was empty");
@@ -195,6 +195,8 @@ public final class LiAppCredentials {
 
     /**
      * Builder to create instances of {@link LiAppCredentials}.
+     *
+     * @deprecated Use the default public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
      */
     public static final class Builder {
 
