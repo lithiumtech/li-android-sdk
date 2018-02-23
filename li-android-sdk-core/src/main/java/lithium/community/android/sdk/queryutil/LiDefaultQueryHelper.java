@@ -33,7 +33,7 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 public class LiDefaultQueryHelper {
 
-    private static LiDefaultQueryHelper INSTANCE;
+    private static LiDefaultQueryHelper instance;
     private JsonObject defaultSetting;
 
     /**
@@ -52,20 +52,20 @@ public class LiDefaultQueryHelper {
      * @return Singleton instance of this class.
      */
     public static synchronized LiDefaultQueryHelper initHelper(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new LiDefaultQueryHelper(context);
+        if (instance == null) {
+            instance = new LiDefaultQueryHelper(context);
         }
-        return INSTANCE;
+        return instance;
     }
 
     /**
      * @return Instance of this class.
      */
     public static LiDefaultQueryHelper getInstance() {
-        if (INSTANCE == null) {
+        if (instance == null) {
             throw new NoSuchPropertyException("Helper not intialized. Call init method first");
         }
-        return INSTANCE;
+        return instance;
     }
 
     /**

@@ -45,7 +45,7 @@ public class LiQueryBuilder {
     private static final String ORDER_BY = "ORDER BY";
     private static final String LIMIT = "LIMIT";
 
-    private static volatile LiQuerySetting LI_QUERY_SETTING;
+    private static volatile LiQuerySetting liQuerySetting;
 
     private static JsonObject getDefault(String client) {
         JsonObject jsonObject = LiDefaultQueryHelper.getInstance().getDefaultSetting();
@@ -125,11 +125,11 @@ public class LiQueryBuilder {
         JsonObject clientSettings = getClientJsonSetting(client, context);
         Gson gson = new Gson();
         try {
-            LI_QUERY_SETTING = gson.fromJson(clientSettings, LiQuerySetting.class);
+            liQuerySetting = gson.fromJson(clientSettings, LiQuerySetting.class);
         } catch (Exception exception) {
             Log.e("LiQueryBuilder", "Error parsing client setting json: " + clientSettings.toString());
         }
-        return LI_QUERY_SETTING;
+        return liQuerySetting;
     }
 
     /**

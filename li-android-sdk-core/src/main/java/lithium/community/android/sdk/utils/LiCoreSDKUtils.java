@@ -59,20 +59,20 @@ import okhttp3.Request;
  */
 public class LiCoreSDKUtils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
-    private static final ThreadLocal<SecureRandom> randTl = new ThreadLocal<SecureRandom>() {
+    private static final ThreadLocal<SecureRandom> RAND_TL = new ThreadLocal<SecureRandom>() {
         @Override
         protected SecureRandom initialValue() {
             return new SecureRandom();
         }
     };
-    private static char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    private static final char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     private LiCoreSDKUtils() {
     }
 
 
     public static String getRandomHexString() {
-        return toHexString(getRandomBytes(randTl.get(), 128));
+        return toHexString(getRandomBytes(RAND_TL.get(), 128));
     }
 
     /**

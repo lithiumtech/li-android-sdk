@@ -28,8 +28,8 @@ import android.support.annotation.NonNull;
  */
 public final class MessageConstants {
 
-    public static String ERROR_ARGUMENT_WAS_NULL = "%s was null";
-    public static String ERROR_STRING_WAS_EMPTY = "%s was empty";
+    public static String errorArgumentWasNull = "%s was null";
+    public static String errorStringWasEmpty = "%s was empty";
 
     /**
      * Default private constructor so that an instance of this
@@ -46,7 +46,7 @@ public final class MessageConstants {
      * @return the error message.
      */
     public static String wasNull(@NonNull String name) {
-        return String.format(ERROR_ARGUMENT_WAS_NULL, name);
+        return String.format(errorArgumentWasNull, name);
     }
 
     /**
@@ -57,6 +57,6 @@ public final class MessageConstants {
      * @return the error message.
      */
     public static String wasEmpty(@NonNull String name) {
-        return String.format(ERROR_STRING_WAS_EMPTY, name);
+        return String.format(errorStringWasEmpty, name);
     }
 }
