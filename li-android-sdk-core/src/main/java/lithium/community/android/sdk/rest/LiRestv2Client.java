@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 
 /**
  * Rest v2 client for community. Always expects LiQL queries in requests
@@ -55,10 +56,10 @@ public class LiRestv2Client extends LiRestClient {
      */
     @Override
     public LiBaseResponse processSync(@NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
-
-        LiCoreSDKUtils.checkNotNull(baseRestRequest);
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
         LiRestV2Request restV2Request = getLiRestV2Request(baseRestRequest);
         LiBaseResponse response = super.processSync(restV2Request);
+
         return validateResponse(response);
     }
 
@@ -70,18 +71,14 @@ public class LiRestv2Client extends LiRestClient {
      * @throws LiRestResponseException
      */
     @NonNull
-    private LiRestV2Request getLiRestV2Request(
-            @NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
-        LiCoreSDKUtils.checkNotNull(baseRestRequest);
-
-        if (baseRestRequest instanceof LiBaseRestRequest == false) {
+    private LiRestV2Request getLiRestV2Request(@NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
+        if (!(baseRestRequest instanceof LiBaseRestRequest)) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            throw LiRestResponseException.illegalArgumentError(
-                    "Rest v2 request should pass a liql query request parameter");
+            throw LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter");
         }
 
-        LiRestV2Request restV2Request = (LiRestV2Request) baseRestRequest;
-        return restV2Request;
+        return (LiRestV2Request) baseRestRequest;
     }
 
     /**
@@ -93,13 +90,12 @@ public class LiRestv2Client extends LiRestClient {
     @Override
     public void processAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack) {
 
-        LiCoreSDKUtils.checkNotNull(baseRestRequest, "baseRestRequest was null");
-        LiCoreSDKUtils.checkNotNull(callBack, "callback was null");
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
+        LiCoreSDKUtils.checkNotNull(callBack, MessageConstants.wasNull("callback"));
 
-        if (baseRestRequest instanceof LiBaseRestRequest == false) {
+        if (!(baseRestRequest instanceof LiBaseRestRequest)) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            callBack.onError(LiRestResponseException.illegalArgumentError(
-                    "Rest v2 request should pass a liql query request parameter"));
+            callBack.onError(LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter"));
         }
 
         LiRestV2Request restV2Request = null;
@@ -123,13 +119,12 @@ public class LiRestv2Client extends LiRestClient {
     public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack, String imagePath,
                                    String imageName, String requestBody) {
 
-        LiCoreSDKUtils.checkNotNull(baseRestRequest, "baseRestRequest was null");
-        LiCoreSDKUtils.checkNotNull(callBack, "callback was null");
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
+        LiCoreSDKUtils.checkNotNull(callBack, MessageConstants.wasNull("callBack"));
 
-        if (baseRestRequest instanceof LiBaseRestRequest == false) {
+        if (!(baseRestRequest instanceof LiBaseRestRequest)) {
             Log.e(LOG_TAG, "Invalid rest v2 request");
-            callBack.onError(LiRestResponseException.illegalArgumentError(
-                    "Rest v2 request should pass a liql query request parameter"));
+            callBack.onError(LiRestResponseException.illegalArgumentError("Rest v2 request should pass a liql query request parameter"));
         }
 
         LiRestV2Request restV2Request = null;
@@ -140,7 +135,6 @@ public class LiRestv2Client extends LiRestClient {
         }
 
         super.uploadImageProcessAsync(baseRestRequest, callBack, imagePath, imageName, requestBody);
-
     }
 
     /**

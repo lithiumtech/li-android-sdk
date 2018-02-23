@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUriUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 
 /**
  * The credentials for initializing the LIA SDK Manager. The client name, client Id, client secret,
@@ -76,18 +77,18 @@ public final class LiAppCredentials {
      * @param clientKey      The client Id.
      * @param clientSecret   The client secret.
      * @param tenantId       tenant ID of the community.
-     * @param communityURL   The LIA community's URL.
-     * @param apiGatewayHost API gateway host.
+     * @param communityURL   The LIA community's URL. (scheme + host)
+     * @param apiGatewayHost API gateway host. (host)
      */
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
                             @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
-        this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, "clientName was empty");
-        this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, "clientKey was empty");
-        this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, "clientSecret was empty");
-        this.tenantId = LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, "tenantId was empty");
+        this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
+        this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
+        this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
+        this.tenantId = LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
 
-        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, "communityURL was empty"));
-        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, "apiGatewayHost was empty"));
+        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
+        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, MessageConstants.wasEmpty("apiGatewayHost")));
 
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + SSO_AUTH_END_POINT;
