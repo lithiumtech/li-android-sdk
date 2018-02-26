@@ -60,7 +60,7 @@ class LiAuthManager {
     private LiAuthState liAuthState;
     private LiDeviceTokenProvider liDeviceTokenProvider;
 
-    LiAuthManager(Context context, LiAppCredentials liAppCredentials) {
+    LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials liAppCredentials) {
         this.liAuthState = restoreAuthState(context);
         this.liAppCredentials = liAppCredentials;
     }
@@ -155,7 +155,7 @@ class LiAuthManager {
      * @throws URISyntaxException
      */
     public void initLoginFlow(Context context, String ssoToken,
-            LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
+                              LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
         this.liDeviceTokenProvider = liDeviceTokenProvider;
         if (!isUserLoggedIn()) {
             new LiAuthServiceImpl(context).startLoginFlow(ssoToken);
@@ -310,7 +310,7 @@ class LiAuthManager {
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     public void fetchFreshAccessToken(final Context context,
-            final LiAuthService.FreshTokenCallBack mFreshTokenCallBack)
+                                      final LiAuthService.FreshTokenCallBack mFreshTokenCallBack)
             throws URISyntaxException, LiRestResponseException {
 
         new LiAuthServiceImpl(context).performRefreshTokenRequest(new LiAuthService.LiTokenResponseCallback() {

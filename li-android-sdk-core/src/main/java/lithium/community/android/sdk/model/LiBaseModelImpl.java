@@ -157,17 +157,9 @@ public class LiBaseModelImpl implements LiBaseModel {
     }
 
     public static class LiDate extends LiBaseModelImpl {
-        private static SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        private static final SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         private LiDateInstant value;
-
-        public void setValue(@NonNull String valueStr) {
-            setValue(new LiDateInstant());
-        }
-
-        public void setValue(LiDateInstant value) {
-            this.value = value;
-        }
 
         public String getValueAsLithiumFormattedDate() {
             return LIA_DATE_TIME_FORMAT.format(value);
@@ -176,12 +168,32 @@ public class LiBaseModelImpl implements LiBaseModel {
         public LiDateInstant getValue() {
             return value;
         }
+
+        public void setValue(@NonNull String valueStr) {
+            setValue(new LiDateInstant());
+        }
+
+        public void setValue(LiDateInstant value) {
+            this.value = value;
+        }
     }
 
     public static class LiDateInstant extends LiBaseModelImpl {
-        private static SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        private static final SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
         private long value;
+
+        public String getValueAsLithiumFormattedDate() {
+            return LIA_DATE_TIME_FORMAT.format(value);
+        }
+
+        public long getValue() {
+            return this.value;
+        }
+
+        public void setValue(long value) {
+            this.value = value;
+        }
 
         public void setValue(@NonNull String valueStr) {
             LIA_DATE_TIME_FORMAT.setTimeZone(TimeZone.getDefault());
@@ -193,19 +205,6 @@ public class LiBaseModelImpl implements LiBaseModel {
             }
             setValue(dt.getTime());
         }
-
-        public void setValue(long value) {
-            this.value = value;
-        }
-
-        public String getValueAsLithiumFormattedDate() {
-            return LIA_DATE_TIME_FORMAT.format(value);
-        }
-
-        public long getValue() {
-            return this.value;
-        }
-
     }
 
     public static class LiPrivacyLevelValue extends LiBaseModelImpl {

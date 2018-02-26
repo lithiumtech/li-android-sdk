@@ -21,8 +21,6 @@ import android.net.Uri;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-
 import lithium.community.android.sdk.utils.LiUriUtils;
 
 /**
@@ -31,27 +29,36 @@ import lithium.community.android.sdk.utils.LiUriUtils;
 
 public class LiAppCredentialsTest {
 
-    private final String ssoToken = "ssoToken";
-    private final String clientKey = "clientKey";
-    private final String clientSecret = "clientSecret";
-    private final String communityUri = "http://www.lithium.com/";
-    private final boolean deferredLogin = false;
-    private final String ssoAuthorizeUri = "http://www.lithium.com/api/2.0/auth/authorize";
-
     @Test
-    public void getParamsTest() throws MalformedURLException {
+    public void getParamsTest() {
+        String clientKey = "clientKey";
+        String clientSecret = "clientSecret";
+        String communityUri = "http://www.lithium.com/";
+        String apiGatewayHost = "http://www.lithium.com/";
+        String clientName = "name";
+        String tenantId = "tenant";
+
         LiAppCredentials liAppCredentials = new LiAppCredentials.Builder()
+                .setClientName(clientName)
                 .setClientKey(clientKey)
                 .setClientSecret(clientSecret)
+                .setTenantId(tenantId)
                 .setCommunityUri(communityUri)
+                .setApiGatewayUri(apiGatewayHost)
                 .build();
+
+        Assert.assertEquals(clientName, liAppCredentials.getClientName());
         Assert.assertEquals(clientKey, liAppCredentials.getClientKey());
         Assert.assertEquals(clientSecret, liAppCredentials.getClientSecret());
         Assert.assertEquals(Uri.parse(communityUri), liAppCredentials.getCommunityUri());
+        Assert.assertEquals(Uri.parse(apiGatewayHost), liAppCredentials.getApiGatewayHost());
+        Assert.assertEquals(apiGatewayHost, liAppCredentials.getApiProxyHost());
+        Assert.assertEquals(tenantId, liAppCredentials.getTenantId());
+
+        String ssoAuthorizeUri = "http://www.lithium.com/api/2.0/auth/authorize";
         Assert.assertEquals(ssoAuthorizeUri, liAppCredentials.getSsoAuthorizeUri());
-        Assert.assertEquals(Uri.parse(communityUri).buildUpon().path("auth/oauth2/authorize").build(),
-                liAppCredentials.getAuthorizeUri());
-        Assert.assertEquals(LiUriUtils.reverseDomainName(Uri.parse(communityUri)) + "://oauth2callback",
-                liAppCredentials.getRedirectUri());
+
+        Assert.assertEquals(Uri.parse(communityUri).buildUpon().path("auth/oauth2/authorize").build(), liAppCredentials.getAuthorizeUri());
+        Assert.assertEquals(LiUriUtils.reverseDomainName(Uri.parse(communityUri)) + "://oauth2callback", liAppCredentials.getRedirectUri());
     }
 }

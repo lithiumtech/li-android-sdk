@@ -130,7 +130,7 @@ public class LiAuthServiceTest {
         try {
             liAppCredentials = TestHelper.getTestAppCredentials();
             liSDKManager = LiSDKManager.init(mContext, liAppCredentials);
-        } catch (URISyntaxException | MalformedURLException ignored) {
+        } catch (URISyntaxException ignored) {
         }
     }
 
