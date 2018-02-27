@@ -17,6 +17,8 @@
 package lithium.community.android.sdk.rest;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,11 +37,15 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.manager.LiClientManager;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import okhttp3.Request;
 import okhttp3.internal.platform.Platform;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -67,14 +73,21 @@ public class LiRestv2ClientTest {
     @Test
     public void testValidateResponse() throws Exception {
         context = Mockito.mock(Activity.class);
+        Resources resources = Mockito.mock(Resources.class);
+        when(context.getResources()).thenReturn(resources);
+        when(resources.openRawResource(anyInt())).thenReturn(null);
+
+        SharedPreferences preferences = Mockito.mock(SharedPreferences.class);
+        when(context.getSharedPreferences(anyString(), anyInt())).thenReturn(preferences);
+        when(preferences.getString(anyString(), anyString())).thenReturn("");
+
         PowerMockito.mockStatic(LiClientManager.class);
         LiClientManager liClientManager = PowerMockito.mock(LiClientManager.class);
 
         PowerMockito.mockStatic(SSLContext.class);
         SSLContext sslContext = PowerMockito.mock(SSLContext.class);
         when(sslContext.getInstance("SSL")).thenReturn(sslContext);
-        Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class),
-                isA(SecureRandom.class));
+        Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class), isA(SecureRandom.class));
         SSLSocketFactory socketFactory = mock(SSLSocketFactory.class);
         when(sslContext.getSocketFactory()).thenReturn(socketFactory);
 
@@ -85,11 +98,12 @@ public class LiRestv2ClientTest {
         BDDMockito.given(Platform.get()).willReturn(platform);
 
         BDDMockito.given(SSLContext.getInstance("SSL")).willReturn(sslContext);
-
+        LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
         LiRestv2Client liRestv2Client = LiRestv2Client.getInstance();
         final LiBaseResponse liBaseResponse = mock(LiBaseResponse.class);
         when(liBaseResponse.getHttpCode()).thenReturn(200);
-        LiRestv2Client liRestv2ClientSpy = spy(LiRestv2Client.class);
+
+        LiRestv2Client liRestv2ClientSpy = spy(liRestv2Client);
         doReturn(liBaseResponse).when(liRestv2ClientSpy).processSync(isA(LiBaseRestRequest.class));
 
         LiRestV2Request liBaseRestRequest = new LiRestV2Request(context, liql, "message");

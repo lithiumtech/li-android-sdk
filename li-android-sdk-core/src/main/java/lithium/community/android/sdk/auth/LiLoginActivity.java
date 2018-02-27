@@ -36,14 +36,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import lithium.community.android.sdk.R;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 /**
+ * <p>
  * Activity that receives the redirect Uri sent by the OpenID endpoint. This activity gets launched
  * when the user approves the app for use and it starts the {@link PendingIntent} given in
  * {@link LiAuthService#performAuthorizationRequest}.
- * <p>App developers using this library <em>must</em> to register this activity in the manifest
+ * </p>
+ * <p>
+ * App developers using this library <em>must</em> to register this activity in the manifest
  * with one intent filter for each redirect URI they are intending to use.
  * </p>
  */
@@ -78,47 +82,49 @@ public class LiLoginActivity extends LiBaseAuthActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        service = new LiAuthServiceImpl(this);
+        LiSDKManager manager = LiSDKManager.getInstance();
+        if (manager != null) {
+            service = new LiAuthServiceImpl(this, manager);
 
-        webViewOauth = findViewById(R.id.li_web_oauth);
-        progressBar = findViewById(R.id.li_login_page_prog_bar);
-        tvLoginInProgress = findViewById(R.id.li_login_in_prog_txt);
+            webViewOauth = findViewById(R.id.li_web_oauth);
+            progressBar = findViewById(R.id.li_login_page_prog_bar);
+            tvLoginInProgress = findViewById(R.id.li_login_in_prog_txt);
 
-        progressBar.setVisibility(View.VISIBLE);
-        webViewOauth.setVisibility(View.INVISIBLE);
-        tvLoginInProgress.setText(getString(R.string.li_openingLoginPage));
-        tvLoginInProgress.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            webViewOauth.setVisibility(View.INVISIBLE);
+            tvLoginInProgress.setText(getString(R.string.li_openingLoginPage));
+            tvLoginInProgress.setVisibility(View.VISIBLE);
 
-        isAccessTokenSaved = false;
+            isAccessTokenSaved = false;
 
-        webViewOauth.clearHistory();
-        webViewOauth.clearFormData();
-        webViewOauth.clearCache(true);
+            webViewOauth.clearHistory();
+            webViewOauth.clearFormData();
+            webViewOauth.clearCache(true);
 
-        Intent intent = getIntent();
-        Uri uri = intent.getData();
+            Intent intent = getIntent();
+            Uri uri = intent.getData();
 
-        if (uri != null) {
-            String url = intent.getData().toString();
-            setTitle(url);
+            if (uri != null) {
+                String url = intent.getData().toString();
+                setTitle(url);
 
-            //set the web client
-            webViewOauth.setWebViewClient(new LoginWebViewClient());
-            webViewOauth.setWebChromeClient(new LoginWebChromeClient());
+                //set the web client
+                webViewOauth.setWebViewClient(new LoginWebViewClient());
+                webViewOauth.setWebChromeClient(new LoginWebChromeClient());
 
-            //activates JavaScript (just in case)
-            WebSettings webSettings = webViewOauth.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-            webSettings.setAppCacheEnabled(false);
+                //activates JavaScript (just in case)
+                WebSettings webSettings = webViewOauth.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+                webSettings.setAppCacheEnabled(false);
 
-            //load the url of the oAuth login page
-            webViewOauth.loadUrl(url);
-        } else {
-            tvLoginInProgress.setText(R.string.li_login_error_missing_url);
-            Log.e("LiLoginActivity", "Login page url is null.");
+                //load the url of the oAuth login page
+                webViewOauth.loadUrl(url);
+            } else {
+                tvLoginInProgress.setText(R.string.li_login_error_missing_url);
+                Log.e("LiLoginActivity", "Login page url is null.");
+            }
         }
-
     }
 
     private class LoginWebChromeClient extends WebChromeClient {

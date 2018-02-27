@@ -18,18 +18,19 @@ package lithium.community.android.sdk.auth;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.rest.LiAuthRestClient;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiUriUtils;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
-import static lithium.community.android.sdk.auth.LiAuthorizationException.EXTRA_EXCEPTION;
 
 /**
  * It is a base activity use to extract Auth code and save access token.
@@ -37,7 +38,10 @@ import static lithium.community.android.sdk.auth.LiAuthorizationException.EXTRA_
  */
 
 public class LiBaseAuthActivity extends AppCompatActivity {
+
     private static final String KEY_STATE = "state";
+
+    @Nullable
     protected LiAuthService service;
 
     /**
@@ -48,57 +52,52 @@ public class LiBaseAuthActivity extends AppCompatActivity {
      */
     protected void extractAuthCode(Uri data) {
         String state = data.getQueryParameter(KEY_STATE);
-        service = new LiAuthServiceImpl(this);
-        LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
-
-        if (request == null) {
-            Log.e(LOG_TAG, String.format(
-                    "Response received for unknown request with state %s", state));
-            service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
-            finish();
-            return;
-        }
-
-        Intent responseData = null;
-        LiSSOAuthResponse response2 = new LiSSOAuthResponse();
-        if (data.getQueryParameterNames().contains(LiAuthorizationException.PARAM_ERROR)) {
-            String error = data.getQueryParameter(LiAuthorizationException.PARAM_ERROR);
-            LiAuthorizationException ex = LiAuthorizationException.fromOAuthTemplate(
-                    LiAuthorizationException.AuthorizationRequestErrors.byString(error),
-                    error,
-                    data.getQueryParameter(LiAuthorizationException.PARAM_ERROR_DESCRIPTION),
-                    LiUriUtils.parseUriIfAvailable(
-                            data.getQueryParameter(LiAuthorizationException.PARAM_ERROR_URI)));
-            responseData = ex.toIntent();
-        } else {
-
-            response2.setAuthCode(data.getQueryParameter("code"));
-            response2.setUserId(data.getQueryParameter("user-id"));
-            response2.setApiProxyHost(data.getQueryParameter("proxy-host"));
-            response2.setTenantId(data.getQueryParameter("tenant-id"));
-            response2.setState(state);
-        }
-
-        try {
-            final LiAuthRestClient autheClient = new LiAuthRestClient();
-            Gson gson = new Gson();
-            String jsonString = gson.toJson(response2);
-            response2.setJsonString(jsonString);
-            service.handleAuthorizationResponse(response2, autheClient, new LiAuthService.LoginCompleteCallBack() {
-                @Override
-                public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
-                    service.enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
-                    finish();
-                }
-
-            });
-        } catch (LiRestResponseException e) {
-            String errorMessage = e.getMessage();
-            if (responseData != null) {
-                responseData.putExtra(LiAuthConstants.LOGIN_RESULT, false);
-                errorMessage = responseData.getStringExtra(EXTRA_EXCEPTION);
+        LiSDKManager manager = LiSDKManager.getInstance();
+        if (LiSDKManager.isInitialized() && manager != null) {
+            service = new LiAuthServiceImpl(this, manager);
+            LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
+            if (request == null) {
+                Log.e(LOG_TAG, String.format("Response received for unknown request with state %s", state));
+                service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+                finish();
+                return;
             }
-            service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+
+            Intent intent = null;
+            LiSSOAuthResponse response = new LiSSOAuthResponse();
+            if (data.getQueryParameterNames().contains(LiAuthorizationException.PARAM_ERROR)) {
+                String error = data.getQueryParameter(LiAuthorizationException.PARAM_ERROR);
+                LiAuthorizationException ex = LiAuthorizationException.fromOAuthTemplate(LiAuthorizationException.AuthorizationRequestErrors.byString(error),
+                        error, data.getQueryParameter(LiAuthorizationException.PARAM_ERROR_DESCRIPTION),
+                        LiUriUtils.parseUriIfAvailable(data.getQueryParameter(LiAuthorizationException.PARAM_ERROR_URI)));
+                intent = ex.toIntent();
+            } else {
+                response.setAuthCode(data.getQueryParameter("code"));
+                response.setUserId(data.getQueryParameter("user-id"));
+                response.setApiProxyHost(data.getQueryParameter("proxy-host"));
+                response.setTenantId(data.getQueryParameter("tenant-id"));
+                response.setState(state);
+            }
+
+            try {
+                final LiAuthRestClient authClient = new LiAuthRestClient();
+                Gson gson = new Gson();
+                String jsonString = gson.toJson(response);
+                response.setJsonString(jsonString);
+                service.handleAuthorizationResponse(response, authClient, new LiAuthService.LoginCompleteCallBack() {
+                    @Override
+                    public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
+                        service.enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
+                        finish();
+                    }
+
+                });
+            } catch (LiRestResponseException e) {
+                if (intent != null) {
+                    intent.putExtra(LiAuthConstants.LOGIN_RESULT, false);
+                }
+                service.enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
+            }
         }
     }
 }

@@ -469,10 +469,15 @@ public class LiCoreSDKUtils {
     }
 
     public static void addLSIRequestHeaders(@NonNull Context context, Request.Builder builder) {
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER,
-                LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        addLSIRequestHeaders(context, checkNotNull(LiSDKManager.getInstance(), MessageConstants.wasNull("Li SDK Manager")), builder);
+    }
+
+    public static void addLSIRequestHeaders(@NonNull Context context, @NonNull LiSDKManager manager, @NonNull Request.Builder builder) {
+        checkNotNull(context, MessageConstants.wasNull("context"));
+        checkNotNull(manager, MessageConstants.wasNull("manager"));
+        checkNotNull(builder, MessageConstants.wasNull("builder"));
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER, manager.getLiAppCredentials().getClientName());
         builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.li_sdk_core_version);
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID,
-                LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, manager.getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
     }
 }

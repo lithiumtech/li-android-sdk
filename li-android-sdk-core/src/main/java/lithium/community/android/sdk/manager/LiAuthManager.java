@@ -17,9 +17,9 @@
 package lithium.community.android.sdk.manager;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -27,15 +27,9 @@ import android.webkit.CookieSyncManager;
 
 import org.json.JSONException;
 
-import java.net.URISyntaxException;
-
 import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.auth.LiAuthService;
-import lithium.community.android.sdk.auth.LiAuthServiceImpl;
-import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
-import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
@@ -43,34 +37,45 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STA
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
-/*
- * Created by kunal.shrivastava on 10/18/16.
- */
 
 /**
  * This class also manages
  * the responsibility of initiating the OAuth2-authorize flow if the user state is blank or empty. When
  * the token is expired, this class manages the responsibility of refreshing the auth state using OAuth
  * refresh token api.
+ *
+ * @author kunal.shrivastava
  */
-
 class LiAuthManager {
 
-    protected final LiAppCredentials liAppCredentials;
+    @NonNull
+    private final LiAppCredentials liAppCredentials;
+
     private LiAuthState liAuthState;
-    private LiDeviceTokenProvider liDeviceTokenProvider;
 
     LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials liAppCredentials) {
         this.liAuthState = restoreAuthState(context);
         this.liAppCredentials = liAppCredentials;
     }
 
-    public LiDeviceTokenProvider getLiDeviceTokenProvider() {
-        return liDeviceTokenProvider;
+    /**
+     * Get the credentials used to initialize the SDK.
+     *
+     * @return the credentials.
+     */
+    @NonNull
+    public LiAppCredentials getLiAppCredentials() {
+        return liAppCredentials;
     }
 
-    public void setLiDeviceTokenProvider(LiDeviceTokenProvider liDeviceTokenProvider) {
-        this.liDeviceTokenProvider = liDeviceTokenProvider;
+    /**
+     * Get the Community URI.
+     *
+     * @return the community URI.
+     * @deprecated Use {@link #getLiAppCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
+     */
+    public Uri getCommunityUrl() {
+        return liAppCredentials.getCommunityUri();
     }
 
     /**
@@ -111,64 +116,8 @@ class LiAuthManager {
         return liAuthState == null ? null : liAuthState.getRefreshToken();
     }
 
-    /**
-     * Login flow is initiated from here and then call goes to LiAuthService
-     *
-     * @param context {@link Context}
-     * @throws URISyntaxException
-     */
-    public void initLoginFlow(Context context) throws URISyntaxException {
-        initLoginFlow(context, null, null);
-    }
-
-    /**
-     * Login flow is initiated from here and then call goes to LiAuthService
-     *
-     * @param context  Android context
-     * @param ssoToken pass the Single Sign-on token if the community uses its own identity provider
-     * @throws URISyntaxException
-     */
-    public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
-        initLoginFlow(context, ssoToken, null);
-    }
-
-    /**
-     * Login flow is initiated from here and then call goes to LiAuthService
-     *
-     * @param context               Android context
-     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using.
-     *                              Either Firebase or GCM
-     * @throws URISyntaxException
-     */
-    public void initLoginFlow(Context context, LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
-        this.liDeviceTokenProvider = liDeviceTokenProvider;
-        initLoginFlow(context, null, liDeviceTokenProvider);
-    }
-
-    /**
-     * Login flow is initiated from here and then call goes to LiAuthService
-     *
-     * @param ssoToken              pass the Single Sign-on token if the community uses its own identity provider
-     * @param liDeviceTokenProvider this provider fetches device token id based upon whatever the app is using.
-     *                              Either Firebase or GCM
-     * @param context               {@link Context}
-     * @throws URISyntaxException
-     */
-    public void initLoginFlow(Context context, String ssoToken,
-                              LiDeviceTokenProvider liDeviceTokenProvider) throws URISyntaxException {
-        this.liDeviceTokenProvider = liDeviceTokenProvider;
-        if (!isUserLoggedIn()) {
-            new LiAuthServiceImpl(context).startLoginFlow(ssoToken);
-        }
-    }
-
-    public boolean removeFromSecuredPreferences(Context context, String key) {
-        if (LiSecuredPrefManager.getInstance() != null) {
-            LiSecuredPrefManager.getInstance().remove(context, key);
-            return true;
-        } else {
-            return false;
-        }
+    public String getFromSecuredPreferences(Context context, String key) {
+        return LiSecuredPrefManager.getInstance() == null ? null : LiSecuredPrefManager.getInstance().getString(context, key);
     }
 
     public boolean putInSecuredPreferences(Context context, String key, String value) {
@@ -180,9 +129,13 @@ class LiAuthManager {
         }
     }
 
-    public String getFromSecuredPreferences(Context context, String key) {
-        return LiSecuredPrefManager.getInstance() == null ? null
-                : LiSecuredPrefManager.getInstance().getString(context, key);
+    public boolean removeFromSecuredPreferences(Context context, String key) {
+        if (LiSecuredPrefManager.getInstance() != null) {
+            LiSecuredPrefManager.getInstance().remove(context, key);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -219,23 +172,28 @@ class LiAuthManager {
         this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
-        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new way of using CookieManager
-        // else use the deprecate methods for older versions
+
+        // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
+        // way of using CookieManager else use the deprecate methods for older versions.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG,
-                    "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >= " + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         } else {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG,
-                    "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
-            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
-            cookieSyncMngr.startSync();
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API < " + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieSyncManager manager = CookieSyncManager.createInstance(context);
+
+            //noinspection deprecation tagets old API version
+            manager.startSync();
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.removeAllCookie();
             cookieManager.removeSessionCookie();
-            cookieSyncMngr.stopSync();
-            cookieSyncMngr.sync();
+
+            //noinspection deprecation tagets old API version
+            manager.stopSync();
+
+            //noinspection deprecation tagets old API version
+            manager.sync();
         }
         this.liAuthState = null;
     }
@@ -274,7 +232,7 @@ class LiAuthManager {
     public String getProxyHost() {
         String proxyHost;
         if (liAuthState == null || TextUtils.isEmpty(liAuthState.getProxyHost())) {
-            proxyHost = liAppCredentials.getApiProxyHost();
+            proxyHost = liAppCredentials.getApiGatewayHost().toString();
         } else {
             proxyHost = liAuthState.getProxyHost();
         }
@@ -299,30 +257,5 @@ class LiAuthManager {
      */
     public boolean getNeedsTokenRefresh() {
         return liAuthState == null || this.liAuthState.getNeedsTokenRefresh();
-    }
-
-    /**
-     * Fetches Fresh Access Token and Persists it.
-     *
-     * @param context             {@link Context}
-     * @param mFreshTokenCallBack {@link LiAuthService.FreshTokenCallBack}
-     * @throws URISyntaxException      {@link URISyntaxException}
-     * @throws LiRestResponseException {@link LiRestResponseException}
-     */
-    public void fetchFreshAccessToken(final Context context,
-                                      final LiAuthService.FreshTokenCallBack mFreshTokenCallBack)
-            throws URISyntaxException, LiRestResponseException {
-
-        new LiAuthServiceImpl(context).performRefreshTokenRequest(new LiAuthService.LiTokenResponseCallback() {
-            @Override
-            public void onTokenRequestCompleted(@Nullable LiTokenResponse response, @Nullable Exception ex) {
-                if (ex != null) {
-                    mFreshTokenCallBack.onFreshTokenFetched(false);
-                    return;
-                }
-                persistAuthState(context, response);
-                mFreshTokenCallBack.onFreshTokenFetched(true);
-            }
-        });
     }
 }
