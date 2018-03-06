@@ -502,7 +502,7 @@ public abstract class LiRestClient {
             requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getNewAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getLiAppCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;
@@ -515,9 +515,9 @@ public abstract class LiRestClient {
     @Deprecated
     private String buildLSIHeaderString(Context context) {
         JsonObject headerJson = new JsonObject();
-        headerJson.addProperty("client_name", sdkManager.getLiAppCredentials().getClientName());
+        headerJson.addProperty("client_name", sdkManager.getCredentials().getClientName());
         headerJson.addProperty("client_type", "android");
-        headerJson.addProperty("client_id", sdkManager.getLiAppCredentials().getClientKey());
+        headerJson.addProperty("client_id", sdkManager.getCredentials().getClientKey());
         headerJson.addProperty("device_code", android.os.Build.DEVICE);
         headerJson.addProperty("device_model", android.os.Build.MODEL);
         headerJson.addProperty("device_id", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
@@ -610,7 +610,6 @@ public abstract class LiRestClient {
                     if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {
                             LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdkManager).performSyncRefreshTokenRequest();
-                            sdkManager.persistAuthState(context, liTokenResponse);
                             sdkManager.persistAuthState(context, liTokenResponse);
 
                             request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();

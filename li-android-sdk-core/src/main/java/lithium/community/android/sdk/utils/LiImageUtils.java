@@ -48,7 +48,7 @@ public class LiImageUtils {
         Bitmap compressedBitmap = getCompressedBitmap(filePath, reqWidth, reqHeight);
 
         String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) + File.separator
-                + LiSDKManager.getInstance().getLiAppCredentials().getTenantId() + "-community" + File.separator;
+                + LiSDKManager.getInstance().getCredentials().getTenantId() + "-community" + File.separator;
         final File communityRoot = new File(fileDirectory);
         communityRoot.mkdirs();
         File compressedFile = new File(fileDirectory + "/" + fileName);

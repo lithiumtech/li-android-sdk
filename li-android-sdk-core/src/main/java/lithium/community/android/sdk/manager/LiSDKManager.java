@@ -174,7 +174,7 @@ public final class LiSDKManager extends LiAuthManager {
     public void syncWithCommunity(final Context context) {
         if (instance.isUserLoggedIn()) {
             try {
-                String clientId = LiUUIDUtils.toUUID(getLiAppCredentials().getClientKey().getBytes()).toString();
+                String clientId = LiUUIDUtils.toUUID(getCredentials().getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
                 LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
                         new LiAsyncRequestCallback<LiGetClientResponse>() {

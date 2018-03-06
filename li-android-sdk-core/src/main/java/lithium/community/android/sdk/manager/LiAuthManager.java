@@ -32,6 +32,8 @@ import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
@@ -49,13 +51,13 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER
 class LiAuthManager {
 
     @NonNull
-    private final LiAppCredentials liAppCredentials;
+    private final LiAppCredentials credentials;
 
     private LiAuthState liAuthState;
 
-    LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials liAppCredentials) {
-        this.liAuthState = restoreAuthState(context);
-        this.liAppCredentials = liAppCredentials;
+    LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) {
+        this.liAuthState = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
+        this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
     }
 
     /**
@@ -64,18 +66,29 @@ class LiAuthManager {
      * @return the credentials.
      */
     @NonNull
+    public LiAppCredentials getCredentials() {
+        return credentials;
+    }
+
+    /**
+     * Get the credentials used to initialize the SDK.
+     *
+     * @return the credentials.
+     * @deprecated Use {@link #getCredentials()} instead.
+     */
+    @NonNull
     public LiAppCredentials getLiAppCredentials() {
-        return liAppCredentials;
+        return credentials;
     }
 
     /**
      * Get the Community URI.
      *
      * @return the community URI.
-     * @deprecated Use {@link #getLiAppCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
+     * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
     public Uri getCommunityUrl() {
-        return liAppCredentials.getCommunityUri();
+        return credentials.getCommunityUri();
     }
 
     /**
@@ -117,12 +130,14 @@ class LiAuthManager {
     }
 
     public String getFromSecuredPreferences(Context context, String key) {
-        return LiSecuredPrefManager.getInstance() == null ? null : LiSecuredPrefManager.getInstance().getString(context, key);
+        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
+        return manager == null ? null : manager.getString(context, key);
     }
 
     public boolean putInSecuredPreferences(Context context, String key, String value) {
-        if (LiSecuredPrefManager.getInstance() != null) {
-            LiSecuredPrefManager.getInstance().putString(context, key, value);
+        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
+        if (manager != null) {
+            manager.putString(context, key, value);
             return true;
         } else {
             return false;
@@ -130,8 +145,9 @@ class LiAuthManager {
     }
 
     public boolean removeFromSecuredPreferences(Context context, String key) {
-        if (LiSecuredPrefManager.getInstance() != null) {
-            LiSecuredPrefManager.getInstance().remove(context, key);
+        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
+        if (manager != null) {
+            manager.remove(context, key);
             return true;
         } else {
             return false;
@@ -232,7 +248,7 @@ class LiAuthManager {
     public String getProxyHost() {
         String proxyHost;
         if (liAuthState == null || TextUtils.isEmpty(liAuthState.getProxyHost())) {
-            proxyHost = liAppCredentials.getApiGatewayHost().toString();
+            proxyHost = credentials.getApiGatewayHost().toString();
         } else {
             proxyHost = liAuthState.getProxyHost();
         }
@@ -245,7 +261,7 @@ class LiAuthManager {
     public String getTenant() {
         String tenant;
         if (liAuthState == null || TextUtils.isEmpty(liAuthState.getTenantId())) {
-            tenant = liAppCredentials.getTenantId();
+            tenant = credentials.getTenantId();
         } else {
             tenant = liAuthState.getTenantId();
         }
