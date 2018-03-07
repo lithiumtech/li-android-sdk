@@ -43,7 +43,6 @@ import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotE
  * This class holds all the Authorization related responses and the Tokens.
  * Created by kunal.shrivastava on 10/18/16.
  */
-@VisibleForTesting
 class LiAuthState {
 
     private static final String LOG_TAG = "LiSDKAuth";

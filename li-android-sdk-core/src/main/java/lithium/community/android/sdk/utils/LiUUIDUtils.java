@@ -22,16 +22,17 @@ import java.util.UUID;
  * On LIA side fetching is done bu UUID, so this class converts UUID to Client Id.
  */
 public final class LiUUIDUtils {
+
     private LiUUIDUtils() {
     }
 
     /**
      * Converts a {@link UUID} to a byte array.
      *
-     * @param uuid
+     * @param uuid The UUID to convert.
      * @return the UUID byte array.
      */
-    public static final byte[] toBytes(UUID uuid) {
+    public static byte[] toBytes(UUID uuid) {
         long msb = uuid.getMostSignificantBits();
         long lsb = uuid.getLeastSignificantBits();
         byte[] buffer = new byte[16];
@@ -47,15 +48,15 @@ public final class LiUUIDUtils {
     }
 
     /**
-     * Converts a {@link UUID} String to a byte array.
+     * Converts a string to UUID and returns it as a byte array.
      *
-     * @param uuidString
-     * @return the UUID byte array.
+     * @param input the input string.
+     * @return the byte array if the UUID.
      * @throws IllegalArgumentException if name does not conform to the string representation as described in
      *                                  {@link UUID#toString}.
      */
-    public static final byte[] toBytes(String uuidString) {
-        UUID uuid = UUID.fromString(uuidString);
+    public static byte[] toBytes(String input) {
+        UUID uuid = UUID.fromString(input);
 
         return toBytes(uuid);
     }
@@ -78,5 +79,4 @@ public final class LiUUIDUtils {
 
         return new UUID(msb, lsb);
     }
-
 }

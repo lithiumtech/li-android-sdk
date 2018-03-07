@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -56,6 +55,7 @@ import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiTokenResponse;
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
@@ -63,6 +63,7 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiImageUtils;
 import lithium.community.android.sdk.utils.LiUriUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.ConnectionSpec;
@@ -85,51 +86,58 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISIT_OR
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.addLSIRequestHeaders;
 
 /**
- * Base rest client. Provides all the generic request response rest call implementation.
+ * Base rest client. Provides all the generic REST implementation.
  */
 public abstract class LiRestClient {
 
     public static final String TOKEN_REFRESH_TAG = "TOKEN_REFRESH_TAG";
     public static final int SERVER_TIMEOUT = 1000;
     private final Gson gson;
+    private LiSDKManager sdkManager;
     private OkHttpClient httpClient;
 
-    public LiRestClient() throws LiRestResponseException {
+    /**
+     * Default public constructor.
+     *
+     * @param manager the Li SDK Manager
+     * @throws LiInitializationException if Rest Client failed to initialize successfully.
+     */
+    public LiRestClient(@NonNull LiSDKManager manager) throws LiInitializationException {
+        this.sdkManager = LiCoreSDKUtils.checkNotNull(manager, MessageConstants.wasNull("manager"));
+
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiDateInstant.class,
-                new JsonDeserializer<LiBaseModelImpl.LiDateInstant>() {
-                    @Override
-                    public LiBaseModelImpl.LiDateInstant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        LiBaseModelImpl.LiDateInstant dateInstant = new LiBaseModelImpl.LiDateInstant();
-                        dateInstant.setValue(json.getAsString());
-                        return dateInstant;
-                    }
-                })
-                .registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
-                    @Override
-                    public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-                        liString.setValue(json.getAsString());
-                        return liString;
-                    }
-                })
-                .registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
-                    @Override
-                    public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-                        liBoolean.setValue(json.getAsBoolean());
-                        return liBoolean;
-                    }
-                })
-                .registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
-                    @Override
-                    public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
-                        liBoolean.setValue(json.getAsLong());
-                        return liBoolean;
-                    }
-                });
+        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiDateInstant.class, new JsonDeserializer<LiBaseModelImpl.LiDateInstant>() {
+            @Override
+            public LiBaseModelImpl.LiDateInstant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                LiBaseModelImpl.LiDateInstant dateInstant = new LiBaseModelImpl.LiDateInstant();
+                dateInstant.setValue(json.getAsString());
+                return dateInstant;
+            }
+        });
+        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
+            @Override
+            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
+                liString.setValue(json.getAsString());
+                return liString;
+            }
+        });
+        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
+            @Override
+            public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
+                liBoolean.setValue(json.getAsBoolean());
+                return liBoolean;
+            }
+        });
+        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
+            @Override
+            public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
+                liBoolean.setValue(json.getAsLong());
+                return liBoolean;
+            }
+        });
 
         gson = gsonBuilder.create();
         ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
@@ -167,9 +175,19 @@ public abstract class LiRestClient {
                     .sslSocketFactory(sslSocketFactory, trustManager);
             this.httpClient = builder.build();
         } catch (Exception e) {
-            throw LiRestResponseException.networkError(e.getMessage());
+            throw new LiInitializationException(LiRestClient.class.getSimpleName(), e);
         }
+    }
 
+    /**
+     * Deprecated public constructor.
+     *
+     * @throws LiInitializationException if Rest Client failed to initialize successfully.
+     * @throws IllegalArgumentException  if the SDK is not initialized.
+     * @deprecated Use {@link #LiRestClient(LiSDKManager)} instead
+     */
+    public LiRestClient() throws LiInitializationException {
+        this(LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), MessageConstants.wasNull("Li SDK Manager")));
     }
 
     public Gson getGson() {
@@ -179,18 +197,18 @@ public abstract class LiRestClient {
     /**
      * Makes Sync Network call.
      *
-     * @param baseRestRequest {@link LiBaseRestRequest}
-     * @return LiBaseResponse {@link LiBaseResponse}
-     * @throws LiRestResponseException {@link LiRestResponseException}
+     * @param baseRestRequest A REST request.
+     * @return LiBaseResponse A valid response.
+     * @throws LiRestResponseException if the request failed or the response was invalid.
      */
     public LiBaseResponse processSync(@NonNull LiBaseRestRequest baseRestRequest) throws LiRestResponseException {
-        LiCoreSDKUtils.checkNotNull(baseRestRequest);
-        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
-                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
-                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext()).performSyncRefreshTokenRequest();
-                LiSDKManager.getInstance().persistAuthState(baseRestRequest.getContext(), liTokenResponse);
-                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+        LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
+        if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
+            if (sdkManager.getNeedsTokenRefresh()) {
+                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext(), sdkManager).performSyncRefreshTokenRequest();
+                sdkManager.persistAuthState(baseRestRequest.getContext(), liTokenResponse);
+                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
             }
         }
 
@@ -225,26 +243,26 @@ public abstract class LiRestClient {
     /**
      * Makes Async Network call.
      *
-     * @param baseRestRequest {@link LiBaseRestRequest}
-     * @param callback        {@link LiAsyncRequestCallback}
+     * @param baseRestRequest A REST request.
+     * @param callback        A callback to be called once the request is completed.
      */
     public void processAsync(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
-        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
+        if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
+            if (sdkManager.getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
-                    LiSDKManager.getInstance().fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                    sdkManager.fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
                         @Override
                         public void onFreshTokenFetched(boolean isFetched) {
                             if (isFetched) {
-                                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
                                 enqueueCall(baseRestRequest, callback);
                             } else {
                                 callback.onError(LiRestResponseException.networkError("Could not refresh token"));
                             }
                         }
                     });
-                } catch (URISyntaxException | LiRestResponseException e) {
+                } catch (LiRestResponseException e) {
                     callback.onError(e);
                 }
             } else {
@@ -309,18 +327,18 @@ public abstract class LiRestClient {
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
                                         final String imagePath, final String imageName, final String requestBody) {
-        if (baseRestRequest.isAuthenticatedRequest() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            if (LiSDKManager.getInstance().getNeedsTokenRefresh()) {
+        if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
+            if (sdkManager.getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + LiSDKManager.getInstance().getNewAuthToken());
-                    LiSDKManager.getInstance().fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                    sdkManager.fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
                         @Override
                         public void onFreshTokenFetched(boolean isFetched) {
-                            Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + LiSDKManager.getInstance().getNewAuthToken());
+                            Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
                             uploadEnqueueCall(baseRestRequest, callback, imagePath, imageName, requestBody);
                         }
                     });
-                } catch (URISyntaxException | LiRestResponseException e) {
+                } catch (LiRestResponseException e) {
                     callback.onError(e);
                 }
             } else {
@@ -357,7 +375,7 @@ public abstract class LiRestClient {
         }
 
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = LiSDKManager.getInstance().getProxyHost();
+        String proxyHost = sdkManager.getProxyHost();
 
         uriBuilder.authority(proxyHost);
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
@@ -441,9 +459,9 @@ public abstract class LiRestClient {
         String requestUrl = response.header("http.request");
         if (requestUrl != null && requestUrl.contains("/beacon") && response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
             String visitorLastIssueTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME);
-            LiSDKManager.getInstance().putInSecuredPreferences(baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
+            sdkManager.putInSecuredPreferences(baseRestRequest.getContext(), LI_VISIT_LAST_ISSUE_TIME_KEY, visitorLastIssueTime);
             String visitOriginTime = response.header(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME);
-            LiSDKManager.getInstance().putInSecuredPreferences(baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
+            sdkManager.putInSecuredPreferences(baseRestRequest.getContext(), LI_VISIT_ORIGIN_TIME_KEY, visitOriginTime);
         }
     }
 
@@ -455,7 +473,7 @@ public abstract class LiRestClient {
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        uriBuilder.authority(LiSDKManager.getInstance().getProxyHost());
+        uriBuilder.authority(sdkManager.getProxyHost());
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
@@ -480,33 +498,33 @@ public abstract class LiRestClient {
     @NonNull
     private Request.Builder buildRequestHeaders(Context context, Request.Builder requestBuilder) {
 
-        if (!TextUtils.isEmpty(LiSDKManager.getInstance().getNewAuthToken())) {
-            requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + LiSDKManager.getInstance().getNewAuthToken());
+        if (!TextUtils.isEmpty(sdkManager.getNewAuthToken())) {
+            requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getNewAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;
     }
 
-    @NonNull
-    @Deprecated
     /**
      * request header key "lia-sdk-app-info"
      */
+    @NonNull
+    @Deprecated
     private String buildLSIHeaderString(Context context) {
         JsonObject headerJson = new JsonObject();
-        headerJson.addProperty("client_name", LiSDKManager.getInstance().getLiAppCredentials().getClientAppName());
+        headerJson.addProperty("client_name", sdkManager.getCredentials().getClientName());
         headerJson.addProperty("client_type", "android");
-        headerJson.addProperty("client_id", LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        headerJson.addProperty("client_id", sdkManager.getCredentials().getClientKey());
         headerJson.addProperty("device_code", android.os.Build.DEVICE);
         headerJson.addProperty("device_model", android.os.Build.MODEL);
         headerJson.addProperty("device_id", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
         headerJson.addProperty("device_api_level", android.os.Build.VERSION.SDK_INT);
         String userId = null;
-        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
-            userId = LiSDKManager.getInstance().getLoggedInUser().getLoginId();
+        if (sdkManager.getLoggedInUser() != null) {
+            userId = sdkManager.getLoggedInUser().getLoginId();
         }
         headerJson.addProperty("user_id", userId);
         return headerJson.toString();
@@ -591,14 +609,13 @@ public abstract class LiRestClient {
                     }
                     if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {
-                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context).performSyncRefreshTokenRequest();
-                            LiSDKManager.getInstance().persistAuthState(context, liTokenResponse);
-                            LiSDKManager.getInstance().persistAuthState(context, liTokenResponse);
+                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdkManager).performSyncRefreshTokenRequest();
+                            sdkManager.persistAuthState(context, liTokenResponse);
 
                             request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
 
-                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION,
-                                    LiAuthConstants.BEARER + LiSDKManager.getInstance().getNewAuthToken()).build();
+                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getNewAuthToken())
+                                    .build();
                         } catch (LiRestResponseException e) {
                             Log.e(LOG_TAG, "Error making rest call for refresh token", e);
                         }

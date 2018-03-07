@@ -712,7 +712,7 @@ public class LiClientManager {
         final LiUserDeviceDataModel liUserDeviceDataModel = new LiUserDeviceDataModel();
         liUserDeviceDataModel.setType(LiQueryConstant.LI_USER_DEVICE_ID_FETCH_TYPE);
         liUserDeviceDataModel.setDeviceId(deviceId);
-        liUserDeviceDataModel.setClientId(LiSDKManager.getInstance().getLiAppCredentials().getClientKey());
+        liUserDeviceDataModel.setClientId(LiSDKManager.getInstance().getCredentials().getClientKey());
         liUserDeviceDataModel.setApplicationType(LiQueryConstant.LI_APPLICATION_TYPE);
         liUserDeviceDataModel.setPushNotificationProvider(pushNotificationProvider);
         liBasePostClient.postModel = liUserDeviceDataModel;

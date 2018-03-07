@@ -17,7 +17,6 @@
 package lithium.community.android.sdk.manager;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -32,6 +31,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiAuthConstants;
+import lithium.community.android.sdk.auth.LiAuthService;
+import lithium.community.android.sdk.auth.LiAuthServiceImpl;
+import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
+import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
@@ -61,10 +64,13 @@ public final class LiSDKManager extends LiAuthManager {
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager instance;
 
+    @Nullable
+    private LiDeviceTokenProvider deviceTokenProvider;
+
     /**
      * Default private constructor.
      *
-     * @param context     The Android context
+     * @param context     The Android context.
      * @param credentials The credentials to be used to authenticate the SDK.
      */
     private LiSDKManager(@NonNull Context context, @NonNull LiAppCredentials credentials) {
@@ -168,7 +174,7 @@ public final class LiSDKManager extends LiAuthManager {
     public void syncWithCommunity(final Context context) {
         if (instance.isUserLoggedIn()) {
             try {
-                String clientId = LiUUIDUtils.toUUID(liAppCredentials.getClientKey().getBytes()).toString();
+                String clientId = LiUUIDUtils.toUUID(getCredentials().getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
                 LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
                         new LiAsyncRequestCallback<LiGetClientResponse>() {
@@ -233,24 +239,97 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Returns community URI.
+     * Gets version name of the SDK.
+     *
+     * @return the version name of the SDK.
      */
-    public Uri getCommunityUrl() {
-        return liAppCredentials.getCommunityUri();
-    }
-
-    /**
-     * Returns AppCredentials.
-     */
-    public LiAppCredentials getLiAppCredentials() {
-        return liAppCredentials;
-    }
-
-    /**
-     * gets the core sdk version
-     */
+    @NonNull
     public String getCoreSDKVersion() {
         return BuildConfig.li_sdk_core_version;
+    }
+
+    /**
+     * Get the device token provider currently being used by the SDK.
+     *
+     * @return the device token provider.
+     */
+    @Nullable
+    public LiDeviceTokenProvider getLiDeviceTokenProvider() {
+        return deviceTokenProvider;
+    }
+
+    /**
+     * Set a new device token provider to be used by the SDK.
+     *
+     * @param deviceTokenProvider A device token provider.
+     */
+    public void setLiDeviceTokenProvider(@Nullable LiDeviceTokenProvider deviceTokenProvider) {
+        this.deviceTokenProvider = deviceTokenProvider;
+    }
+
+    /**
+     * Start SSO login.
+     *
+     * @param context             An Android context.
+     * @param ssoToken            Single SignOn token if the community uses its own identity provider.
+     * @param deviceTokenProvider Provider to get the device ID for push notifications. A Firebase or GCM token.
+     */
+    public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider deviceTokenProvider) {
+        this.deviceTokenProvider = deviceTokenProvider;
+        if (!isUserLoggedIn()) {
+            new LiAuthServiceImpl(context, this).startLoginFlow(ssoToken);
+        }
+    }
+
+    /**
+     * Start SSO login.
+     *
+     * @param context  An Android context.
+     * @param ssoToken Single SignOn token if the community uses its own identity provider.
+     */
+    public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
+        initLoginFlow(context, ssoToken, null);
+    }
+
+    /**
+     * Start community login.
+     *
+     * @param context             An Android context.
+     * @param deviceTokenProvider Provider to get the device ID for push notifications. A Firebase or GCM token.
+     */
+    public void initLoginFlow(Context context, LiDeviceTokenProvider deviceTokenProvider) {
+        this.deviceTokenProvider = deviceTokenProvider;
+        initLoginFlow(context, null, deviceTokenProvider);
+    }
+
+    /**
+     * Start anonymous login.
+     *
+     * @param context An Android context object.
+     */
+    public void initLoginFlow(Context context) {
+        initLoginFlow(context, null, null);
+    }
+
+    /**
+     * Fetches Fresh Access Token and Persists it.
+     *
+     * @param context             An Android context.
+     * @param mFreshTokenCallBack {@link LiAuthService.FreshTokenCallBack}
+     * @throws LiRestResponseException An exception is thrown when an invalid response is received by the SDK.
+     */
+    public void fetchFreshAccessToken(final Context context, final LiAuthService.FreshTokenCallBack mFreshTokenCallBack) throws LiRestResponseException {
+        new LiAuthServiceImpl(context, this).performRefreshTokenRequest(new LiAuthService.LiTokenResponseCallback() {
+            @Override
+            public void onTokenRequestCompleted(@Nullable LiTokenResponse response, @Nullable Exception ex) {
+                if (ex != null) {
+                    mFreshTokenCallBack.onFreshTokenFetched(false);
+                    return;
+                }
+                persistAuthState(context, response);
+                mFreshTokenCallBack.onFreshTokenFetched(true);
+            }
+        });
     }
 }
 
