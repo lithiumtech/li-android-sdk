@@ -83,12 +83,6 @@ public class LiSDKManagerTest {
     }
 
     @Test
-    public void testGetInstance() {
-        LiSDKManager instance = LiSDKManager.getInstance();
-        assert instance == null;
-    }
-
-    @Test
     public void testInitializeOnlyOnce() throws LiInitializationException {
         LiSDKManager.initialize(mContext, TestHelper.getTestAppCredentials());
         LiSDKManager instance = LiSDKManager.getInstance();
