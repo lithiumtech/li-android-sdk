@@ -45,7 +45,7 @@ public class LiDefaultQueryHelper {
      *
      * @param context {@link Context}
      */
-    private LiDefaultQueryHelper(Context context) {
+    private LiDefaultQueryHelper(@NonNull Context context) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         defaultSetting = getDefaultQueryJSON(context);
     }
@@ -79,10 +79,8 @@ public class LiDefaultQueryHelper {
      */
     @Deprecated
     public static synchronized LiDefaultQueryHelper initHelper(Context context) {
-        if (instance == null) {
-            instance = new LiDefaultQueryHelper(context);
-        }
-        return instance;
+        initialize(context);
+        return getInstance();
     }
 
     /**
@@ -101,7 +99,7 @@ public class LiDefaultQueryHelper {
             settings = new JsonParser().parse(string).getAsJsonObject();
         } catch (Exception e) {
             Log.e("LiDefaultQueryHelper", "Could not parse the default SDK settings");
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
         return settings;

@@ -16,9 +16,7 @@
 
 package lithium.community.android.sdk.rest;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.Context;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,8 +43,6 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import okhttp3.Request;
 import okhttp3.internal.platform.Platform;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -63,30 +59,14 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 })
 public class LiRestv2ClientTest {
 
-    private static String liql = "select * from messages";
-    private Activity context;
-
-    @Test
-    public void testGetInstance() {
-//        LiRestv2Client liRestv2Client = LiRestv2Client.getInstance();
-//        Assert.assertTrue(liRestv2Client.getGson() != null);
-    }
-
     @Test
     public void testValidateResponse() throws Exception {
-        context = Mockito.mock(Activity.class);
-        Resources resources = Mockito.mock(Resources.class);
-        when(context.getResources()).thenReturn(resources);
-        when(resources.openRawResource(anyInt())).thenReturn(null);
-
-        SharedPreferences preferences = Mockito.mock(SharedPreferences.class);
-        when(context.getSharedPreferences(anyString(), anyInt())).thenReturn(preferences);
-        when(preferences.getString(anyString(), anyString())).thenReturn("");
+        Context context = TestHelper.createMockContext();
 
         PowerMockito.mockStatic(LiClientManager.class);
-        LiClientManager liClientManager = PowerMockito.mock(LiClientManager.class);
-
+        PowerMockito.mock(LiClientManager.class);
         PowerMockito.mockStatic(SSLContext.class);
+
         SSLContext sslContext = PowerMockito.mock(SSLContext.class);
         when(sslContext.getInstance("SSL")).thenReturn(sslContext);
         Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class), isA(SecureRandom.class));
@@ -108,6 +88,7 @@ public class LiRestv2ClientTest {
         LiRestv2Client liRestv2ClientSpy = spy(liRestv2Client);
         doReturn(liBaseResponse).when(liRestv2ClientSpy).processSync(isA(LiBaseRestRequest.class));
 
+        String liql = "select * from messages";
         LiRestV2Request liBaseRestRequest = new LiRestV2Request(context, liql, "message");
         liBaseRestRequest.addQueryParam("test");
 
@@ -117,4 +98,3 @@ public class LiRestv2ClientTest {
         PowerMockito.verifyStatic();
     }
 }
-
