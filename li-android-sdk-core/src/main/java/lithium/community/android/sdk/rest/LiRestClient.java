@@ -186,6 +186,7 @@ public abstract class LiRestClient {
      * @throws IllegalArgumentException  if the SDK is not initialized.
      * @deprecated Use {@link #LiRestClient(LiSDKManager)} instead
      */
+    @Deprecated
     public LiRestClient() throws LiInitializationException {
         this(LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), MessageConstants.wasNull("Li SDK Manager")));
     }

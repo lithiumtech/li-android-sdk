@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.NoSuchPropertyException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -66,10 +65,8 @@ public class LiDefaultQueryHelper {
     /**
      * @return Instance of this class.
      */
+    @Nullable
     public static LiDefaultQueryHelper getInstance() {
-        if (instance == null) {
-            throw new NoSuchPropertyException("Helper not intialized. Call init method first");
-        }
         return instance;
     }
 
@@ -80,6 +77,7 @@ public class LiDefaultQueryHelper {
      * @return instance of Lithium Query Helper.
      * @deprecated Use {@link #initialize(Context)}
      */
+    @Deprecated
     public static synchronized LiDefaultQueryHelper initHelper(Context context) {
         if (instance == null) {
             instance = new LiDefaultQueryHelper(context);

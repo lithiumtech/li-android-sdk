@@ -80,6 +80,7 @@ class LiAuthManager {
      * @return the credentials.
      * @deprecated Use {@link #getCredentials()} instead.
      */
+    @Deprecated
     @NonNull
     public LiAppCredentials getLiAppCredentials() {
         return credentials;
@@ -91,6 +92,7 @@ class LiAuthManager {
      * @return the community URI.
      * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
+    @Deprecated
     public Uri getCommunityUrl() {
         return credentials.getCommunityUri();
     }

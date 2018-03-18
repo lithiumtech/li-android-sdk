@@ -86,6 +86,7 @@ public class LiAuthServiceImpl implements LiAuthService {
      * @param context Android context.
      * @deprecated use {@link #LiAuthServiceImpl(Context, LiSDKManager)} instead
      */
+    @Deprecated
     public LiAuthServiceImpl(@NonNull Context context) {
         this.context = LiCoreSDKUtils.checkNotNull(context);
         sdkManager = LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), "Li SDK Manager was null");

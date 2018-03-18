@@ -148,6 +148,7 @@ public final class LiAppCredentials {
      * @return The client name
      * @deprecated Use {@link #getClientName()} instead.
      */
+    @Deprecated
     @NonNull
     public String getClientAppName() {
         return clientName;
@@ -157,6 +158,7 @@ public final class LiAppCredentials {
      * @return the API Gateways host address
      * @deprecated Use {@link #getApiGatewayHost()}
      */
+    @Deprecated
     @NonNull
     public String getApiProxyHost() {
         return getApiGatewayHost().toString();
@@ -198,6 +200,7 @@ public final class LiAppCredentials {
      *
      * @deprecated Use the default public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
      */
+    @Deprecated
     public static final class Builder {
 
         private String clientName;
@@ -291,6 +294,7 @@ public final class LiAppCredentials {
          * @return this builder.
          * @deprecated Use {@link #getApiGatewayHost()} instead.
          */
+        @Deprecated
         public Builder setApiProxyHost(@NonNull String apiProxyHost) {
             this.apiGatewayUri = apiProxyHost;
             return this;
@@ -303,6 +307,7 @@ public final class LiAppCredentials {
          * @return this builder
          * @deprecated Use {@link #setClientName(String)}
          */
+        @Deprecated
         public Builder setClientAppName(@NonNull String clientAppName) {
             this.clientName = clientAppName;
             return this;
