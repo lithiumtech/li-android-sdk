@@ -16,40 +16,31 @@
 
 package lithium.community.android.sdk;
 
-import android.net.Uri;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
+
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Contains common test values which are useful across all tests.
  */
 public class TestHelper {
 
-    /**
-     * For requesting an authorization code.
-     *
-     * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1.1"> "The OAuth 2.0
-     * Authorization Framework" (RFC 6749), Section 3.1.1</a>
-     */
-    public static final String CODE = "code";
-
-    /**
-     * For requesting an access token via an implicit grant.
-     *
-     * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1.1"> "The OAuth 2.0
-     * Authorization Framework" (RFC 6749), Section 3.1.1</a>
-     */
-    public static final String TOKEN = "token";
-
-    /**
-     * For requesting an OpenID Conenct ID Token.
-     *
-     * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">
-     * "OpenID Connect Core 1.0", Section 2</a>
-     */
-    public static final String ID_TOKEN = "id_token";
-
-    public static final String APPLICATION_TYPE_NATIVE = "native";
 
     public static final String TEST_CLIENT_NAME = "test";
     public static final String TEST_CLIENT_ID = "mj2gw0IYuoo33m0rKxuX4KpxUfsy7Q0rcBJhq34GHgs=";
@@ -57,228 +48,265 @@ public class TestHelper {
     public static final String TEST_TENANT_ID = "test";
     public static final String TEST_CLIENT_SECRET = "test_client_secret";
     public static final String TEST_COMMUNITY_URL = "http://community.lithium.com";
-
-    public static final String TEST_STATE = "$TAT3";
-    public static final String TEST_APP_SCHEME = "com.test.app";
-
-    public static final Uri TEST_APP_REDIRECT_URI = Uri.parse(TEST_APP_SCHEME + ":/oidc_callback");
-
-    public static final String TEST_SCOPE = "openid email";
-
-    public static final Uri TEST_IDP_AUTH_ENDPOINT = Uri.parse("https://testidp.example.com/authorize");
-    public static final Uri TEST_IDP_TOKEN_ENDPOINT = Uri.parse("https://testidp.example.com/token");
-    public static final Uri TEST_IDP_REGISTRATION_ENDPOINT = Uri.parse("https://testidp.example.com/token");
-
-    public static final String TEST_CODE_VERIFIER = "0123456789_0123456789_0123456789_0123456789";
-    public static final String TEST_AUTH_CODE = "zxcvbnmjk";
-    public static final String TEST_ACCESS_TOKEN = "aaabbbccc";
-    public static final String TEST_ID_TOKEN = "abc.def.ghi";
-    public static final String TEST_REFRESH_TOKEN = "asdfghjkl";
-    public static final Long TEST_ACCESS_TOKEN_EXPIRATION_TIME = 120000L; // two minutes
-
-    public static final Long TEST_CLIENT_SECRET_EXPIRES_AT = 78L;
-
-    public static final String TEST_EMAIL_ADDRESS = "test@example.com";
-
     public static final String DEFAULT_QUERY_SETTINGS = "{\n" +
-            "\t\"article\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"in\",\n" +
-            "\t\t\t\"key\": \"conversation.style\",\n" +
-            "\t\t\t\"value\": \"('forum', 'blog')\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"depth\",\n" +
-            "\t\t\t\"value\": \"##\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"ordering\": {\n" +
-            "\t\t\t\"key\": \"conversation.last_post_time\",\n" +
-            "\t\t\t\"type\": \"desc\"\n" +
-            "\t\t},\n" +
-            "\t\t\"limit\": \"50\"\n" +
-            "\t},\n" +
-            "\t\"test\": {\n" +
-            "\t\t\"liDataSource\": \"test\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"target.type\",\n" +
-            "\t\t\t\"value\": \"'test'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"limit\": \"25\"\n" +
-            "\t},\n" +
-            "\t\"node\": {\n" +
-            "\t\t\"liDataSource\": \"nodes\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"in\",\n" +
-            "\t\t\t\"key\": \"conversation_style\",\n" +
-            "\t\t\t\"value\": \"('forum', 'blog')\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"parent.id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"and\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"limit\": \"25\"\n" +
-            "\t},\n" +
-            "\t\"search\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"matches\",\n" +
-            "\t\t\t\"key\": \"body\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"OR\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"matches\",\n" +
-            "\t\t\t\"key\": \"subject\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"OR\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"matches\",\n" +
-            "\t\t\t\"key\": \"tags.text\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"OR\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"matches\",\n" +
-            "\t\t\t\"key\": \"labels.text\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"in\",\n" +
-            "\t\t\t\"key\": \"conversation.style\",\n" +
-            "\t\t\t\"value\": \"('forum', 'blog')\",\n" +
-            "\t\t\t\"operator\": \"OR\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"depth\",\n" +
-            "\t\t\t\"value\": \"0\",\n" +
-            "\t\t\t\"operator\": \"and\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"ordering\": {\n" +
-            "\t\t\t\"key\": \"conversation.last_post_time\",\n" +
-            "\t\t\t\"type\": \"desc\"\n" +
-            "\t\t},\n" +
-            "\t\t\"limit\": \"25\"\n" +
-            "\t},\n" +
-            "\t\"subscription\": {\n" +
-            "\t\t\"liDataSource\": \"subscriptions\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"target.type\",\n" +
-            "\t\t\t\"value\": \"'message'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"limit\": \"25\"\n" +
-            "\t},\n" +
-            "\t\"message_children\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"parent.id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"questions\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"author.id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"and\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"depth\",\n" +
-            "\t\t\t\"value\": \"&&\",\n" +
-            "\t\t\t\"operator\": \"and\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"ordering\": {\n" +
-            "\t\t\t\"key\": \"conversation.last_post_time\",\n" +
-            "\t\t\t\"type\": \"desc\"\n" +
-            "\t\t}\n" +
-            "\t},\n" +
-            "\t\"category\": {\n" +
-            "\t\t\"liDataSource\": \"nodes\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"node_type\",\n" +
-            "\t\t\t\"value\": \"'category'\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"article_browse\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"board.id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"depth\",\n" +
-            "\t\t\t\"value\": \"&&\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"ordering\": {\n" +
-            "\t\t\t\"key\": \"conversation.last_post_time\",\n" +
-            "\t\t\t\"type\": \"desc\"\n" +
-            "\t\t},\n" +
-            "\t\t\"limit\": \"25\"\n" +
-            "\t},\n" +
-            "\t\"message\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"user\": {\n" +
-            "\t\t\"liDataSource\": \"users\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"messages_by_ids\": {\n" +
-            "\t\t\"liDataSource\": \"messages\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"in\",\n" +
-            "\t\t\t\"key\": \"id\",\n" +
-            "\t\t\t\"value\": \"(##)\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"floated_message\": {\n" +
-            "\t\t\"liDataSource\": \"floated_message\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"message.board.id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"AND\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"scope\",\n" +
-            "\t\t\t\"value\": \"'&&'\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t},\n" +
-            "\t\"app_sdk_setting\": {\n" +
-            "\t\t\"liDataSource\": \"app_sdk_settings\",\n" +
-            "\t\t\"whereClauses\": [{\n" +
-            "\t\t\t\"clause\": \"equals\",\n" +
-            "\t\t\t\"key\": \"client_id\",\n" +
-            "\t\t\t\"value\": \"'##'\",\n" +
-            "\t\t\t\"operator\": \"or\"\n" +
-            "\t\t}]\n" +
-            "\t}\n" +
+            "  \"article\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"in\",\n" +
+            "        \"key\": \"conversation.style\",\n" +
+            "        \"value\": \"('forum', 'blog')\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"depth\",\n" +
+            "        \"value\": \"##\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"ordering\": {\n" +
+            "      \"key\": \"conversation.last_post_time\",\n" +
+            "      \"type\": \"desc\"\n" +
+            "    },\n" +
+            "    \"limit\": \"50\"\n" +
+            "  },\n" +
+            "  \"test\": {\n" +
+            "    \"liDataSource\": \"test\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"target.type\",\n" +
+            "        \"value\": \"'test'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"node\": {\n" +
+            "    \"liDataSource\": \"nodes\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"in\",\n" +
+            "        \"key\": \"conversation_style\",\n" +
+            "        \"value\": \"('forum', 'blog')\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"parent.id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"and\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"node_depth\": {\n" +
+            "    \"liDataSource\": \"nodes\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"in\",\n" +
+            "        \"key\": \"conversation_style\",\n" +
+            "        \"value\": \"('forum', 'blog')\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"depth\",\n" +
+            "        \"value\": \"##\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"search\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"matches\",\n" +
+            "        \"key\": \"body\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"OR\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"matches\",\n" +
+            "        \"key\": \"subject\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"OR\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"matches\",\n" +
+            "        \"key\": \"tags.text\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"OR\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"matches\",\n" +
+            "        \"key\": \"labels.text\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"in\",\n" +
+            "        \"key\": \"conversation.style\",\n" +
+            "        \"value\": \"('forum', 'blog')\",\n" +
+            "        \"operator\": \"OR\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"depth\",\n" +
+            "        \"value\": \"0\",\n" +
+            "        \"operator\": \"and\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"ordering\": {\n" +
+            "      \"key\": \"conversation.last_post_time\",\n" +
+            "      \"type\": \"desc\"\n" +
+            "    },\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"subscription\": {\n" +
+            "    \"liDataSource\": \"subscriptions\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"target.type\",\n" +
+            "        \"value\": \"'message'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"message_children\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"topic.id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"ordering\": {\n" +
+            "      \"key\": \"post_time\",\n" +
+            "      \"type\": \"asc\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"questions\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"author.id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"and\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"depth\",\n" +
+            "        \"value\": \"&&\",\n" +
+            "        \"operator\": \"and\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"ordering\": {\n" +
+            "      \"key\": \"conversation.last_post_time\",\n" +
+            "      \"type\": \"desc\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"category\": {\n" +
+            "    \"liDataSource\": \"nodes\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"node_type\",\n" +
+            "        \"value\": \"'category'\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  \"article_browse\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"board.id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"depth\",\n" +
+            "        \"value\": \"&&\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"ordering\": {\n" +
+            "      \"key\": \"conversation.last_post_time\",\n" +
+            "      \"type\": \"desc\"\n" +
+            "    },\n" +
+            "    \"limit\": \"25\"\n" +
+            "  },\n" +
+            "  \"message\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  \"user\": {\n" +
+            "    \"liDataSource\": \"users\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  \"messages_by_ids\": {\n" +
+            "    \"liDataSource\": \"messages\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"in\",\n" +
+            "        \"key\": \"id\",\n" +
+            "        \"value\": \"(##)\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  \"floated_message\": {\n" +
+            "    \"liDataSource\": \"floated_message\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"message.board.id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"AND\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"scope\",\n" +
+            "        \"value\": \"'&&'\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  \"app_sdk_setting\": {\n" +
+            "    \"liDataSource\": \"app_sdk_settings\",\n" +
+            "    \"whereClauses\": [\n" +
+            "      {\n" +
+            "        \"clause\": \"equals\",\n" +
+            "        \"key\": \"client_id\",\n" +
+            "        \"value\": \"'##'\",\n" +
+            "        \"operator\": \"or\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }\n" +
             "}";
 
     public static LiAppCredentials getTestAppCredentials() {
@@ -292,14 +320,50 @@ public class TestHelper {
                 .build();
     }
 
-    public static LiAppCredentials getTestAppSSOCredentials() {
-        return new LiAppCredentials.Builder()
-                .setClientName(TEST_CLIENT_NAME)
-                .setClientKey(TEST_CLIENT_ID)
-                .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL)
-                .setApiGatewayUri(TEST_API_GATEWAY_HOST)
-                .setTenantId(TEST_TENANT_ID)
-                .build();
+    public static Context createMockContext() {
+
+        final Map<String, String> map = new HashMap<>();
+
+        final SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
+        when(editor.putString(anyString(), anyString())).thenReturn(editor);
+        when(editor.putString(anyString(), anyString())).then(new Answer<SharedPreferences.Editor>() {
+            @Override
+            public SharedPreferences.Editor answer(InvocationOnMock invocation) throws Throwable {
+                String key = invocation.getArgumentAt(0, String.class);
+                String value = invocation.getArgumentAt(1, String.class);
+                map.put(key, value);
+                return editor;
+            }
+        });
+        when(editor.remove(anyString())).then(new Answer<SharedPreferences.Editor>() {
+            @Override
+            public SharedPreferences.Editor answer(InvocationOnMock invocation) throws Throwable {
+                String key = invocation.getArgumentAt(0, String.class);
+                map.remove(key);
+                return editor;
+            }
+        });
+
+        SharedPreferences preferences = mock(SharedPreferences.class);
+        when(preferences.getString(anyString(), anyString())).then(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                String key = invocation.getArgumentAt(0, String.class);
+                return map.get(key);
+            }
+        });
+        when(preferences.edit()).thenReturn(editor);
+
+        InputStream inputStream = new ByteArrayInputStream(DEFAULT_QUERY_SETTINGS.getBytes(StandardCharsets.UTF_8));
+
+        Resources resource = mock(Resources.class);
+        when(resource.getBoolean(anyInt())).thenReturn(true);
+        when(resource.openRawResource(anyInt())).thenReturn(inputStream);
+
+        Context context = mock(Context.class);
+        when(context.getSharedPreferences(anyString(), anyInt())).thenReturn(preferences);
+        when(context.getResources()).thenReturn(resource);
+
+        return context;
     }
 }

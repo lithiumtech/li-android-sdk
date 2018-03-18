@@ -16,9 +16,7 @@
 
 package lithium.community.android.sdk.rest;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.Context;
 import android.net.Uri;
 
 import org.junit.Assert;
@@ -26,10 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -49,8 +47,6 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
@@ -63,6 +59,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.crypto.*"})
 @PrepareForTest({LiAuthRestClient.class, OkHttpClient.class, Response.class, ResponseBody.class})
 public class LiAuthRestClientTest {
     public static final String CLIENT_ID = "clientId";
@@ -76,26 +73,15 @@ public class LiAuthRestClientTest {
     public static final String GRANT_TYPE = "grantType";
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String REFRESH_TOKEN = "refreshToken";
+
     @Mock
-    private Activity mContext;
-    private SharedPreferences mMockSharedPreferences;
-    private Resources resource;
-    private LiSDKManager liSDKManager;
+    private Context mContext;
 
     @Before
     public void setUpTest() throws Exception {
-        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
-        // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
-
-        mContext = Mockito.mock(Activity.class);
-        mMockSharedPreferences = Mockito.mock(SharedPreferences.class);
-        resource = Mockito.mock(Resources.class);
-        Mockito.when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
-        Mockito.when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
-        Mockito.when(mContext.getResources()).thenReturn(resource);
-        Mockito.when(resource.getBoolean(anyInt())).thenReturn(true);
-        liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
+        mContext = TestHelper.createMockContext();
+        LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
     }
 
 

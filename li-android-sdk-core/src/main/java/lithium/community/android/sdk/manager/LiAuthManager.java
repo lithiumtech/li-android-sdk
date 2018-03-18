@@ -30,7 +30,9 @@ import org.json.JSONException;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.model.response.LiUser;
+import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.MessageConstants;
@@ -55,9 +57,11 @@ class LiAuthManager {
 
     private LiAuthState liAuthState;
 
-    LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) {
+    LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
         this.liAuthState = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
         this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
+        LiDefaultQueryHelper.initialize(context);
+        LiSecuredPrefManager.initialize(credentials.getClientSecret());
     }
 
     /**

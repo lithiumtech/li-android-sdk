@@ -16,9 +16,7 @@
 
 package lithium.community.android.sdk;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.Context;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -37,10 +35,6 @@ import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.manager.LiSDKManager;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author aiteja.tokala, adityasharat
@@ -51,18 +45,12 @@ public class LiSDKManagerTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    private Activity mContext;
+    private Context mContext;
 
     @Before
     public void setUpTest() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mContext = mock(Activity.class);
-        SharedPreferences mMockSharedPreferences = mock(SharedPreferences.class);
-        Resources resource = mock(Resources.class);
-        when(resource.getBoolean(anyInt())).thenReturn(true);
-        when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
-        when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
-        when(mContext.getResources()).thenReturn(resource);
+        mContext = TestHelper.createMockContext();
     }
 
     @Test(expected = IllegalArgumentException.class)
