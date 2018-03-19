@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -68,7 +67,7 @@ class LiSecuredPrefManager {
      * @param secret The secret encryption key.
      * @throws NoSuchAlgorithmException If the device does not support SHA-1 encryption.
      */
-    private LiSecuredPrefManager(@NonNull String secret) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private LiSecuredPrefManager(@NonNull String secret) throws NoSuchAlgorithmException {
         LiCoreSDKUtils.checkNotNull(secret, MessageConstants.wasNull("secret encryption key"));
         MessageDigest sha = MessageDigest.getInstance("SHA1");
         key = new SecretKeySpec(Arrays.copyOf(sha.digest(secret.getBytes()), ENCRYPTION_LENGTH), "AES");
@@ -83,7 +82,7 @@ class LiSecuredPrefManager {
         if (isInitialized.compareAndSet(false, true)) {
             try {
                 instance = new LiSecuredPrefManager(secret);
-            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
                 throw new LiInitializationException(LiSecuredPrefManager.class.getSimpleName(), e);
             }
@@ -120,7 +119,7 @@ class LiSecuredPrefManager {
     }
 
     @NonNull
-    private static String encode(@NonNull byte[] input) throws UnsupportedEncodingException {
+    private static String encode(@NonNull byte[] input) {
         return Base64.encodeToString(input, Base64.DEFAULT);
     }
 
@@ -159,8 +158,7 @@ class LiSecuredPrefManager {
             if (encryptedValue != null) {
                 value = decrypt(encryptedValue);
             }
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException
-                | BadPaddingException | UnsupportedEncodingException | IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             value = preferences.getString(key, null);
         }
@@ -182,8 +180,7 @@ class LiSecuredPrefManager {
             String encryptedKey = encrypt(key);
             String encryptedValue = encrypt(value);
             getSecuredPreferences(context).edit().putString(encryptedKey, encryptedValue).apply();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException
-                | BadPaddingException | UnsupportedEncodingException | IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             getSecuredPreferences(context).edit().putString(key, value).apply();
         }
@@ -209,7 +206,7 @@ class LiSecuredPrefManager {
 
     @NonNull
     private String encrypt(@NonNull String string) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+            BadPaddingException, IllegalBlockSizeException {
         @SuppressLint("GetInstance")
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -220,7 +217,7 @@ class LiSecuredPrefManager {
 
     @NonNull
     private String decrypt(@NonNull String string) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+            BadPaddingException, IllegalBlockSizeException {
         @SuppressLint("GetInstance")
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, key);
