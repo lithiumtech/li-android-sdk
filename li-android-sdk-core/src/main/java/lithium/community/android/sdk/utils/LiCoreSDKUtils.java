@@ -440,13 +440,13 @@ public class LiCoreSDKUtils {
     public static String getRawString(Context context, int rawResId) {
         InputStream inputStream = context.getResources().openRawResource(rawResId);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        int _char;
+        int character;
         try {
             if (inputStream != null) {
-                _char = inputStream.read();
-                while (_char != -1) {
-                    outputStream.write(_char);
-                    _char = inputStream.read();
+                character = inputStream.read();
+                while (character != -1) {
+                    outputStream.write(character);
+                    character = inputStream.read();
                 }
                 inputStream.close();
             }

@@ -159,8 +159,8 @@ class LiSecuredPrefManager {
             if (encryptedValue != null) {
                 value = decrypt(encryptedValue);
             }
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | UnsupportedEncodingException |
-                IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException
+                | BadPaddingException | UnsupportedEncodingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             value = preferences.getString(key, null);
         }
@@ -182,8 +182,8 @@ class LiSecuredPrefManager {
             String encryptedKey = encrypt(key);
             String encryptedValue = encrypt(value);
             getSecuredPreferences(context).edit().putString(encryptedKey, encryptedValue).apply();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | UnsupportedEncodingException |
-                IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException
+                | BadPaddingException | UnsupportedEncodingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             getSecuredPreferences(context).edit().putString(key, value).apply();
         }
