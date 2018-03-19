@@ -84,87 +84,76 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAIL
  */
 public class LiClientManager {
 
-    public static LiRestv2Client getRestClient() throws LiRestResponseException {
+    public static LiRestv2Client getRestClient() {
         return LiRestv2Client.getInstance();
     }
 
     /**
      * Fetches a list of all the articles for the user in context ordered by post time or kudos count. Create
-     * parameters with {@LiClientRequestParams.LiMessagesClientRequestParams}.
+     * parameters with {@link LiClientRequestParams.LiMessagesClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesClientRequestParams} the Android context
-     *                              (required)
+     * @param params {@link LiClientRequestParams.LiMessagesClientRequestParams} the Android context (required)
      * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMessagesClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MESSAGES_CLIENT);
+    public static LiClient getMessagesClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MESSAGES_CLIENT);
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", "0");
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
-                LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE,
-                LiMessage.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
+                LiQueryConstant.LI_ARTICLES_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches all articles on the specified board, authored by the user in context. Create parameters with
-     * {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams}.
+     * {@link LiClientRequestParams.LiMessagesByBoardIdClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByBoardIdClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the ID of the board from which to fetch the messages (required)
+     * @param params {@link LiClientRequestParams.LiMessagesByBoardIdClientRequestParams}
      * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMessagesByBoardIdClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MESSAGES_BY_BOARD_ID_CLIENT);
-        String boardId
-                = ((LiClientRequestParams.LiMessagesByBoardIdClientRequestParams) liClientRequestParams).getBoardId();
+    public static LiClient getMessagesByBoardIdClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MESSAGES_BY_BOARD_ID_CLIENT);
+        String boardId = ((LiClientRequestParams.LiMessagesByBoardIdClientRequestParams) params).getBoardId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", boardId).replaceAll("&&", "0");
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
-                LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_BROWSE_QUERYSETTINGS_TYPE,
-                LiMessage.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
+                LiQueryConstant.LI_ARTICLES_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_ARTICLES_BROWSE_QUERYSETTINGS_TYPE, LiMessage.class)
+                .setReplacer(liQueryValueReplacer);
     }
 
     /**
-     * Fetches all the SDK settings from the Community app. Create parameters with {@LiClientRequestParams
-     * .LiSdkSettingsClientRequestParams}.
+     * Fetches all the SDK settings from the Community app. Create parameters with {@link LiClientRequestParams.LiSdkSettingsClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiSdkSettingsClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the client ID (required)
+     * @param params {@link LiClientRequestParams.LiSdkSettingsClientRequestParams}
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getSdkSettingsClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_SDK_SETTINGS_CLIENT);
-        String clientId
-                = ((LiClientRequestParams.LiSdkSettingsClientRequestParams) liClientRequestParams).getClientId();
+    public static LiClient getSdkSettingsClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_SDK_SETTINGS_CLIENT);
+        String clientId = ((LiClientRequestParams.LiSdkSettingsClientRequestParams) params).getClientId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", clientId);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_SDK_SETTINGS_CLIENT_BASE_LIQL,
-                LiQueryConstant.LI_SDK_SETTINGS_CLIENT_TYPE, LiQueryConstant.LI_SDK_SETTINGS_QUERYSETTINGS_TYPE,
-                LiAppSdkSettings.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_SDK_SETTINGS_CLIENT_BASE_LIQL,
+                LiQueryConstant.LI_SDK_SETTINGS_CLIENT_TYPE, LiQueryConstant.LI_SDK_SETTINGS_QUERYSETTINGS_TYPE, LiAppSdkSettings.class)
+                .setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches a list of all Community subscriptions for the user in context. Create parameters with
-     * {@LiClientRequestParams.LiUserSubscriptionsClientRequestParams}.
+     * {@link LiClientRequestParams.LiUserSubscriptionsClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiUserSubscriptionsClientRequestParams} the Android
-     *                              context (required)
+     * @param params {@link LiClientRequestParams.LiUserSubscriptionsClientRequestParams} (required)
      * @return LiSubscription {@link LiSubscriptions}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUserSubscriptionsClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_USER_SUBSCRIPTIONS_CLIENT);
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LI_SUBSCRIPTIONS_CLIENT_TYPE,
+    public static LiClient getUserSubscriptionsClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_USER_SUBSCRIPTIONS_CLIENT);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LI_SUBSCRIPTIONS_CLIENT_TYPE,
                 LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
     }
 
@@ -172,214 +161,173 @@ public class LiClientManager {
      * Fetches a list of boards for a given category, along with board and category details. Create parameters with
      * {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the category ID (required)
+     * @param params {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams}
      * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getCategoryBoardsClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_CATEGORY_BOARDS_CLIENT);
-        String categoryId
-                = ((LiClientRequestParams.LiCategoryBoardsClientRequestParams) liClientRequestParams).getCategoryId();
+    public static LiClient getCategoryBoardsClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_CATEGORY_BOARDS_CLIENT);
+        String categoryId = ((LiClientRequestParams.LiCategoryBoardsClientRequestParams) params).getCategoryId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", categoryId);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_BROWSE_CLIENT_BASE_LIQL,
-                LiQueryConstant.LI_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_BROWSE_QUERYSETTINGS_TYPE,
-                LiBrowse.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_BROWSE_CLIENT_BASE_LIQL, LiQueryConstant.LI_BROWSE_CLIENT_TYPE,
+                LiQueryConstant.LI_BROWSE_QUERYSETTINGS_TYPE, LiBrowse.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches boards at a specific depth in the Community Structure hierarchy. 0 is the highest level in the
      * structure. Create parameters with {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the depth of boards to include in the query (required)
+     * @param params {@link LiClientRequestParams.LiBoardsByDepthClientRequestParams}.
      * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getBoardsByDepthClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_BOARDS_BY_DEPTH_CLIENT);
-        int depth = ((LiClientRequestParams.LiBoardsByDepthClientRequestParams) liClientRequestParams).getDepth();
+    public static LiClient getBoardsByDepthClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_BOARDS_BY_DEPTH_CLIENT);
+        int depth = ((LiClientRequestParams.LiBoardsByDepthClientRequestParams) params).getDepth();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(depth));
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_BROWSE_CLIENT_BASE_LIQL,
-                LiQueryConstant.LI_BROWSE_CLIENT_TYPE, LiQueryConstant.LI_BROWSE_BY_DEPTH_QUERYSETTINGS_TYPE,
-                LiBrowse.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_BROWSE_CLIENT_BASE_LIQL, LiQueryConstant.LI_BROWSE_CLIENT_TYPE,
+                LiQueryConstant.LI_BROWSE_BY_DEPTH_QUERYSETTINGS_TYPE, LiBrowse.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches details of child messages of the specified message. Child messages include replies comments, as well
      * as nested replies or comments. Create parameters with {@link LiClientRequestParams.LiRepliesClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiRepliesClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the ID of the parent message (required)
+     * @param params {@link LiClientRequestParams.LiRepliesClientRequestParams}.
      * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
     @NonNull
-    public static LiClient getRepliesClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_REPLIES_CLIENT);
-        Long parentId = ((LiClientRequestParams.LiRepliesClientRequestParams) liClientRequestParams).getParentId();
+    public static LiClient getRepliesClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_REPLIES_CLIENT);
+        Long parentId = ((LiClientRequestParams.LiRepliesClientRequestParams) params).getParentId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(parentId));
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_TYPE,
-                LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(
-                liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL,
+                LiQueryConstant.LI_MESSAGE_CHILDREN_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_CHILDREN_QUERYSETTINGS_TYPE, LiMessage.class)
+                .setReplacer(liQueryValueReplacer);
     }
 
     /**
-     * Performs a keyword search in the community. Create parameters with
-     * {@link LiClientRequestParams.LiSearchClientRequestParams}.
+     * Performs a keyword search in the community. Create parameters with {@link LiClientRequestParams.LiSearchClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiSearchClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the text string to search, passed as 'query'. The 'query' parameter is compared
-     *                              with the body and subject of the message. (required)
+     * @param params the text string to search, passed as 'query'. The 'query' parameter is compared
+     *               with the body and subject of the message. (required)
      * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getSearchClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_SEARCH_CLIENT);
-        String query = ((LiClientRequestParams.LiSearchClientRequestParams) liClientRequestParams).getQuery();
+    public static LiClient getSearchClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_SEARCH_CLIENT);
+        String query = ((LiClientRequestParams.LiSearchClientRequestParams) params).getQuery();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", query);
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                String.format(LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, query), LiQueryConstant.LI_SEARCH_CLIENT_TYPE,
-                LiQueryConstant.LI_SEARCH_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), String.format(LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, query),
+                LiQueryConstant.LI_SEARCH_CLIENT_TYPE, LiQueryConstant.LI_SEARCH_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches messages posted by a specified author up to a specified depth in the Community Structure hierarchy.
      * Crate parameters with {@link LiClientRequestParams.LiUserMessagesClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUserMessagesClientRequestParams}  the Android
-     *                              context (required)
-     * @param liClientRequestParams the ID of the author (required)
-     * @param liClientRequestParams the depth of the message, where the a topic message = 0, the first reply = 1, and
-     *                              so on (required)
+     * @param params the depth of the message, where the a topic message = 0, the first reply = 1, and so on (required).
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUserMessagesClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_USER_MESSAGES_CLIENT);
-        Long authorId = ((LiClientRequestParams.LiUserMessagesClientRequestParams) liClientRequestParams).getAuthorId();
-        String depth = ((LiClientRequestParams.LiUserMessagesClientRequestParams) liClientRequestParams).getDepth();
+    public static LiClient getUserMessagesClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_USER_MESSAGES_CLIENT);
+        Long authorId = ((LiClientRequestParams.LiUserMessagesClientRequestParams) params).getAuthorId();
+        String depth = ((LiClientRequestParams.LiUserMessagesClientRequestParams) params).getDepth();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(authorId)).replaceAll("&&", depth);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
-                LiQueryConstant.LI_QUESTIONS_CLIENT_TYPE, LiQueryConstant.LI_QUESTIONS_QUERYSETTINGS_TYPE,
-                LiMessage.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_QUESTIONS_CLIENT_TYPE,
+                LiQueryConstant.LI_QUESTIONS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches category details available to the user in context. This method respects the Hide from Lists and Menus
-     * setting in Community Admin.
-     * Create parameters with {@link LiClientRequestParams.LiCategoryClientRequestParams}.
+     * setting in Community Admin. Create parameters with {@link LiClientRequestParams.LiCategoryClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCategoryClientRequestParams} the Android context
-     *                              (required)
+     * @param params {@link LiClientRequestParams.LiCategoryClientRequestParams}.
      * @return LiBrowse {@link LiBrowse}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getCategoryClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_CATEGORY_CLIENT);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_CATEGORY_CLIENT_BASE_LIQL,
-                LiQueryConstant.LI_CATEGORY_CLIENT_TYPE, LiQueryConstant.LI_CATEGORY_QUERYSETTINGS_TYPE,
-                LiBrowse.class);
+    public static LiClient getCategoryClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_CATEGORY_CLIENT);
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_CATEGORY_CLIENT_BASE_LIQL, LiQueryConstant.LI_CATEGORY_CLIENT_TYPE,
+                LiQueryConstant.LI_CATEGORY_QUERYSETTINGS_TYPE, LiBrowse.class);
     }
 
     /**
-     * Fetches all details about the specified user. Create parameters with
-     * {@link LiClientRequestParams.LiUserDetailsClientRequestParams}.
+     * Fetches all details about the specified user. Create parameters with {@link LiClientRequestParams.LiUserDetailsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUserDetailsClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the ID of the user (required)
+     * @param params {@link LiClientRequestParams.LiUserDetailsClientRequestParams}.
      * @return LUser {@link LiUser}
      * @throws LiRestResponseException LiClient {@link LiRestResponseException}
      */
-    public static LiClient getUserDetailsClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_USER_DETAILS_CLIENT);
-        String userId = ((LiClientRequestParams.LiUserDetailsClientRequestParams) liClientRequestParams).getUserId();
+    public static LiClient getUserDetailsClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_USER_DETAILS_CLIENT);
+        String userId = ((LiClientRequestParams.LiUserDetailsClientRequestParams) params).getUserId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", userId);
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL,
-                LI_USER_DETAILS_CLIENT_TYPE, LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE,
-                LiUser.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_USER_DETAILS_CLIENT_BASE_LIQL, LI_USER_DETAILS_CLIENT_TYPE,
+                LiQueryConstant.LI_USER_DETAILS_QUERYSETTINGS_TYPE, LiUser.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
-     * Fetches details of the specified message. Create parameters with
-     * {@link LiClientRequestParams.LiMessageClientRequestParams}.
+     * Fetches details of the specified message. Create parameters with {@link LiClientRequestParams.LiMessageClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the ID of the message (required)
+     * @param params {@link LiClientRequestParams.LiMessageClientRequestParams}.
      * @return LiMessage {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMessageClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MESSAGE_CLIENT);
-        Long messageId = ((LiClientRequestParams.LiMessageClientRequestParams) liClientRequestParams).getMessageId();
+    public static LiClient getMessageClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MESSAGE_CLIENT);
+        Long messageId = ((LiClientRequestParams.LiMessageClientRequestParams) params).getMessageId();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(messageId));
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE,
-                LiQueryConstant.LI_MESSAGE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_CONVERSATION_BASE_LIQL,
+                LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
      * Fetches details of all floated (or "pinned") of the specified board for the user in context.
-     * Create parameters with {@LiClientRequestParams.LiFloatedMessagesClientRequestParams}.
+     * Create parameters with {@link LiClientRequestParams.LiFloatedMessagesClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiFloatedMessagesClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the ID of the board (required)
-     * @param liClientRequestParams the scope for searching the floated messages. Supported scopes: "global", "local"
-     *                              (required)
+     * @param params the scope for searching the floated messages. Supported scopes: "global", "local"
+     *               (required)
      * @return LiFloatedMessageModel {@link LiFloatedMessageModel}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getFloatedMessagesClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_FLOATED_MESSAGES_CLIENT);
-        String boardId
-                = ((LiClientRequestParams.LiFloatedMessagesClientRequestParams) liClientRequestParams).getBoardId();
-        String scope = ((LiClientRequestParams.LiFloatedMessagesClientRequestParams) liClientRequestParams).getScope();
+    public static LiClient getFloatedMessagesClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_FLOATED_MESSAGES_CLIENT);
+        String boardId = ((LiClientRequestParams.LiFloatedMessagesClientRequestParams) params).getBoardId();
+        String scope = ((LiClientRequestParams.LiFloatedMessagesClientRequestParams) params).getScope();
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", String.valueOf(boardId)).replaceAll("&&", scope);
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL, LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_TYPE,
-                LiQueryConstant.LI_FLOATED_MESSAGE_QUERYSETTINGS_TYPE, LiFloatedMessageModel.class).setReplacer(
-                liQueryValueReplacer);
+
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_BASE_LIQL,
+                LiQueryConstant.LI_FLOATED_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_FLOATED_MESSAGE_QUERYSETTINGS_TYPE, LiFloatedMessageModel.class)
+                .setReplacer(liQueryValueReplacer);
     }
 
     /**
-     * Fetches details for the specified set of messages. Create parameters with {@LiClientRequestParams
-     * .LiMessagesByIdsClientRequestParams}.
+     * Fetches details for the specified set of messages. Create parameters with {@link LiClientRequestParams.LiMessagesByIdsClientRequestParams}.
      *
-     * @param liClientRequestParams {@LiClientRequestParams.LiMessagesByIdsClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the IDs of the messages, passed as a set (required)
+     * @param params {@link LiClientRequestParams.LiMessagesByIdsClientRequestParams}.
      * @return LiMessages {@link LiMessage}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMessagesByIdsClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MESSAGES_BY_ID_CLIENT);
-        Set<String> messageIds
-                = ((LiClientRequestParams.LiMessagesByIdsClientRequestParams) liClientRequestParams).getMessageIds();
+    public static LiClient getMessagesByIdsClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MESSAGES_BY_ID_CLIENT);
+        Set<String> messageIds = ((LiClientRequestParams.LiMessagesByIdsClientRequestParams) params).getMessageIds();
         final StringBuilder sb = new StringBuilder();
         boolean isFirst = true;
         for (String id : messageIds) {
@@ -395,28 +343,25 @@ public class LiClientManager {
         LiQueryValueReplacer liQueryValueReplacer = new LiQueryValueReplacer();
         liQueryValueReplacer.replaceAll("##", sb.toString());
 
-        return new LiBaseGetClient(liClientRequestParams.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL,
-                LiQueryConstant.LI_MESSAGE_CLIENT_TYPE, LiQueryConstant.LI_MESSAGE_BY_IDS_QUERYSETTINGS_TYPE,
-                LiMessage.class).setReplacer(liQueryValueReplacer);
+        return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_MESSAGE_LIST_BASE_LIQL, LiQueryConstant.LI_MESSAGE_CLIENT_TYPE,
+                LiQueryConstant.LI_MESSAGE_BY_IDS_QUERYSETTINGS_TYPE, LiMessage.class).setReplacer(liQueryValueReplacer);
     }
 
     /**
-     * Kudos the specified message for the user in context.
-     * Create parameters with {@link LiClientRequestParams.LiKudoClientRequestParams}.
-     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then
-     * used in the POST call.
+     * Kudos the specified message for the user in context. Create parameters with {@link LiClientRequestParams.LiKudoClientRequestParams}.
+     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiKudoClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the ID of the message to kudo (required)
+     * @param params the ID of the message to kudo (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_KUDO_CLIENT);
-        String messageId = ((LiClientRequestParams.LiKudoClientRequestParams) liClientRequestParams).getMessageId();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
-                String.format("/community/2.0/%s/messages/%s/kudos", LiSDKManager.getInstance().getTenant(), messageId));
+    public static LiClient getKudoClient(LiClientRequestParams params) throws LiRestResponseException {
+
+        params.validate(Client.LI_KUDO_CLIENT);
+        String messageId = ((LiClientRequestParams.LiKudoClientRequestParams) params).getMessageId();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), String.format("/community/2.0/%s/messages/%s/kudos",
+                LiSDKManager.getInstance().getTenant(), messageId));
+
         LiPostKudoModel liPostKudoModel = new LiPostKudoModel();
         LiMessage liMessage = new LiMessage();
         LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
@@ -425,77 +370,69 @@ public class LiClientManager {
         liPostKudoModel.setType(LiQueryConstant.LI_KUDO_TYPE);
         liPostKudoModel.setMessage(liMessage);
         liBasePostClient.postModel = liPostKudoModel;
+
         return liBasePostClient;
     }
 
     /**
-     * Unkudos the specified message for the user in context.
-     * Create parameters with {@link LiClientRequestParams.LiUnKudoClientRequestParams}.
-     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then
-     * used in the POST call.
+     * Unkudos the specified message for the user in context. Create parameters with {@link LiClientRequestParams.LiUnKudoClientRequestParams}.
+     * Uses {@link LiPostKudoModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUnKudoClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the ID of the message to unkudoed (required)
+     * @param params the ID of the message to unkudoed (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUnKudoClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_UNKUDO_CLIENT);
-        String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) liClientRequestParams).getMessageId();
-        LiClientRequestParams.LiGenericDeleteClientRequestParams requestParams =
-                new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+    public static LiClient getUnKudoClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_UNKUDO_CLIENT);
+        String messageId = ((LiClientRequestParams.LiUnKudoClientRequestParams) params).getMessageId();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams requestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(
+                params.getContext(), CollectionsType.MESSAGE, messageId, "/kudos");
+
         return getGenericQueryDeleteClient(requestParams);
     }
 
     /**
-     * Marks a message as an accepted solution.
-     * Create parameters with {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams}.
-     * Uses {@link LiAcceptSolutionModel} to build the request body. The model is converted to a JsonObject, which is
-     * then used in the POST call.
+     * Marks a message as an accepted solution. Create parameters with {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams}.
+     * Uses {@link LiAcceptSolutionModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiAcceptSolutionClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the ID of the message to mark as a solution (required)
+     * @param params the ID of the message to mark as a solution (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getAcceptSolutionClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_ACCEPT_SOLUTION_CLIENT);
-        Long messageId = ((LiClientRequestParams.LiAcceptSolutionClientRequestParams) liClientRequestParams).getMessageId();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+    public static LiClient getAcceptSolutionClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_ACCEPT_SOLUTION_CLIENT);
+        Long messageId = ((LiClientRequestParams.LiAcceptSolutionClientRequestParams) params).getMessageId();
+        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/solutions_data", LiSDKManager.getInstance().getTenant()));
         LiAcceptSolutionModel liAcceptSolutionModel = new LiAcceptSolutionModel();
         liAcceptSolutionModel.setType(LiQueryConstant.LI_ACCEPT_SOLUTION_TYPE);
         liAcceptSolutionModel.setMessageid(String.valueOf(messageId));
         liBasePostClient.postModel = liAcceptSolutionModel;
+
         return liBasePostClient;
     }
 
     /**
-     * Posts a new message to the community.
-     * Create parameters with {@link LiClientRequestParams.LiCreateMessageClientRequestParams}.
-     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is
-     * then used in the POST call.
+     * Posts a new message to the community. Create parameters with {@link LiClientRequestParams.LiCreateMessageClientRequestParams}.
+     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateMessageClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the subject of the message (required)
-     * @param liClientRequestParams the body of the message (required)
-     * @param liClientRequestParams the image filename (if an image is included in the message)
-     * @param liClientRequestParams the image ID (if an image is included in the message)
-     * @param liClientRequestParams the ID of the board where the message will be posted (required)
+     * @param params {@link LiClientRequestParams.LiCreateMessageClientRequestParams}
+     *               the subject of the message (required)
+     *               the body of the message (required)
+     *               the image filename (if an image is included in the message)
+     *               the image ID (if an image is included in the message)
+     *               the ID of the board where the message will be posted (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getCreateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_CREATE_MESSAGE_CLIENT);
-        final String subject = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getSubject();
-        final String boardId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBoardId();
-        final String imageId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageId();
-        final String imageName = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getImageName();
+    public static LiClient getCreateMessageClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_CREATE_MESSAGE_CLIENT);
+        final String subject = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getSubject();
+        final String boardId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getBoardId();
+        final String imageId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getImageId();
+        final String imageName = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getImageName();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenant()));
 
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
@@ -506,49 +443,46 @@ public class LiClientManager {
         liPostMessageModel.setType(LiQueryConstant.LI_POST_QUESTION_TYPE);
         liPostMessageModel.setSubject(subject);
 
-        String body = ((LiClientRequestParams.LiCreateMessageClientRequestParams) liClientRequestParams).getBody();
+        String body = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getBody();
         body = embedImageTag(body, imageId, imageName);
         liPostMessageModel.setBody(body);
         liPostMessageModel.setBoard(liBoard);
         liBasePostClient.postModel = liPostMessageModel;
+
         return liBasePostClient;
     }
 
     /**
-     * Updates an existing message by ID. Crate parameters with
-     * {@link LiClientRequestParams.LiUpdateMessageClientRequestParams}.
-     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is
-     * then used in the PUT call.
+     * Updates an existing message by ID. Crate parameters with {@link LiClientRequestParams.LiUpdateMessageClientRequestParams}.
+     * Uses {@link LiPostMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the PUT call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateMessageClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the message subject
-     * @param liClientRequestParams the message body
-     * @param liClientRequestParams the message ID (required)
+     * @param params {@link LiClientRequestParams.LiUpdateMessageClientRequestParams}
+     *               the Android context (required)
+     *               the message subject
+     *               the message body
+     *               the message ID (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUpdateMessageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_UPDATE_MESSAGE_CLIENT);
-        final String subject = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getSubject();
-        final String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getBody();
-        final String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) liClientRequestParams).getMessageId();
+    public static LiClient getUpdateMessageClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_UPDATE_MESSAGE_CLIENT);
+        final String subject = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) params).getSubject();
+        final String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) params).getBody();
+        final String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) params).getMessageId();
 
-        final LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
                 String.format("/community/2.0/%s/messages/%s", LiSDKManager.getInstance().getTenant(), messageId));
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         liPostMessageModel.setType(LI_POST_QUESTION_TYPE);
         liPostMessageModel.setBody(body);
         liPostMessageModel.setSubject(subject);
         liBasePutClient.postModel = liPostMessageModel;
+
         return liBasePutClient;
     }
 
     /**
      * Embeds an image tag into the message body.
-     * <p><li-image id=IMAGEID</> width="500" height="500" alt=IAMGEID.png align="inline" size="large"
-     * sourcetype="new"></li-image></p>
-     * //This is to insert image id in body if any to effectively display image along with post.
      *
      * @param body      Body of the message to which image has to be attached
      * @param imageId   Id of the image received from community.
@@ -566,27 +500,25 @@ public class LiClientManager {
     }
 
     /**
-     * Creates a reply or comment.
-     * Create parameters with {@link LiClientRequestParams.LiCreateReplyClientRequestParams}.
-     * Uses {@link LiReplyMessageModel} to build request body. The model is converted to a JsonObject, which is then
-     * used in the POST call.
+     * Creates a reply or comment. Create parameters with {@link LiClientRequestParams.LiCreateReplyClientRequestParams}.
+     * Uses {@link LiReplyMessageModel} to build request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateReplyClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the message ID (required)
-     * @param liClientRequestParams the message body (required)
-     * @param liClientRequestParams the image filename (if the message includes an image)
-     * @param liClientRequestParams the image ID (if the message includes an image)
+     * @param params {@link LiClientRequestParams.LiCreateReplyClientRequestParams}
+     *               the Android context (required)
+     *               the message ID (required)
+     *               the message body (required)
+     *               the image filename (if the message includes an image)
+     *               the image ID (if the message includes an image)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException LiClient {@link LiRestResponseException}
      */
-    public static LiClient getCreateReplyClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_CREATE_REPLY_CLIENT);
-        final String subject = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getSubject();
-        final Long messageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getMessageId();
-        final String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageId();
-        final String imageName = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getImageName();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+    public static LiClient getCreateReplyClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_CREATE_REPLY_CLIENT);
+        final String subject = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getSubject();
+        final Long messageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getMessageId();
+        final String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getImageId();
+        final String imageName = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getImageName();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenant()));
 
         final LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
@@ -595,7 +527,7 @@ public class LiClientManager {
         liId.setValue(Long.valueOf(messageId));
         parent.setId(liId);
 
-        String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) liClientRequestParams).getBody();
+        String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getBody();
         body = embedImageTag(body, imageId, imageName);
         liReplyMessage.setSubject(subject);
         liReplyMessage.setBody(body);
@@ -607,30 +539,28 @@ public class LiClientManager {
     }
 
     /**
-     * Uploads an image to the community on behalf of the user in context. The image is placed into the user's public
-     * album.
+     * Uploads an image to the community on behalf of the user in context. The image is placed into the user's public album.
      * Create parameters with {@link LiClientRequestParams.LiUploadImageClientRequestParams}.
-     * Uses {@link LiUploadImageModel} to build request body. The model is converted to a JsonObject, which is then
-     * used in the POST call.
+     * Uses {@link LiUploadImageModel} to build request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUploadImageClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the image title (required)
-     * @param liClientRequestParams the image filename (required)
-     * @param liClientRequestParams the absolute path to the image (required)
-     *                              Note: the image filename and the filename in the absolute path param above must
-     *                              be equal.
+     * @param params {@link LiClientRequestParams.LiUploadImageClientRequestParams}
+     *               the Android context (required)
+     *               the image title (required)
+     *               the image filename (required)
+     *               the absolute path to the image (required)
+     *               Note: the image filename and the filename in the absolute path param above must
+     *               be equal.
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getUploadImageClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_UPLOAD_IMAGE_CLIENT);
+    public static LiClient getUploadImageClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_UPLOAD_IMAGE_CLIENT);
 
-        final String title = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getTitle();
-        final String description = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getDescription();
-        final String imageName = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getImageName();
-        final String path = ((LiClientRequestParams.LiUploadImageClientRequestParams) liClientRequestParams).getPath();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final String title = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getTitle();
+        final String description = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getDescription();
+        final String imageName = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getImageName();
+        final String path = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getPath();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/images", LiSDKManager.getInstance().getTenant()), path, imageName);
 
         LiUploadImageModel uploadImageModel = new LiUploadImageModel();
@@ -645,28 +575,24 @@ public class LiClientManager {
     }
 
     /**
-     * Creates an abuse report for the specified message.
-     * Create parameters with {@link LiClientRequestParams.LiReportAbuseClientRequestParams}.
-     * Uses the {@link LiMarkAbuseModel} to build the request body. The model is converted to a JsonObject, which is
-     * then used in the POST call.
-     * <p>
-     * Added 1.0.2
+     * Creates an abuse report for the specified message. Create parameters with {@link LiClientRequestParams.LiReportAbuseClientRequestParams}.
+     * Uses the {@link LiMarkAbuseModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiReportAbuseClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the ID of message to report (required)
-     * @param liClientRequestParams the message body of the message being reported (required)
-     * @param liClientRequestParams the ID of the user making the abuse report (required)
+     * @param params {@link LiClientRequestParams.LiReportAbuseClientRequestParams}
+     *               the Android context (required)
+     *               the ID of message to report (required)
+     *               the message body of the message being reported (required)
+     *               the ID of the user making the abuse report (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getReportAbuseClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MARK_ABUSE_CLIENT);
+    public static LiClient getReportAbuseClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MARK_ABUSE_CLIENT);
 
-        final String messageId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getMessageId();
-        final String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getUserId();
-        final String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) liClientRequestParams).getBody();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final String messageId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getMessageId();
+        final String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getUserId();
+        final String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getBody();
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/abuse_reports", LiSDKManager.getInstance().getTenant()));
 
         LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
@@ -689,24 +615,21 @@ public class LiClientManager {
     }
 
     /**
-     * Fetches the ID corresponding to device ID from the community.
-     * Create parameters with {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams}.
+     * Fetches the ID corresponding to device ID from the community. Create parameters with {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams} the ID
-     *                              registered with
-     *                              notification
-     *                              provider
-     * @param liClientRequestParams the Global provider for Push notification. Currently "GCM" and "FIREBASE".
+     * @param params {@link LiClientRequestParams.LiDeviceIdFetchClientRequestParams}
+     *               the ID registered with notification provider
+     *               the Global provider for Push notification. Currently "GCM" and "FIREBASE".
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getDeviceIdFetchClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_DEVICE_ID_FETCH_CLIENT);
+    public static LiClient getDeviceIdFetchClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_DEVICE_ID_FETCH_CLIENT);
 
-        final String deviceId = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams).getDeviceId();
-        final String pushNotificationProvider = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) liClientRequestParams)
+        final String deviceId = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) params).getDeviceId();
+        final String pushNotificationProvider = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) params)
                 .getPushNotificationProvider();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/user_device_data", LiSDKManager.getInstance().getTenant()));
 
         final LiUserDeviceDataModel liUserDeviceDataModel = new LiUserDeviceDataModel();
@@ -721,56 +644,49 @@ public class LiClientManager {
     }
 
     /**
-     * Updates the device ID in community with the given device ID. Create parameters with
-     * {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams}.
+     * Updates the device ID in community with the given device ID. Create parameters with {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams the device ID registered with the push notification provider (required)
-     * @param liClientRequestParams the ID corresponding to device ID in the community (required)
+     * @param params {@link LiClientRequestParams.LiDeviceIdUpdateClientRequestParams}
+     *               the Android context (required)
+     *               the device ID registered with the push notification provider (required)
+     *               the ID corresponding to device ID in the community (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getDeviceIdUpdateClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_DEVICE_ID_UPDATE_CLIENT);
-        String deviceId
-                = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) liClientRequestParams).getDeviceId();
-        String id = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) liClientRequestParams).getDeviceId();
+    public static LiClient getDeviceIdUpdateClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_DEVICE_ID_UPDATE_CLIENT);
+        String deviceId = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) params).getDeviceId();
+        String id = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) params).getDeviceId();
         String path = "/community/2.0/%s/user_device_data/" + id;
-        LiBasePutClient liBasePostClient = new LiBasePutClient(liClientRequestParams.getContext(),
-                String.format(path,
-                        LiSDKManager.getInstance().getTenant()));
+        LiBasePutClient liBasePostClient = new LiBasePutClient(params.getContext(), String.format(path, LiSDKManager.getInstance().getTenant()));
         LiUserDeviceIdUpdateModel liUserDeviceIdUpdateModel = new LiUserDeviceIdUpdateModel();
         liUserDeviceIdUpdateModel.setType(LiQueryConstant.LI_USER_DEVICE_ID_FETCH_TYPE);
         liUserDeviceIdUpdateModel.setDeviceId(deviceId);
         liBasePostClient.postModel = liUserDeviceIdUpdateModel;
+
         return liBasePostClient;
     }
 
     /**
-     * Creates new user account.
-     * Create parameters with {@link LiClientRequestParams.LiCreateUserParams}.
-     * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which
-     * is then used in the POST call.
-     * <p>
-     * Added 1.1.0
+     * Creates new user account. Create parameters with {@link LiClientRequestParams.LiCreateUserParams}.
+     * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiCreateUserParams} the Android context (required)
-     * @param liClientRequestParams the user's login (required)
-     * @param liClientRequestParams the user's password (required)
-     * @param liClientRequestParams the user's email (required)
-     * @param liClientRequestParams the user's avatar
-     * @param liClientRequestParams the user's biography
-     * @param liClientRequestParams the user's first name
-     * @param liClientRequestParams the user's last name
+     * @param params {@link LiClientRequestParams.LiCreateUserParams}
+     *               the Android context (required)
+     *               the user's login (required)
+     *               the user's password (required)
+     *               the user's email (required)
+     *               the user's avatar
+     *               the user's biography
+     *               the user's first name
+     *               the user's last name
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getCreateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_CREATE_USER_CLIENT);
+    public static LiClient getCreateUserClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_CREATE_USER_CLIENT);
 
-        final LiClientRequestParams.LiCreateUserParams liCreateUserParams = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams);
+        final LiClientRequestParams.LiCreateUserParams liCreateUserParams = ((LiClientRequestParams.LiCreateUserParams) params);
         final LiAvatar avatar = new LiAvatar();
 
         if (!TextUtils.isEmpty(liCreateUserParams.getAvatarUrl())) {
@@ -786,15 +702,15 @@ public class LiClientManager {
             avatar.setImage(liCreateUserParams.getAvatarImageId());
         }
 
-        final String biography = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getBiography();
-        final String coverImage = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getCoverImage();
-        final String email = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getEmail();
-        final String firstName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getFirstName();
-        final String lastName = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLastName();
-        final String login = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getLogin();
-        final String password = ((LiClientRequestParams.LiCreateUserParams) liClientRequestParams).getPassword();
+        final String biography = ((LiClientRequestParams.LiCreateUserParams) params).getBiography();
+        final String coverImage = ((LiClientRequestParams.LiCreateUserParams) params).getCoverImage();
+        final String email = ((LiClientRequestParams.LiCreateUserParams) params).getEmail();
+        final String firstName = ((LiClientRequestParams.LiCreateUserParams) params).getFirstName();
+        final String lastName = ((LiClientRequestParams.LiCreateUserParams) params).getLastName();
+        final String login = ((LiClientRequestParams.LiCreateUserParams) params).getLogin();
+        final String password = ((LiClientRequestParams.LiCreateUserParams) params).getPassword();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenant()));
 
         final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
@@ -813,29 +729,25 @@ public class LiClientManager {
     }
 
     /**
-     * Mark a single message as read or unread
-     * Create parameters with {@link LiClientRequestParams.LiMarkMessageParams}.
-     * Uses the {@link LiMarkMessageModel} to build the request body. The model is converted to a JsonObject, which
-     * is then used in the POST call.
-     * <p>
-     * Added 1.1.0
+     * Mark a single message as read or unread Create parameters with {@link LiClientRequestParams.LiMarkMessageParams}.
+     * Uses the {@link LiMarkMessageModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessageParams} the Android context (required)
-     * @param liClientRequestParams the ID of the user marking the message (required)
-     * @param liClientRequestParams the ID of the message (required)
-     * @param liClientRequestParams whether to mark the message read or unread. Pass 'markUnread' as 'true' to mark
-     *                              the message as read. (required)
+     * @param params {@link LiClientRequestParams.LiMarkMessageParams}
+     *               the Android context (required)
+     *               the ID of the user marking the message (required)
+     *               the ID of the message (required)
+     *               whether to mark the message read or unread. Pass 'markUnread' as 'true' to mark the message as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkMessagePostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MARK_MESSAGE_POST_CLIENT);
+    public static LiClient getMarkMessagePostClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MARK_MESSAGE_POST_CLIENT);
 
-        final String userId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getUserId();
-        final String messageId = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).getMessageId();
-        final boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) liClientRequestParams).isMarkUnread();
+        final String userId = ((LiClientRequestParams.LiMarkMessageParams) params).getUserId();
+        final String messageId = ((LiClientRequestParams.LiMarkMessageParams) params).getMessageId();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) params).isMarkUnread();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
 
         final LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
@@ -849,31 +761,26 @@ public class LiClientManager {
     }
 
     /**
-     * Marks a set of messages (not necessarily in the same thread) as read or unread. Compare this to
-     * getMarkTopicPostClient.
-     * Create parameters with
-     * {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMarkMessagesParams}.
-     * Uses the {@link LiMarkMessagesModel} to build the request body. The model is converted to a JsonObject, which
-     * is then used in the POST call.
-     * <p>
-     * Added 1.1.0
+     * Marks a set of messages (not necessarily in the same thread) as read or unread. Compare this to getMarkTopicPostClient.
+     * Create parameters with {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMarkMessagesParams}.
+     * Uses the {@link LiMarkMessagesModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkMessagesParams} the Android context
-     * @param liClientRequestParams the user marking the messages (required)
-     * @param liClientRequestParams the IDs of the messages to mark in a comma-separated list (required)
-     * @param liClientRequestParams whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark
-     *                              the messages as read. (required)
+     * @param params {@link LiClientRequestParams.LiMarkMessagesParams}
+     *               the Android context
+     *               the user marking the messages (required)
+     *               the IDs of the messages to mark in a comma-separated list (required)
+     *               whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark the messages as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkMessagesPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MARK_MESSAGES_POST_CLIENT);
+    public static LiClient getMarkMessagesPostClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MARK_MESSAGES_POST_CLIENT);
 
-        final String userId = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getUserId();
-        final String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).getMessageIds();
-        final boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) liClientRequestParams).isMarkUnread();
+        final String userId = ((LiClientRequestParams.LiMarkMessagesParams) params).getUserId();
+        final String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) params).getMessageIds();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) params).isMarkUnread();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
 
         final LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
@@ -887,28 +794,26 @@ public class LiClientManager {
     }
 
     /**
-     * Marks a topic message and all its replies as read or unread. Compare this to getMarkMessagesPostClient.
-     * Create parameters with {@link LiClientRequestParams.LiMarkTopicParams}.
-     * Uses the {@link LiMarkTopicModel} to build the request body. The model is converted to a JsonObject, which is
-     * then used in the POST call.
-     * <p>
-     * Added 1.1.0
+     * Marks a topic message and all its replies as read or unread. Compare this to getMarkMessagesPostClient. Create parameters with
+     * {@link LiClientRequestParams.LiMarkTopicParams}. Uses the {@link LiMarkTopicModel} to build the request body. The model is converted to a JsonObject,
+     * which is then used in the POST call.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMarkTopicParams} the Android context (required)
-     * @param liClientRequestParams the ID of the topic message to mark (required)
-     * @param liClientRequestParams whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark
-     *                              the messages as read. (required)
+     * @param params {@link LiClientRequestParams.LiMarkTopicParams}
+     *               the Android context (required)
+     *               the ID of the topic message to mark (required)
+     *               whether to mark the messages read or unread. Pass 'markUnread' as 'true' to mark
+     *               the messages as read. (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getMarkTopicPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MARK_TOPIC_POST_CLIENT);
+    public static LiClient getMarkTopicPostClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MARK_TOPIC_POST_CLIENT);
 
-        final String userId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getUserId();
-        final String topicId = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).getTopicId();
-        final boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) liClientRequestParams).isMarkUnread();
+        final String userId = ((LiClientRequestParams.LiMarkTopicParams) params).getUserId();
+        final String topicId = ((LiClientRequestParams.LiMarkTopicParams) params).getTopicId();
+        final boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) params).isMarkUnread();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenant()));
 
         LiMarkTopicModel liMarkTopicModel = new LiMarkTopicModel();
@@ -923,34 +828,28 @@ public class LiClientManager {
 
 
     /**
-     * Creates a subscription to the specified target (a board or message).
-     * Create parameters with {@link LiClientRequestParams.LiPostSubscriptionParams}.
      * <p>
-     * The parameters can either be a target which is a {@link LiBaseModel} in the form of {@link LiMessage} or
-     * {@link LiBrowse}
-     * which was selected to be subscribed to and needs to be passed in the constructor
+     * Creates a subscription to the specified target (a board or message). Create parameters with {@link LiClientRequestParams.LiPostSubscriptionParams}.
+     * </p>
      * <p>
-     * Alternatively in the parameters "message/boardId" and "type" need to be passed in the constructor.
-     * "type" is either "message" or "board" depending upon what was selected.
+     * The parameters can either be a target which is a {@link LiBaseModel} in the form of {@link LiMessage} or {@link LiBrowse} which was selected to be
+     * subscribed to and needs to be passed in the constructor Alternatively in the parameters "message/boardId" and "type" need to be passed in the
+     * constructor. "type" is either "message" or "board" depending upon what was selected. If both are set then the target takes precedence and string
+     * parameters are ignored.
+     * </p>
      * <p>
-     * If both are set then the target takes precedence and string parameters are ignored.
-     * <p>
-     * Uses the {@link LiSubscriptionPostModel} to build the request body.
-     * The model is converted to a JsonObject, which is then used in the POST call.
-     * <p>
-     * Added 1.0.1
+     * Uses the {@link LiSubscriptionPostModel} to build the request body. The model is converted to a JsonObject, which is then used in the POST call.
+     * </p>
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiPostSubscriptionParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the target of the subscription -- a board or message (required)
+     * @param params {@link LiClientRequestParams.LiPostSubscriptionParams}
+     *               the Android context
+     *               the target of the subscription -- a board or message (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getSubscriptionPostClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
-        LiClientRequestParams.LiPostSubscriptionParams liPostSubscriptionParams =
-                ((LiClientRequestParams.LiPostSubscriptionParams) liClientRequestParams);
+    public static LiClient getSubscriptionPostClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
+        LiClientRequestParams.LiPostSubscriptionParams liPostSubscriptionParams = ((LiClientRequestParams.LiPostSubscriptionParams) params);
         LiBaseModel liBaseModel = liPostSubscriptionParams.getTarget();
         LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.Target();
         String targetID = null;
@@ -960,7 +859,6 @@ public class LiClientManager {
                 LiMessage message = (LiMessage) liBaseModel.getModel();
                 targetType = "message";
                 targetID = String.valueOf(message.getId());
-
             } else if (liBaseModel.getModel() instanceof LiBrowse) {
                 LiBrowse board = (LiBrowse) liBaseModel.getModel();
                 targetType = "board";
@@ -972,12 +870,13 @@ public class LiClientManager {
         }
         target.setType(targetType);
         target.setId(targetID);
-        LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenant()));
         LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
         liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
         liSubscriptionPostModel.setTarget(target);
         liBasePostClient.postModel = liSubscriptionPostModel;
+
         return liBasePostClient;
     }
 
@@ -985,9 +884,7 @@ public class LiClientManager {
         String finalBoardId = boardId;
         String boardPrefix = "board:";
         if (finalBoardId.contains(boardPrefix)) {
-            finalBoardId = finalBoardId.substring(
-                    finalBoardId.indexOf(boardPrefix) + boardPrefix.length(),
-                    finalBoardId.length());
+            finalBoardId = finalBoardId.substring(finalBoardId.indexOf(boardPrefix) + boardPrefix.length(), finalBoardId.length());
         }
 
         return finalBoardId;
@@ -996,48 +893,46 @@ public class LiClientManager {
     /**
      * Deletes a subscription.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiDeleteSubscriptionParams} the Android context
-     * @param liClientRequestParams the subscription ID
+     * @param params {@link LiClientRequestParams.LiDeleteSubscriptionParams}
+     *               the Android context
+     *               the subscription ID
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getSubscriptionDeleteClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
-        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams) liClientRequestParams).getSubscriptionId();
-        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams
-                = new LiClientRequestParams.LiGenericDeleteClientRequestParams(liClientRequestParams.getContext(),
-                CollectionsType.SUBSCRIPTION, id);
-        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(
-                liGenericDeleteClientRequestParams);
-        return liBaseDeleteClient;
+    public static LiClient getSubscriptionDeleteClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_SUBSCRIPTION_DELETE_CLIENT);
+        String id = ((LiClientRequestParams.LiDeleteSubscriptionParams) params).getSubscriptionId();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams outputParams
+                = new LiClientRequestParams.LiGenericDeleteClientRequestParams(params.getContext(), CollectionsType.SUBSCRIPTION, id);
+
+        return getGenericQueryDeleteClient(outputParams);
     }
 
     /**
-     * Updates an existing user. Create parameters with {@link LiClientRequestParams.LiUpdateUserParams}.
-     * Uses {@link LiCreateUpdateUserModel} to build the request body. The model is converted to a JsonObject, which
-     * is then used in the POST call.
      * <p>
-     * Added 1.1.0
+     * Updates an existing user. Create parameters with {@link LiClientRequestParams.LiUpdateUserParams}. Uses {@link LiCreateUpdateUserModel} to build the
+     * request body. The model is converted to a JsonObject, which is then used in the POST call.
+     * </p>
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiUpdateUserParams} the Android context (required)
-     * @param liClientRequestParams the user's avatar image url
-     * @param liClientRequestParams the user's avatar image external url
-     * @param liClientRequestParams the user's avatar image internal url
-     * @param liClientRequestParams the user's avatar image id
-     * @param liClientRequestParams the user's biography
-     * @param liClientRequestParams the user's cover image
-     * @param liClientRequestParams the user's email
-     * @param liClientRequestParams the user's first name
-     * @param liClientRequestParams the user's last name
-     * @param liClientRequestParams the user's login
+     * @param params {@link LiClientRequestParams.LiUpdateUserParams}
+     *               the Android context (required)
+     *               the user's avatar image url
+     *               the user's avatar image external url
+     *               the user's avatar image internal url
+     *               the user's avatar image id
+     *               the user's biography
+     *               the user's cover image
+     *               the user's email
+     *               the user's first name
+     *               the user's last name
+     *               the user's login
      * @return {@link LiClient}
      * @throws LiRestResponseException
      */
-    public static LiClient getUpdateUserClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_UPDATE_USER_CLIENT);
+    public static LiClient getUpdateUserClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_UPDATE_USER_CLIENT);
 
-        final LiClientRequestParams.LiUpdateUserParams liUpdateUserParams = (LiClientRequestParams.LiUpdateUserParams) liClientRequestParams;
+        final LiClientRequestParams.LiUpdateUserParams liUpdateUserParams = (LiClientRequestParams.LiUpdateUserParams) params;
 
         final LiAvatar avatar = new LiAvatar();
 
@@ -1062,7 +957,7 @@ public class LiClientManager {
         final String login = liUpdateUserParams.getLogin();
         final String id = liUpdateUserParams.getId();
 
-        final LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
                 String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenant(), id));
 
         final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
@@ -1080,27 +975,28 @@ public class LiClientManager {
     }
 
     /**
-     * This is generic Post client. Provide a path to a Community API v1 or v2 endpoint and a request body.
-     * Create parameters with {@link LiClientRequestParams.LiGenericPostClientRequestParams}.
+     * This is generic Post client. Provide a path to a Community API v1 or v2 endpoint and a request body. Create parameters with
+     * {@link LiClientRequestParams.LiGenericPostClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPostClientRequestParams} the Android context
-     * @param liClientRequestParams the path to a Community v1 or v2 endpoint
-     * @param liClientRequestParams the request body as a {@link JsonObject}
+     * @param params {@link LiClientRequestParams.LiGenericPostClientRequestParams}
+     *               the Android context
+     *               the path to a Community v1 or v2 endpoint
+     *               the request body as a {@link JsonObject}
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getGenericPostClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_GENERIC_POST_CLIENT);
+    public static LiClient getGenericPostClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_GENERIC_POST_CLIENT);
 
-        final String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getPath();
-        final JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams).getRequestBody();
+        final String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) params).getPath();
+        final JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) params).getRequestBody();
 
-        final Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) liClientRequestParams)
+        final Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) params)
                 .getAdditionalHttpHeaders();
 
         final String requestPath = "/community/2.0/%s/" + path;
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(liClientRequestParams.getContext(),
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
                 String.format(requestPath, LiSDKManager.getInstance().getTenant()), additionalHeaders);
 
         final LiGenericPostModel genericPostModel = new LiGenericPostModel();
@@ -1113,15 +1009,14 @@ public class LiClientManager {
     /**
      * This is a beacon client which is used to send information to the community backend for analytics aka LSI
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiBeaconPostClientRequestParams}
+     * @param params {@link LiClientRequestParams.LiBeaconPostClientRequestParams}
      */
-    public static LiClient getBeaconClient(LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_BEACON_CLIENT);
-        LiClientRequestParams.LiBeaconPostClientRequestParams liBeaconPostClientRequestParams =
-                ((LiClientRequestParams.LiBeaconPostClientRequestParams) liClientRequestParams);
-        String targetType = liBeaconPostClientRequestParams.getTargetType();
-        String targetId = liBeaconPostClientRequestParams.getTargetId();
-        Context context = liBeaconPostClientRequestParams.getContext();
+    public static LiClient getBeaconClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_BEACON_CLIENT);
+        LiClientRequestParams.LiBeaconPostClientRequestParams beaconParams = ((LiClientRequestParams.LiBeaconPostClientRequestParams) params);
+        String targetType = beaconParams.getTargetType();
+        String targetId = beaconParams.getTargetId();
+        Context context = beaconParams.getContext();
         JsonObject requestBody = new JsonObject();
         if (!TextUtils.isEmpty(targetId) && !TextUtils.isEmpty(targetType)) {
             JsonObject targetJsonObject = new JsonObject();
@@ -1130,46 +1025,42 @@ public class LiClientManager {
             requestBody.add("target", targetJsonObject);
         }
         Map<String, String> additionalHeaders = new HashMap<>();
-        String visitOriginTime = LiSDKManager.getInstance().getFromSecuredPreferences(context,
-                LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY);
+        String visitOriginTime = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISIT_ORIGIN_TIME_KEY);
         if (!TextUtils.isEmpty(visitOriginTime)) {
             additionalHeaders.put(LiRequestHeaderConstants.LI_REQUEST_VISIT_ORIGIN_TIME, visitOriginTime);
         }
-        String visitorLastIssuedTime = LiSDKManager.getInstance().getFromSecuredPreferences(context,
-                LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY);
+        String visitorLastIssuedTime = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISIT_LAST_ISSUE_TIME_KEY);
         if (!TextUtils.isEmpty(visitorLastIssuedTime)) {
             additionalHeaders.put(LiRequestHeaderConstants.LI_REQUEST_VISIT_LAST_ISSUE_TIME, visitorLastIssuedTime);
         }
 
-        LiClientRequestParams params = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon",
-                requestBody, additionalHeaders);
-        return LiClientManager.getGenericPostClient(params);
+        LiClientRequestParams outputParams = new LiClientRequestParams.LiGenericPostClientRequestParams(context, "beacon", requestBody, additionalHeaders);
+
+        return LiClientManager.getGenericPostClient(outputParams);
     }
 
     /**
-     * This is generic PUT client. Provide the path to a Community API v1 or v2 endpoint and a request body.
-     * Create parameters with {@link LiClientRequestParams.LiGenericPutClientRequestParams}.
+     * This is generic PUT client. Provide the path to a Community API v1 or v2 endpoint and a request body. Create parameters with
+     * {@link LiClientRequestParams.LiGenericPutClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericPutClientRequestParams} the Android context
-     *                              (required)
-     * @param liClientRequestParams the path to a Community v1 or v2 endpoint (required)
-     * @param liClientRequestParams the request body as a {@link JsonObject} (required)
+     * @param params {@link LiClientRequestParams.LiGenericPutClientRequestParams}
+     *               the Android context  (required)
+     *               the path to a Community v1 or v2 endpoint (required)
+     *               the request body as a {@link JsonObject} (required)
      * @return {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getGenericPutClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_GENERIC_PUT_CLIENT);
-        String path = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getPath();
-        JsonObject requestBody
-                = ((LiClientRequestParams.LiGenericPutClientRequestParams) liClientRequestParams).getRequestBody();
+    public static LiClient getGenericPutClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_GENERIC_PUT_CLIENT);
+        String path = ((LiClientRequestParams.LiGenericPutClientRequestParams) params).getPath();
+        JsonObject requestBody = ((LiClientRequestParams.LiGenericPutClientRequestParams) params).getRequestBody();
         String requestPath = "/community/2.0/%s/" + path;
-        LiBasePutClient liBasePutClient = new LiBasePutClient(liClientRequestParams.getContext(),
-                String.format(requestPath,
-                        LiSDKManager.getInstance().getTenant()));
+        LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
+                String.format(requestPath, LiSDKManager.getInstance().getTenant()));
         LiGenericPutModel genericPutModel = new LiGenericPutModel();
         genericPutModel.setData(requestBody);
         liBasePutClient.postModel = genericPutModel;
+
         return liBasePutClient;
     }
 
@@ -1177,79 +1068,69 @@ public class LiClientManager {
      * This is generic Get client. Provide a LiQL query. Create parameters with
      * {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams a custom LiQL query (required)
+     * @param params {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}
+     *               the Android context (required)
+     *               a custom LiQL query (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getGenericLiqlGetClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_GENERIC_LIQL_CLIENT);
-        String liQuery = ((LiClientRequestParams.LiGenericLiqlClientRequestParams) liClientRequestParams).getLiQuery();
-        return new LiBaseGetClient(liClientRequestParams.getContext(), liQuery, null, LiQueryConstant.LI_GENERIC_TYPE,
-                null);
+    public static LiClient getGenericLiqlGetClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_GENERIC_LIQL_CLIENT);
+        String liQuery = ((LiClientRequestParams.LiGenericLiqlClientRequestParams) params).getLiQuery();
+
+        return new LiBaseGetClient(params.getContext(), liQuery, null, LiQueryConstant.LI_GENERIC_TYPE, null);
     }
 
     /**
      * This is generic Get client. Provide a LiQL query. Create parameters with
      * {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericLiqlClientRequestParams} the Android
-     *                              context (required)
-     * @param liClientRequestParams a custom LiQL query (required)
+     * @param params {@link LiClientRequestParams.LiGenericLiqlClientRequestParams}
+     *               the Android context (required)
+     *               a custom LiQL query (required)
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getGenericNoLiqlGetClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_GENERIC_LIQL_CLIENT);
-        String pathParam
-                = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getPathParam();
-        String queryParams
-                = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) liClientRequestParams).getQueryParams();
-        return new LiBaseGetClient(liClientRequestParams.getContext(), queryParams, null,
-                LiQueryConstant.LI_GENERIC_TYPE, null, pathParam);
+    public static LiClient getGenericNoLiqlGetClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_GENERIC_LIQL_CLIENT);
+        String pathParam = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) params).getPathParam();
+        String queryParams = ((LiClientRequestParams.LiGenericNoLiqlClientRequestParams) params).getQueryParams();
+
+        return new LiBaseGetClient(params.getContext(), queryParams, null, LiQueryConstant.LI_GENERIC_TYPE, null, pathParam);
     }
 
 
     /**
-     * Creates custom WHERE clause, ORDER BY, and/or LIMIT parameters to a LIQL queries used by a Lithium API provider.
-     * Create parameters with {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams}.
+     * Creates custom WHERE clause, ORDER BY, and/or LIMIT parameters to a LIQL queries used by a Lithium API provider. Create parameters with
+     * {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams}.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams} the Android
-     *                              context
+     * @param params {@link LiClientRequestParams.LiGenericQueryParamsClientRequestParams} the Android context
      * @return LiClient {@link LiClient}
      */
-    public static LiClient getGenericQueryParamsGetClient(LiClientRequestParams liClientRequestParams) {
-        liClientRequestParams.validate(Client.LI_GENERIC_QUERY_PARAMS_CLIENT);
-        LiQueryRequestParams liQueryRequestParams
-                = ((LiClientRequestParams.LiGenericQueryParamsClientRequestParams) liClientRequestParams)
-                .getLiQueryRequestParams();
-        return new LiBaseGetClient(liClientRequestParams.getContext(),
-                LiClientConfig.getBaseQuery(liQueryRequestParams.getClient()),
-                LiClientConfig.getType(liQueryRequestParams.getClient()),
-                LiClientConfig.getResponseClass(liQueryRequestParams.getClient()), liQueryRequestParams);
+    public static LiClient getGenericQueryParamsGetClient(LiClientRequestParams params) {
+        params.validate(Client.LI_GENERIC_QUERY_PARAMS_CLIENT);
+        LiQueryRequestParams liQueryRequestParams = ((LiClientRequestParams.LiGenericQueryParamsClientRequestParams) params).getLiQueryRequestParams();
+
+        return new LiBaseGetClient(params.getContext(), LiClientConfig.getBaseQuery(liQueryRequestParams.getClient()),
+                LiClientConfig.getType(liQueryRequestParams.getClient()), LiClientConfig.getResponseClass(liQueryRequestParams.getClient()),
+                liQueryRequestParams);
     }
 
     /**
      * This is a generic DELETE client.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiGenericDeleteClientRequestParams}
+     * @param params {@link LiClientRequestParams.LiGenericDeleteClientRequestParams}
      * @return LiClient {@link LiClient}
      */
-    public static LiClient getGenericQueryDeleteClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT);
-        LiClientRequestParams.LiGenericDeleteClientRequestParams clientRequestParams
-                = (LiClientRequestParams.LiGenericDeleteClientRequestParams) liClientRequestParams;
+    public static LiClient getGenericQueryDeleteClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_GENERIC_DELETE_QUERY_PARAMS_CLIENT);
+        LiClientRequestParams.LiGenericDeleteClientRequestParams clientRequestParams = (LiClientRequestParams.LiGenericDeleteClientRequestParams) params;
         Map<String, String> queryRequestParams = clientRequestParams.getLiQueryRequestParams();
         String id = clientRequestParams.getId();
         String extraPathAfterId = clientRequestParams.getSubResourcePath();
         CollectionsType collectionsType = clientRequestParams.getCollectionsType();
         StringBuilder path = new StringBuilder();
-        path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(),
-                collectionsType.getValue(), id));
+        path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenant(), collectionsType.getValue(), id));
         if (extraPathAfterId != null) {
             path = path.append(extraPathAfterId);
         }
@@ -1262,41 +1143,34 @@ public class LiClientManager {
                 }
             }
         }
-        return new LiBaseDeleteClient(liClientRequestParams.getContext(), path.toString());
+
+        return new LiBaseDeleteClient(params.getContext(), path.toString());
     }
 
     /**
-     * Deletes the specified message. Create parameters with
-     * {@link lithium.community.android.sdk.model.request.LiClientRequestParams.LiMessageDeleteClientRequestParams}.
-     * Optionally pass the 'includeReplies' parameters as 'true' to delete replies or comments associated with the
-     * message.
+     * Deletes the specified message. Create parameters with {@link LiClientRequestParams.LiMessageDeleteClientRequestParams}. Optionally pass the
+     * 'includeReplies' parameters as 'true' to delete replies or comments associated with the message.
      *
-     * @param liClientRequestParams {@link LiClientRequestParams.LiMessageDeleteClientRequestParams} the Android context
-     * @param liClientRequestParams the ID of the message to delete
-     * @param liClientRequestParams whether or not to delete replies/comments to the message
+     * @param params {@link LiClientRequestParams.LiMessageDeleteClientRequestParams}
+     *               the Android context
+     *               the ID of the message to delete
+     *               whether or not to delete replies/comments to the message
      * @return LiClient {@link LiClient}
      * @throws LiRestResponseException {@link LiRestResponseException}
      */
-    public static LiClient getMessageDeleteClient(
-            LiClientRequestParams liClientRequestParams) throws LiRestResponseException {
-        liClientRequestParams.validate(Client.LI_MESSAGE_DELETE_CLIENT);
-        String messageId
-                = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).getMessageId();
-        boolean includeReplies
-                = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) liClientRequestParams).isIncludeReplies();
-        LiClientRequestParams.LiGenericDeleteClientRequestParams liGenericDeleteClientRequestParams;
+    public static LiClient getMessageDeleteClient(LiClientRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_MESSAGE_DELETE_CLIENT);
+        String messageId = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) params).getMessageId();
+        boolean includeReplies = ((LiClientRequestParams.LiMessageDeleteClientRequestParams) params).isIncludeReplies();
+        LiClientRequestParams.LiGenericDeleteClientRequestParams deleteParams;
         if (includeReplies) {
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("delete_message.include_replies", "true");
-            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(
-                    liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId, requestParams);
+            deleteParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(params.getContext(), CollectionsType.MESSAGE, messageId, requestParams);
         } else {
-            liGenericDeleteClientRequestParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(
-                    liClientRequestParams.getContext(), CollectionsType.MESSAGE, messageId);
+            deleteParams = new LiClientRequestParams.LiGenericDeleteClientRequestParams(params.getContext(), CollectionsType.MESSAGE, messageId);
         }
-        LiBaseDeleteClient liBaseDeleteClient = (LiBaseDeleteClient) getGenericQueryDeleteClient(
-                liGenericDeleteClientRequestParams);
-        return liBaseDeleteClient;
+        return getGenericQueryDeleteClient(deleteParams);
     }
 
 

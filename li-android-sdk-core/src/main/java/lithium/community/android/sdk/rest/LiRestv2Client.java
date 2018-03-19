@@ -67,6 +67,7 @@ public class LiRestv2Client extends LiRestClient {
     public static LiRestv2Client getInstance() {
         if (instance == null) {
             try {
+                // TODO: remove this in next major version.
                 //noinspection ConstantConditions to support backwards compatibility
                 initialize(LiSDKManager.getInstance());
             } catch (LiInitializationException e) {
