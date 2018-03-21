@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package lithium.community.android.sdk;
+package lithium.community.android.sdk.manager;
 
 import android.content.Context;
 
@@ -32,10 +32,9 @@ import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.exception.LiInitializationException;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.manager.LiSecuredPrefManager;
 
 import static org.junit.Assert.assertEquals;
 
