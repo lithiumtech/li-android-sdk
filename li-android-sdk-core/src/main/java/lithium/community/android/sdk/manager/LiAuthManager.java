@@ -20,6 +20,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -43,10 +44,10 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_I
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 
 /**
- * This class also manages
- * the responsibility of initiating the OAuth2-authorize flow if the user state is blank or empty. When
- * the token is expired, this class manages the responsibility of refreshing the auth state using OAuth
- * refresh token api.
+ * <p>
+ * This class also manages the responsibility of initiating the OAuth2-authorize flow if the user state is blank or empty. When
+ * the token is expired, this class manages the responsibility of refreshing the auth state using OAuth refresh token api.
+ * </p>
  *
  * @author kunal.shrivastava
  */
@@ -55,13 +56,18 @@ class LiAuthManager {
     @NonNull
     private final LiAppCredentials credentials;
 
-    private LiAuthState liAuthState;
+    @NonNull
+    private final LiSecuredPrefManager preferences;
+
+    @Nullable
+    private LiAuthState state;
 
     LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
-        this.liAuthState = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
         this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-        LiDefaultQueryHelper.initialize(context);
         LiSecuredPrefManager.initialize(credentials.getClientSecret());
+        LiDefaultQueryHelper.initialize(context);
+        this.preferences = LiSecuredPrefManager.getInstance();
+        this.state = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
     }
 
     /**
@@ -83,7 +89,7 @@ class LiAuthManager {
     @Deprecated
     @NonNull
     public LiAppCredentials getLiAppCredentials() {
-        return credentials;
+        return getCredentials();
     }
 
     /**
@@ -98,66 +104,70 @@ class LiAuthManager {
     }
 
     /**
-     * Fetches the current logged in User.
+     * Get the current logged in User.
      *
-     * @return user details.
+     * @return If a user is logged in the logged in user will be return else {@code null}.
      */
+    @Nullable
     public LiUser getLoggedInUser() {
-        if (liAuthState != null) {
-            return liAuthState.getUser();
-        }
-        return null;
+        return state != null ? state.getUser() : null;
     }
 
     /**
-     * Sets User
+     * Sets a logged in User
      *
-     * @param user {@Link LiUser}
+     * @param user a LIA user.
      */
-    public void setLoggedInUser(Context context, LiUser user) {
-        if (liAuthState != null) {
-            liAuthState.setUser(user);
-            putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
+    public void setLoggedInUser(@NonNull Context context, @Nullable LiUser user) {
+        if (state != null) {
+            state.setUser(user);
+            putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
         }
     }
 
     /**
-     * Returns Access Token.
+     * Get the access token for API calls.
+     *
+     * @return the access token if logged in and initialized else {@code null}.
      */
+    @Nullable
+    public String getAuthToken() {
+        return state == null ? null : state.getAccessToken();
+    }
+
+    /**
+     * Get the access token for API calls.
+     *
+     * @return the access token if logged in and initialized else {@code null}.
+     * @deprecated Use {@link #getAuthToken()} instead.
+     */
+    @Deprecated
+    @Nullable
     public String getNewAuthToken() {
-        return liAuthState == null ? null : liAuthState.getAccessToken();
+        return getAuthToken();
     }
 
     /**
-     * Returns Refresh Token.
+     * Get the refresh token for generating new access token
+     *
+     * @return the refresh token if logged in and initialized else {@code null}.
      */
+    @Nullable
     public String getRefreshToken() {
-        return liAuthState == null ? null : liAuthState.getRefreshToken();
+        return state == null ? null : state.getRefreshToken();
     }
 
-    public String getFromSecuredPreferences(Context context, String key) {
-        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
-        return manager == null ? null : manager.getString(context, key);
+    @Nullable
+    public String getFromSecuredPreferences(@NonNull Context context, @NonNull String key) {
+        return preferences.getString(context, key);
     }
 
-    public boolean putInSecuredPreferences(Context context, String key, String value) {
-        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
-        if (manager != null) {
-            manager.putString(context, key, value);
-            return true;
-        } else {
-            return false;
-        }
+    public void putInSecuredPreferences(@NonNull Context context, @NonNull String key, @NonNull String value) {
+        preferences.putString(context, key, value);
     }
 
-    public boolean removeFromSecuredPreferences(Context context, String key) {
-        LiSecuredPrefManager manager = LiSecuredPrefManager.getInstance();
-        if (manager != null) {
-            manager.remove(context, key);
-            return true;
-        } else {
-            return false;
-        }
+    public void removeFromSecuredPreferences(@NonNull Context context, @NonNull String key) {
+        preferences.remove(context, key);
     }
 
     /**
@@ -167,9 +177,9 @@ class LiAuthManager {
      * @param authorizationResponse {@link LiSSOAuthResponse}
      */
     public void persistAuthState(Context context, @NonNull LiSSOAuthResponse authorizationResponse) {
-        this.liAuthState = new LiAuthState();
-        liAuthState.update(authorizationResponse);
-        putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
+        this.state = new LiAuthState();
+        state.update(authorizationResponse);
+        putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
     }
 
     /**
@@ -179,8 +189,10 @@ class LiAuthManager {
      * @param response {@link LiTokenResponse}
      */
     public void persistAuthState(Context context, @NonNull LiTokenResponse response) {
-        this.liAuthState.update(response);
-        putInSecuredPreferences(context, LI_AUTH_STATE, liAuthState.jsonSerializeString());
+        if (this.state != null) {
+            this.state.update(response);
+            putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
+        }
     }
 
     /**
@@ -189,11 +201,11 @@ class LiAuthManager {
      * @param context {@link Context}
      */
     public void logout(Context context) {
-        this.removeFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
-        this.removeFromSecuredPreferences(context, LI_AUTH_STATE);
-        this.removeFromSecuredPreferences(context, LI_DEVICE_ID);
-        this.removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
-        this.removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
+        removeFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
+        removeFromSecuredPreferences(context, LI_AUTH_STATE);
+        removeFromSecuredPreferences(context, LI_DEVICE_ID);
+        removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
+        removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
 
         // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
         // way of using CookieManager else use the deprecate methods for older versions.
@@ -217,7 +229,7 @@ class LiAuthManager {
             //noinspection deprecation tagets old API version
             manager.sync();
         }
-        this.liAuthState = null;
+        this.state = null;
     }
 
     /**
@@ -226,58 +238,71 @@ class LiAuthManager {
      * @return true or false depending whether user is logged in.
      */
     public boolean isUserLoggedIn() {
-        return (this.liAuthState != null && this.liAuthState.isAuthorized());
+        return this.state != null && this.state.isAuthorized();
     }
 
     /**
-     * Fetches Auth State from Shared Preference.
+     * Restores Auth State from preferences.
      *
-     * @param context {@link Context}
-     * @return the LiAuthState class.
+     * @param context An Android Context.
+     * @return the Auth State.
      */
+    @Nullable
     public final LiAuthState restoreAuthState(Context context) {
-        String jsonString = getFromSecuredPreferences(context, LI_AUTH_STATE);
-        if (!TextUtils.isEmpty(jsonString)) {
+        String json = getFromSecuredPreferences(context, LI_AUTH_STATE);
+        if (!TextUtils.isEmpty(json)) {
             try {
-                liAuthState = LiAuthState.jsonDeserialize(jsonString);
-                return liAuthState;
-            } catch (JSONException jsonException) {
-                // should never happen
+                state = LiAuthState.deserialize(json);
+                return state;
+            } catch (JSONException e) {
+                Log.e(LiAuthManager.class.getSimpleName(), "Auth State deserialization failed");
+                e.printStackTrace();
             }
         }
         return null;
     }
 
     /**
-     * Returns proxy host received along with auth code .
+     * Gets the API gateway's host address.
+     *
+     * @return the API gateway's host address.
      */
+    public String getApiGatewayHost() {
+        return state != null && !TextUtils.isEmpty(state.getProxyHost()) ? state.getProxyHost() : credentials.getApiGatewayHost().toString();
+    }
+
+    /**
+     * @deprecated Use {@link #getApiGatewayHost()} instead.
+     */
+    @Deprecated
     public String getProxyHost() {
-        String proxyHost;
-        if (liAuthState == null || TextUtils.isEmpty(liAuthState.getProxyHost())) {
-            proxyHost = credentials.getApiGatewayHost().toString();
-        } else {
-            proxyHost = liAuthState.getProxyHost();
-        }
-        return proxyHost;
+        return getApiGatewayHost();
     }
 
     /**
      * Returns tenant id received along with auth code .
      */
-    public String getTenant() {
-        String tenant;
-        if (liAuthState == null || TextUtils.isEmpty(liAuthState.getTenantId())) {
-            tenant = credentials.getTenantId();
-        } else {
-            tenant = liAuthState.getTenantId();
-        }
-        return tenant;
+    public String getTenantId() {
+        return state != null && !TextUtils.isEmpty(state.getTenantId()) ? state.getTenantId() : credentials.getTenantId();
     }
 
     /**
-     * Checks if need to getch fresh access tokens.
+     * Returns tenant Id.
+     *
+     * @return Returns tenant id received along with auth code.
+     * @deprecated Use {@link #getTenantId()} instead.
+     */
+    @Deprecated
+    public String getTenant() {
+        return getTenantId();
+    }
+
+    /**
+     * Checks if the SDK needs to refresh the access token.
+     *
+     * @return {@code true} if the access token has expired or user is logged out, otherwise {@code false}.
      */
     public boolean getNeedsTokenRefresh() {
-        return liAuthState == null || this.liAuthState.getNeedsTokenRefresh();
+        return state == null || this.state.getNeedsTokenRefresh();
     }
 }

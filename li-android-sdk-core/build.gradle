@@ -86,6 +86,7 @@ unMock {
     keep "android.database.CrossProcessCursor"
     keep "android.location.Location"
     keep "android.net.Uri"
+    keep "javax.net.ssl"
     keepStartingWith "android.database.MatrixCursor"
     keepStartingWith "android.text.TextUtils"
     keepStartingWith "android.util."
@@ -123,6 +124,7 @@ dependencies {
     testCompile "org.mockito:mockito-all:$project.ext.mockitoVersion"
     testCompile "org.powermock:powermock-module-junit4:$project.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$project.ext.powerMockito"
+    testCompile "com.squareup.okhttp3:mockwebserver:$project.ext.okhttpVersion"
     testCompile "com.squareup.assertj:assertj-android:$project.ext.assertjAndroidVersion"
 }
 

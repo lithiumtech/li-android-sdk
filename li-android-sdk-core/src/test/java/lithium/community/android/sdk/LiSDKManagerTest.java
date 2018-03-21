@@ -28,16 +28,19 @@ import org.junit.runners.MethodSorters;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.manager.LiSDKManager;
+import lithium.community.android.sdk.manager.LiSecuredPrefManager;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author aiteja.tokala, adityasharat
+ * @author saiteja.tokala, adityasharat
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +54,22 @@ public class LiSDKManagerTest {
     public void setUpTest() throws Exception {
         MockitoAnnotations.initMocks(this);
         mContext = TestHelper.createMockContext();
+
+        Field instance = LiSecuredPrefManager.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
+        Field isInitialized = LiSecuredPrefManager.class.getDeclaredField("isInitialized");
+        isInitialized.setAccessible(true);
+        isInitialized.set(null, new AtomicBoolean(false));
+
+        instance = LiSDKManager.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
+        isInitialized = LiSDKManager.class.getDeclaredField("isInitialized");
+        isInitialized.setAccessible(true);
+        isInitialized.set(null, new AtomicBoolean(false));
+
+        LiSDKManager.initialize(mContext, TestHelper.getTestAppCredentials());
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -101,7 +101,7 @@ public class LiAuthManagerTest {
         Assert.assertEquals(HREF, LiSDKManager.getInstance().getLoggedInUser().getHref());
         Assert.assertEquals(PROFILE_PAGE_URL, LiSDKManager.getInstance().getLoggedInUser().getProfilePageUrl());
 
-        Assert.assertEquals(ACCESS_TOKEN, LiSDKManager.getInstance().getNewAuthToken());
+        Assert.assertEquals(ACCESS_TOKEN, LiSDKManager.getInstance().getAuthToken());
         Assert.assertEquals(NEW_REFRESH_TOKEN, LiSDKManager.getInstance().getRefreshToken());
         Assert.assertTrue(LiSDKManager.getInstance().isUserLoggedIn());
     }

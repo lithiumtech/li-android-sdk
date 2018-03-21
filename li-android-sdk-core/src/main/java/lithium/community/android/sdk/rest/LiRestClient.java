@@ -164,10 +164,10 @@ public abstract class LiRestClient {
         LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
         if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
             if (sdkManager.getNeedsTokenRefresh()) {
-                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getAuthToken());
                 LiTokenResponse liTokenResponse = new LiAuthServiceImpl(baseRestRequest.getContext(), sdkManager).performSyncRefreshTokenRequest();
                 sdkManager.persistAuthState(baseRestRequest.getContext(), liTokenResponse);
-                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
+                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getAuthToken());
             }
         }
 
@@ -209,12 +209,12 @@ public abstract class LiRestClient {
         if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
             if (sdkManager.getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getAuthToken());
                     sdkManager.fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
                         @Override
                         public void onFreshTokenFetched(boolean isFetched) {
                             if (isFetched) {
-                                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
+                                Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getAuthToken());
                                 enqueueCall(baseRestRequest, callback);
                             } else {
                                 callback.onError(LiRestResponseException.networkError("Could not refresh token"));
@@ -289,11 +289,11 @@ public abstract class LiRestClient {
         if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
             if (sdkManager.getNeedsTokenRefresh()) {
                 try {
-                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getNewAuthToken());
+                    Log.d(TOKEN_REFRESH_TAG, "Refresh Token expired on device, fetching again: " + sdkManager.getAuthToken());
                     sdkManager.fetchFreshAccessToken(baseRestRequest.getContext(), new LiAuthServiceImpl.FreshTokenCallBack() {
                         @Override
                         public void onFreshTokenFetched(boolean isFetched) {
-                            Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getNewAuthToken());
+                            Log.d(TOKEN_REFRESH_TAG, "Fetched new refresh token: " + sdkManager.getAuthToken());
                             uploadEnqueueCall(baseRestRequest, callback, imagePath, imageName, requestBody);
                         }
                     });
@@ -334,7 +334,7 @@ public abstract class LiRestClient {
         }
 
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = sdkManager.getProxyHost();
+        String proxyHost = sdkManager.getApiGatewayHost();
 
         uriBuilder.authority(proxyHost);
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
@@ -432,7 +432,7 @@ public abstract class LiRestClient {
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
         Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        uriBuilder.authority(sdkManager.getProxyHost());
+        uriBuilder.authority(sdkManager.getApiGatewayHost());
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
@@ -457,8 +457,8 @@ public abstract class LiRestClient {
     @NonNull
     private Request.Builder buildRequestHeaders(Context context, Request.Builder requestBuilder) {
 
-        if (!TextUtils.isEmpty(sdkManager.getNewAuthToken())) {
-            requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getNewAuthToken());
+        if (!TextUtils.isEmpty(sdkManager.getAuthToken())) {
+            requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
@@ -573,7 +573,7 @@ public abstract class LiRestClient {
 
                             request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
 
-                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getNewAuthToken())
+                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken())
                                     .build();
                         } catch (LiRestResponseException e) {
                             Log.e(LOG_TAG, "Error making rest call for refresh token", e);

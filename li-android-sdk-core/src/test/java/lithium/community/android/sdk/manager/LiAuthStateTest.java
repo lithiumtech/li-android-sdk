@@ -120,12 +120,12 @@ public class LiAuthStateTest {
                 + "\\\"access_token\\\":\\\"ACCESSTOKEN\\\",\\\"refresh_token\\\":\\\"NewRefreshToken\\\","
                 + "\\\"expires_in\\\":1,\\\"userId\\\":\\\"UserId\\\","
                 + "\\\"token_type\\\":\\\"TokenTypeBearer\\\",\\\"expiresAt\\\":1001}\","
-                + "\"refreshToken\":\"NewRefreshToken\"}", liAuthState.jsonSerializeString());
+                + "\"refreshToken\":\"NewRefreshToken\"}", liAuthState.toJsonString());
     }
 
     @Test
     public void testJsonDeserialize() throws JSONException {
-        LiAuthState liAuthState = LiAuthState.jsonDeserialize("{\"mLastTokenResponse\":{\"access_token\":\"accessToken\",\"request\":{\"clientId\":\"clientId\","
+        LiAuthState liAuthState = LiAuthState.deserialize("{\"mLastTokenResponse\":{\"access_token\":\"accessToken\",\"request\":{\"clientId\":\"clientId\","
                 + "\"configuration\":{\"authorizationEndpoint\":\"http:\\/\\/localhost:8080\"},"
                 + "\"additionalParameters\":{},\"client_secret\":\"clientSecret\","
                 + "\"grantType\":\"refresh_token\",\"refreshToken\":\"referesh\"},"

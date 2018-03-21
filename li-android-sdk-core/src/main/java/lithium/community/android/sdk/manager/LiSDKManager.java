@@ -141,7 +141,6 @@ public final class LiSDKManager extends LiAuthManager {
      *
      * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
      */
-    @Nullable
     public static LiSDKManager getInstance() {
         return instance;
     }

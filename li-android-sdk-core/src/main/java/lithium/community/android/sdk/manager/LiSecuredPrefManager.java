@@ -113,7 +113,6 @@ class LiSecuredPrefManager {
      *
      * @return Instance of the Secured Preference Manager.
      */
-    @Nullable
     public static LiSecuredPrefManager getInstance() {
         return instance;
     }

@@ -21,41 +21,37 @@ import android.content.Context;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.security.SecureRandom;
-
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import lithium.community.android.sdk.TestHelper;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.internal.platform.Platform;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-/*
-  Created by kunal.shrivastava on 12/07/16.
- */
 
+/**
+ * @author kunal.shrivastava, adityasharat
+ */
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.crypto.*"})
+@PowerMockIgnore({"javax.crypto.*", "javax.net.ssl.*"})
 @PrepareForTest({LiClientManager.class, LiRestv2Client.class, LiRestClient.class, SSLContext.class, Platform.class,
-        Request.class, LiCoreSDKUtils.class
+        Request.class, LiCoreSDKUtils.class, OkHttpClient.class
 })
 public class LiRestv2ClientTest {
 
@@ -63,38 +59,31 @@ public class LiRestv2ClientTest {
     public void testValidateResponse() throws Exception {
         Context context = TestHelper.createMockContext();
 
-        PowerMockito.mockStatic(LiClientManager.class);
-        PowerMockito.mock(LiClientManager.class);
-        PowerMockito.mockStatic(SSLContext.class);
-
         SSLContext sslContext = PowerMockito.mock(SSLContext.class);
-        when(sslContext.getInstance("SSL")).thenReturn(sslContext);
-        Mockito.doNothing().when(sslContext).init(isA(KeyManager[].class), isA(TrustManager[].class), isA(SecureRandom.class));
+
         SSLSocketFactory socketFactory = mock(SSLSocketFactory.class);
         when(sslContext.getSocketFactory()).thenReturn(socketFactory);
 
-        PowerMockito.mockStatic(Platform.class);
-        Platform platform = PowerMockito.mock(Platform.class);
-        X509TrustManager trustManager = mock(X509TrustManager.class);
-        when(platform.trustManager(socketFactory)).thenReturn(trustManager);
-        BDDMockito.given(Platform.get()).willReturn(platform);
+        PowerMockito.mockStatic(SSLContext.class);
+        Mockito.when(SSLContext.getInstance(anyString())).thenReturn(sslContext);
 
-        BDDMockito.given(SSLContext.getInstance("SSL")).willReturn(sslContext);
         LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
-        LiRestv2Client liRestv2Client = LiRestv2Client.getInstance();
+        LiRestv2Client.initialize(LiSDKManager.getInstance());
+        LiRestv2Client client = LiRestv2Client.getInstance();
+
         final LiBaseResponse liBaseResponse = mock(LiBaseResponse.class);
         when(liBaseResponse.getHttpCode()).thenReturn(200);
 
-        LiRestv2Client liRestv2ClientSpy = spy(liRestv2Client);
-        doReturn(liBaseResponse).when(liRestv2ClientSpy).processSync(isA(LiBaseRestRequest.class));
+        LiRestv2Client spy = spy(client);
+        doReturn(liBaseResponse).when(spy).processSync(isA(LiBaseRestRequest.class));
 
         String liql = "select * from messages";
-        LiRestV2Request liBaseRestRequest = new LiRestV2Request(context, liql, "message");
-        liBaseRestRequest.addQueryParam("test");
+        LiRestV2Request request = new LiRestV2Request(context, liql, "message");
+        request.addQueryParam("test");
 
-        LiBaseResponse liBaseResponse1 = liRestv2ClientSpy.processSync(liBaseRestRequest);
+        LiBaseResponse response = spy.processSync(request);
 
-        Assert.assertEquals(200, liBaseResponse1.getHttpCode());
+        Assert.assertEquals(200, response.getHttpCode());
         PowerMockito.verifyStatic();
     }
 }
