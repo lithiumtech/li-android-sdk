@@ -87,15 +87,15 @@ public final class LiAppCredentials {
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
                             @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost,
                             @NonNull String deviceId) {
-        this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
-        this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
-        this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
-        this.tenantId = LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
+        this.clientName = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
+        this.clientKey = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
+        this.clientSecret = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
+        this.tenantId = LiCoreSDKUtils.checkNotNullAndNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
 
-        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
-        this.deviceId = LiCoreSDKUtils.checkNullOrNotEmpty(deviceId, MessageConstants.wasEmpty("deviceId"));
+        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNotNullAndNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
+        this.deviceId = LiCoreSDKUtils.checkNotNullAndNotEmpty(deviceId, MessageConstants.wasEmpty("deviceId"));
 
-        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, MessageConstants.wasEmpty("apiGatewayHost")));
+        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNotNullAndNotEmpty(apiGatewayHost, MessageConstants.wasEmpty("apiGatewayHost")));
 
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + SSO_AUTH_END_POINT;

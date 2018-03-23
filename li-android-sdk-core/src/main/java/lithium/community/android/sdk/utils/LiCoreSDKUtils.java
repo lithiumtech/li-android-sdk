@@ -156,7 +156,7 @@ public class LiCoreSDKUtils {
      * Ensures that the string is either null, or a non-empty string.
      */
     @NonNull
-    public static String checkNullOrNotEmpty(String input, @Nullable String errorMessage) {
+    public static String checkNotNullAndNotEmpty(String input, @Nullable String errorMessage) {
         checkNotNull(input, errorMessage);
         checkArgument(!TextUtils.isEmpty(input), errorMessage != null ? errorMessage : "Argument was an empty string");
         return input;

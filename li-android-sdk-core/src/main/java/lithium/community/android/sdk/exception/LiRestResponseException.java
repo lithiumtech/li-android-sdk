@@ -65,7 +65,7 @@ public class LiRestResponseException extends Exception {
      * Reconstructs an {@link LiRestResponseException} from the JSON
      */
     public static LiRestResponseException fromJson(@NonNull String jsonStr, Gson gson) {
-        LiCoreSDKUtils.checkNullOrNotEmpty(jsonStr, "jsonStr cannot be null or empty");
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(jsonStr, "jsonStr cannot be null or empty");
         JsonObject error = gson.fromJson(jsonStr, JsonObject.class);
         JsonObject data = error.get("data").getAsJsonObject();
         return new LiRestResponseException(error.get("http_code").getAsInt(),

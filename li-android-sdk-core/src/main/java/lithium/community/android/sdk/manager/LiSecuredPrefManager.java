@@ -148,7 +148,7 @@ class LiSecuredPrefManager {
     @Nullable
     public String getString(@NonNull Context context, @NonNull String key) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        LiCoreSDKUtils.checkNullOrNotEmpty(key, MessageConstants.wasNull("key"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
         SharedPreferences preferences = getSecuredPreferences(context);
         String value = null;
         try {
@@ -173,8 +173,8 @@ class LiSecuredPrefManager {
      */
     public void putString(@NonNull Context context, @NonNull String key, @NonNull String value) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        LiCoreSDKUtils.checkNullOrNotEmpty(key, MessageConstants.wasNull("key"));
-        LiCoreSDKUtils.checkNullOrNotEmpty(key, MessageConstants.wasNull("value"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("value"));
         try {
             String encryptedKey = encrypt(key);
             String encryptedValue = encrypt(value);
@@ -193,7 +193,7 @@ class LiSecuredPrefManager {
      */
     public void remove(@NonNull Context context, @NonNull String key) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        LiCoreSDKUtils.checkNullOrNotEmpty(key, MessageConstants.wasNull("key"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
         try {
             String encryptedString = encrypt(key);
             getSecuredPreferences(context).edit().remove(encryptedString).apply();

@@ -78,7 +78,7 @@ public enum LiModerationStatus {
     MARKED_REJECTED;
 
     public static LiModerationStatus fromString(String moderationStatus) {
-        if (LiCoreSDKUtils.checkNullOrNotEmpty(moderationStatus, null) != null) {
+        if (LiCoreSDKUtils.checkNotNullAndNotEmpty(moderationStatus, null) != null) {
             return LiModerationStatus.UNKNOWN;
         }
 

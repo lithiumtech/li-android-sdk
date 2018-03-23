@@ -37,7 +37,7 @@ import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkArgument;
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNull;
-import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotEmpty;
+import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNullAndNotEmpty;
 
 /**
  * This class holds all the Authorization related responses and the Tokens.
@@ -129,7 +129,7 @@ class LiAuthState {
      * @throws JSONException if the provided JSON does not match the expected structure.
      */
     static LiAuthState deserialize(@NonNull String string) throws JSONException {
-        checkNullOrNotEmpty(string, "jsonStr cannot be null or empty");
+        checkNotNullAndNotEmpty(string, "jsonStr cannot be null or empty");
         return deserialize(new JSONObject(string));
     }
 
