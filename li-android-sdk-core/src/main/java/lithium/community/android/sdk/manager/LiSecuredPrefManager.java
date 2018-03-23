@@ -203,6 +203,16 @@ class LiSecuredPrefManager {
         }
     }
 
+    /**
+     * Clears all saved preferences.
+     *
+     * @param context An Android Context.
+     */
+    public void clear(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        getSecuredPreferences(context).edit().clear().apply();
+    }
+
     @NonNull
     private String encrypt(@NonNull String string) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {

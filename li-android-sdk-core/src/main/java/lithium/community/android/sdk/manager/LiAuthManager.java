@@ -39,9 +39,6 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.MessageConstants;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_AUTH_STATE;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 
 /**
  * <p>
@@ -64,7 +61,7 @@ class LiAuthManager {
 
     LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
         this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-        LiSecuredPrefManager.initialize(credentials.getClientSecret());
+        LiSecuredPrefManager.initialize(credentials.getClientSecret() + credentials.getDeviceId());
         LiDefaultQueryHelper.initialize(context);
         this.preferences = LiSecuredPrefManager.getInstance();
         this.state = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
@@ -200,12 +197,10 @@ class LiAuthManager {
      *
      * @param context {@link Context}
      */
-    public void logout(Context context) {
-        removeFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
-        removeFromSecuredPreferences(context, LI_AUTH_STATE);
-        removeFromSecuredPreferences(context, LI_DEVICE_ID);
-        removeFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
-        removeFromSecuredPreferences(context, LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME);
+    public void logout(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+
+        preferences.clear(context);
 
         // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
         // way of using CookieManager else use the deprecate methods for older versions.
