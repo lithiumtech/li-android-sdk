@@ -197,7 +197,7 @@ class LiSecuredPrefManager {
         try {
             String encryptedString = encrypt(key);
             getSecuredPreferences(context).edit().remove(encryptedString).apply();
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             getSecuredPreferences(context).edit().remove(key).apply();
         }
@@ -214,23 +214,23 @@ class LiSecuredPrefManager {
     }
 
     @NonNull
-    private String encrypt(@NonNull String string) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+    private String encrypt(@NonNull String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
         @SuppressLint("GetInstance")
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] bytes = string.getBytes();
+        byte[] bytes = input.getBytes();
         byte[] encrypted = cipher.doFinal(bytes);
         return encode(encrypted);
     }
 
     @NonNull
-    private String decrypt(@NonNull String string) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+    private String decrypt(@NonNull String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
         @SuppressLint("GetInstance")
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, key);
-        byte[] decoded = decode(string);
+        byte[] decoded = decode(input);
         byte[] decrypted = cipher.doFinal(decoded);
         return new String(decrypted);
     }
