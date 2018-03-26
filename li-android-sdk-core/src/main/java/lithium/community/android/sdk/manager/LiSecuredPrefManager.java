@@ -16,138 +16,222 @@
 
 package lithium.community.android.sdk.manager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
-import android.util.Log;
 
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
-
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 
 /**
- * Created by Lithium Technologies Inc on 5/29/17.
+ * <p>
+ * Lia Secured Preference Manager is used internally by the SDK to
+ * securely manage preferences which are used by the SDK.
+ * </p>
+ *
+ * @author adityasharat
  */
 class LiSecuredPrefManager {
 
-    private static final String ENCRYPTION_ALGORITHM = "AES";
+    private static final String ENCRYPTION_ALGORITHM = "AES/ECB/PKCS5Padding";
     private static final int ENCRYPTION_LENGTH = 16;
 
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSecuredPrefManager instance;
 
-    private MessageDigest sha;
-    private Key aesKey;
-    private byte[] encryptionKey;
+    @NonNull
+    private final Key key;
 
-    private LiSecuredPrefManager(Context context) throws NoSuchAlgorithmException {
-        String encryptionStr = context.getPackageName() + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        encryptionKey = encryptionStr.getBytes();
-        sha = MessageDigest.getInstance("SHA-1");
-        aesKey = new SecretKeySpec(Arrays.copyOf(sha.digest(encryptionKey), ENCRYPTION_LENGTH), ENCRYPTION_ALGORITHM);
+    /**
+     * Default private constructor.
+     *
+     * @param secret The secret encryption key.
+     * @throws NoSuchAlgorithmException If the device does not support SHA-1 encryption.
+     */
+    private LiSecuredPrefManager(@NonNull String secret) throws NoSuchAlgorithmException {
+        LiCoreSDKUtils.checkNotNull(secret, MessageConstants.wasNull("secret encryption key"));
+        MessageDigest sha = MessageDigest.getInstance("SHA1");
+        key = new SecretKeySpec(Arrays.copyOf(sha.digest(secret.getBytes()), ENCRYPTION_LENGTH), "AES");
     }
 
     /**
-     * Instance of this.
+     * Default initializer.
+     *
+     * @param secret The secret encryption key.
      */
-    public static LiSecuredPrefManager getInstance() {
-        if (instance == null) {
-            Log.e(LI_LOG_TAG, "LiSecuredPrefManager not intialized. Call init method first");
-            return null;
-        }
-        return instance;
-    }
-
-    private static String encode(byte[] input) {
-        return Base64.encodeToString(input, Base64.NO_PADDING | Base64.NO_WRAP);
-    }
-
-    private static byte[] decode(String input) {
-        return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
-    }
-
-    public static synchronized LiSecuredPrefManager init(Context context) {
+    public static synchronized void initialize(@NonNull String secret) throws LiInitializationException {
         if (isInitialized.compareAndSet(false, true)) {
             try {
-                instance = new LiSecuredPrefManager(context);
+                instance = new LiSecuredPrefManager(secret);
             } catch (NoSuchAlgorithmException e) {
-                Log.e(LiCoreSDKConstants.LI_LOG_TAG, e.getMessage());
+                e.printStackTrace();
+                throw new LiInitializationException(LiSecuredPrefManager.class.getSimpleName(), e);
             }
         }
-        return instance;
-    }
-
-    public String encrypt(String str) throws Exception {
-        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-        return encode(cipher.doFinal(str.getBytes("UTF-8")));
-    }
-
-    public String decrypt(String encrStr) throws Exception {
-        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, aesKey);
-        return new String(cipher.doFinal(decode(encrStr)), "UTF-8");
     }
 
     /**
-     * fetches shared preference
+     * Deprecated initializer.
      *
-     * @param context {@link Context}
-     * @return SharedPreferences
+     * @param context An Android context.
+     * @return instance of Lithium Secured Preference Manager.
+     * @deprecated Use {@link #initialize(String)} instead.
      */
-    SharedPreferences getSecuredPreferences(Context context) {
-        return context.getSharedPreferences(LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-    }
-
-    public void remove(Context context, String key) {
+    @Deprecated
+    public static synchronized LiSecuredPrefManager init(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         try {
-            instance.getSecuredPreferences(context).edit().remove(
-                    instance.encrypt(key)).apply();
-        } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
-            instance.getSecuredPreferences(context).edit().remove(key).apply();
+            initialize(context.getPackageName() + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+        } catch (LiInitializationException e) {
+            e.printStackTrace();
         }
+
+        return getInstance();
     }
 
-    public void putString(Context context, String key, String value) {
-        try {
-            instance.getSecuredPreferences(context).edit().putString(
-                    instance.encrypt(key),
-                    instance.encrypt(value)).apply();
-        } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
-            instance.getSecuredPreferences(context).edit().putString(key, value).apply();
-        }
+    /**
+     * Get instance the of Lia Secured Preference Manager.
+     *
+     * @return Instance of the Secured Preference Manager.
+     */
+    public static LiSecuredPrefManager getInstance() {
+        return instance;
     }
 
-    public String getString(Context context, String key) {
-        //get secured preferences and check key has any value there
-        SharedPreferences securedPreferences = instance.getSecuredPreferences(context);
-        String value;
+    @NonNull
+    private static String encode(@NonNull byte[] input) {
+        return Base64.encodeToString(input, Base64.DEFAULT);
+    }
+
+    @NonNull
+    private static byte[] decode(String input) {
+        return Base64.decode(input, Base64.DEFAULT);
+    }
+
+    /**
+     * Get the instance of the shared preference.
+     *
+     * @return Lia Shared Preferences.
+     */
+    @NonNull
+    private SharedPreferences getSecuredPreferences(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        return context.getSharedPreferences(LiCoreSDKConstants.LI_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * Get a value of a preference.
+     *
+     * @param context An Android Context.
+     * @param key     The preference key.
+     * @return The value of the key or {@code null} if {@code key} does not exist.
+     */
+    @Nullable
+    public String getString(@NonNull Context context, @NonNull String key) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
+        SharedPreferences preferences = getSecuredPreferences(context);
+        String value = null;
         try {
-            value = instance.decrypt(securedPreferences.getString(instance.encrypt(key), null));
-            if (value == null) {
-                //if not present then check in old unencrypted preferences and then move it new encrypted preferences
-                // file
-                value = securedPreferences.getString(key, null);
-                putString(context, key, value);
-                securedPreferences.edit().remove(key).apply();
+            String encryptedKey = encrypt(key);
+            String encryptedValue = preferences.getString(encryptedKey, null);
+            if (encryptedValue != null) {
+                value = decrypt(encryptedValue);
             }
-        } catch (Exception e) {
-            Log.e(LI_LOG_TAG, "Encryption error, " + e.getMessage());
-            value = securedPreferences.getString(key, null);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+            value = preferences.getString(key, null);
         }
         return value;
+    }
+
+    /**
+     * Saves a key and value in preference.
+     *
+     * @param context An Android Context.
+     * @param key     The preference key.
+     * @param value   Its value.
+     */
+    public void putString(@NonNull Context context, @NonNull String key, @NonNull String value) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("value"));
+        try {
+            String encryptedKey = encrypt(key);
+            String encryptedValue = encrypt(value);
+            getSecuredPreferences(context).edit().putString(encryptedKey, encryptedValue).apply();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+            getSecuredPreferences(context).edit().putString(key, value).apply();
+        }
+    }
+
+    /**
+     * Removes a saved preference.
+     *
+     * @param context An Android Context.
+     * @param key     The preference key.
+     */
+    public void remove(@NonNull Context context, @NonNull String key) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(key, MessageConstants.wasNull("key"));
+        try {
+            String encryptedString = encrypt(key);
+            getSecuredPreferences(context).edit().remove(encryptedString).apply();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+            getSecuredPreferences(context).edit().remove(key).apply();
+        }
+    }
+
+    /**
+     * Clears all saved preferences.
+     *
+     * @param context An Android Context.
+     */
+    public void clear(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        getSecuredPreferences(context).edit().clear().apply();
+    }
+
+    @NonNull
+    private String encrypt(@NonNull String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+        @SuppressLint("GetInstance")
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] bytes = input.getBytes();
+        byte[] encrypted = cipher.doFinal(bytes);
+        return encode(encrypted);
+    }
+
+    @NonNull
+    private String decrypt(@NonNull String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+        @SuppressLint("GetInstance")
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] decoded = decode(input);
+        byte[] decrypted = cipher.doFinal(decoded);
+        return new String(decrypted);
     }
 }

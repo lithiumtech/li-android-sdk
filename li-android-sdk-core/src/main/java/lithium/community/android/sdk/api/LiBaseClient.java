@@ -66,8 +66,8 @@ abstract class LiBaseClient implements LiClient {
         this.liRestv2Client = LiRestv2Client.getInstance();
     }
 
-    public LiBaseClient(Context context, String basePath, String type, String querySettingsType,
-            Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass,
+                        RequestType requestType) throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -78,32 +78,23 @@ abstract class LiBaseClient implements LiClient {
     }
 
 
-    public LiBaseClient(Context context, String type, String querySettingsType,
-            Class<? extends LiBaseModel> responseClass, RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType)
+            throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
-        String tenant = LiSDKManager.getInstance().getTenant();
-        if (tenant == null) {
-            tenant = LiSDKManager.getInstance().getCredentials().getTenantId();
-        }
-        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_SEARCH_BASE_PATH, tenant);
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_SEARCH_BASE_PATH, LiSDKManager.getInstance().getTenantId());
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
         this.requestType = requestType;
     }
 
-    public LiBaseClient(Context context, String type, String querySettingsType,
-            Class<? extends LiBaseModel> responseClass, RequestType requestType,
-            String pathParam) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType,
+                        String pathParam) throws LiRestResponseException {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
-        String tenant = LiSDKManager.getInstance().getTenant();
-        if (tenant == null) {
-            tenant = LiSDKManager.getInstance().getCredentials().getTenantId();
-        }
-        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_GENERIC_BASE_PATH, tenant, pathParam);
+        this.basePath = String.format(LiAuthConstants.API_PROXY_DEFAULT_GENERIC_BASE_PATH, LiSDKManager.getInstance().getTenantId(), pathParam);
         this.responseClass = responseClass;
         this.liRestv2Client = LiRestv2Client.getInstance();
         this.requestType = requestType;
@@ -153,13 +144,11 @@ abstract class LiBaseClient implements LiClient {
             this.liRestV2Request.setPath(basePath);
             final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request,
-                        LiBaseResponse response) throws LiRestResponseException {
+                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
                     if (null != response) {
                         if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                             if (requestType.equals(RequestType.GET)) {
-                                liAsyncRequestCallback.onSuccess(request,
-                                        new LiGetClientResponse(response, type, responseClass, getGson()));
+                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
                             } else if (requestType.equals(RequestType.DELETE)) {
                                 liAsyncRequestCallback.onSuccess(request, new LiDeleteClientResponse(response));
                             } else if (requestType.equals(RequestType.PUT)) {
@@ -203,13 +192,11 @@ abstract class LiBaseClient implements LiClient {
             String requestBody = getRequestBody();
             final LiAsyncRequestCallback callback = new LiAsyncRequestCallback<LiBaseResponse>() {
                 @Override
-                public void onSuccess(LiBaseRestRequest request,
-                        LiBaseResponse response) throws LiRestResponseException {
+                public void onSuccess(LiBaseRestRequest request, LiBaseResponse response) throws LiRestResponseException {
                     if (null != response) {
                         if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                             if (requestType.equals(RequestType.GET)) {
-                                liAsyncRequestCallback.onSuccess(request,
-                                        new LiGetClientResponse(response, type, responseClass, getGson()));
+                                liAsyncRequestCallback.onSuccess(request, new LiGetClientResponse(response, type, responseClass, getGson()));
                             } else {
                                 liAsyncRequestCallback.onSuccess(request, new LiPostClientResponse(response));
                             }
@@ -299,7 +286,6 @@ abstract class LiBaseClient implements LiClient {
     /**
      * Enum to classify Request Type
      */
-
     protected enum RequestType {
         GET, POST, DELETE, PUT;
     }

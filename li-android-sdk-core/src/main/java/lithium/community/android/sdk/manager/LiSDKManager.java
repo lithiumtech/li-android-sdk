@@ -40,7 +40,6 @@ import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.model.request.LiClientRequestParams;
 import lithium.community.android.sdk.model.response.LiAppSdkSettings;
 import lithium.community.android.sdk.model.response.LiUser;
-import lithium.community.android.sdk.queryutil.LiDefaultQueryHelper;
 import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
@@ -54,12 +53,14 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
+ * <p>
  * Interface to Lithium Community Android SDK. Provides the entry point into
  * the Community REST API v2 using OAuth2.
+ * </p>
+ *
+ * @author adityasharat
  */
 public final class LiSDKManager extends LiAuthManager {
-
-    private static final String COMPONENT_NAME = LiSDKManager.class.getName();
 
     private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static LiSDKManager instance;
@@ -73,7 +74,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @param context     The Android context.
      * @param credentials The credentials to be used to authenticate the SDK.
      */
-    private LiSDKManager(@NonNull Context context, @NonNull LiAppCredentials credentials) {
+    private LiSDKManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
         super(context, credentials);
     }
 
@@ -85,17 +86,9 @@ public final class LiSDKManager extends LiAuthManager {
      * @param credentials The {@link LiAppCredentials} for authenticating the SDK.
      */
     public static synchronized void initialize(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws LiInitializationException {
-
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-
         if (isInitialized.compareAndSet(false, true)) {
-            if (LiDefaultQueryHelper.initHelper(context) == null) {
-                throw new LiInitializationException(COMPONENT_NAME);
-            }
-            if (LiSecuredPrefManager.init(context) == null) {
-                throw new LiInitializationException(COMPONENT_NAME);
-            }
             instance = new LiSDKManager(context, credentials);
         }
         updatePreferences(context);
@@ -110,23 +103,16 @@ public final class LiSDKManager extends LiAuthManager {
      * @throws URISyntaxException Does not throw a URISyntaxException but still here for legacy support.
      * @deprecated Use {@link #initialize(Context, LiAppCredentials)} instead.
      */
+    @Deprecated
     @Nullable
     public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws URISyntaxException {
-
-        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-
-        if (isInitialized.compareAndSet(false, true)) {
-            if (LiDefaultQueryHelper.initHelper(context) == null) {
-                return null;
-            }
-            if (LiSecuredPrefManager.init(context) == null) {
-                return null;
-            }
-            instance = new LiSDKManager(context, credentials);
+        try {
+            initialize(context, credentials);
+        } catch (LiInitializationException e) {
+            e.printStackTrace();
         }
-        updatePreferences(context);
-        return instance;
+
+        return getInstance();
     }
 
     /**
@@ -145,6 +131,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @return true or false depending on whether the SDK is initialized
      * @deprecated Use {@link #isInitialized()} instead.
      */
+    @Deprecated
     public static boolean isEnvironmentInitialized() {
         return isInitialized.get() && instance != null;
     }
@@ -154,7 +141,6 @@ public final class LiSDKManager extends LiAuthManager {
      *
      * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
      */
-    @Nullable
     public static LiSDKManager getInstance() {
         return instance;
     }

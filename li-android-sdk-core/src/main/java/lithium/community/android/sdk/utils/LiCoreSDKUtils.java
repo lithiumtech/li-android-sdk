@@ -58,6 +58,7 @@ import okhttp3.Request;
  * Utility class for common operations.
  */
 public class LiCoreSDKUtils {
+
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
     private static final ThreadLocal<SecureRandom> RAND_TL = new ThreadLocal<SecureRandom>() {
         @Override
@@ -155,7 +156,7 @@ public class LiCoreSDKUtils {
      * Ensures that the string is either null, or a non-empty string.
      */
     @NonNull
-    public static String checkNullOrNotEmpty(String input, @Nullable String errorMessage) {
+    public static String checkNotNullAndNotEmpty(String input, @Nullable String errorMessage) {
         checkNotNull(input, errorMessage);
         checkArgument(!TextUtils.isEmpty(input), errorMessage != null ? errorMessage : "Argument was an empty string");
         return input;
@@ -437,24 +438,24 @@ public class LiCoreSDKUtils {
      * @return String is the raw file.
      */
     public static String getRawString(Context context, int rawResId) {
-        String defaultJsonString;
         InputStream inputStream = context.getResources().openRawResource(rawResId);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        int readPointer;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        int character;
         try {
             if (inputStream != null) {
-                readPointer = inputStream.read();
-                while (readPointer != -1) {
-                    byteArrayOutputStream.write(readPointer);
-                    readPointer = inputStream.read();
+                character = inputStream.read();
+                while (character != -1) {
+                    outputStream.write(character);
+                    character = inputStream.read();
                 }
                 inputStream.close();
             }
         } catch (IOException e) {
-            Log.e("Default JSON read", e.getMessage());
+            Log.e("Util", "#getRawString() failed.");
+            e.printStackTrace();
         }
-        defaultJsonString = byteArrayOutputStream.toString();
-        return defaultJsonString;
+
+        return outputStream.toString();
     }
 
     public static Long getTime(Long time) {

@@ -17,6 +17,7 @@
 package lithium.community.android.sdk.rest;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -37,8 +38,24 @@ public class LiRestv2Client extends LiRestClient {
 
     private static final String LOG_TAG = "LiRestv2Client";
 
+    private static LiRestv2Client instance;
+
     private LiRestv2Client(@NonNull LiSDKManager manager) throws LiInitializationException {
         super(manager);
+    }
+
+    /**
+     * <p>
+     * Initializes the Rest Client singleton. If the initialization is successful {@link #getInstance()} will
+     * return an initialized SDK Manager. This function may or may not create a new instance or reinitialize
+     * with subsequent calls.
+     * </p>
+     *
+     * @param manager A Li SDK manager
+     * @throws LiInitializationException if the Rest client fails to initialize.
+     */
+    public static void initialize(@NonNull LiSDKManager manager) throws LiInitializationException {
+        instance = new LiRestv2Client(manager);
     }
 
     /**
@@ -46,8 +63,18 @@ public class LiRestv2Client extends LiRestClient {
      *
      * @return Instance of this class.
      */
+    @Nullable
     public static LiRestv2Client getInstance() {
-        return LiRestV2ClientInitializer.LI_RESTV_2_CLIENT;
+        if (instance == null) {
+            try {
+                // TODO: remove this in next major version.
+                //noinspection ConstantConditions to support backwards compatibility
+                initialize(LiSDKManager.getInstance());
+            } catch (LiInitializationException e) {
+                e.printStackTrace();
+            }
+        }
+        return instance;
     }
 
     /**
@@ -170,25 +197,6 @@ public class LiRestv2Client extends LiRestClient {
         } else {
             Log.e(LOG_TAG, "Error response from server");
             throw LiRestResponseException.fromJson(jsonObject.getAsString(), gson);
-        }
-    }
-
-    /**
-     * Initializer for LiRestV2Client.
-     */
-    private static class LiRestV2ClientInitializer {
-
-        private static final LiRestv2Client LI_RESTV_2_CLIENT;
-
-        static {
-            LiRestv2Client instance;
-            try {
-                instance = new LiRestv2Client(LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), MessageConstants.wasNull("SDK Manager")));
-            } catch (LiInitializationException e) {
-                instance = null;
-                e.printStackTrace();
-            }
-            LI_RESTV_2_CLIENT = instance;
         }
     }
 }

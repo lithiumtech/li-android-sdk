@@ -37,7 +37,7 @@ import lithium.community.android.sdk.utils.LiSystemClock;
 
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkArgument;
 import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNull;
-import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotEmpty;
+import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNotNullAndNotEmpty;
 
 /**
  * This class holds all the Authorization related responses and the Tokens.
@@ -45,12 +45,9 @@ import static lithium.community.android.sdk.utils.LiCoreSDKUtils.checkNullOrNotE
  */
 class LiAuthState {
 
-    private static final String LOG_TAG = "LiSDKAuth";
-
     /**
-     * Tokens which have less time than this value left before expiry will be considered to be
-     * expired for the purposes of calls to
-     * performActionWithFreshTokens}.
+     * Tokens which have less time than this value left before expiry will be
+     * considered to be expired for the purposes of calls to performActionWithFreshTokens.
      */
     private static final int EXPIRY_TIME_TOLERANCE_MS = 60000;
     private static final String KEY_REFRESH_TOKEN = "refreshToken";
@@ -94,19 +91,18 @@ class LiAuthState {
 
     /**
      * Reads an authorization state instance from a JSON string representation produced by
-     * {@link #jsonSerialize()}.
+     * {@link #serialize()}.
      *
      * @throws JSONException if the provided JSON does not match the expected structure.
      */
-    private static LiAuthState jsonDeserialize(@NonNull JSONObject json) throws JSONException {
+    private static LiAuthState deserialize(@NonNull JSONObject json) throws JSONException {
         checkNotNull(json, "json cannot be null");
         Gson gson = new Gson();
         LiAuthState state = new LiAuthState();
         state.mRefreshToken = LiCoreSDKUtils.getStringIfDefined(json, KEY_REFRESH_TOKEN);
         state.mScope = LiCoreSDKUtils.getStringIfDefined(json, KEY_SCOPE);
         if (json.has(KEY_AUTHORIZATION_EXCEPTION)) {
-            state.mLiAuthorizationException = LiAuthorizationException.fromJson(
-                    json.getJSONObject(KEY_AUTHORIZATION_EXCEPTION));
+            state.mLiAuthorizationException = LiAuthorizationException.fromJson(json.getJSONObject(KEY_AUTHORIZATION_EXCEPTION));
         }
 
         if (json.has(KEY_LOGGED_IN_USER)) {
@@ -127,14 +123,14 @@ class LiAuthState {
 
     /**
      * Reads an authorization state instance from a JSON string representation produced by
-     * {@link #jsonSerializeString()}. This method is just a convenience wrapper for
-     * {@link #jsonDeserialize(JSONObject)}, converting the JSON string to its JSON object form.
+     * {@link #toJsonString()}. This method is just a convenience wrapper for
+     * {@link #deserialize(JSONObject)}, converting the JSON string to its JSON object form.
      *
      * @throws JSONException if the provided JSON does not match the expected structure.
      */
-    static LiAuthState jsonDeserialize(@NonNull String jsonStr) throws JSONException {
-        checkNullOrNotEmpty(jsonStr, "jsonStr cannot be null or empty");
-        return jsonDeserialize(new JSONObject(jsonStr));
+    static LiAuthState deserialize(@NonNull String string) throws JSONException {
+        checkNotNullAndNotEmpty(string, "jsonStr cannot be null or empty");
+        return deserialize(new JSONObject(string));
     }
 
     /**
@@ -172,29 +168,17 @@ class LiAuthState {
 
     @Nullable
     public String getProxyHost() {
-        if (isSSOLogin) {
-            if (mLastLiSSOAuthResponse != null) {
-                return mLastLiSSOAuthResponse.getApiProxyHost();
-            }
-        }
-
-        return null;
+        return isSSOLogin && mLastLiSSOAuthResponse != null ? mLastLiSSOAuthResponse.getApiProxyHost() : null;
     }
 
     /**
      * provides tenant id fetched during authorization.
      *
-     * @return
+     * @return the tenant id
      */
     @Nullable
     public String getTenantId() {
-        if (isSSOLogin) {
-            if (mLastLiSSOAuthResponse != null) {
-                return mLastLiSSOAuthResponse.getTenantId();
-            }
-        }
-
-        return null;
+        return isSSOLogin && mLastLiSSOAuthResponse != null ? mLastLiSSOAuthResponse.getTenantId() : null;
     }
 
     /**
@@ -202,14 +186,7 @@ class LiAuthState {
      */
     @Nullable
     String getAccessToken() {
-        if (isSSOLogin) {
-            if (mLastLiTokenResponse != null) {
-                return mLastLiTokenResponse.getAccessToken();
-            }
-            return null;
-        }
-
-        return null;
+        return isSSOLogin && mLastLiTokenResponse != null ? mLastLiTokenResponse.getAccessToken() : null;
     }
 
     /**
@@ -218,14 +195,7 @@ class LiAuthState {
      */
     @Nullable
     Long getAccessTokenExpirationTime() {
-        if (isSSOLogin) {
-            if (mLastLiTokenResponse != null) {
-                return mLastLiTokenResponse.getExpiresAt();
-            }
-            return null;
-
-        }
-        return -1L;
+        return isSSOLogin && mLastLiTokenResponse != null ? mLastLiTokenResponse.getExpiresAt() : -1L;
     }
 
     /**
@@ -233,10 +203,7 @@ class LiAuthState {
      * from which at least either an access token or an ID token have been retrieved.
      */
     boolean isAuthorized() {
-        if (isSSOLogin) {
-            return getAccessToken() != null;
-        }
-        return false;
+        return isSSOLogin && getAccessToken() != null;
     }
 
     /**
@@ -267,8 +234,7 @@ class LiAuthState {
                 return getAccessToken() == null;
             }
 
-            return getAccessTokenExpirationTime()
-                    <= liClock.getCurrentTimeMillis() + EXPIRY_TIME_TOLERANCE_MS;
+            return getAccessTokenExpirationTime() <= liClock.getCurrentTimeMillis() + EXPIRY_TIME_TOLERANCE_MS;
 
         } else {
             if (mNeedsTokenRefreshOverride) {
@@ -281,16 +247,14 @@ class LiAuthState {
                 return getAccessToken() == null;
             }
 
-            return getAccessTokenExpirationTime()
-                    <= liClock.getCurrentTimeMillis() + EXPIRY_TIME_TOLERANCE_MS;
+            return getAccessTokenExpirationTime() <= liClock.getCurrentTimeMillis() + EXPIRY_TIME_TOLERANCE_MS;
         }
     }
 
     /**
      * Updates the authorization state based on a new authorization response.
      */
-    void update(
-            @Nullable LiSSOAuthResponse authResponse) {
+    void update(@Nullable LiSSOAuthResponse authResponse) {
         checkArgument(authResponse != null, "exactly one of authResponse or authException should be non-null");
 
         // the last token response and refresh token are now stale, as they are associated with
@@ -299,7 +263,6 @@ class LiAuthState {
         mLiAuthorizationException = null;
 
         // if the response's mScope is null, it means that it equals that of the request
-
         mScope = null;
         mLastLiSSOAuthResponse = authResponse;
         mProxyHost = authResponse.getApiProxyHost();
@@ -309,21 +272,18 @@ class LiAuthState {
     /**
      * Updates the authorization state based on a new token response.
      */
-    void update(
-            @Nullable LiTokenResponse liTokenResponse) {
+    void update(@Nullable LiTokenResponse liTokenResponse) {
         checkArgument(liTokenResponse != null, "no tokenResponse ");
-
         mLastLiTokenResponse = liTokenResponse;
         mScope = null;
         mRefreshToken = liTokenResponse.getRefreshToken();
-
     }
 
     /**
      * Produces a JSON representation of the authorization state for persistent storage or local
      * transmission (e.g. between activities).
      */
-    JSONObject jsonSerialize() {
+    JSONObject serialize() {
         JSONObject json = new JSONObject();
         LiCoreSDKUtils.putIfNotNull(json, KEY_REFRESH_TOKEN, mRefreshToken);
         LiCoreSDKUtils.putIfNotNull(json, KEY_SCOPE, mScope);
@@ -333,23 +293,13 @@ class LiAuthState {
         }
 
         if (mLastLiSSOAuthResponse != null) {
-            LiCoreSDKUtils.put(
-                    json,
-                    KEY_LAST_SSO_AUTHORIZATION_RESPONSE,
-                    mLastLiSSOAuthResponse.getJsonString());
+            LiCoreSDKUtils.put(json, KEY_LAST_SSO_AUTHORIZATION_RESPONSE, mLastLiSSOAuthResponse.getJsonString());
         }
         if (mLastLiTokenResponse != null) {
-            LiCoreSDKUtils.put(
-                    json,
-                    KEY_LI_LAST_TOKEN_RESPONSE,
-                    mLastLiTokenResponse.getJsonString());
+            LiCoreSDKUtils.put(json, KEY_LI_LAST_TOKEN_RESPONSE, mLastLiTokenResponse.getJsonString());
         }
-
         if (user != null) {
-            LiCoreSDKUtils.put(
-                    json,
-                    KEY_LOGGED_IN_USER,
-                    user.jsonSerialize());
+            LiCoreSDKUtils.put(json, KEY_LOGGED_IN_USER, user.jsonSerialize());
         }
 
         return json;
@@ -358,10 +308,10 @@ class LiAuthState {
     /**
      * Produces a JSON string representation of the authorization state for persistent storage or
      * local transmission (e.g. between activities). This method is just a convenience wrapper
-     * for {@link #jsonSerialize()}, converting the JSON object to its string form.
+     * for {@link #serialize()}, converting the JSON object to its string form.
      */
-    String jsonSerializeString() {
-        return jsonSerialize().toString();
+    String toJsonString() {
+        return serialize().toString();
     }
 
     /**

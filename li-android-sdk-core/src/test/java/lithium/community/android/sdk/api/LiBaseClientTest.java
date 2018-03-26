@@ -16,9 +16,7 @@
 
 package lithium.community.android.sdk.api;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.Context;
 
 import com.google.gson.Gson;
 
@@ -26,15 +24,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -53,13 +48,10 @@ import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiBaseRestRequest;
 import lithium.community.android.sdk.rest.LiClientResponse;
 import lithium.community.android.sdk.rest.LiGetClientResponse;
-import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -67,50 +59,30 @@ import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 /**
- * Created by kunal.shrivastava on 12/1/16.
+ * @author kunal.shrivastava
  */
-
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.crypto.*"})
 @PrepareForTest({LiRestv2Client.class, LiBaseClient.class, LiClientManager.class, LiBaseResponse.class, LiMessage.class, LiGetClientResponse.class})
 public class LiBaseClientTest {
-    private static final String LI_ARTICLES_CLIENT_BASE_LIQL
-            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
+    private static final String LI_ARTICLES_LIQL = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
-    private static final String LI_ARTICLES_QUERYSETTINGS_TYPE = "article";
+    private static final String LI_ARTICLES_QUERY_SETTINGS_TYPE = "article";
 
-    private static final String EXPECTED_QUERY
-            = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages WHERE conversation.style in ('forum') "
-            + "AND depth = ## ORDER BY post_time desc LIMIT 50";
     private LiRestv2Client liRestv2Client;
-    private LiClientManager liClientManager;
-    private LiRestV2Request liRestV2Request;
-    private Activity mContext;
-    private LiSDKManager liSDKManager;
-    private SharedPreferences mMockSharedPreferences;
-    private Resources resource;
-
-    @Mock
-    private LiRestv2Client liRestv2ClientNew;
-
-
-    @Captor
-    private ArgumentCaptor<LiAsyncRequestCallback> dummyCallbackArgumentCaptor;
+    private Context mContext;
 
     @Before
-    public void setUp() throws Exception, LiRestResponseException {
+    public void setUp() throws Exception {
 
-        mContext = Mockito.mock(Activity.class);
-        mMockSharedPreferences = Mockito.mock(SharedPreferences.class);
-        resource = Mockito.mock(Resources.class);
-        when(resource.getBoolean(anyInt())).thenReturn(true);
-        when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
-        when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
-        when(mContext.getResources()).thenReturn(resource);
-        liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
-        liRestv2Client = mock(LiRestv2Client.class);
         MockitoAnnotations.initMocks(this);
-//        when(liSDKManager.getTenant()).thenReturn("test");
-        liClientManager = mock(LiClientManager.class);
+
+        mContext = TestHelper.createMockContext();
+
+        //noinspection deprecation for test
+        LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
+        liRestv2Client = mock(LiRestv2Client.class);
+
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
         PowerMockito.mockStatic(LiClientManager.class);
@@ -118,16 +90,16 @@ public class LiBaseClientTest {
 
     @Test
     public void testBaseGetClientCreation() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE,
                 LiMessage.class);
         Assert.assertEquals(LI_ARTICLES_CLIENT_TYPE, liClient.type);
-        Assert.assertEquals(LI_ARTICLES_QUERYSETTINGS_TYPE, liClient.querySettingsType);
+        Assert.assertEquals(LI_ARTICLES_QUERY_SETTINGS_TYPE, liClient.querySettingsType);
         PowerMockito.verifyStatic();
     }
 
     @Test
     public void testSetLiRestV2Request() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE,
                 LiMessage.class);
         liClient.setLiRestV2Request();
         Assert.assertEquals(LI_ARTICLES_CLIENT_TYPE, liClient.liRestV2Request.getType());
@@ -136,7 +108,7 @@ public class LiBaseClientTest {
 
     @Test
     public void testGetGson() throws LiRestResponseException {
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE,
                 LiMessage.class);
         Assert.assertEquals(null, liClient.getGson());
         PowerMockito.verifyStatic();
@@ -147,8 +119,7 @@ public class LiBaseClientTest {
         LiRestv2Client liRestv2Client = null;
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
-                LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE, LiMessage.class);
         Assert.assertEquals(null, liClient.getGson());
         PowerMockito.verifyStatic();
     }
@@ -169,8 +140,7 @@ public class LiBaseClientTest {
         PowerMockito.when(liBaseResponse.getHttpCode()).thenReturn(200);
         PowerMockito.when(liBaseResponse.getMessage()).thenReturn("success");
         PowerMockito.when(liBaseResponse.getStatus()).thenReturn("success");
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
-                LiMessage.class);
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE, LiMessage.class);
         LiClientResponse response = liClient.processSync();
         LinkedList<LiMessage> responseList = (LinkedList<LiMessage>) response.getResponse();
         Assert.assertEquals(200, response.getHttpCode());
@@ -199,7 +169,7 @@ public class LiBaseClientTest {
                 }
         ).when(liRestv2Client).processAsync(isA(LiBaseRestRequest.class), any(LiAsyncRequestCallback.class));
 
-        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_CLIENT_BASE_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERYSETTINGS_TYPE,
+        LiBaseClient liClient = new LiBaseGetClient(mContext, LI_ARTICLES_LIQL, LI_ARTICLES_CLIENT_TYPE, LI_ARTICLES_QUERY_SETTINGS_TYPE,
                 LiMessage.class);
         liClient.processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
             @Override

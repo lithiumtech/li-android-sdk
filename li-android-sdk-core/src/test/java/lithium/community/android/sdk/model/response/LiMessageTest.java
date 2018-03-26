@@ -24,7 +24,10 @@ import org.junit.Test;
 
 import java.util.List;
 
+import lithium.community.android.sdk.TestHelper;
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.exception.LiRestResponseException;
+import lithium.community.android.sdk.manager.LiSDKManager;
 import lithium.community.android.sdk.model.LiBaseModel;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestv2Client;
@@ -35,10 +38,12 @@ import static org.junit.Assert.fail;
 
 
 public class LiMessageTest {
+
     Gson gson;
 
     @Before
-    public void setUp() throws LiRestResponseException {
+    public void setUp() throws LiRestResponseException, LiInitializationException {
+        LiSDKManager.initialize(TestHelper.createMockContext(), TestHelper.getTestAppCredentials());
         gson = LiRestv2Client.getInstance().getGson();
     }
 

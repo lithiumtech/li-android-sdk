@@ -17,82 +17,98 @@
 package lithium.community.android.sdk.queryutil;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.NoSuchPropertyException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lithium.community.android.sdk.R;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
+import lithium.community.android.sdk.utils.MessageConstants;
 
 /**
- * This class is use to fetch default query settings for LIQL calls from the 'raw' package of the core SDK.
- * Created by shoureya.kant on 1/12/17.
+ * This class is use to fetch default LIQL query settings for LIQL calls.
+ *
+ * @author shoureya.kant, adityasharat
  */
-
 public class LiDefaultQueryHelper {
 
     private static LiDefaultQueryHelper instance;
+
+    @Nullable
     private JsonObject defaultSetting;
 
     /**
-     * private constructor.
+     * Default private constructor.
      *
      * @param context {@link Context}
      */
-    private LiDefaultQueryHelper(Context context) {
+    private LiDefaultQueryHelper(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         defaultSetting = getDefaultQueryJSON(context);
+    }
+
+    /**
+     * Initializes the singleton instance of the Lithium Query Helper
+     *
+     * @param context {@link Context}
+     */
+    public static synchronized void initialize(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        if (instance == null) {
+            instance = new LiDefaultQueryHelper(context);
+        }
+    }
+
+    /**
+     * @return Instance of this class.
+     */
+    @Nullable
+    public static LiDefaultQueryHelper getInstance() {
+        return instance;
     }
 
     /**
      * Initializes helper class.
      *
      * @param context {@link Context}
-     * @return Singleton instance of this class.
+     * @return instance of Lithium Query Helper.
+     * @deprecated Use {@link #initialize(Context)}
      */
+    @Deprecated
     public static synchronized LiDefaultQueryHelper initHelper(Context context) {
-        if (instance == null) {
-            instance = new LiDefaultQueryHelper(context);
-        }
-        return instance;
+        initialize(context);
+        return getInstance();
     }
 
     /**
-     * @return Instance of this class.
-     */
-    public static LiDefaultQueryHelper getInstance() {
-        if (instance == null) {
-            throw new NoSuchPropertyException("Helper not intialized. Call init method first");
-        }
-        return instance;
-    }
-
-    /**
-     * Fetches default settings from 'raw' package
+     * Fetches default settings packaged with the SDK.
      *
-     * @param context {@link Context}
-     * @return default settings in JsonObject form.
+     * @param context An Android context.
+     * @return default SDK settings.
      */
-    private static JsonObject getDefaultQueryJSON(Context context) {
+    @Nullable
+    private static JsonObject getDefaultQueryJSON(@NonNull Context context) {
         int rawResId = R.raw.li_default_query_settings;
-        JsonObject defaultQuerySettingsJson = null;
-        String defaultJsonString = null;
-
-        defaultJsonString = LiCoreSDKUtils.getRawString(context, rawResId);
+        String string = LiCoreSDKUtils.getRawString(context, rawResId);
+        JsonObject settings = null;
 
         try {
-            // Parse the data into jsonobject to get original data in form of json.
-            defaultQuerySettingsJson = new JsonParser().parse(defaultJsonString).getAsJsonObject();
+            settings = new JsonParser().parse(string).getAsJsonObject();
         } catch (Exception e) {
-            Log.e("LiDefaultQueryHelper", "Could not parse default query settings");
+            Log.e("LiDefaultQueryHelper", "Could not parse the default SDK settings");
+            e.printStackTrace();
         }
-        return defaultQuerySettingsJson;
+
+        return settings;
     }
 
     /**
      * @return default settings
      */
+    @Nullable
     public JsonObject getDefaultSetting() {
         return defaultSetting;
     }

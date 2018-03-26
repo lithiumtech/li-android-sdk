@@ -55,7 +55,8 @@ import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
 
 /**
  * Implementation class for LiAuthService. Starts login flow, performs authorization, fetches access and refresh tokens.
- * Created by shoureya.kant on 9/12/16.
+ *
+ * @author shoureya.kant
  */
 public class LiAuthServiceImpl implements LiAuthService {
 
@@ -86,6 +87,7 @@ public class LiAuthServiceImpl implements LiAuthService {
      * @param context Android context.
      * @deprecated use {@link #LiAuthServiceImpl(Context, LiSDKManager)} instead
      */
+    @Deprecated
     public LiAuthServiceImpl(@NonNull Context context) {
         this.context = LiCoreSDKUtils.checkNotNull(context);
         sdkManager = LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), "Li SDK Manager was null");
@@ -390,7 +392,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         request.setClientSecret(this.sdkManager.getCredentials().getClientSecret());
         request.setGrantType("refresh_token");
         request.setRefreshToken(this.sdkManager.getRefreshToken());
-        String uri = "https://" + this.sdkManager.getProxyHost() + "/auth/v1/refreshToken";
+        String uri = "https://" + this.sdkManager.getApiGatewayHost() + "/auth/v1/refreshToken";
         request.setUri(Uri.parse(uri));
 
         try {
@@ -454,7 +456,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         request.setClientSecret(this.sdkManager.getCredentials().getClientSecret());
         request.setGrantType("refresh_token");
         request.setRefreshToken(this.sdkManager.getRefreshToken());
-        String uri = "https://" + this.sdkManager.getProxyHost() + "/auth/v1/refreshToken";
+        String uri = "https://" + this.sdkManager.getApiGatewayHost() + "/auth/v1/refreshToken";
         request.setUri(Uri.parse(uri));
 
         LiTokenResponse response = null;

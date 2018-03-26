@@ -16,9 +16,7 @@
 
 package lithium.community.android.sdk.manager;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.Context;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +26,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -39,72 +38,36 @@ import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-/*
-  Created by kunal.shrivastava on 11/31/16.
+/**
+ * @author kunal.shrivastava
  */
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.crypto.*"})
 @PrepareForTest(LiRestv2Client.class)
 public class LiClientManagerTest {
 
-    public static final String LI_GENERIC_TYPE = "generic_get";
-    public static final String LI_SDK_SETTINGS_CLIENT_TYPE = "app_sdk_setting";
-    private static final String LI_ACCEPT_SOLUTION_TYPE = "solution_data";
-    private static final String LI_KUDO_TYPE = "kudo";
-    private static final String LI_POST_QUESTION_TYPE = "message";
-    private static final String LI_REPLY_MESSAGE_TYPE = "message";
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
-    private static final String LI_SUBSCRIPTIONS_CLIENT_TYPE = "subscription";
-    private static final String LI_BROWSE_CLIENT_TYPE = "node";
-    private static final String LI_SEARCH_CLIENT_TYPE = "message";
-    private static final String LI_MESSAGE_CHILDREN_CLIENT_TYPE = "message";
-    private static final String LI_QUESTIONS_CLIENT_TYPE = "message";
-    private static final String LI_CATEGORY_CLIENT_TYPE = "node";
     private static final String LI_ARTICLES_BROWSE_CLIENT_TYPE = "message";
-    private static final String LI_USER_DETAILS_CLIENT_TYPE = "user";
-    private static final String LI_MESSAGE_CLIENT_TYPE = "message";
     private static final String GET = "GET";
     private static final String DELETE = "DELETE";
-    private static final String POST = "POST";
     private static final String PUT = "PUT";
 
-
     @Mock
-    private Activity mContext;
-
-    private SharedPreferences mMockSharedPreferences;
-
-    private LiClientManager liClientManger;
-
-    private Resources resource;
-
+    private Context mContext;
     private LiRestv2Client liRestv2Client;
-
-    private LiSDKManager liSDKManager;
 
     @Before
     public void setUpTest() throws Exception {
-        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
-        // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
 
-        mContext = mock(Activity.class);
-        mMockSharedPreferences = mock(SharedPreferences.class);
-        resource = mock(Resources.class);
-        when(mContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mMockSharedPreferences);
-        when(mMockSharedPreferences.getString(anyString(), anyString())).thenReturn("foobar");
-        when(mContext.getResources()).thenReturn(resource);
-        when(resource.getBoolean(anyInt())).thenReturn(true);
-        liSDKManager = LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
+        mContext = TestHelper.createMockContext();
+        LiSDKManager.init(mContext, TestHelper.getTestAppCredentials());
         liRestv2Client = PowerMockito.mock(LiRestv2Client.class);
         PowerMockito.mockStatic(LiRestv2Client.class);
         BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
     }
-
 
     @Test
     public void testGetMessagesClient() {

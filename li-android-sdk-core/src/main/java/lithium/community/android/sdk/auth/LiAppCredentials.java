@@ -59,6 +59,9 @@ public final class LiAppCredentials {
     private final Uri communityUri;
 
     @NonNull
+    private final String deviceId;
+
+    @NonNull
     private final Uri apiGatewayHost;
 
     @NonNull
@@ -79,16 +82,20 @@ public final class LiAppCredentials {
      * @param tenantId       tenant ID of the community.
      * @param communityURL   The LIA community's URL. (scheme + host)
      * @param apiGatewayHost API gateway host. (host)
+     * @param deviceId       A unique static identifier for this device. Suggested Firebase instance id.
      */
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-                            @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost) {
-        this.clientName = LiCoreSDKUtils.checkNullOrNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
-        this.clientKey = LiCoreSDKUtils.checkNullOrNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
-        this.clientSecret = LiCoreSDKUtils.checkNullOrNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
-        this.tenantId = LiCoreSDKUtils.checkNullOrNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
+                            @NonNull String tenantId, @NonNull String communityURL, @NonNull String apiGatewayHost,
+                            @NonNull String deviceId) {
+        this.clientName = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
+        this.clientKey = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
+        this.clientSecret = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
+        this.tenantId = LiCoreSDKUtils.checkNotNullAndNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
 
-        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
-        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNullOrNotEmpty(apiGatewayHost, MessageConstants.wasEmpty("apiGatewayHost")));
+        this.communityUri = Uri.parse(LiCoreSDKUtils.checkNotNullAndNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
+        this.deviceId = LiCoreSDKUtils.checkNotNullAndNotEmpty(deviceId, MessageConstants.wasEmpty("deviceId"));
+
+        this.apiGatewayHost = Uri.parse(LiCoreSDKUtils.checkNotNullAndNotEmpty(apiGatewayHost, MessageConstants.wasEmpty("apiGatewayHost")));
 
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + SSO_AUTH_END_POINT;
@@ -125,6 +132,11 @@ public final class LiAppCredentials {
     }
 
     @NonNull
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    @NonNull
     public Uri getApiGatewayHost() {
         return apiGatewayHost;
     }
@@ -148,6 +160,7 @@ public final class LiAppCredentials {
      * @return The client name
      * @deprecated Use {@link #getClientName()} instead.
      */
+    @Deprecated
     @NonNull
     public String getClientAppName() {
         return clientName;
@@ -157,6 +170,7 @@ public final class LiAppCredentials {
      * @return the API Gateways host address
      * @deprecated Use {@link #getApiGatewayHost()}
      */
+    @Deprecated
     @NonNull
     public String getApiProxyHost() {
         return getApiGatewayHost().toString();
@@ -175,8 +189,9 @@ public final class LiAppCredentials {
         LiAppCredentials that = (LiAppCredentials) o;
 
         return clientName.equals(that.clientName) && tenantId.equals(that.tenantId) && clientKey.equals(that.clientKey)
-                && clientSecret.equals(that.clientSecret) && communityUri.equals(that.communityUri) && apiGatewayHost.equals(that.apiGatewayHost)
-                && authorizeUri.equals(that.authorizeUri) && redirectUri.equals(that.redirectUri) && ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
+                && clientSecret.equals(that.clientSecret) && communityUri.equals(that.communityUri) && deviceId.equals(that.deviceId)
+                && apiGatewayHost.equals(that.apiGatewayHost) && authorizeUri.equals(that.authorizeUri) && redirectUri.equals(that.redirectUri)
+                && ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
     }
 
     @Override
@@ -186,6 +201,7 @@ public final class LiAppCredentials {
         result = 31 * result + clientKey.hashCode();
         result = 31 * result + clientSecret.hashCode();
         result = 31 * result + communityUri.hashCode();
+        result = 31 * result + deviceId.hashCode();
         result = 31 * result + apiGatewayHost.hashCode();
         result = 31 * result + authorizeUri.hashCode();
         result = 31 * result + redirectUri.hashCode();
@@ -196,8 +212,9 @@ public final class LiAppCredentials {
     /**
      * Builder to create instances of {@link LiAppCredentials}.
      *
-     * @deprecated Use the default public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
+     * @deprecated Use the default public constructor {@link #LiAppCredentials(String, String, String, String, String, String, String)} instead.
      */
+    @Deprecated
     public static final class Builder {
 
         private String clientName;
@@ -291,6 +308,7 @@ public final class LiAppCredentials {
          * @return this builder.
          * @deprecated Use {@link #getApiGatewayHost()} instead.
          */
+        @Deprecated
         public Builder setApiProxyHost(@NonNull String apiProxyHost) {
             this.apiGatewayUri = apiProxyHost;
             return this;
@@ -303,6 +321,7 @@ public final class LiAppCredentials {
          * @return this builder
          * @deprecated Use {@link #setClientName(String)}
          */
+        @Deprecated
         public Builder setClientAppName(@NonNull String clientAppName) {
             this.clientName = clientAppName;
             return this;
@@ -315,7 +334,7 @@ public final class LiAppCredentials {
          */
         @NonNull
         public LiAppCredentials build() {
-            return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, apiGatewayUri);
+            return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, apiGatewayUri, "deviceId");
         }
     }
 }

@@ -19,7 +19,6 @@ package lithium.community.android.sdk.model.response;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiBoard;
@@ -65,11 +64,7 @@ public class LiSubscriptions extends LiBaseModelImpl implements LiTargetModel {
 
     public LiMessage getLiMessage() {
         if (targetObject.has("type") && targetObject.get("type").getAsString().equals("message")) {
-            try {
-                return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiMessage.class);
-            } catch (LiRestResponseException e) {
-                return null;
-            }
+            return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiMessage.class);
         } else {
             return null;
         }
@@ -77,11 +72,7 @@ public class LiSubscriptions extends LiBaseModelImpl implements LiTargetModel {
 
     public LiBoard getLiBoard() {
         if (targetObject.has("type") && targetObject.get("type").getAsString().equals("board")) {
-            try {
-                return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiBoard.class);
-            } catch (LiRestResponseException e) {
-                return null;
-            }
+            return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiBoard.class);
         } else {
             return null;
         }

@@ -247,7 +247,7 @@ public final class LiAuthorizationException extends Exception {
      * @throws JSONException if the JSON is malformed or missing required properties
      */
     public static LiAuthorizationException fromJson(@NonNull String jsonStr) throws JSONException {
-        LiCoreSDKUtils.checkNullOrNotEmpty(jsonStr, "jsonStr cannot be null or empty");
+        LiCoreSDKUtils.checkNotNullAndNotEmpty(jsonStr, "jsonStr cannot be null or empty");
         return fromJson(new JSONObject(jsonStr));
     }
 
