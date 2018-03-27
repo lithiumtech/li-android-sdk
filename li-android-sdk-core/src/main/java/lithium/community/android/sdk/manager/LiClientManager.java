@@ -84,6 +84,8 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAIL
  */
 public class LiClientManager {
 
+    private static final String API_PATH_PREFIX = "/%s/api/2.0/%s";
+
     public static LiRestv2Client getRestClient() {
         return LiRestv2Client.getInstance();
     }
@@ -359,8 +361,8 @@ public class LiClientManager {
 
         params.validate(Client.LI_KUDO_CLIENT);
         String messageId = ((LiClientRequestParams.LiKudoClientRequestParams) params).getMessageId();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), String.format("/community/2.0/%s/messages/%s/kudos",
-                LiSDKManager.getInstance().getTenantId(), messageId));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), String.format("messages/%s/kudos", messageId));
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         LiPostKudoModel liPostKudoModel = new LiPostKudoModel();
         LiMessage liMessage = new LiMessage();
@@ -402,8 +404,8 @@ public class LiClientManager {
     public static LiClient getAcceptSolutionClient(LiClientRequestParams params) throws LiRestResponseException {
         params.validate(Client.LI_ACCEPT_SOLUTION_CLIENT);
         Long messageId = ((LiClientRequestParams.LiAcceptSolutionClientRequestParams) params).getMessageId();
-        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/solutions_data", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "solutions_data");
+        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
         LiAcceptSolutionModel liAcceptSolutionModel = new LiAcceptSolutionModel();
         liAcceptSolutionModel.setType(LiQueryConstant.LI_ACCEPT_SOLUTION_TYPE);
         liAcceptSolutionModel.setMessageid(String.valueOf(messageId));
@@ -432,8 +434,8 @@ public class LiClientManager {
         final String imageId = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getImageId();
         final String imageName = ((LiClientRequestParams.LiCreateMessageClientRequestParams) params).getImageName();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "messages");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         LiBoard liBoard = new LiBoard();
@@ -470,8 +472,8 @@ public class LiClientManager {
         final String body = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) params).getBody();
         final String messageId = ((LiClientRequestParams.LiUpdateMessageClientRequestParams) params).getMessageId();
 
-        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
-                String.format("/community/2.0/%s/messages/%s", LiSDKManager.getInstance().getTenantId(), messageId));
+        final String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), String.format("messages/%s", messageId));
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(), path);
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         liPostMessageModel.setType(LI_POST_QUESTION_TYPE);
         liPostMessageModel.setBody(body);
@@ -518,8 +520,8 @@ public class LiClientManager {
         final Long messageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getMessageId();
         final String imageId = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getImageId();
         final String imageName = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getImageName();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/messages", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "messages");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         final LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
         LiMessage parent = new LiMessage();
@@ -560,8 +562,8 @@ public class LiClientManager {
         final String description = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getDescription();
         final String imageName = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getImageName();
         final String path = ((LiClientRequestParams.LiUploadImageClientRequestParams) params).getPath();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/images", LiSDKManager.getInstance().getTenantId()), path, imageName);
+        String urlPath = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "images");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), urlPath, path, imageName);
 
         LiUploadImageModel uploadImageModel = new LiUploadImageModel();
         uploadImageModel.setType(LiQueryConstant.LI_IMAGE_TYPE);
@@ -592,8 +594,8 @@ public class LiClientManager {
         final String messageId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getMessageId();
         final String userId = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getUserId();
         final String body = ((LiClientRequestParams.LiReportAbuseClientRequestParams) params).getBody();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/abuse_reports", LiSDKManager.getInstance().getTenantId()));
+        final String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "abuse_reports");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
         liMarkAbuseModel.setType(LiQueryConstant.LI_MARK_ABUSE_TYPE);
@@ -627,10 +629,10 @@ public class LiClientManager {
         params.validate(Client.LI_DEVICE_ID_FETCH_CLIENT);
 
         final String deviceId = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) params).getDeviceId();
-        final String pushNotificationProvider = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) params)
-                .getPushNotificationProvider();
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/user_device_data", LiSDKManager.getInstance().getTenantId()));
+        final String pushNotificationProvider = ((LiClientRequestParams.LiDeviceIdFetchClientRequestParams) params).getPushNotificationProvider();
+
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "user_device_data");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         final LiUserDeviceDataModel liUserDeviceDataModel = new LiUserDeviceDataModel();
         liUserDeviceDataModel.setType(LiQueryConstant.LI_USER_DEVICE_ID_FETCH_TYPE);
@@ -657,8 +659,9 @@ public class LiClientManager {
         params.validate(Client.LI_DEVICE_ID_UPDATE_CLIENT);
         String deviceId = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) params).getDeviceId();
         String id = ((LiClientRequestParams.LiDeviceIdUpdateClientRequestParams) params).getDeviceId();
-        String path = "/community/2.0/%s/user_device_data/" + id;
-        LiBasePutClient liBasePostClient = new LiBasePutClient(params.getContext(), String.format(path, LiSDKManager.getInstance().getTenantId()));
+
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "user_device_data/" + id);
+        LiBasePutClient liBasePostClient = new LiBasePutClient(params.getContext(), path);
         LiUserDeviceIdUpdateModel liUserDeviceIdUpdateModel = new LiUserDeviceIdUpdateModel();
         liUserDeviceIdUpdateModel.setType(LiQueryConstant.LI_USER_DEVICE_ID_FETCH_TYPE);
         liUserDeviceIdUpdateModel.setDeviceId(deviceId);
@@ -710,8 +713,8 @@ public class LiClientManager {
         final String login = ((LiClientRequestParams.LiCreateUserParams) params).getLogin();
         final String password = ((LiClientRequestParams.LiCreateUserParams) params).getPassword();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/users", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "users");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
@@ -747,8 +750,8 @@ public class LiClientManager {
         final String messageId = ((LiClientRequestParams.LiMarkMessageParams) params).getMessageId();
         final boolean markUnread = ((LiClientRequestParams.LiMarkMessageParams) params).isMarkUnread();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenantId()));
+        final String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "messages_read");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         final LiMarkMessageModel liMarkMessageModel = new LiMarkMessageModel();
         liMarkMessageModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
@@ -780,8 +783,8 @@ public class LiClientManager {
         final String messageIds = ((LiClientRequestParams.LiMarkMessagesParams) params).getMessageIds();
         final boolean markUnread = ((LiClientRequestParams.LiMarkMessagesParams) params).isMarkUnread();
 
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "messages_read");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         final LiMarkMessagesModel liMarkMessagesModel = new LiMarkMessagesModel();
         liMarkMessagesModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
@@ -812,9 +815,8 @@ public class LiClientManager {
         final String userId = ((LiClientRequestParams.LiMarkTopicParams) params).getUserId();
         final String topicId = ((LiClientRequestParams.LiMarkTopicParams) params).getTopicId();
         final boolean markUnread = ((LiClientRequestParams.LiMarkTopicParams) params).isMarkUnread();
-
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/messages_read", LiSDKManager.getInstance().getTenantId()));
+        final String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "messages_read");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
 
         LiMarkTopicModel liMarkTopicModel = new LiMarkTopicModel();
         liMarkTopicModel.setType(LI_MARK_MESSAGE_CLIENT_TYPE);
@@ -870,8 +872,8 @@ public class LiClientManager {
         }
         target.setType(targetType);
         target.setId(targetID);
-        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format("/community/2.0/%s/subscriptions", LiSDKManager.getInstance().getTenantId()));
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "subscriptions");
+        LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
         LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
         liSubscriptionPostModel.setType(LI_SUBSCRIPTIONS_CLIENT_TYPE);
         liSubscriptionPostModel.setTarget(target);
@@ -957,8 +959,8 @@ public class LiClientManager {
         final String login = liUpdateUserParams.getLogin();
         final String id = liUpdateUserParams.getId();
 
-        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
-                String.format("/community/2.0/%s/users/%s", LiSDKManager.getInstance().getTenantId(), id));
+        final String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), String.format("users/%s", id));
+        final LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(), path);
 
         final LiCreateUpdateUserModel liCreateUpdateUserModel = new LiCreateUpdateUserModel();
         liCreateUpdateUserModel.setType(LI_USER_DETAILS_CLIENT_TYPE);
@@ -991,13 +993,10 @@ public class LiClientManager {
         final String path = ((LiClientRequestParams.LiGenericPostClientRequestParams) params).getPath();
         final JsonElement requestBody = ((LiClientRequestParams.LiGenericPostClientRequestParams) params).getRequestBody();
 
-        final Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) params)
-                .getAdditionalHttpHeaders();
+        final Map<String, String> additionalHeaders = ((LiClientRequestParams.LiGenericPostClientRequestParams) params).getAdditionalHttpHeaders();
 
-        final String requestPath = "/community/2.0/%s/" + path;
-
-        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(),
-                String.format(requestPath, LiSDKManager.getInstance().getTenantId()), additionalHeaders);
+        final String requestPath = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), path);
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), requestPath, additionalHeaders);
 
         final LiGenericPostModel genericPostModel = new LiGenericPostModel();
         genericPostModel.setData(requestBody);
@@ -1054,9 +1053,9 @@ public class LiClientManager {
         params.validate(Client.LI_GENERIC_PUT_CLIENT);
         String path = ((LiClientRequestParams.LiGenericPutClientRequestParams) params).getPath();
         JsonObject requestBody = ((LiClientRequestParams.LiGenericPutClientRequestParams) params).getRequestBody();
-        String requestPath = "/community/2.0/%s/" + path;
-        LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(),
-                String.format(requestPath, LiSDKManager.getInstance().getTenantId()));
+
+        String requestPath = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), path);
+        LiBasePutClient liBasePutClient = new LiBasePutClient(params.getContext(), requestPath);
         LiGenericPutModel genericPutModel = new LiGenericPutModel();
         genericPutModel.setData(requestBody);
         liBasePutClient.postModel = genericPutModel;
@@ -1130,7 +1129,7 @@ public class LiClientManager {
         String extraPathAfterId = clientRequestParams.getSubResourcePath();
         CollectionsType collectionsType = clientRequestParams.getCollectionsType();
         StringBuilder path = new StringBuilder();
-        path = path.append(String.format("/community/2.0/%s/%s/%s", LiSDKManager.getInstance().getTenantId(), collectionsType.getValue(), id));
+        path = path.append(String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), String.format("%s/%s", collectionsType.getValue(), id)));
         if (extraPathAfterId != null) {
             path = path.append(extraPathAfterId);
         }

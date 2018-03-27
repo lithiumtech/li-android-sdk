@@ -239,12 +239,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         request.setClientSecret(credentials.getClientSecret());
         request.setGrantType("authorization_code");
         try {
-            String proxyHost;
-            if (response.getApiProxyHost() == null) {
-                proxyHost = credentials.getApiGatewayHost().toString();
-            } else {
-                proxyHost = response.getApiProxyHost();
-            }
+            String proxyHost = credentials.getApiGatewayHost().toString();
             String uri = "https://" + proxyHost + "/auth/v1/accessToken";
             request.setUri(Uri.parse(uri));
             client.accessTokenAsync(context, request, new LiAuthAsyncRequestCallback<LiBaseResponse>() {

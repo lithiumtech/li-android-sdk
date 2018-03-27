@@ -26,6 +26,6 @@ public class LiAuthConstants {
     public static final String LOGIN_RESULT = "LOGIN_RESULT";
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
-    public static final String API_PROXY_DEFAULT_SEARCH_BASE_PATH = "community/2.0/%s/search";
-    public static final String API_PROXY_DEFAULT_GENERIC_BASE_PATH = "community/2.0/%s/%s";
+    public static final String API_PROXY_DEFAULT_SEARCH_BASE_PATH = "%s/api/2.0/search";
+    public static final String API_PROXY_DEFAULT_GENERIC_BASE_PATH = "%s/api/2.0/%s";
 }

@@ -263,7 +263,7 @@ class LiAuthManager {
      * @return the API gateway's host address.
      */
     public String getApiGatewayHost() {
-        return state != null && !TextUtils.isEmpty(state.getProxyHost()) ? state.getProxyHost() : credentials.getApiGatewayHost().toString();
+        return credentials.getApiGatewayHost().toString();
     }
 
     /**
