@@ -100,7 +100,7 @@ public class LiAuthRestClient {
      */
     @NonNull
     @VisibleForTesting
-    LiBaseResponse getLiBaseResponseFromResponse(Response response) throws IOException, LiRestResponseException {
+    LiBaseResponse getLiBaseResponseFromResponse(Response response) throws IOException {
         return new LiBaseResponse(response);
     }
 
@@ -207,8 +207,7 @@ public class LiAuthRestClient {
         });
     }
 
-    private void checkResponse(Response response, @NonNull LiAuthAsyncRequestCallback callback,
-            String error) throws LiRestResponseException, IOException {
+    private void checkResponse(Response response, @NonNull LiAuthAsyncRequestCallback callback, String error) throws LiRestResponseException, IOException {
         if (response != null) {
             if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
                 try {

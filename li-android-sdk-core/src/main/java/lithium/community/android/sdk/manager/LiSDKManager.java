@@ -231,7 +231,7 @@ public final class LiSDKManager extends LiAuthManager {
      */
     @NonNull
     public String getCoreSDKVersion() {
-        return BuildConfig.li_sdk_core_version;
+        return BuildConfig.LI_SDK_CORE_VERSION;
     }
 
     /**

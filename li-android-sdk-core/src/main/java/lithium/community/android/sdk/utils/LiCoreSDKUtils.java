@@ -478,7 +478,8 @@ public class LiCoreSDKUtils {
         checkNotNull(manager, MessageConstants.wasNull("manager"));
         checkNotNull(builder, MessageConstants.wasNull("builder"));
         builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER, manager.getCredentials().getClientName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.li_sdk_core_version);
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, manager.getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.LI_SDK_CORE_VERSION);
+        String visitorId = manager.getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID);
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, visitorId != null ? visitorId : "null");
     }
 }

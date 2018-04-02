@@ -84,7 +84,7 @@ import static lithium.community.android.sdk.utils.LiQueryConstant.LI_USER_DETAIL
  */
 public class LiClientManager {
 
-    private static final String API_PATH_PREFIX = "/%s/api/2.0/%s";
+    private static final String API_PATH_PREFIX = "%s/api/2.0/%s";
 
     public static LiRestv2Client getRestClient() {
         return LiRestv2Client.getInstance();

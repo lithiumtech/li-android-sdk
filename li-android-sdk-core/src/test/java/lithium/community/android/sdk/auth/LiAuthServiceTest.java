@@ -32,6 +32,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -57,9 +58,11 @@ import lithium.community.android.sdk.rest.LiRestv2Client;
 import lithium.community.android.sdk.utils.LiSystemClock;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -81,7 +84,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Activity.class, LiAuthService.class, LiAuthServiceImpl.class, LiAuthRestClient.class,
         OkHttpClient.class, Response.class, Gson.class, JsonObject.class, JsonElement.class, LiSystemClock.class,
-        LiRestv2Client.class, LiBaseGetClient.class, LiRestV2Request.class})
+        LiRestv2Client.class, LiBaseGetClient.class, LiRestV2Request.class, OkHttpClient.class})
 public class LiAuthServiceTest {
 
     public static final String RANDOM_STATE = "randomState";
@@ -113,6 +116,10 @@ public class LiAuthServiceTest {
         mContext = TestHelper.createMockContext();
         liAppCredentials = TestHelper.getTestAppCredentials();
         LiSDKManager.init(mContext, liAppCredentials);
+        LiRestv2Client liRestv2Client = PowerMockito.mock(LiRestv2Client.class);
+        when(liRestv2Client.getGson()).thenReturn(new Gson());
+        PowerMockito.mockStatic(LiRestv2Client.class);
+        BDDMockito.given(LiRestv2Client.getInstance()).willReturn(liRestv2Client);
     }
 
     @Test
@@ -290,7 +297,7 @@ public class LiAuthServiceTest {
     }
 
     @Test
-    public void performSyncRefreshTokenRequestTest() throws MalformedURLException, URISyntaxException, LiRestResponseException {
+    public void performSyncRefreshTokenRequestTest() throws LiRestResponseException {
         LiAuthServiceImpl liAuthService = new LiAuthServiceImpl(mContext);
         liAuthService = spy(liAuthService);
         LiAuthRestClient liAuthRestClient = spy(new LiAuthRestClient());
@@ -299,7 +306,6 @@ public class LiAuthServiceTest {
 
         String refreshtokenResponse = "{\n" +
                 "  \"data\": {\n" +
-                "    \"response\": {\n" +
                 "      \"status\": \"success\",\n" +
                 "      \"message\": \"OK\",\n" +
                 "      \"http_code\": 200,\n" +
@@ -310,7 +316,6 @@ public class LiAuthServiceTest {
                 "        \"refresh_token\": \"NJIjGeQP3rsdE2Wz46gFExlWdLpwv1kRompX5szrnXY=\",\n" +
                 "        \"token_type\": \"bearer\"\n" +
                 "      }\n" +
-                "    }\n" +
                 "  }\n" +
                 "}";
         Gson gson = new Gson();
@@ -333,7 +338,6 @@ public class LiAuthServiceTest {
 
         String refreshtokenResponse = "{\n" +
                 "  \"data\": {\n" +
-                "    \"response\": {\n" +
                 "      \"status\": \"success\",\n" +
                 "      \"message\": \"OK\",\n" +
                 "      \"http_code\": 200,\n" +
@@ -344,7 +348,6 @@ public class LiAuthServiceTest {
                 "        \"refresh_token\": \"NJIjGeQP3rsdE2Wz46gFExlWdLpwv1kRompX5szrnXY=\",\n" +
                 "        \"token_type\": \"bearer\"\n" +
                 "      }\n" +
-                "    }\n" +
                 "  }\n" +
                 "}";
         Gson gson = new Gson();
@@ -361,15 +364,18 @@ public class LiAuthServiceTest {
             PowerMockito.whenNew(OkHttpClient.class).withNoArguments().thenReturn(okHttpClient);
         } catch (Exception ignored) {
         }
-        Call call = mock(Call.class);
+        final Call call = mock(Call.class);
         final Response response = mock(Response.class);
+        when(response.code()).thenReturn(200);
+        ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), refreshtokenResponse);
+        when(response.body()).thenReturn(responseBody);
         when(okHttpClient.newCall(isA(Request.class))).thenReturn(call);
         doAnswer(
                 new Answer<Void>() {
                     @Override
                     public Void answer(final InvocationOnMock invocation) throws Throwable {
                         Callback callback = (Callback) invocation.getArguments()[0];
-                        callback.onResponse(isA(Call.class), response);
+                        callback.onResponse(call, response);
                         //callback.onFailure(isA(Call.class),new IOException("OnError"));
                         return null;
 
@@ -380,7 +386,7 @@ public class LiAuthServiceTest {
             PowerMockito.whenNew(LiBaseResponse.class).withArguments(response).thenReturn(liBaseResponse);
             liAuthService.performRefreshTokenRequest(callback);
         } catch (Exception ignored) {
-
+            ignored.printStackTrace();
         }
     }
 

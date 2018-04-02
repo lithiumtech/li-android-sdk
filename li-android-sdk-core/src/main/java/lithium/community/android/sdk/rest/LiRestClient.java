@@ -250,7 +250,7 @@ public abstract class LiRestClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
                 try {
                     if (response != null) {
@@ -377,7 +377,7 @@ public abstract class LiRestClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
                 try {
                     if (response != null) {
@@ -431,8 +431,7 @@ public abstract class LiRestClient {
      * @return final request that will be sent across network.
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        uriBuilder.authority(sdkManager.getApiGatewayHost());
+        Uri.Builder uriBuilder = sdkManager.getCredentials().getCommunityUri().buildUpon();
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
