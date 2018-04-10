@@ -27,7 +27,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 project.ext.set('groupId', 'lithium.community.android.sdk')
 project.ext.set('artifactId', 'li-android-sdk-core')
 
-project.ext.set('versionCode', 126001) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+project.ext.set('versionCode', 126002) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
 project.ext.set('versionName', '1.2.6')
 
 project.ext.set('repositoryName', 'li-android-sdk')
@@ -57,7 +57,7 @@ android {
 
     buildTypes {
         buildTypes.each {
-            it.resValue "string", "LI_SDK_CORE_VERSION", "${project.ext.versionName}"
+            it.resValue "string", "li_sdk_core_version", "${project.ext.versionName}"
             it.buildConfigField "String", "LI_SDK_CORE_VERSION", "\"${project.ext.versionName}\""
         }
 
