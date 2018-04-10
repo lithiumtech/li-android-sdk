@@ -27,6 +27,7 @@ import org.junit.rules.ExpectedException;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.TestHelper;
@@ -55,7 +56,7 @@ public class LiSecuredPrefManagerTest {
 
     @Test
     public void initialize() throws Exception {
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         Assert.assertNotNull(LiSecuredPrefManager.getInstance());
     }
 
@@ -67,14 +68,14 @@ public class LiSecuredPrefManagerTest {
     }
 
     @Test
-    public void init() throws Exception {
+    public void init() {
         MockContext context = new MockContext();
         LiSecuredPrefManager instance = LiSecuredPrefManager.init(context);
         Assert.assertNotNull(instance);
     }
 
     @Test
-    public void init_null() throws Exception {
+    public void init_null() {
         thrown.expect(IllegalArgumentException.class);
         //noinspection ConstantConditions for test
         LiSecuredPrefManager instance = LiSecuredPrefManager.init(null);
@@ -83,7 +84,7 @@ public class LiSecuredPrefManagerTest {
 
     @Test
     public void getString() throws Exception {
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String string = instance.getString(context, "test");
@@ -103,7 +104,7 @@ public class LiSecuredPrefManagerTest {
     @Test
     public void getString_null_key() throws Exception {
         thrown.expect(IllegalArgumentException.class);
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         //noinspection ConstantConditions for test
@@ -113,7 +114,7 @@ public class LiSecuredPrefManagerTest {
     @Test
     public void getString_null_context_null_key() throws Exception {
         thrown.expect(IllegalArgumentException.class);
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         //noinspection ConstantConditions for test
@@ -122,7 +123,7 @@ public class LiSecuredPrefManagerTest {
 
     @Test
     public void putString_getString() throws Exception {
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String key = "test";
@@ -134,7 +135,7 @@ public class LiSecuredPrefManagerTest {
 
     @Test
     public void remove() throws Exception {
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String key = "test";
@@ -148,7 +149,7 @@ public class LiSecuredPrefManagerTest {
     @Test
     public void remove_null_context() throws Exception {
         thrown.expect(IllegalArgumentException.class);
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String key = "test";
@@ -161,7 +162,7 @@ public class LiSecuredPrefManagerTest {
     @Test
     public void remove_null_key() throws Exception {
         thrown.expect(IllegalArgumentException.class);
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String key = "test";
@@ -174,7 +175,7 @@ public class LiSecuredPrefManagerTest {
     @Test
     public void remove_null_context_null_key() throws Exception {
         thrown.expect(IllegalArgumentException.class);
-        LiSecuredPrefManager.initialize("ThisIsASecretKey");
+        LiSecuredPrefManager.initialize(UUID.randomUUID().toString());
         LiSecuredPrefManager instance = LiSecuredPrefManager.getInstance();
         assert instance != null;
         String key = "test";

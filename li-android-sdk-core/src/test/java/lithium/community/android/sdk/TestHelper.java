@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import lithium.community.android.sdk.auth.LiAppCredentials;
 
@@ -310,14 +311,12 @@ public class TestHelper {
             "}";
 
     public static LiAppCredentials getTestAppCredentials() {
-        return new LiAppCredentials.Builder()
-                .setClientName(TEST_CLIENT_NAME)
-                .setClientKey(TEST_CLIENT_ID)
-                .setClientSecret(TEST_CLIENT_SECRET)
-                .setCommunityUri(TEST_COMMUNITY_URL)
-                .setApiGatewayUri(TEST_API_GATEWAY_HOST)
-                .setTenantId(TEST_TENANT_ID)
-                .build();
+        return new LiAppCredentials(TEST_CLIENT_NAME,
+                TEST_CLIENT_ID,
+                TEST_CLIENT_SECRET,
+                TEST_TENANT_ID,
+                TEST_COMMUNITY_URL,
+                UUID.randomUUID().toString());
     }
 
     public static Context createMockContext() {

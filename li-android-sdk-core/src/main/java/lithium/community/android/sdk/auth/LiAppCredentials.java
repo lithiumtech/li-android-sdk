@@ -72,14 +72,17 @@ public final class LiAppCredentials {
     private final String ssoAuthorizeUri;
 
     /**
+     * <p>
      * Default public constructor for Lia SDK Credentials.
+     * </p>
      *
      * @param clientName   The client name.
      * @param clientKey    The client Id.
      * @param clientSecret The client secret.
      * @param tenantId     tenant ID of the community.
-     * @param communityURL The LIA community's URL. (scheme + host)
-     * @param deviceId     A unique static identifier for this device. Suggested Firebase instance id.
+     * @param communityURL The LIA community's URL.
+     * @param deviceId     A unique static identifier for this device. Use a GUID or Instance ID which is 'Single App' scoped with 'Install-reset' resettability
+     *                     and persistence. Example: <code>UUID.randomUUID().toString()</code> persisted in a Shared Preferences.
      */
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
                             @NonNull String tenantId, @NonNull String communityURL, @NonNull String deviceId) {
