@@ -461,6 +461,7 @@ public abstract class LiRestClient {
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;
