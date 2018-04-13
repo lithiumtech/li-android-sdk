@@ -333,10 +333,7 @@ public abstract class LiRestClient {
             file = new File(imagePath);
         }
 
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = sdkManager.getApiGatewayHost();
-
-        uriBuilder.authority(proxyHost);
+        Uri.Builder uriBuilder = sdkManager.getCredentials().getCommunityUri().buildUpon();
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
