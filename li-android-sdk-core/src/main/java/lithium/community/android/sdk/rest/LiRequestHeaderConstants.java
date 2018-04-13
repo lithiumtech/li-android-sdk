@@ -17,9 +17,10 @@
 package lithium.community.android.sdk.rest;
 
 /**
- * Created by Lithium Technologies Inc on 8/31/17.
+ * Constants for request headers for REST API calls.
+ *
+ * @author adityasharat
  */
-
 public class LiRequestHeaderConstants {
     public static final String LI_REQUEST_CONTENT_TYPE = "Content-Type";
     public static final String LI_REQUEST_APPLICATION_IDENTIFIER = "Application-Identifier";
@@ -30,6 +31,12 @@ public class LiRequestHeaderConstants {
     public static final String LI_REQUEST_CLIENT_ID = "client-id";
 
     public static final String LI_REQUEST_AUTH_SERVICE_KEY = "Auth-Service-Authorization";
-    public static final String LI_REQUEST_AUTH_SERVICE_VALUE = "LiAndroidSdk";
+    public static final String LI_REQUEST_AUTH_SERVICE_VALUE = "default";
+
+    /**
+     * Default private constructor so that an instance of this class cannot be created.
+     */
+    private LiRequestHeaderConstants() {
+    }
 
 }

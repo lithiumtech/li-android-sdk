@@ -368,6 +368,7 @@ public abstract class LiRestClient {
                 request.addHeader(entry.getKey(), entry.getValue());
             }
         }
+        request.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS).build();
         Call call = clientBuilder.newCall(request.build());
         call.enqueue(new Callback() {
