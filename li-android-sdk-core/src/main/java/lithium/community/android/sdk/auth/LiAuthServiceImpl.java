@@ -89,6 +89,17 @@ public class LiAuthServiceImpl implements LiAuthService {
         sdkManager = LiCoreSDKUtils.checkNotNull(LiSDKManager.getInstance(), "Li SDK Manager was null");
     }
 
+    private static Uri buildRefreshTokenUri(@NonNull LiAppCredentials credentials) {
+        LiCoreSDKUtils.checkNotNull(credentials, "credentials");
+        return credentials.getCommunityUri()
+                .buildUpon()
+                .appendPath(credentials.getTenantId())
+                .appendPath("api")
+                .appendPath("2.0")
+                .appendPath("auth")
+                .appendPath("refreshToken")
+                .build();
+    }
 
     @Override
     public void startLoginFlow() {
@@ -136,7 +147,6 @@ public class LiAuthServiceImpl implements LiAuthService {
         context.startActivity(intent);
         dispose();
     }
-
 
     /**
      * Performs Authorization (SSO flow).
@@ -405,12 +415,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         request.setGrantType("refresh_token");
         request.setRefreshToken(this.sdkManager.getRefreshToken());
 
-        Uri uri = credentials.getCommunityUri()
-                .buildUpon()
-                .appendPath("auth")
-                .appendPath("v1")
-                .appendPath("refreshToken")
-                .build();
+        Uri uri = buildRefreshTokenUri(credentials);
 
         request.setUri(uri);
 
@@ -483,12 +488,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         request.setGrantType("refresh_token");
         request.setRefreshToken(this.sdkManager.getRefreshToken());
 
-        Uri uri = credentials.getCommunityUri()
-                .buildUpon()
-                .appendPath("auth")
-                .appendPath("v1")
-                .appendPath("refreshToken")
-                .build();
+        Uri uri = buildRefreshTokenUri(credentials);
 
         request.setUri(uri);
 
