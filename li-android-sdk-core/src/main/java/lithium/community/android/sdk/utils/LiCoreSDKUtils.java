@@ -458,8 +458,8 @@ public class LiCoreSDKUtils {
         return outputStream.toString();
     }
 
-    public static Long getTime(Long time) {
-        return (time != null ? (time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
+    public static long addCurrentTime(long time) {
+        return time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis();
     }
 
     public static void sendLoginBroadcast(Context context, boolean isLoginSuccessful, int responseCode) {

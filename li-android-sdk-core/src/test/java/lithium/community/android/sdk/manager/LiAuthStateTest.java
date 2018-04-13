@@ -107,7 +107,7 @@ public class LiAuthStateTest {
         liTokenResponse.setRefreshToken(NEW_REFRESH_TOKEN);
         liTokenResponse.setLithiumUserId(LITHIUM_USER_ID);
         liTokenResponse.setExpiresIn(EXPIRES_IN);
-        liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(EXPIRES_IN));
+        liTokenResponse.setExpiresAt(LiCoreSDKUtils.addCurrentTime(EXPIRES_IN));
 
         String json = gson.toJson(liTokenResponse);
         liTokenResponse.setJsonString(json);

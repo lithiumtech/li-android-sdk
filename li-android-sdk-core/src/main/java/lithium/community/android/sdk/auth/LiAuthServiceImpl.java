@@ -265,8 +265,9 @@ public class LiAuthServiceImpl implements LiAuthService {
                         LiTokenResponse accessToken = gson.fromJson(data, LiTokenResponse.class);
 
                         // set expiry time
-                        data.addProperty("expiresAt", accessToken.getExpiresAt());
-                        accessToken.setExpiresAt(LiCoreSDKUtils.getTime(accessToken.getExpiresIn()));
+                        long expiresAt = LiCoreSDKUtils.addCurrentTime(accessToken.getExpiresIn());
+                        data.addProperty("expiresAt", expiresAt);
+                        accessToken.setExpiresAt(expiresAt);
 
                         // serialize the token and save it
                         accessToken.setJsonString(String.valueOf(data));
@@ -429,9 +430,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                             JsonObject tokenData = responseData.get("data").getAsJsonObject();
 
                             LiTokenResponse tokenResponse = gson.fromJson(tokenData, LiTokenResponse.class);
-                            tokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(tokenResponse.getExpiresIn()));
 
-                            tokenData.addProperty("expiresAt", tokenResponse.getExpiresAt());
+                            long expiresAt = LiCoreSDKUtils.addCurrentTime(tokenResponse.getExpiresIn());
+                            tokenResponse.setExpiresAt(expiresAt);
+                            tokenData.addProperty("expiresAt", expiresAt);
                             tokenResponse.setJsonString(tokenData.toString());
 
                             callback.onTokenRequestCompleted(tokenResponse, null);
@@ -500,9 +502,10 @@ public class LiAuthServiceImpl implements LiAuthService {
                 JsonObject tokenData = responseData.get("data").getAsJsonObject();
 
                 response = gson.fromJson(tokenData, LiTokenResponse.class);
-                response.setExpiresAt(LiCoreSDKUtils.getTime(response.getExpiresIn()));
 
-                tokenData.addProperty("expiresAt", response.getExpiresAt());
+                long expiresAt = LiCoreSDKUtils.addCurrentTime(response.getExpiresIn());
+                response.setExpiresAt(expiresAt);
+                tokenData.addProperty("expiresAt", expiresAt);
                 response.setJsonString(tokenData.toString());
 
                 response.setJsonString(tokenData.toString());

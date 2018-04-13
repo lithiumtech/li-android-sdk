@@ -27,20 +27,25 @@ public class LiTokenResponse {
 
     @SerializedName("lithiumUserId")
     private String lithiumUserId;
+
     @SerializedName("access_token")
     private String accessToken;
+
     @SerializedName("refresh_token")
     private String refreshToken;
+
     @SerializedName("expires_in")
-    private Long expiresIn;
+    private long expiresIn;
+
     @SerializedName("userId")
     private String userId;
+
     @SerializedName("token_type")
     private String tokenType;
 
     private String jsonString;
 
-    private Long expiresAt;
+    private long expiresAt;
 
     public String getJsonString() {
         return jsonString;
@@ -74,19 +79,19 @@ public class LiTokenResponse {
         this.refreshToken = refreshToken;
     }
 
-    public Long getExpiresIn() {
+    public long getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(Long expiresIn) {
+    public void setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
     }
 
-    public Long getExpiresAt() {
+    public long getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Long expiresAt) {
+    public void setExpiresAt(long expiresAt) {
         this.expiresAt = expiresAt;
     }
 

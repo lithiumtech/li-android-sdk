@@ -55,6 +55,7 @@ import lithium.community.android.sdk.rest.LiAuthRestClient;
 import lithium.community.android.sdk.rest.LiBaseResponse;
 import lithium.community.android.sdk.rest.LiRestV2Request;
 import lithium.community.android.sdk.rest.LiRestv2Client;
+import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -323,9 +324,11 @@ public class LiAuthServiceTest {
         doReturn(liBaseResponse).when(liAuthRestClient).refreshTokenSync(isA(Context.class),
                 isA(LiRefreshTokenRequest.class));
 
+        long atLeast = LiCoreSDKUtils.addCurrentTime(86400L);
         LiTokenResponse tokenResponse = liAuthService.performSyncRefreshTokenRequest();
         assert (tokenResponse.getAccessToken().equals(ACCESS_TOKEN));
-
+        Assert.assertEquals(tokenResponse.getExpiresIn(), 86400L);
+        Assert.assertTrue("expiry in", tokenResponse.getExpiresAt() >= atLeast);
     }
 
     @Test
