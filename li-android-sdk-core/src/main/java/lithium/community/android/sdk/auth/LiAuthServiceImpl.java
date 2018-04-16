@@ -176,7 +176,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 String state = liSsoAuthResponse.getState();
                 LiSSOAuthorizationRequest request = LiAuthRequestStore.getInstance().getLiOriginalRequest(state);
                 if (request == null) {
-                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG, String.format("Response received for unknown request with state %s", state));
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, String.format("Response received for unknown request with state %s", state));
                     enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_FORBIDDEN);
                     return;
                 }
@@ -190,14 +190,14 @@ public class LiAuthServiceImpl implements LiAuthService {
                     });
                 } catch (LiRestResponseException e) {
                     enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
-                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Error Fetching Auth Code: " + e);
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Error Fetching Auth Code: " + e);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 enablePostAuthorizationFlows(false, LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
-                Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Error Fetching Auth Code: " + e);
+                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Error Fetching Auth Code: " + e);
             }
         });
         dispose();
@@ -260,7 +260,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 @Override
                 public void onSuccess(LiBaseResponse response) {
                     if (response == null || response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Access Token API call unsuccessful.");
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Access Token API call unsuccessful.");
                         final int code = response != null ? response.getHttpCode() : LiAuthorizationException.GeneralErrors.SERVER_ERROR.code;
                         LiAuthorizationException exception = LiAuthorizationException.generalEx(code, "Error fetching access token");
                         callback.onLoginComplete(exception, false);
@@ -283,24 +283,24 @@ public class LiAuthServiceImpl implements LiAuthService {
                         accessToken.setJsonString(String.valueOf(data));
                         sdkManager.persistAuthState(context, accessToken);
 
-                        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG, "Access Token API call successful");
+                        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Access Token API call successful");
                         getUserAfterTokenResponse(callback);
                     } else {
-                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Access Token API call invalid response.");
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Access Token API call invalid response.");
                         callback.onLoginComplete(LiAuthorizationException.generalEx(response.getHttpCode(), "Access Token API call invalid response."), false);
                     }
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Log.d(LiCoreSDKConstants.LI_ERROR_LOG, "Access Token API call failed");
+                    Log.d(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Access Token API call failed");
                     e.printStackTrace();
                     LiAuthorizationException ex = LiAuthorizationException.generalEx(LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, e.getMessage());
                     callback.onLoginComplete(ex, false);
                 }
             });
         } catch (RuntimeException e) {
-            Log.d(LiCoreSDKConstants.LI_ERROR_LOG, "Access Token API request aborted.");
+            Log.d(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Access Token API request aborted.");
             e.printStackTrace();
             throw LiRestResponseException.runtimeError(e.getMessage());
         }
@@ -349,13 +349,13 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onError(Exception exception) {
-                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "SDK settings API call failed.");
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "SDK settings API call failed.");
                     exception.printStackTrace();
                     callBack.onLoginComplete(null, true);
                 }
             });
         } catch (LiRestResponseException e) {
-            Log.d(LiCoreSDKConstants.LI_ERROR_LOG, "SDK settings API request aborted.");
+            Log.d(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "SDK settings API request aborted.");
             e.printStackTrace();
             callBack.onLoginComplete(null, true);
         }
@@ -384,7 +384,7 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onError(Exception e) {
-                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "User Details API call failed.");
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "User Details API call failed.");
                     e.printStackTrace();
                     getSDKSettings(callBack);
                     LiAuthorizationException ex = LiAuthorizationException.generalEx(LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, e.getMessage());
@@ -392,7 +392,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                 }
             });
         } catch (LiRestResponseException e) {
-            Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "User Details API call aborted");
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "User Details API call aborted");
             e.printStackTrace();
             getSDKSettings(callBack);
         }
@@ -444,12 +444,12 @@ public class LiAuthServiceImpl implements LiAuthService {
                             callback.onTokenRequestCompleted(tokenResponse, null);
                         } else {
                             String error = "Refresh Token API invalid response.";
-                            Log.e(LiCoreSDKConstants.LI_ERROR_LOG, error);
+                            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, error);
                             callback.onTokenRequestCompleted(null, new InvalidObjectException(error));
                         }
                     } catch (RuntimeException e) {
                         String error = "Refresh Token API invalid response.";
-                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG, error);
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, error);
                         e.printStackTrace();
                         callback.onTokenRequestCompleted(null, e);
                     }
@@ -457,14 +457,14 @@ public class LiAuthServiceImpl implements LiAuthService {
 
                 @Override
                 public void onError(Exception exception) {
-                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Refresh Token API call failed.");
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Refresh Token API call failed.");
                     exception.printStackTrace();
                     callback.onTokenRequestCompleted(null, exception);
                 }
 
             });
         } catch (RuntimeException e) {
-            Log.d(LiCoreSDKConstants.LI_ERROR_LOG, "Refresh Token API request aborted.");
+            Log.d(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Refresh Token API request aborted.");
             e.printStackTrace();
             callback.onTokenRequestCompleted(null, e);
         }
@@ -512,7 +512,7 @@ public class LiAuthServiceImpl implements LiAuthService {
             }
         } catch (RuntimeException ex) {
             String error = "Refresh Token API invalid response.";
-            Log.e(LiCoreSDKConstants.LI_ERROR_LOG, error);
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, error);
             ex.printStackTrace();
             throw LiRestResponseException.runtimeError(error);
         }

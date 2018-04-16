@@ -71,7 +71,7 @@ public class LiBaseResponse {
             }
             message = response.message();
         } catch (Exception ex) {
-            Log.e(LiCoreSDKConstants.LI_ERROR_LOG, "Response deserialization failed");
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Response deserialization failed");
             ex.printStackTrace();
             code = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
             status = "error";

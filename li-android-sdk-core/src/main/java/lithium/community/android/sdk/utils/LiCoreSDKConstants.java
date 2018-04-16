@@ -46,6 +46,12 @@ public class LiCoreSDKConstants {
     public static final long LI_MIN_IMAGE_SIZE_TO_COMPRESS = 1024 * 1024;
 
     public static final String LI_LOG_TAG = "LiSdk";
-    public static final String LI_DEBUG_LOG = "LiSdkDebug";
-    public static final String LI_ERROR_LOG = "LiSdkError";
+    public static final String LI_DEBUG_LOG_TAG = "LiSdkDebug";
+    public static final String LI_ERROR_LOG_TAG = "LiSdkError";
+
+    /**
+     * Default private constructor so that an instance of this class cannot be created.
+     */
+    private LiCoreSDKConstants() {
+    }
 }

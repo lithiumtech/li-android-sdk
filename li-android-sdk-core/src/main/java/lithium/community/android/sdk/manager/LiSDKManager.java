@@ -50,7 +50,7 @@ import lithium.community.android.sdk.utils.MessageConstants;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_ERROR_LOG;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_ERROR_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
@@ -143,7 +143,7 @@ public final class LiSDKManager extends LiAuthManager {
      */
     public static LiSDKManager getInstance() {
         if (instance == null) {
-            Log.e(LI_ERROR_LOG, "SDK was not initialized. Call `LiSDKManager.initialize(Context, LiAppCredentials)` before invoking getInstance().");
+            Log.e(LI_ERROR_LOG_TAG, "SDK was not initialized. Call `LiSDKManager.initialize(Context, LiAppCredentials)` before invoking getInstance().");
         }
         return instance;
     }
