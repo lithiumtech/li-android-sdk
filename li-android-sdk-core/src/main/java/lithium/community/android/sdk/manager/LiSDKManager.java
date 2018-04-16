@@ -50,6 +50,7 @@ import lithium.community.android.sdk.utils.MessageConstants;
 
 import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_ERROR_LOG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
 
 /**
@@ -95,17 +96,16 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Initializes LiSDKManager.
+     * Initializes Lia SDK Manager.
      *
      * @param context     The android context.
      * @param credentials The credentials for authentication.
-     * @return An instance of LiSDKManager
-     * @throws URISyntaxException Does not throw a URISyntaxException but still here for legacy support.
+     * @return An instance of Li SDK Manager
      * @deprecated Use {@link #initialize(Context, LiAppCredentials)} instead.
      */
     @Deprecated
     @Nullable
-    public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) throws URISyntaxException {
+    public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) {
         try {
             initialize(context, credentials);
         } catch (LiInitializationException e) {
@@ -142,6 +142,9 @@ public final class LiSDKManager extends LiAuthManager {
      * @return if the SDK initialized then the current instance of {@link LiSDKManager} is return, else {@code null} is returned.
      */
     public static LiSDKManager getInstance() {
+        if (instance == null) {
+            Log.e(LI_ERROR_LOG, "SDK was not initialized. Call `LiSDKManager.initialize(Context, LiAppCredentials)` before invoking getInstance().");
+        }
         return instance;
     }
 
@@ -162,65 +165,64 @@ public final class LiSDKManager extends LiAuthManager {
             try {
                 String clientId = LiUUIDUtils.toUUID(getCredentials().getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
-                LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(
-                        new LiAsyncRequestCallback<LiGetClientResponse>() {
+                LiClientManager.getSdkSettingsClient(liClientRequestParams).processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
 
-                            @Override
-                            public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response)
-                                    throws LiRestResponseException {
-                                if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                                    Gson gson = new Gson();
-                                    JsonObject responseJsonObject = response.getJsonObject();
-                                    if (responseJsonObject.has("data")) {
-                                        JsonObject dataObj = responseJsonObject.get("data").getAsJsonObject();
-                                        if (dataObj.has("items")) {
-                                            JsonArray items = dataObj.get("items").getAsJsonArray();
-                                            if (!items.isJsonNull() && items.size() > 0) {
-                                                LiAppSdkSettings liAppSdkSettings = gson.fromJson(items.get(0), LiAppSdkSettings.class);
-                                                if (liAppSdkSettings != null) {
-                                                    putInSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS, liAppSdkSettings.getAdditionalInformation());
-                                                }
-                                            }
+                    @Override
+                    public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) {
+                        if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                            Gson gson = new Gson();
+                            JsonObject responseJsonObject = response.getJsonObject();
+                            if (responseJsonObject.has("data")) {
+                                JsonObject dataObj = responseJsonObject.get("data").getAsJsonObject();
+                                if (dataObj.has("items")) {
+                                    JsonArray items = dataObj.get("items").getAsJsonArray();
+                                    if (!items.isJsonNull() && items.size() > 0) {
+                                        LiAppSdkSettings liAppSdkSettings = gson.fromJson(items.get(0), LiAppSdkSettings.class);
+                                        if (liAppSdkSettings != null) {
+                                            putInSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS, liAppSdkSettings.getAdditionalInformation());
                                         }
                                     }
-                                } else {
-                                    Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
                                 }
                             }
+                        } else {
+                            Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
+                        }
+                    }
 
-                            @Override
-                            public void onError(Exception exception) {
-                                Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: " + exception.getMessage());
-                            }
-                        });
+                    @Override
+                    public void onError(Exception exception) {
+                        Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: " + exception.getMessage());
+                        exception.printStackTrace();
+                    }
+                });
             } catch (LiRestResponseException e) {
                 Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
+                e.printStackTrace();
             }
             //get logged in user details
             try {
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUserDetailsClientRequestParams(context, "self");
-                LiClientManager.getUserDetailsClient(liClientRequestParams)
-                        .processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
-                            @Override
-                            public void onSuccess(LiBaseRestRequest request, LiGetClientResponse liClientResponse) throws LiRestResponseException {
-                                if (liClientResponse != null && liClientResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL
-                                        && liClientResponse.getResponse() != null && !liClientResponse.getResponse().isEmpty()) {
-                                    LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
-                                    instance.setLoggedInUser(context, user);
-                                } else {
-                                    Log.e(LOG_TAG, "No user found while fetching UserDetails");
-                                }
-                            }
+                LiClientManager.getUserDetailsClient(liClientRequestParams).processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
+                    @Override
+                    public void onSuccess(LiBaseRestRequest request, LiGetClientResponse liClientResponse) {
+                        if (liClientResponse != null && liClientResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL
+                                && liClientResponse.getResponse() != null && !liClientResponse.getResponse().isEmpty()) {
+                            LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
+                            instance.setLoggedInUser(context, user);
+                        } else {
+                            Log.e(LOG_TAG, "No user found while fetching UserDetails");
+                        }
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e(LOG_TAG, "Unable to fetch user details: " + e);
-                            }
-                        });
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(LOG_TAG, "Unable to fetch user details: " + e);
+                    }
+                });
             } catch (LiRestResponseException e) {
                 Log.e(LOG_TAG, "ERROR: " + e);
+                e.printStackTrace();
             }
-
         }
     }
 
@@ -230,8 +232,20 @@ public final class LiSDKManager extends LiAuthManager {
      * @return the version name of the SDK.
      */
     @NonNull
-    public String getCoreSDKVersion() {
+    public String getVersion() {
         return BuildConfig.LI_SDK_CORE_VERSION;
+    }
+
+    /**
+     * Gets version name of the SDK.
+     *
+     * @return the version name of the SDK.
+     * @deprecated Use {@link #getVersion()} instead.
+     */
+    @Deprecated
+    @NonNull
+    public String getCoreSDKVersion() {
+        return getVersion();
     }
 
     /**
