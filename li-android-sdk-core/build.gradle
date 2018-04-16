@@ -27,8 +27,8 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 project.ext.set('groupId', 'lithium.community.android.sdk')
 project.ext.set('artifactId', 'li-android-sdk-core')
 
-project.ext.set('versionCode', 126005) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
-project.ext.set('versionName', '1.2.6')
+project.ext.set('versionCode', 126006) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+project.ext.set('versionName', '1.2.6-SNAPSHOT')
 
 project.ext.set('repositoryName', 'li-android-sdk')
 project.ext.set('localReleaseDest', "${buildDir}/release/${project.ext.versionName}")
