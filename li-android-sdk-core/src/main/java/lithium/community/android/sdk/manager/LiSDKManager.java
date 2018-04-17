@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.auth.LiAuthConstants;
 import lithium.community.android.sdk.auth.LiAuthService;
 import lithium.community.android.sdk.auth.LiAuthServiceImpl;
 import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
@@ -48,7 +47,6 @@ import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiUUIDUtils;
 import lithium.community.android.sdk.utils.MessageConstants;
 
-import static lithium.community.android.sdk.auth.LiAuthConstants.LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_ERROR_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_VISITOR_ID;
@@ -162,6 +160,7 @@ public final class LiSDKManager extends LiAuthManager {
      */
     public void syncWithCommunity(final Context context) {
         if (instance.isUserLoggedIn()) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "SDK is retrieving settings from the community");
             try {
                 String clientId = LiUUIDUtils.toUUID(getCredentials().getClientKey().getBytes()).toString();
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
@@ -170,37 +169,40 @@ public final class LiSDKManager extends LiAuthManager {
                     @Override
                     public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) {
                         if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                            Gson gson = new Gson();
+                            Gson gson = LiClientManager.getRestClient().getGson();
                             JsonObject responseJsonObject = response.getJsonObject();
                             if (responseJsonObject.has("data")) {
                                 JsonObject dataObj = responseJsonObject.get("data").getAsJsonObject();
                                 if (dataObj.has("items")) {
                                     JsonArray items = dataObj.get("items").getAsJsonArray();
                                     if (!items.isJsonNull() && items.size() > 0) {
-                                        LiAppSdkSettings liAppSdkSettings = gson.fromJson(items.get(0), LiAppSdkSettings.class);
-                                        if (liAppSdkSettings != null) {
-                                            putInSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS, liAppSdkSettings.getAdditionalInformation());
+                                        LiAppSdkSettings settings = gson.fromJson(items.get(0), LiAppSdkSettings.class);
+                                        if (settings != null) {
+                                            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "SDK retrieved settings from the community successfully");
+                                            putInSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS, settings.getAdditionalInformation());
                                         }
                                     }
                                 }
                             }
                         } else {
-                            Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings");
+                            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "API retrieved invalid settings from the community");
                         }
                     }
 
                     @Override
                     public void onError(Exception exception) {
-                        Log.e(LiCoreSDKConstants.LI_LOG_TAG, "Error getting SDK settings: " + exception.getMessage());
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "API failed to retrieve settings from the community");
                         exception.printStackTrace();
                     }
                 });
             } catch (LiRestResponseException e) {
-                Log.e(LiAuthConstants.LOG_TAG, e.getMessage());
+                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Sync with community request aborted");
                 e.printStackTrace();
             }
+
             //get logged in user details
             try {
+                Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "SDK is retrieving logged in user details");
                 LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiUserDetailsClientRequestParams(context, "self");
                 LiClientManager.getUserDetailsClient(liClientRequestParams).processAsync(new LiAsyncRequestCallback<LiGetClientResponse>() {
                     @Override
@@ -208,19 +210,21 @@ public final class LiSDKManager extends LiAuthManager {
                         if (liClientResponse != null && liClientResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL
                                 && liClientResponse.getResponse() != null && !liClientResponse.getResponse().isEmpty()) {
                             LiUser user = (LiUser) liClientResponse.getResponse().get(0).getModel();
+                            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "SDK is setting logged in user details");
                             instance.setLoggedInUser(context, user);
                         } else {
-                            Log.e(LOG_TAG, "No user found while fetching UserDetails");
+                            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "API returned invalid user details");
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.e(LOG_TAG, "Unable to fetch user details: " + e);
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "API failed to return user details");
+                        e.printStackTrace();
                     }
                 });
             } catch (LiRestResponseException e) {
-                Log.e(LOG_TAG, "ERROR: " + e);
+                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "User details request aborted");
                 e.printStackTrace();
             }
         }
@@ -314,20 +318,28 @@ public final class LiSDKManager extends LiAuthManager {
     /**
      * Fetches Fresh Access Token and Persists it.
      *
-     * @param context             An Android context.
-     * @param mFreshTokenCallBack {@link LiAuthService.FreshTokenCallBack}
+     * @param context  An Android context.
+     * @param callBack {@link LiAuthService.FreshTokenCallBack}
      * @throws LiRestResponseException An exception is thrown when an invalid response is received by the SDK.
      */
-    public void fetchFreshAccessToken(final Context context, final LiAuthService.FreshTokenCallBack mFreshTokenCallBack) throws LiRestResponseException {
+    public void fetchFreshAccessToken(final Context context, final LiAuthService.FreshTokenCallBack callBack) throws LiRestResponseException {
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#fetchFreshAccessToken() - refreshing access token");
         new LiAuthServiceImpl(context, this).performRefreshTokenRequest(new LiAuthService.LiTokenResponseCallback() {
             @Override
             public void onTokenRequestCompleted(@Nullable LiTokenResponse response, @Nullable Exception ex) {
                 if (ex != null) {
-                    mFreshTokenCallBack.onFreshTokenFetched(false);
+                    ex.printStackTrace();
+                    callBack.onFreshTokenFetched(false);
                     return;
                 }
-                persistAuthState(context, response);
-                mFreshTokenCallBack.onFreshTokenFetched(true);
+                if (response != null) {
+                    Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiSDKManager#fetchFreshAccessToken() - refresh access token successful");
+                    persistAuthState(context, response);
+                    callBack.onFreshTokenFetched(true);
+                } else {
+                    Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiSDKManager#restoreAuthState() - API returned invalid refreshed access token");
+                    callBack.onFreshTokenFetched(false);
+                }
             }
         });
     }

@@ -244,9 +244,12 @@ public class LiAuthServiceTest {
         PowerMockito.doReturn(liSSOAuthResponse).when(liAuthService, "getLiSSOAuthResponse", liBaseResponse);
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         PowerMockito.whenNew(OkHttpClient.class).withNoArguments().thenReturn(okHttpClient);
-        Call call = mock(Call.class);
+        final Call call = mock(Call.class);
 
         final Response response = mock(Response.class);
+        when(response.code()).thenReturn(200);
+        ResponseBody body = mock(ResponseBody.class);
+        when(response.body()).thenReturn(body);
         when(okHttpClient.newCall(isA(Request.class))).thenReturn(call);
 
         PowerMockito.whenNew(LiBaseResponse.class).withArguments(response).thenReturn(liBaseResponse);
@@ -255,7 +258,7 @@ public class LiAuthServiceTest {
             @Override
             public Void answer(final InvocationOnMock invocation) throws Throwable {
                 Callback callback = (Callback) invocation.getArguments()[0];
-                callback.onResponse(isA(Call.class), response);
+                callback.onResponse(call, response);
                 return null;
             }
         }).when(call).enqueue(any(Callback.class));
@@ -284,9 +287,8 @@ public class LiAuthServiceTest {
 
         PowerMockito.doAnswer(new Answer<Void>() {
             @Override
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
-                LiAuthService.LoginCompleteCallBack callback
-                        = (LiAuthService.LoginCompleteCallBack) invocation.getArguments()[0];
+            public Void answer(final InvocationOnMock invocation) {
+                LiAuthService.LoginCompleteCallBack callback = (LiAuthService.LoginCompleteCallBack) invocation.getArguments()[0];
                 callback.onLoginComplete(null, true);
                 return null;
             }

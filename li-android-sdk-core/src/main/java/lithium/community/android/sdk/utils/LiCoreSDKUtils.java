@@ -463,6 +463,12 @@ public class LiCoreSDKUtils {
     }
 
     public static void sendLoginBroadcast(Context context, boolean isLoginSuccessful, int responseCode) {
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Sending login complete broadcast. Login success is " + String.valueOf(isLoginSuccessful));
+        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LOGIN COMPLETE BROADCAST: User is not null");
+        } else {
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LOGIN COMPLETE BROADCAST: User is null");
+        }
         Intent intent = new Intent(context.getString(R.string.li_login_complete_broadcast_intent));
         intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT, isLoginSuccessful);
         intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT_CODE, responseCode);

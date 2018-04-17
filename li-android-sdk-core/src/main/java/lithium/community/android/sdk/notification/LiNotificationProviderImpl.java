@@ -35,9 +35,10 @@ import lithium.community.android.sdk.rest.LiPostClientResponse;
 import lithium.community.android.sdk.rest.LiPutClientResponse;
 import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEBUG_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_DEVICE_ID;
-import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_LOG_TAG;
+import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_ERROR_LOG_TAG;
 import static lithium.community.android.sdk.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 
 /**
@@ -95,13 +96,13 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                             }
                         }
                     } else {
-                        Log.e(LI_LOG_TAG, "Unable to fetch device id");
+                        Log.e(LI_ERROR_LOG_TAG, "Unable to fetch device id");
                     }
                 }
 
                 @Override
                 public void onError(Exception exception) {
-                    Log.e(LI_LOG_TAG, "Unable to fetch device id");
+                    Log.e(LI_ERROR_LOG_TAG, "Device Id API request failed.");
                     exception.printStackTrace();
                 }
             });
@@ -119,15 +120,15 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                 @Override
                 public void onSuccess(LiBaseRestRequest request, LiPutClientResponse response) {
                     if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                        Log.i(LI_LOG_TAG, "Successfully updated device Id");
+                        Log.d(LI_DEBUG_LOG_TAG, "Successfully updated device Id");
                     } else {
-                        Log.e(LI_LOG_TAG, "Unable to update device Id");
+                        Log.e(LI_ERROR_LOG_TAG, "Unable to update device Id");
                     }
                 }
 
                 @Override
                 public void onError(Exception exception) {
-                    Log.e(LI_LOG_TAG, "Unable to update device Id");
+                    Log.e(LI_ERROR_LOG_TAG, "Unable to update device Id");
                     exception.printStackTrace();
                 }
             });

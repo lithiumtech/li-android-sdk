@@ -239,7 +239,7 @@ public class LiUserTest {
                         + ".com\\/t5\\/user\\/viewprofilepage\\/user-id\\/52295\",\"USER_ID\":\"123456\","
                         + "\"USER_AVATAR\":{\"MESSAGE_IMAGE_URL\":\"AVATAR\",\"PROFILE_IMAGE_URL\":\"null\"},"
                         + "\"USER_HREF\":\"\\/\\/messages\\/\\/213824\"}",
-                liUser.jsonSerialize().toString());
+                liUser.serialize().toString());
 
     }
 
@@ -262,8 +262,8 @@ public class LiUserTest {
         email.setValue(EMAIL);
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
-        JSONObject jsonObject = liUser.jsonSerialize();
-        LiUser liUser1 = liUser.jsonDeserialize(jsonObject);
+        JSONObject jsonObject = liUser.serialize();
+        LiUser liUser1 = liUser.deserialize(jsonObject);
         Assert.assertEquals(liUser.getId(), liUser1.getId());
         Assert.assertEquals(liUser.getProfilePageUrl(), liUser1.getProfilePageUrl());
         Assert.assertEquals(liUser.getHref(), liUser1.getHref());

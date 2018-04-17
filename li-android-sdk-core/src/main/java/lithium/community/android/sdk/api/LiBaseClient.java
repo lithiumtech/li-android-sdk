@@ -66,8 +66,8 @@ abstract class LiBaseClient implements LiClient {
         this.liRestv2Client = LiRestv2Client.getInstance();
     }
 
-    public LiBaseClient(Context context, String basePath, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass,
-                        RequestType requestType) throws LiRestResponseException {
+    public LiBaseClient(Context context, String basePath, String type, String querySettingsType,
+                        Class<? extends LiBaseModel> responseClass, RequestType requestType) {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -78,8 +78,7 @@ abstract class LiBaseClient implements LiClient {
     }
 
 
-    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType)
-            throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType) {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -89,8 +88,8 @@ abstract class LiBaseClient implements LiClient {
         this.requestType = requestType;
     }
 
-    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass, RequestType requestType,
-                        String pathParam) throws LiRestResponseException {
+    public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass,
+                        RequestType requestType, String pathParam) {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -167,11 +166,13 @@ abstract class LiBaseClient implements LiClient {
 
                 @Override
                 public void onError(Exception e) {
+                    e.printStackTrace();
                     liAsyncRequestCallback.onError(e);
                 }
             };
             liRestv2Client.processAsync(liRestV2Request, callback);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             throw LiRestResponseException.runtimeError(e.getMessage());
         }
     }
@@ -210,11 +211,13 @@ abstract class LiBaseClient implements LiClient {
 
                 @Override
                 public void onError(Exception e) {
+                    e.printStackTrace();
                     liAsyncRequestCallback.onError(e);
                 }
             };
             liRestv2Client.uploadProcessAsync(liRestV2Request, callback, imagePath, imageName, requestBody);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             throw LiRestResponseException.runtimeError(e.getMessage());
         }
     }
