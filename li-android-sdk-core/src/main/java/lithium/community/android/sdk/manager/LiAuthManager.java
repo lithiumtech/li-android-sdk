@@ -268,7 +268,6 @@ class LiAuthManager {
         if (!TextUtils.isEmpty(json)) {
             try {
                 state = LiAuthState.deserialize(json);
-                return state;
             } catch (JSONException e) {
                 Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthManager#restoreAuthState() - deserialization of auth state failed");
                 e.printStackTrace();
@@ -276,7 +275,8 @@ class LiAuthManager {
         } else {
             Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#restoreAuthState() - No saved auth state found");
         }
-        return null;
+
+        return state;
     }
 
     /**
@@ -298,7 +298,7 @@ class LiAuthManager {
      */
     @Deprecated
     public String getProxyHost() {
-        return getApiGatewayHost();
+        return credentials.getCommunityUri().toString();
     }
 
     /**
