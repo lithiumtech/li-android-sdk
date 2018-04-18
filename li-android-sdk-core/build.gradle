@@ -66,13 +66,9 @@ android {
 
     buildTypes {
         buildTypes.each { variant ->
-            def name = versionName
             if (variant.isDebuggable()) {
-                name = name + "+${getGitHash()}"
                 variant.versionNameSuffix = "+${getGitHash()}"
             }
-            variant.resValue "string", "li_sdk_core_version", "${name}"
-            variant.buildConfigField "String", "LI_SDK_CORE_VERSION", "\"${name}\""
         }
 
         debug {
