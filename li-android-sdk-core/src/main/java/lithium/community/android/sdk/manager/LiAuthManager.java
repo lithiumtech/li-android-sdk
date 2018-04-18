@@ -283,13 +283,18 @@ class LiAuthManager {
      * Gets the API gateway's host address.
      *
      * @return the API gateway's host address.
+     * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
+    @Deprecated
     public String getApiGatewayHost() {
-        return credentials.getApiGatewayHost().toString();
+        return credentials.getCommunityUri().toString();
     }
 
     /**
-     * @deprecated Use {@link #getApiGatewayHost()} instead.
+     * Gets the API gateway's host address.
+     *
+     * @return the API gateway's host address.
+     * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
     @Deprecated
     public String getProxyHost() {

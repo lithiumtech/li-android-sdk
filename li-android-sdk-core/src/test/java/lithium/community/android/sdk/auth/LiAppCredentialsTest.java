@@ -34,7 +34,6 @@ public class LiAppCredentialsTest {
         String clientKey = "clientKey";
         String clientSecret = "clientSecret";
         String communityUri = "http://www.lithium.com/";
-        String apiGatewayHost = "http://www.lithium.com/";
         String clientName = "name";
         String tenantId = "tenant";
 
@@ -44,15 +43,14 @@ public class LiAppCredentialsTest {
                 .setClientSecret(clientSecret)
                 .setTenantId(tenantId)
                 .setCommunityUri(communityUri)
-                .setApiGatewayUri(apiGatewayHost)
                 .build();
 
         Assert.assertEquals(clientName, liAppCredentials.getClientName());
         Assert.assertEquals(clientKey, liAppCredentials.getClientKey());
         Assert.assertEquals(clientSecret, liAppCredentials.getClientSecret());
         Assert.assertEquals(Uri.parse(communityUri), liAppCredentials.getCommunityUri());
-        Assert.assertEquals(Uri.parse(apiGatewayHost), liAppCredentials.getApiGatewayHost());
-        Assert.assertEquals(apiGatewayHost, liAppCredentials.getApiProxyHost());
+        Assert.assertEquals(Uri.parse(communityUri), liAppCredentials.getCommunityUri());
+        Assert.assertEquals(communityUri, liAppCredentials.getCommunityUri().toString());
         Assert.assertEquals(tenantId, liAppCredentials.getTenantId());
 
         String ssoAuthorizeUri = "http://www.lithium.com/api/2.0/auth/authorize";

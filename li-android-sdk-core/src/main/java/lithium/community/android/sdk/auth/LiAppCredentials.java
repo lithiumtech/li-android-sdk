@@ -111,6 +111,7 @@ public final class LiAppCredentials {
      * @param deviceId       A unique static identifier for this device. Suggested Firebase instance id.
      * @deprecated Use {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
      */
+    @Deprecated
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
                             @NonNull String tenantId, @NonNull String communityURL, @Deprecated @Nullable String apiGatewayHost,
                             @NonNull String deviceId) {
@@ -151,16 +152,6 @@ public final class LiAppCredentials {
         return deviceId;
     }
 
-    /**
-     * The API Gateways host address.
-     *
-     * @return The API Gateway host Uri.
-     */
-    @NonNull
-    public Uri getApiGatewayHost() {
-        return getCommunityUri();
-    }
-
     @NonNull
     public Uri getAuthorizeUri() {
         return authorizeUri;
@@ -187,8 +178,20 @@ public final class LiAppCredentials {
     }
 
     /**
+     * The API Gateways host address.
+     *
+     * @return The API Gateway host Uri.
+     * @deprecated This property is no longer used. Use {@link #getCommunityUri()} instead.
+     */
+    @Deprecated
+    @NonNull
+    public Uri getApiGatewayHost() {
+        return getCommunityUri();
+    }
+
+    /**
      * @return the API Gateways host address
-     * @deprecated Use {@link #getApiGatewayHost()}
+     * @deprecated This property is no longer used. Use {@link #getCommunityUri()} instead.
      */
     @Deprecated
     @NonNull
@@ -243,7 +246,10 @@ public final class LiAppCredentials {
 
         /**
          * Default public constructor for the builder.
+         *
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         public Builder() {
         }
 
@@ -252,7 +258,9 @@ public final class LiAppCredentials {
          *
          * @param clientName the client name.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         public Builder setClientName(@NonNull String clientName) {
             this.clientName = clientName;
             return this;
@@ -263,7 +271,9 @@ public final class LiAppCredentials {
          *
          * @param clientKey the client key.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public Builder setClientKey(@NonNull String clientKey) {
             this.clientKey = clientKey;
@@ -275,7 +285,9 @@ public final class LiAppCredentials {
          *
          * @param clientSecret the client secret.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public Builder setClientSecret(@NonNull String clientSecret) {
             this.clientSecret = clientSecret;
@@ -287,7 +299,9 @@ public final class LiAppCredentials {
          *
          * @param tenantId the tenant Id.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public Builder setTenantId(@NonNull String tenantId) {
             this.tenantId = tenantId;
@@ -299,7 +313,9 @@ public final class LiAppCredentials {
          *
          * @param communityUri the LIA community URL.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public Builder setCommunityUri(@NonNull String communityUri) {
             this.communityUri = communityUri;
@@ -311,7 +327,9 @@ public final class LiAppCredentials {
          *
          * @param apiGatewayUri the API Gateway host address.
          * @return this builder.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public Builder setApiGatewayUri(@NonNull String apiGatewayUri) {
             return this;
@@ -322,7 +340,7 @@ public final class LiAppCredentials {
          *
          * @param apiProxyHost The API gateways host address.
          * @return this builder.
-         * @deprecated Use {@link #getApiGatewayHost()} instead.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
         @Deprecated
         public Builder setApiProxyHost(@NonNull String apiProxyHost) {
@@ -334,7 +352,7 @@ public final class LiAppCredentials {
          *
          * @param clientAppName The client name to set
          * @return this builder
-         * @deprecated Use {@link #setClientName(String)}
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
         @Deprecated
         public Builder setClientAppName(@NonNull String clientAppName) {
@@ -346,7 +364,9 @@ public final class LiAppCredentials {
          * Build and return a new instance of {@link LiAppCredentials}.
          *
          * @return a new instance of {@link LiAppCredentials}.
+         * @deprecated Use the public constructor {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
          */
+        @Deprecated
         @NonNull
         public LiAppCredentials build() {
             return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, "deviceId");
