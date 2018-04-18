@@ -458,11 +458,17 @@ public class LiCoreSDKUtils {
         return outputStream.toString();
     }
 
-    public static Long getTime(Long time) {
-        return (time != null ? (time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis()) : null);
+    public static long addCurrentTime(long time) {
+        return time * 1000 + LiSystemClock.INSTANCE.getCurrentTimeMillis();
     }
 
     public static void sendLoginBroadcast(Context context, boolean isLoginSuccessful, int responseCode) {
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Sending login complete broadcast. Login success is " + String.valueOf(isLoginSuccessful));
+        if (LiSDKManager.getInstance().getLoggedInUser() != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LOGIN COMPLETE BROADCAST: User is not null");
+        } else {
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LOGIN COMPLETE BROADCAST: User is null");
+        }
         Intent intent = new Intent(context.getString(R.string.li_login_complete_broadcast_intent));
         intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT, isLoginSuccessful);
         intent.putExtra(LiCoreSDKConstants.LOGIN_RESULT_CODE, responseCode);
@@ -478,7 +484,8 @@ public class LiCoreSDKUtils {
         checkNotNull(manager, MessageConstants.wasNull("manager"));
         checkNotNull(builder, MessageConstants.wasNull("builder"));
         builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_IDENTIFIER, manager.getCredentials().getClientName());
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.li_sdk_core_version);
-        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, manager.getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID));
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_APPLICATION_VERSION, BuildConfig.LI_SDK_CORE_VERSION);
+        String visitorId = manager.getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID);
+        builder.header(LiRequestHeaderConstants.LI_REQUEST_VISITOR_ID, visitorId != null ? visitorId : "null");
     }
 }

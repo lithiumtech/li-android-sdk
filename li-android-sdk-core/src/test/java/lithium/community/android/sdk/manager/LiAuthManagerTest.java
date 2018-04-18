@@ -26,10 +26,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-
 import lithium.community.android.sdk.TestHelper;
+import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;
@@ -67,10 +65,10 @@ public class LiAuthManagerTest {
 
 
     @Test
-    public void testSetLoggedInUser() throws MalformedURLException, URISyntaxException {
+    public void testSetLoggedInUser() throws LiInitializationException {
         Context context = TestHelper.createMockContext();
 
-        LiSDKManager.init(context, TestHelper.getTestAppCredentials());
+        LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
         LiSecuredPrefManager.getInstance().putString(context, LiCoreSDKConstants.LI_AUTH_STATE, AUTH_STATE_JSON);
         LiSDKManager.getInstance().restoreAuthState(context);
 

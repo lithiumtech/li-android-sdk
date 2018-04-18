@@ -41,7 +41,7 @@ public class LiAvatar extends LiBaseModelImpl {
     private String internal;
     private String external;
 
-    public static LiAvatar jsonDeserialize(JSONObject json) throws JSONException {
+    public static LiAvatar deserialize(JSONObject json) throws JSONException {
         LiAvatar avatar = new LiAvatar();
         avatar.setMessage(json.getString(MESSAGE_IMAGE_URL));
         avatar.setProfile(json.getString(PROFILE_IMAGE_URL));
@@ -68,7 +68,7 @@ public class LiAvatar extends LiBaseModelImpl {
      * Produces a JSON string representation of the token response for persistent storage or
      * local transmission (e.g. between activities).
      */
-    public JSONObject jsonSerialize() {
+    public JSONObject serialize() {
         JSONObject json = new JSONObject();
         LiCoreSDKUtils.put(json, PROFILE_IMAGE_URL, String.valueOf(this.getProfile()));
         LiCoreSDKUtils.put(json, MESSAGE_IMAGE_URL, this.getMessage());

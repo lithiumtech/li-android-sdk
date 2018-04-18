@@ -124,7 +124,7 @@ public class LiAuthRestClientTest {
         final Response finalResponse = response;
         try {
             doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(response);
-        } catch (IOException | LiRestResponseException ignored) {
+        } catch (IOException ignored) {
         }
         final IOException excep = mock(IOException.class);
         when(excep.getMessage()).thenReturn("Error authorizeAsync");
@@ -297,7 +297,7 @@ public class LiAuthRestClientTest {
         final Response finalResponse = response;
         try {
             doReturn(liBaseResponse).when(liAuthRestClient).getLiBaseResponseFromResponse(finalResponse);
-        } catch (IOException | LiRestResponseException ignored) {
+        } catch (IOException ignored) {
         }
         final IOException excep = mock(IOException.class);
         when(excep.getMessage()).thenReturn(EXCEPTION_CAUSE);

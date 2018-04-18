@@ -16,6 +16,8 @@
 
 package lithium.community.android.sdk.rest;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -40,10 +42,10 @@ public class LiBaseResponse {
     private static final String TYPE = "type";
     private static final String ITEMS = "items";
     private static final String ITEM = "item";
-    private static final String STATUS_CODE = "statusCode";
+    private static final String STATUS = "status";
     private String status;
     private String message;
-    private int httpCode;
+    private int code;
     private JsonObject data;
 
     public LiBaseResponse() {
@@ -54,24 +56,24 @@ public class LiBaseResponse {
      * Wrapping OkHttp response to LiBaseResponse.
      *
      * @param response {@link Response}
-     * @throws IOException
-     * @throws LiRestResponseException
+     * @throws IOException If the reponse if not a valid JSON Object string.
      */
-    public LiBaseResponse(Response response) throws IOException, LiRestResponseException {
+    public LiBaseResponse(Response response) throws IOException {
 
-        httpCode = response.code();
+        code = response.code();
         String responseStr = response.body().string();
         try {
             data = LiClientManager.getRestClient().getGson().fromJson(responseStr, JsonObject.class);
-            if (httpCode == LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR) {
-                if (data.has(STATUS_CODE)) {
-                    httpCode = data.get(STATUS_CODE).getAsInt();
-                }
+            if (data.has(STATUS)) {
+                status = data.get(STATUS).getAsString();
+            } else {
+                status = response.isSuccessful() ? "success" : "error";
             }
-            status = response.isSuccessful() ? "success" : "error";
             message = response.message();
         } catch (Exception ex) {
-            httpCode = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Response deserialization failed");
+            ex.printStackTrace();
+            code = LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR;
             status = "error";
             message = ex.getMessage();
         }
@@ -102,11 +104,11 @@ public class LiBaseResponse {
     }
 
     public int getHttpCode() {
-        return httpCode;
+        return code;
     }
 
     public void setHttpCode(int httpCode) {
-        this.httpCode = httpCode;
+        this.code = httpCode;
     }
 
     /**
@@ -115,14 +117,14 @@ public class LiBaseResponse {
      * @throws LiRestResponseException
      */
     public List<LiBaseModel> toEntityList(final String type, final Class<? extends LiBaseModel> baseModelClass,
-            final Gson gson) throws LiRestResponseException {
+                                          final Gson gson) throws LiRestResponseException {
         final String objectNamePlural = type + "s";
         return singleEntityOrListFromJson(data, objectNamePlural, type, baseModelClass, gson);
     }
 
     private List<LiBaseModel> singleEntityOrListFromJson(final JsonElement node, final String objectNamePlural,
-            final String objectName, final Class<? extends LiBaseModel> baseModelClass,
-            final Gson gson) throws LiRestResponseException {
+                                                         final String objectName, final Class<? extends LiBaseModel> baseModelClass,
+                                                         final Gson gson) throws LiRestResponseException {
         if (node != null && node.getAsJsonObject().has(DATA)) {
             JsonObject response = node.getAsJsonObject().get(DATA).getAsJsonObject();
             if (!response.has(TYPE)) {

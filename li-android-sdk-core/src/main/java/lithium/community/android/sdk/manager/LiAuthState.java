@@ -19,6 +19,7 @@ package lithium.community.android.sdk.manager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -32,6 +33,7 @@ import lithium.community.android.sdk.auth.LiSSOAuthResponse;
 import lithium.community.android.sdk.auth.LiTokenResponse;
 import lithium.community.android.sdk.model.response.LiUser;
 import lithium.community.android.sdk.utils.LiClock;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 import lithium.community.android.sdk.utils.LiSystemClock;
 
@@ -106,7 +108,7 @@ class LiAuthState {
         }
 
         if (json.has(KEY_LOGGED_IN_USER)) {
-            state.user = LiUser.jsonDeserialize(json.getJSONObject(KEY_LOGGED_IN_USER));
+            state.user = LiUser.deserialize(json.getJSONObject(KEY_LOGGED_IN_USER));
         }
         if (json.has(KEY_LAST_SSO_AUTHORIZATION_RESPONSE)) {
             String string = json.getString(KEY_LAST_SSO_AUTHORIZATION_RESPONSE);
@@ -299,7 +301,7 @@ class LiAuthState {
             LiCoreSDKUtils.put(json, KEY_LI_LAST_TOKEN_RESPONSE, mLastLiTokenResponse.getJsonString());
         }
         if (user != null) {
-            LiCoreSDKUtils.put(json, KEY_LOGGED_IN_USER, user.jsonSerialize());
+            LiCoreSDKUtils.put(json, KEY_LOGGED_IN_USER, user.serialize());
         }
 
         return json;
@@ -317,11 +319,22 @@ class LiAuthState {
     /**
      * Returns user details.
      */
+    @Nullable
     public LiUser getUser() {
+        if (user != null) {
+            Log.d(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthState#getUser() - Li User is not null");
+        } else {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthState#getUser() - Li User is null");
+        }
         return user;
     }
 
-    public void setUser(LiUser user) {
+    public void setUser(@Nullable LiUser user) {
+        if (user != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthState#setUser() - User is not null");
+        } else {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthState#setUser() - User is null");
+        }
         this.user = user;
     }
 

@@ -32,7 +32,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import lithium.community.android.sdk.exception.LiRestResponseException;
 import lithium.community.android.sdk.manager.LiClientManager;
@@ -43,8 +42,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
@@ -53,51 +50,64 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 public class LiCallTaskTest {
 
     private Call call;
-    private LiBaseResponse liBaseResponse;
     private LiCallTask callTask;
-    private Response response;
-    private ResponseBody body;
-    private Request request;
-    private Protocol protocol;
-    private LiClientManager liClientManager;
-    private LiRestv2Client liRestClient;
-    private Gson gson;
-    private LiBaseRestRequest restRequest;
-    private LiAsyncRequestCallback responseCallback;
 
     @Before
-    public void setUp() throws LiRestResponseException, IOException {
+    public void setUp() throws IOException {
 
-        gson = PowerMockito.mock(Gson.class);
-        restRequest = PowerMockito.mock(LiBaseRestRequest.class);
-        responseCallback = PowerMockito.mock(LiAsyncRequestCallback.class);
-        liRestClient = PowerMockito.mock(LiRestv2Client.class);
-        byte[] bytes = new byte[100];
-        Arrays.fill(bytes, (byte) 0);
-        body = ResponseBody.create(MediaType.parse("application/json; charset=utf-8"), bytes);
-        request = PowerMockito.mock(Request.class);
-        protocol = PowerMockito.mock(Protocol.class);
-        response = PowerMockito.mock(Response.class);
+        LiRestv2Client liRestClient = PowerMockito.mock(LiRestv2Client.class);
+
+        String json = "{\n" +
+                "  \"status\": \"success\",\n" +
+                "  \"message\": \"\",\n" +
+                "  \"http_code\": 200,\n" +
+                "  \"data\": {\n" +
+                "    \"type\": \"messages\",\n" +
+                "    \"list_item_type\": \"message\",\n" +
+                "    \"size\": 1,\n" +
+                "    \"items\": [\n" +
+                "      {\n" +
+                "        \"type\": \"message\",\n" +
+                "        \"conversation\": {\n" +
+                "          \"type\": \"conversation\",\n" +
+                "          \"last_post_time\": \"2016-06-22T08:46:02.737-07:00\"\n" +
+                "        }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"metadata\": {}\n" +
+                "}";
+        byte[] bytes = json.getBytes();
+
+        ResponseBody body = ResponseBody.create(MediaType.parse("application/json; charset=utf-8"), bytes);
+        Request request = PowerMockito.mock(Request.class);
+
+        Protocol protocol = PowerMockito.mock(Protocol.class);
+
         Response.Builder builder = new Response.Builder();
         builder.code(200);
         builder.message("test");
         builder.body(body);
         builder.request(request);
         builder.protocol(protocol);
-        response = builder.build();
+        Response response = builder.build();
+
         PowerMockito.mockStatic(LiClientManager.class);
-        liClientManager = mock(LiClientManager.class);
+
+        LiClientManager liClientManager = mock(LiClientManager.class);
         when(liClientManager.getRestClient()).thenReturn(liRestClient);
-        when(liRestClient.getGson()).thenReturn(gson);
-        when(gson.fromJson(anyString(), (Class<Object>) any())).thenReturn(null);
+        when(liRestClient.getGson()).thenReturn(new Gson());
+
         call = PowerMockito.mock(Call.class);
         callTask = new LiCallTask(call);
+
         when(call.execute()).thenReturn(response);
+
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void executeTest() throws LiRestResponseException, IOException {
+    public void executeTest() throws LiRestResponseException {
         Assert.assertEquals(200, callTask.execute().getHttpCode());
         PowerMockito.verifyStatic();
     }

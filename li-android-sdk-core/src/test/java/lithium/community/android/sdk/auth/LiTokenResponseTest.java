@@ -72,9 +72,9 @@ public class LiTokenResponseTest {
     @Test
     public void getExpiresAtTest() {
         liTokenResponse = new LiTokenResponse();
-        liTokenResponse.setExpiresAt(LiCoreSDKUtils.getTime(2L));
+        liTokenResponse.setExpiresAt(LiCoreSDKUtils.addCurrentTime(2L));
         assertNotEquals(null, liTokenResponse.getExpiresAt());
-        assertEquals(Long.valueOf(2001), liTokenResponse.getExpiresAt());
+        assertEquals(2001, liTokenResponse.getExpiresAt());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class LiTokenResponseTest {
         liTokenResponse = new LiTokenResponse();
         liTokenResponse.setExpiresAt(2L);
         assertNotEquals(null, liTokenResponse.getExpiresAt());
-        assertEquals(Long.valueOf(2), liTokenResponse.getExpiresAt());
+        assertEquals(2, liTokenResponse.getExpiresAt());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class LiTokenResponseTest {
         liTokenResponse = new LiTokenResponse();
         liTokenResponse.setExpiresIn(2L);
         assertNotEquals(null, liTokenResponse.getExpiresIn());
-        assertEquals(Long.valueOf(2), liTokenResponse.getExpiresIn());
+        assertEquals(2, liTokenResponse.getExpiresIn());
     }
 
     @Test

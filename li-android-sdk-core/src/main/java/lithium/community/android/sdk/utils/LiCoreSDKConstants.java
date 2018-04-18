@@ -28,7 +28,6 @@ public class LiCoreSDKConstants {
     public static final String LI_VISIT_ORIGIN_TIME_KEY = "LI_VISIT_ORIGIN_TIME_KEY";
     public static final String LI_VISIT_LAST_ISSUE_TIME_KEY = "LI_VISIT_LAST_ISSUE_TIME_KEY";
     public static final String LI_DEVICE_ID = "Li_device_id";
-    public static final String LI_LOG_TAG = "LI_LOG_TAG";
     public static final String LI_RECEIVER_DEVICE_ID = "Li_receivedDeviceId";
     public static final String LI_SSO_TOKEN = "LI_SSO_TOKEN";
     public static final String LI_BEACON_TARGET_TYPE_BOARD = "board";
@@ -45,4 +44,14 @@ public class LiCoreSDKConstants {
     public static final int HTTP_CODE_SERVER_ERROR = 500;
     public static final int HTTP_CODE_SERVICE_UNAVAILABLE = 503;
     public static final long LI_MIN_IMAGE_SIZE_TO_COMPRESS = 1024 * 1024;
+
+    public static final String LI_LOG_TAG = "LiSdk";
+    public static final String LI_DEBUG_LOG_TAG = "LiSdkDebug";
+    public static final String LI_ERROR_LOG_TAG = "LiSdkError";
+
+    /**
+     * Default private constructor so that an instance of this class cannot be created.
+     */
+    private LiCoreSDKConstants() {
+    }
 }

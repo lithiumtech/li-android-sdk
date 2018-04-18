@@ -87,6 +87,7 @@ public class LiBaseAuthActivity extends AppCompatActivity {
                 service.handleAuthorizationResponse(response, authClient, new LiAuthService.LoginCompleteCallBack() {
                     @Override
                     public void onLoginComplete(LiAuthorizationException authException, boolean isSuccess) {
+                        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Login complete. It was " + String.valueOf(isSuccess));
                         service.enablePostAuthorizationFlows(isSuccess, LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL);
                         finish();
                     }

@@ -250,7 +250,7 @@ public abstract class LiRestClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
                 try {
                     if (response != null) {
@@ -333,10 +333,7 @@ public abstract class LiRestClient {
             file = new File(imagePath);
         }
 
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        String proxyHost = sdkManager.getApiGatewayHost();
-
-        uriBuilder.authority(proxyHost);
+        Uri.Builder uriBuilder = sdkManager.getCredentials().getCommunityUri().buildUpon();
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
@@ -368,6 +365,7 @@ public abstract class LiRestClient {
                 request.addHeader(entry.getKey(), entry.getValue());
             }
         }
+        request.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS).build();
         Call call = clientBuilder.newCall(request.build());
         call.enqueue(new Callback() {
@@ -377,7 +375,7 @@ public abstract class LiRestClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
                 try {
                     if (response != null) {
@@ -431,8 +429,7 @@ public abstract class LiRestClient {
      * @return final request that will be sent across network.
      */
     protected Request buildRequest(LiBaseRestRequest baseRestRequest) {
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("https");
-        uriBuilder.authority(sdkManager.getApiGatewayHost());
+        Uri.Builder uriBuilder = sdkManager.getCredentials().getCommunityUri().buildUpon();
         uriBuilder.appendEncodedPath(baseRestRequest.getPath());
         if (baseRestRequest.getQueryParams() != null) {
             for (String param : baseRestRequest.getQueryParams().keySet()) {
@@ -462,6 +459,7 @@ public abstract class LiRestClient {
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
+        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;

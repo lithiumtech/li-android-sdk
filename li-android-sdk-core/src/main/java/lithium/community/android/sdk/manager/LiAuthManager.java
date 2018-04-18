@@ -107,6 +107,11 @@ class LiAuthManager {
      */
     @Nullable
     public LiUser getLoggedInUser() {
+        if (state != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#getLoggedInUser() - Li Auth State is not null");
+        } else {
+            Log.e(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#getLoggedInUser() - Li Auth State is null");
+        }
         return state != null ? state.getUser() : null;
     }
 
@@ -117,8 +122,16 @@ class LiAuthManager {
      */
     public void setLoggedInUser(@NonNull Context context, @Nullable LiUser user) {
         if (state != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#setLoggedInUser() - Li Auth State is not null");
+            if (user != null) {
+                Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#setLoggedInUser() - Li User is not null");
+            } else {
+                Log.e(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#setLoggedInUser() - Li User is null");
+            }
             state.setUser(user);
             putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
+        } else {
+            Log.e(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Li Auth State is null");
         }
     }
 
@@ -170,12 +183,13 @@ class LiAuthManager {
     /**
      * persists Auth State in shared preference when  Authorization Response is received
      *
-     * @param context               {@link Context}
-     * @param authorizationResponse {@link LiSSOAuthResponse}
+     * @param context  {@link Context}
+     * @param response {@link LiSSOAuthResponse}
      */
-    public void persistAuthState(Context context, @NonNull LiSSOAuthResponse authorizationResponse) {
+    public void persistAuthState(Context context, @NonNull LiSSOAuthResponse response) {
         this.state = new LiAuthState();
-        state.update(authorizationResponse);
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#persistAuthState() - persisting SSO auth state");
+        state.update(response);
         putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
     }
 
@@ -187,8 +201,11 @@ class LiAuthManager {
      */
     public void persistAuthState(Context context, @NonNull LiTokenResponse response) {
         if (this.state != null) {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#persistAuthState() - persisting auth state");
             this.state.update(response);
             putInSecuredPreferences(context, LI_AUTH_STATE, state.toJsonString());
+        } else {
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthManager#persistAuthState() - auth state is null");
         }
     }
 
@@ -198,6 +215,8 @@ class LiAuthManager {
      * @param context {@link Context}
      */
     public void logout(@NonNull Context context) {
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#logout() - logging out from SDK");
+
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
 
         preferences.clear(context);
@@ -205,11 +224,11 @@ class LiAuthManager {
         // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
         // way of using CookieManager else use the deprecate methods for older versions.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >= " + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         } else {
-            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API < " + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            Log.d(LiCoreSDKConstants.LI_LOG_TAG, "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
             CookieSyncManager manager = CookieSyncManager.createInstance(context);
 
             //noinspection deprecation tagets old API version
@@ -244,34 +263,42 @@ class LiAuthManager {
      */
     @Nullable
     public final LiAuthState restoreAuthState(Context context) {
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#restoreAuthState() - restoring auth state");
         String json = getFromSecuredPreferences(context, LI_AUTH_STATE);
         if (!TextUtils.isEmpty(json)) {
             try {
                 state = LiAuthState.deserialize(json);
-                return state;
             } catch (JSONException e) {
-                Log.e(LiAuthManager.class.getSimpleName(), "Auth State deserialization failed");
+                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthManager#restoreAuthState() - deserialization of auth state failed");
                 e.printStackTrace();
             }
+        } else {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#restoreAuthState() - No saved auth state found");
         }
-        return null;
+
+        return state;
     }
 
     /**
      * Gets the API gateway's host address.
      *
      * @return the API gateway's host address.
+     * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
+    @Deprecated
     public String getApiGatewayHost() {
-        return state != null && !TextUtils.isEmpty(state.getProxyHost()) ? state.getProxyHost() : credentials.getApiGatewayHost().toString();
+        return credentials.getCommunityUri().toString();
     }
 
     /**
-     * @deprecated Use {@link #getApiGatewayHost()} instead.
+     * Gets the API gateway's host address.
+     *
+     * @return the API gateway's host address.
+     * @deprecated Use {@link #getCredentials()} and call {@link LiAppCredentials#getCommunityUri()} instead.
      */
     @Deprecated
     public String getProxyHost() {
-        return getApiGatewayHost();
+        return credentials.getCommunityUri().toString();
     }
 
     /**

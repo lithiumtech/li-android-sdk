@@ -17,6 +17,7 @@
 package lithium.community.android.sdk.model.response;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -27,6 +28,7 @@ import lithium.community.android.sdk.model.LiBaseModelImpl;
 import lithium.community.android.sdk.model.helpers.LiAvatar;
 import lithium.community.android.sdk.model.helpers.LiImage;
 import lithium.community.android.sdk.model.helpers.LiRanking;
+import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 import lithium.community.android.sdk.utils.LiCoreSDKUtils;
 
 /**
@@ -87,19 +89,22 @@ public class LiUser extends LiBaseModelImpl {
     @SerializedName("avatar")
     private LiAvatar avatar;
 
-    public static LiUser jsonDeserialize(JSONObject jsonObject) throws JSONException {
+    public static LiUser deserialize(JSONObject jsonObject) throws JSONException {
         LiUser user = new LiUser();
         user.setId(jsonObject.getLong(USER_ID));
         LiString emailStr = new LiString();
         emailStr.setValue(jsonObject.getString(USER_EMAIL));
         user.setEmail(emailStr);
-        LiAvatar avatar = LiAvatar.jsonDeserialize(jsonObject.getJSONObject(USER_AVATAR));
+        LiAvatar avatar = LiAvatar.deserialize(jsonObject.getJSONObject(USER_AVATAR));
         user.setAvatar(avatar);
         LiString loginStr = new LiString();
         loginStr.setValue(jsonObject.getString(USER_LOGIN));
         user.setLogin(loginStr);
         user.setHref(jsonObject.getString(USER_HREF));
         user.setProfilePageUrl(jsonObject.getString(USER_VIEW_HREF));
+
+        Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiUser#deserialize() - " + user.toString());
+
         return user;
     }
 
@@ -349,16 +354,21 @@ public class LiUser extends LiBaseModelImpl {
      * Produces a JSON string representation of the token response for persistent storage or
      * local transmission (e.g. between activities).
      */
-    public JSONObject jsonSerialize() {
+    public JSONObject serialize() {
         JSONObject json = new JSONObject();
         LiCoreSDKUtils.putIfNotNull(json, USER_ID, String.valueOf(this.id));
         LiCoreSDKUtils.put(json, USER_EMAIL, this.email);
-        LiCoreSDKUtils.put(json, USER_AVATAR, this.avatar.jsonSerialize());
+        LiCoreSDKUtils.put(json, USER_AVATAR, this.avatar.serialize());
         LiCoreSDKUtils.put(json, USER_LOGIN, this.login.getValue());
         LiCoreSDKUtils.put(json, USER_HREF, this.href);
         if (!TextUtils.isEmpty(profilePageUrl)) {
             LiCoreSDKUtils.put(json, USER_VIEW_HREF, this.profilePageUrl);
         }
         return json;
+    }
+
+    @Override
+    public String toString() {
+        return "LiUser{email='" + login.getValue() + "'}";
     }
 }
