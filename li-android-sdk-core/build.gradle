@@ -66,12 +66,9 @@ android {
 
     buildTypes {
         buildTypes.each { variant ->
-            def name = project.ext.versionName
             if (variant.isDebuggable()) {
-                name = name + "+${getGitHash()}"
+                variant.versionNameSuffix = "+${getGitHash()}"
             }
-            variant.resValue "string", "li_sdk_core_version", "${name}"
-            variant.buildConfigField "String", "LI_SDK_CORE_VERSION", "\"${name}\""
         }
 
         debug {
@@ -199,6 +196,9 @@ task uploadLocalArchives(type: Upload) {
     uploadDescriptor = true
     repositories {
         mavenDeployer {
+            pom.groupId = groupId
+            pom.artifactId = artifactId
+            pom.version = versionName + "+${getGitHash()}"
             repository(url: mavenLocal().url)
         }
     }
@@ -206,23 +206,22 @@ task uploadLocalArchives(type: Upload) {
 
 uploadArchives {
     repositories.mavenDeployer {
-        pom.groupId = project.ext.groupId
-        pom.artifactId = project.ext.artifactId
-        pom.version = project.ext.versionName
-        // Add other pom properties here if you want (developer details / licenses)
-        repository(url: "file://${project.ext.localReleaseDest}")
+        pom.groupId = groupId
+        pom.artifactId = artifactId
+        pom.version = versionName
+        repository(url: "file://${localReleaseDest}")
     }
 }
 
 task zipRelease(type: Zip) {
-    from project.ext.localReleaseDest
+    from localReleaseDest
     destinationDir buildDir
-    archiveName "${project.ext.artifactId}-${project.ext.versionName}.zip"
+    archiveName "${artifactId}-${versionName}.zip"
 }
 
 task generateRelease << {
-    println "Release ${project.ext.versionName} can be found at ${project.ext.localReleaseDest}/"
-    println "Release ${project.ext.versionName} zipped can be found ${buildDir}/release-${project.ext.versionName}.zip"
+    println "Release ${versionName} can be found at ${localReleaseDest}/"
+    println "Release ${versionName} zipped can be found ${buildDir}/release-${versionName}.zip"
 }
 
 generateRelease.dependsOn(uploadArchives)
@@ -242,8 +241,9 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name project.ext.artifactId
-                url project.ext.siteUrl
+                name artifactId
+                version versionName + "+${getGitHash()}"
+                url siteUrl
 
                 // Set your license
                 licenses {
@@ -254,9 +254,9 @@ install {
                 }
 
                 scm {
-                    connection project.ext.gitUrl
-                    developerConnection project.ext.gitUrl
-                    url project.ext.siteUrl
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
                 }
             }
         }
@@ -268,10 +268,10 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = project.ext.repositoryName
-        name = project.ext.artifactId
-        websiteUrl = project.ext.siteUrl
-        vcsUrl = project.ext.gitUrl
+        repo = repositoryName
+        name = artifactId
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
     }
