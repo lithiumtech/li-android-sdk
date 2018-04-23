@@ -18,9 +18,10 @@ The SDK supports Lithium Registration authentication, LithiumSSO, and custom SSO
 | li-android-sdk-core | Authentication<br>API Providers<br>Custom API Providers<br>Push Notification Support (Firebase Cloud Messaging) |
 
 ### Requirements
+
 The Community Android SDK requires:
 
-* Access to a Lithium Community instance running version 17.1 or later
+* Access to a Lithium Community instance running version 18.4 or later
 * A Community user account with the **Manage API Apps** permission grated
 * Android Studio
 * Authorization credentials: App Key and Secret (generated in **Community Admin > System > API Apps**)
@@ -31,18 +32,22 @@ To get started with Community Android SDK development, see the instructions in [
 
 The guide will take you through generating credentials, building your AARs, adding required dependencies, and app initialization.
 
-## License
+### License
+
 Except as otherwise noted, the Community Android SDK and the Lithium Community Reference app are licensed under the Apache 2.0 License.
 
-Copyright 2017 Lithium Technologies
+Copyright 2018 Lithium Technologies
 
-## Example app
+### Example app
+
 The [Lithium Community Android SDK Example](https://github.com/lithiumtech/li-android-sdk-example/blob/dev/README.md) is a basic implementation of the Community Android SDK. The reference application shows the fastest way to get a Lithium Community backed application running quickly.
 
-## Getting help
+### Getting help
+
 Visit the [Developers Discussion forum](https://community.lithium.com/t5/Developers-Discussion/bd-p/studio) on the Lithium Community to ask questions and talk with other members of the Lithium Developer community.
 
-## Next steps
+### Next steps
+
 * Review our [providers and models documentation](https://github.com/lithiumtech/li-android-sdk-core/wiki/Community-Android-SDK-API-providers)
 * Review the [li-android-sdk-core Javadoc](https://lithiumtech.github.io/li-android-sdk-core/)
 * Run through our [tutorials](https://github.com/lithiumtech/li-android-sdk-core/wiki/Tutorials)
