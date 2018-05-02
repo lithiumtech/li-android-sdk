@@ -455,11 +455,11 @@ public abstract class LiRestClient {
     private Request.Builder buildRequestHeaders(Context context, Request.Builder requestBuilder) {
 
         if (!TextUtils.isEmpty(sdkManager.getAuthToken())) {
+            requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
             requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CLIENT_ID, sdkManager.getCredentials().getClientKey());
-        requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         addLSIRequestHeaders(context, requestBuilder);
 
         return requestBuilder;

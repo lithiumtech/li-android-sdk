@@ -20,6 +20,7 @@ import android.content.Context;
 
 import java.util.Map;
 
+import lithium.community.android.sdk.manager.LiSDKManager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -44,7 +45,7 @@ public class LiRestV2Request extends LiBaseRestRequest {
      * Preparing rest v2 request for GET call when no additional headers are present.
      */
     public LiRestV2Request(Context context, String queryParams, String type) {
-        super(context, RestMethod.GET, null, null, true);
+        super(context, RestMethod.GET, null, null, LiSDKManager.getInstance().isUserLoggedIn());
         addQueryParam(queryParams);
         this.type = type;
     }
