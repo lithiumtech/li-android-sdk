@@ -27,16 +27,15 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonParser;
+import com.lithium.community.android.example.R;
+import com.lithium.community.android.notification.LiNotificationPayload;
+import com.lithium.community.android.ui.components.activities.LiConversationActivity;
+import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 
 import java.util.Map;
 
-import lithium.community.android.sdk.notification.LiNotificationPayload;
-import lithium.community.android.sdk.ui.components.activities.LiConversationActivity;
-import lithium.community.android.sdk.ui.components.utils.LiSDKConstants;
-import com.lithium.community.android.example.R;
-
 /**
- * This class overrides the class {@link lithium.community.android.sdk.notification.LiFirebaseMessagingService}
+ * This class overrides the class {@link com.lithium.community.android.notification.LiFirebaseMessagingService}
  * behavior for showing the notification received from community
  */
 public class RefAppNotificationService extends FirebaseMessagingService {

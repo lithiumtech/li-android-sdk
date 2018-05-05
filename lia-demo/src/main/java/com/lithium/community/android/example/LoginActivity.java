@@ -31,13 +31,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
-
-import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.ui.components.activities.LiSupportHomeActivity;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 public class LoginActivity extends AppCompatActivity {
 

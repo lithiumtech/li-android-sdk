@@ -22,9 +22,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import java.util.UUID;
-
 import com.lithium.community.android.example.R;
+
+import java.util.UUID;
 
 /**
  * @author adityasharat

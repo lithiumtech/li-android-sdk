@@ -19,10 +19,10 @@ package com.lithium.community.android.example;
 import android.app.Application;
 import android.util.Log;
 
-import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.exception.LiInitializationException;
-import lithium.community.android.sdk.manager.LiSDKManager;
+import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.exception.LiInitializationException;
+import com.lithium.community.android.manager.LiSDKManager;
 
 public class MainApplication extends Application {
 

@@ -19,16 +19,15 @@ apply plugin: 'maven'
 
 android {
 
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.lithium.community.android.example"
-        minSdkVersion 19
-        targetSdkVersion 27
-        versionCode 130000
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
     }
     buildTypes {
         release {
@@ -40,26 +39,16 @@ android {
         }
     }
     lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-}
-configurations.all {
-    resolutionStrategy {
-        force 'com.android.support:support-annotations:27.0.2'
+        abortOnError true
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile('lithium.community.android.sdk:li-android-sdk-core:1.3.0+', {
-        changing = true
-    })
-    compile('lithium.community.android.sdk:li-android-sdk-ui:1.3.0+', {
-        changing = true
-    })
-    compile 'com.google.firebase:firebase-messaging:11.8.0'
+    compile project(':lia-core')
+    compile project(':lia-ui')
+    compile "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
 
     testCompile 'junit:junit:4.12'
 }

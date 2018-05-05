@@ -20,9 +20,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.notification.LiNotificationProviderImpl;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.notification.LiNotificationProviderImpl;
 
 /**
  * Created by sumit.pannalall on 12/29/16.
