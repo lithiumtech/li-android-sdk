@@ -51,6 +51,16 @@ allprojects {
 
     // All SDK, tools and dependency versions
     project.ext {
+        // artifact information
+        repositoryName = 'lia-sdk-android'
+        groupId = 'com.lithium.community.android'
+        siteUrl = 'https://github.com/lithiumtech/lia-sdk-android'
+        gitUrl = 'https://github.com/lithiumtech/lia-sdk-android.git'
+
+        // version information
+        versionCode = 140000    // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+        versionName = '1.4.0'
+
         // Sdk and tools
         minSdkVersion = 19
         targetSdkVersion = 27

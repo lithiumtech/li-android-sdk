@@ -7,20 +7,15 @@ apply plugin: 'checkstyle'
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-project.ext.set('groupId', 'lithium.community.android.sdk')
-project.ext.set('artifactId', 'li-android-sdk-ui')
-
-project.ext.set('versionCode', 130000) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
-project.ext.set('versionName', '1.3.0')
-
-project.ext.set('repositoryName', 'li-android-sdk-ui')
-project.ext.set('localReleaseDest', "${buildDir}/release/${project.ext.versionName}")
-
-project.ext.set('siteUrl', 'https://github.com/lithiumtech/li-android-sdk-ui')
-project.ext.set('gitUrl', 'https://github.com/lithiumtech/li-android-sdk-ui.git')
+siteUrl = project.ext.siteUrl
+gitUrl = project.ext.gitUrl
 
 version = project.ext.versionName
 group = project.ext.groupId
+
+def artifactId = 'lia-ui'
+
+def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
