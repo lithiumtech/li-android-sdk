@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Here is where all the attributes will be listed which require customization from the parent app -->
+    <attr name="li_theme_appBarOverlay" format="reference"/>
+    <attr name="li_theme_popupOverlay" format="reference"/>
+    <attr name="li_theme_noActionBar" format="reference"/>
+
+    <!--Icon Attrs-->
+    <attr name="li_theme_articleConversationStyleIcon" format="reference"/>
+    <attr name="li_theme_articleDoneIcon" format="reference"/>
+    <attr name="li_theme_askQuestBubbleIcon" format="reference"/>
+    <attr name="li_theme_askQuestSelectedBoardColor" format="reference|color"/>
+    <attr name="li_theme_articlePinnedIcon" format="reference"/>
+    <attr name="li_theme_uploadPhotoIcon" format="reference"/>
+    <attr name="li_theme_shareMessageIcon" format="reference"/>
+    <attr name="li_theme_browseListCategoryIcon" format="reference"/>
+    <attr name="li_theme_browseListBoardIcon" format="reference"/>
+    <attr name="li_theme_browseHeaderArrow" format="reference"/>
+    <attr name="li_theme_messageKudoBtnIcon" format="reference"/>
+    <attr name="li_theme_messageReplyBtnIcon" format="reference"/>
+    <attr name="li_theme_messageAcceptBtnIcon" format="reference"/>
+    <attr name="li_theme_messageUnAcceptBtnIcon" format="reference"/>
+    <attr name="li_theme_messageUserAvatarIcon" format="reference"/>
+    <attr name="li_theme_askQSelectedImageRemoveIcon" format="reference"/>
+    <attr name="li_theme_searchIcon" format="reference"/>
+    <attr name="li_theme_askQPostQuestionBtn" format="reference"/>
+    <attr name="li_theme_backbutton" format="reference"/>
+
+    <attr name="li_theme_errorLoginBtnTextColor" format="reference|color"/>
+    <attr name="li_theme_newReplyTxtColor" format="reference|color"/>
+    <attr name="li_theme_newReplyTxtSize" format="reference|dimension"/>
+    <attr name="li_theme_articleListPinnedTxtColor" format="reference|color"/>
+    <attr name="li_theme_articleListResolvedTxtColor" format="reference|color"/>
+    <attr name="li_theme_articleListDetailsTxtSize" format="reference|dimension"/>
+    <attr name="li_theme_background" format="reference|color"/>
+    <attr name="li_theme_search_text_hint_color" format="reference|color"/>
+    <attr name="li_theme_search_text_color" format="reference|color"/>
+
+</resources>

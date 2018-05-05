@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="li_dividerColor">#E0E0E0</color>
+    <color name="li_typeDividerColor">#666666</color>
+    <color name="li_lightBg">#FFFFFF</color>
+    <color name="li_lightIcon">#FFFFFF</color>
+    <color name="li_listIconColor">#7F7F7F</color>
+    <color name="li_theme_askQuestSelectedBoardColor">#1E88E5</color>
+    <color name="li_theme_newReplyTxtColor">#1E88E5</color>
+    <color name="li_theme_errorLoginBtnTextColor">#1E88E5</color>
+    <color name="li_theme_articleListPinnedTxtColor">#9575CD</color>
+    <color name="li_theme_articleListResolvedTxtColor">@android:color/holo_green_light</color>
+    <color name="li_theme_already_kudoed">#096bb6</color>
+    <color name="li_theme_remove_tint">#000000</color>
+    <color name="li_report_abuse_label_color">#c3c3c3</color>
+</resources>

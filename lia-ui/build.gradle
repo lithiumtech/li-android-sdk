@@ -1,0 +1,221 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'checkstyle'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+project.ext.set('groupId', 'lithium.community.android.sdk')
+project.ext.set('artifactId', 'li-android-sdk-ui')
+
+project.ext.set('versionCode', 130000) // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+project.ext.set('versionName', '1.3.0')
+
+project.ext.set('repositoryName', 'li-android-sdk-ui')
+project.ext.set('localReleaseDest', "${buildDir}/release/${project.ext.versionName}")
+
+project.ext.set('siteUrl', 'https://github.com/lithiumtech/li-android-sdk-ui')
+project.ext.set('gitUrl', 'https://github.com/lithiumtech/li-android-sdk-ui.git')
+
+version = project.ext.versionName
+group = project.ext.groupId
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+android {
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+    }
+
+    buildTypes {
+
+        buildTypes.each { variant ->
+            if (variant.isDebuggable()) {
+                variant.versionNameSuffix = "+${getGitHash()}"
+            }
+        }
+
+        debug {
+            minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
+        }
+
+        snapshot {
+            minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        def flavor = variant.mergedFlavor
+        def versionCode = flavor.versionCode
+        def versionName = flavor.versionName
+        if (variant.buildType.isDebuggable()) {
+            versionCode += 1
+            def suffix = "+${getGitHash()}"
+            versionName = versionName + suffix
+        }
+        flavor.versionCode = versionCode
+        flavor.versionName = versionName
+
+        variant.resValue "string", "li_sdk_ui_version", "${versionName}"
+        variant.buildConfigField "String", "LI_SDK_UI_VERSION", "\"${versionName}\""
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:design:27.0.2"
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile('lithium.community.android.sdk:li-android-sdk-core:1.3.0+', {
+        changing = true
+    })
+}
+
+preBuild.dependsOn('checkstyle')
+assemble.dependsOn('lint')
+check.dependsOn('checkstyle')
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../docs/")
+    failOnError false
+}
+
+task androidJavadocs(type: Javadoc) {
+    failOnError = false
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../docs/")
+    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath += files(ext.androidJar)
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task uploadLocalArchives(type: Upload) {
+    configuration = configurations.archives
+    uploadDescriptor = true
+    repositories {
+        mavenDeployer {
+            pom.groupId = groupId
+            pom.artifactId = artifactId
+            pom.version = versionName + "+${getGitHash()}"
+            repository(url: mavenLocal().url)
+        }
+    }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.groupId = groupId
+        pom.artifactId = artifactId
+        pom.version = versionName
+        repository(url: "file://${localReleaseDest}")
+    }
+}
+
+task zipRelease(type: Zip) {
+    from localReleaseDest
+    destinationDir buildDir
+    archiveName "${artifactId}-${versionName}.zip"
+}
+
+task generateRelease << {
+    println "Release ${versionName} can be found at ${localReleaseDest}/"
+    println "Release ${versionName} zipped can be found ${buildDir}/release-${versionName}.zip"
+}
+
+generateRelease.dependsOn(uploadArchives)
+generateRelease.dependsOn(zipRelease)
+generateRelease.dependsOn(javadoc)
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name artifactId
+                version versionName + "+${getGitHash()}"
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = repositoryName
+        name = artifactId
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}

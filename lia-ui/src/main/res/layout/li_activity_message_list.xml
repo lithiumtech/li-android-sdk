@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/li_toolbar"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="?android:attr/actionBarSize"
+        android:id="@+id/li_articles_fragment_container"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/li_ask_question_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/li_fab_margin"
+        android:tint="@color/li_lightBg"
+        android:src="?attr/li_theme_askQuestBubbleIcon" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lithium.community.android.sdk.ui.components">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application>
+        <activity
+            android:name=".activities.LiSupportHomeActivity"
+            android:label="@string/li_support_activity_title"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.LiSearchActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.LiCreateMessageActivity"
+            android:label="@string/li_title_activity_create_message"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".activities.LiConversationActivity"
+            android:label="@string/li_title_activity_messages"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.LiBrowseActivity"
+            android:label="@string/li_title_activity_browse"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.LiMessageListActivity"
+            android:label="@string/li_title_activity_articles"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.LiReportAbuseActivity"
+            android:label="@string/li_notify_moderator"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+    </application>
+
+</manifest>

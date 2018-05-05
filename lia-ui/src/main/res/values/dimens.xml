@@ -1,0 +1,24 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="li_activity_horizontal_margin">16dp</dimen>
+    <dimen name="li_activity_vertical_margin">16dp</dimen>
+    <dimen name="li_fab_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="li_nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="li_general_padding">5dp</dimen>
+    <dimen name="li_listViewPadding">10dp</dimen>
+    <dimen name="li_post_user_image_dimen">25dp</dimen>
+    <dimen name="li_article_status_pinned_img_height">25dp</dimen>
+    <dimen name="li_article_status_pinned_img_width">25dp</dimen>
+    <dimen name="li_article_accept_img_height">25dp</dimen>
+    <dimen name="li_article_accept_img_width">25dp</dimen>
+    <dimen name="li_message_original_post_title_text_size">18sp</dimen>
+    <dimen name="li_browse_one_level_up_sub_text">12sp</dimen>
+    <dimen name="li_shim_margin">2.5dp</dimen>
+    <dimen name="li_article_status_detail_img_width">10dp</dimen>
+    <dimen name="li_theme_articleList_newReplyFontSize">10sp</dimen>
+    <dimen name="li_theme_articleListDetailsTxtSize">11sp</dimen>
+    <dimen name="li_ask_title_label_size">17sp</dimen>
+    <dimen name="li_browse_dialog_title_size">20sp</dimen>
+    <dimen name="li_selected_upload_image_size">50dp</dimen>
+</resources>

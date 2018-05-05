@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="lithium.community.android.sdk.ui.components.activities.LiCreateMessageActivity">
+
+
+    <include layout="@layout/li_toolbar"/>
+    <include layout="@layout/li_user_not_logged_in"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/li_create_message_fragment_container"
+        android:paddingTop="?android:attr/actionBarSize"/>
+
+</android.support.design.widget.CoordinatorLayout>

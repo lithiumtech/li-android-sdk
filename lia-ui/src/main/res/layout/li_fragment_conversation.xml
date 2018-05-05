@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/li_general_padding">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/li_conversation_footer"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/li_general_padding"
+        android:layout_alignParentBottom="true">
+        <lithium.community.android.sdk.ui.components.custom.ui.LiRoundedImageView
+            android:layout_width="@dimen/li_post_user_image_dimen"
+            android:layout_height="@dimen/li_post_user_image_dimen"
+            android:id="@+id/li_user_image"
+            android:layout_marginStart="10dp"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/li_post_add_a_reply_txt"
+            android:padding="@dimen/li_general_padding"
+            android:text="@string/li_add_a_reply_txt"/>
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/li_swipeable_items_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/li_conversation_footer">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/li_main_content_container">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/li_supportFragmentRecycler"
+                android:name="lithium.community.lithosphere.QuestionsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="LinearLayoutManager"/>
+            <include layout="@layout/li_user_not_logged_in" />
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

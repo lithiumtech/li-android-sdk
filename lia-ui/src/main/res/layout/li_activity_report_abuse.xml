@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="lithium.community.android.sdk.ui.components.activities.LiConversationActivity">
+
+    <include layout="@layout/li_toolbar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/li_report_abuse_label"
+            android:text="@string/li_tell_us_why_inappropriate"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/li_general_padding"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/li_report_abuse_label_color"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:background="@drawable/li_border_light"
+            android:padding="@dimen/li_general_padding"
+            android:layout_margin="@dimen/li_general_padding"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/li_report_abuse_label"
+            android:id="@+id/li_report_abuse_description"/>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
