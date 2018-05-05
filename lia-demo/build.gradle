@@ -49,7 +49,6 @@ dependencies {
 
     compile project(':lia-core')
     compile project(':lia-ui')
-    compile "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
 
     testCompile 'junit:junit:4.12'
 }
