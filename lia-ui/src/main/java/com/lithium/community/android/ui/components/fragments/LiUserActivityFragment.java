@@ -27,10 +27,24 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.lithium.community.android.api.LiClient;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.request.LiClientRequestParams;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.model.response.LiTargetModel;
+import com.lithium.community.android.model.response.LiUser;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.activities.LiCreateMessageActivity;
 import com.lithium.community.android.ui.components.adapters.LiMessageListAdapter;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,20 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.model.response.LiTargetModel;
-import lithium.community.android.sdk.model.response.LiUser;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.rest.LiGetClientResponse;
-import lithium.community.android.sdk.ui.components.R;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 /**
  * This fragment extends {@link LiBaseFragment} and displays Messages that are authored by the logged in user.
@@ -183,7 +183,7 @@ public class LiUserActivityFragment extends LiBaseFragment {
 
     /**
      * Get all the subscribed Messages for the logged in user.
-     * Gets a list of {@link lithium.community.android.sdk.model.response.LiSubscriptions} and extracts {@link LiMessage}
+     * Gets a list of {@link com.lithium.community.android.model.response.LiSubscriptions} and extracts {@link LiMessage}
      * that gets added to the {@link List<LiMessage>} response
      */
     public void getSubscriptions() {

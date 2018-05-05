@@ -34,11 +34,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiSearchFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
+
+import java.util.ArrayList;
 
 /**
  * This class is responsible for displaying the Search screen.

@@ -45,9 +45,24 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lithium.community.android.api.LiClient;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.request.LiClientRequestParams;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.rest.LiPostClientResponse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.adapters.LiCreateMessageAdapter;
+import com.lithium.community.android.ui.components.custom.ui.LiRoundedImageView;
 import com.lithium.community.android.ui.components.utils.LiImageHelper;
+import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiImageUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -56,23 +71,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.rest.LiGetClientResponse;
-import lithium.community.android.sdk.rest.LiPostClientResponse;
-import lithium.community.android.sdk.ui.components.R;
-
-import com.lithium.community.android.ui.components.custom.ui.LiRoundedImageView;
-import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
-import lithium.community.android.sdk.utils.LiImageUtils;
 
 /**
  * This fragment extends {@link DialogFragment}

@@ -25,14 +25,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
-import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.response.LiBrowse;
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.response.LiBrowse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiBrowseFragment;
 import com.lithium.community.android.ui.components.fragments.LiOnMessageRowClickListener;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
+
+import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link LiBrowse} and makes a call to the

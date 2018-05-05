@@ -35,26 +35,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.lithium.community.android.api.LiClient;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.activities.LiConversationActivity;
 import com.lithium.community.android.ui.components.adapters.LiBaseRecyclerAdapter;
+import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.net.URISyntaxException;
 import java.util.List;
-
-import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.rest.LiGetClientResponse;
-import lithium.community.android.sdk.ui.components.R;
-
-import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 /**
  * This fragment is an abstract base class which takes care of getting appropriate LiClient,
@@ -86,6 +83,7 @@ public abstract class LiBaseFragment extends DialogFragment
      * For now there is no behavior on long click of the row
      */
     protected LiOnMessageRowClickListener mListener = new LiOnMessageRowClickListener() {
+
         @Override
         public void onMessageRowClick(LiBaseModel item) {
             LiMessage message = (LiMessage) item;

@@ -30,10 +30,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiMessageListFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 /**
  * This activity is responsible for painting the the article list on the screen.

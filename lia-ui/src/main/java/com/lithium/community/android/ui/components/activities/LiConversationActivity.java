@@ -23,7 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiConversationFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 

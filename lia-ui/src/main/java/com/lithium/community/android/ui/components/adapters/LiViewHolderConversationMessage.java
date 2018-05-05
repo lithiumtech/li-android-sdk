@@ -31,7 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.custom.ui.LiRoundedImageView;
 
 /**

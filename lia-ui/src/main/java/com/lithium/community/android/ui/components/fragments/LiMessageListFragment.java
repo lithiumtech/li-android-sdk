@@ -23,31 +23,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lithium.community.android.api.LiClient;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.request.LiClientRequestParams;
+import com.lithium.community.android.model.response.LiFloatedMessageModel;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.adapters.LiMessageListAdapter;
+import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import lithium.community.android.sdk.api.LiClient;
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.model.LiBaseModel;
-import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.model.response.LiFloatedMessageModel;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.rest.LiGetClientResponse;
-import lithium.community.android.sdk.ui.components.R;
-
-import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
 
 
 /**
@@ -62,12 +59,12 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
  * i.putExtra(LiSDKConstants.SELECTED_BOARD_NAME, selectedCategory.getTitle());
  * i.putExtra(LiSDKConstants.APPLY_ARTICLES_COMMON_HEADERS, true/false);
  * <p>
- * {@link LiCoreSDKConstants.SELECTED_BOARD_ID} is required by the activity to know which board the user was on when the board name (from browse all screen)
+ * {@link LiSDKConstants#SELECTED_BOARD_ID} is required by the activity to know which board the user was on when the board name (from browse all screen)
  * button was clicked.
  * This is also used for deciding whether the screen would show top 25 messages or only the message from the clicked board. Default is null and if null then
  * top 25 message from the community are displayed.
- * {@link LiCoreSDKConstants.SELECTED_BOARD_NAME} is required by the activity to update the actionbar title with the selected board name.
- * {@link LiCoreSDKConstants.APPLY_ARTICLES_COMMON_HEADERS} is required by the activity to show the default headers ("Ask a question and Browse All") or not.
+ * {@link LiSDKConstants#SELECTED_BOARD_NAME} is required by the activity to update the actionbar title with the selected board name.
+ * {@link LiSDKConstants#APPLY_ARTICLES_COMMON_HEADERS} is required by the activity to show the default headers ("Ask a question and Browse All") or not.
  * Default is false and it will not show the headers
  */
 public class LiMessageListFragment extends LiBaseFragment {

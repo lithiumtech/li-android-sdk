@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Lithium Technologies Pvt Ltd
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,46 +15,49 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="lithium.community.android.sdk.ui.components">
+    package="com.lithium.community.android.ui">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application>
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiSupportHomeActivity"
+            android:name=".components.activities.LiSupportHomeActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/li_support_activity_title"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiSearchActivity"
+            android:name=".components.activities.LiSearchActivity"
+            android:configChanges="orientation|screenSize"
             android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiCreateMessageActivity"
+            android:name=".components.activities.LiCreateMessageActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/li_title_activity_create_message"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|screenSize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiConversationActivity"
+            android:name=".components.activities.LiConversationActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/li_title_activity_messages"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiBrowseActivity"
+            android:name=".components.activities.LiBrowseActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/li_title_activity_browse"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiMessageListActivity"
+            android:name=".components.activities.LiMessageListActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/li_title_activity_articles"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.lithium.community.android.ui.components.activities.LiReportAbuseActivity"
-            android:label="@string/li_notify_moderator"
+            android:name=".components.activities.LiReportAbuseActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:label="@string/li_notify_moderator"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

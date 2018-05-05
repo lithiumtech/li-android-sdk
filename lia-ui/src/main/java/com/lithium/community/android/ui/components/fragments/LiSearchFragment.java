@@ -23,15 +23,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.model.request.LiClientRequestParams;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.adapters.LiMessageListAdapter;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.ui.components.R;
 
 /**
  * This fragment extends {@link LiBaseFragment} and displays the Search results for a given keyword.

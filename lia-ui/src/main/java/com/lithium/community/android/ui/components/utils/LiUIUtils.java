@@ -25,16 +25,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.lithium.community.android.model.LiBaseModelImpl;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.ui.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import lithium.community.android.sdk.model.LiBaseModelImpl;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.ui.components.R;
 
 /**
  * Created by sumit.pannalall on 10/12/16.
@@ -71,7 +71,10 @@ public class LiUIUtils {
         if (context != null) {
             ConnectivityManager cm = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            NetworkInfo netInfo = null;
+            if (cm != null) {
+                netInfo = cm.getActiveNetworkInfo();
+            }
             //should check null because in airplane mode it will be null
             return (netInfo != null && netInfo.isConnected());
         }

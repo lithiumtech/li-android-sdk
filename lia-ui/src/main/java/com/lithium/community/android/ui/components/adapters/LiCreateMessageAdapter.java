@@ -31,14 +31,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.model.response.LiMessage;
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.response.LiMessage;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.custom.ui.LiSoftKeyboardLsnrLinearLayout;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
+import com.squareup.picasso.Picasso;
 
 
 /**

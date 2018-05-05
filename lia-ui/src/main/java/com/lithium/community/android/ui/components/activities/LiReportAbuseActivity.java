@@ -30,15 +30,15 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import lithium.community.android.sdk.exception.LiRestResponseException;
-import lithium.community.android.sdk.manager.LiClientManager;
-import lithium.community.android.sdk.model.request.LiClientRequestParams;
-import lithium.community.android.sdk.rest.LiAsyncRequestCallback;
-import lithium.community.android.sdk.rest.LiBaseRestRequest;
-import lithium.community.android.sdk.rest.LiPostClientResponse;
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.model.request.LiClientRequestParams;
+import com.lithium.community.android.rest.LiAsyncRequestCallback;
+import com.lithium.community.android.rest.LiBaseRestRequest;
+import com.lithium.community.android.rest.LiPostClientResponse;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 /**
  * Created by Lithium Technologies Inc on 4/5/17.
@@ -53,9 +53,9 @@ import lithium.community.android.sdk.utils.LiCoreSDKConstants;
  *          i.putExtras(bundle);
  *          activity.startActivity(i);
  * </pre>
- * {@link LiCoreSDKConstants}.REPORT_ABUSE_MESSAGE_ID ID of the message which is being reported as abuse
- * {@link LiCoreSDKConstants}.REPORT_ABUSE_AUTHOR_ID ID of the author of the message which is being reported as abuse
- * {@link LiCoreSDKConstants}.REPORT_ABUSE_MESSAGE_BODY body of the message which is being reported as abuse
+ * {@link LiSDKConstants#REPORT_ABUSE_MESSAGE_ID ID of the message which is being reported as abuse
+ * {@link LiSDKConstants#REPORT_ABUSE_AUTHOR_ID ID of the author of the message which is being reported as abuse
+ * {@link LiSDKConstants#REPORT_ABUSE_MESSAGE_BODY body of the message which is being reported as abuse
  */
 
 public class LiReportAbuseActivity extends AppCompatActivity {

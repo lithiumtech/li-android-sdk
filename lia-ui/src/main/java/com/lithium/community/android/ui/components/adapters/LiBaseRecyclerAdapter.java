@@ -19,10 +19,10 @@ package com.lithium.community.android.ui.components.adapters;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.List;
-
-import lithium.community.android.sdk.model.LiBaseModel;
+import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.ui.components.fragments.LiOnMessageRowClickListener;
+
+import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that is common to sdk fragments

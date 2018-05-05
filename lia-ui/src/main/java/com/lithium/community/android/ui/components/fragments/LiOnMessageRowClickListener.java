@@ -16,7 +16,8 @@
 
 package com.lithium.community.android.ui.components.fragments;
 
-import lithium.community.android.sdk.model.LiBaseModel;
+
+import com.lithium.community.android.model.LiBaseModel;
 
 /**
  * An interface for adding click and long click behaviors to a particular message from the list of messages displayed.

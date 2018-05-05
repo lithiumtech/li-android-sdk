@@ -22,10 +22,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.ui.R;
+import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
 import com.lithium.community.android.ui.components.fragments.LiMessageListFragment;
 import com.lithium.community.android.ui.components.fragments.LiUserActivityFragment;
-import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
 
 /**
  * {@link FragmentStatePagerAdapter} that displays the two tabs on the {@link LiSupportHomeActivity}

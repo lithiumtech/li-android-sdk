@@ -33,13 +33,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import java.net.URISyntaxException;
-
-import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.android.sdk.ui.components.R;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
-import lithium.community.android.sdk.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
+
+import java.net.URISyntaxException;
 
 /**
  * This class is responsible for displaying the Ask a Question screen.
