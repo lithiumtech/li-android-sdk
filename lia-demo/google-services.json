@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "132005067049",
+    "firebase_url": "https://li-android-sdk-example.firebaseio.com",
+    "project_id": "li-android-sdk-example",
+    "storage_bucket": "li-android-sdk-example.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132005067049:android:77275ec6297c571f",
+        "android_client_info": {
+          "package_name": "lithium.community.sdk.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132005067049-e77kggi4fr03kap2bm4m5d1ihv8giimc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lithium.community.sdk.example",
+            "certificate_hash": "f75e7b3382a5db68f41708e23c70437a24684ba4"
+          }
+        },
+        {
+          "client_id": "132005067049-hvcbpl18cg4jq6v8m80msci6qd0sv52s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDllGxkiLMGARd2LYkLBqiySfxObVG1EZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132005067049-hvcbpl18cg4jq6v8m80msci6qd0sv52s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

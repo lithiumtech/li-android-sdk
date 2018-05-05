@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-include ':lia-core', ':lia-ui', ':lia-demo'
+package com.lithium.community.sdk.example;
+
+import android.app.Application;
+import android.util.Log;
+
+/**
+ * @author adityasharat
+ */
+public class MainApplicationOverride extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i(MainApplicationOverride.class.getSimpleName(), "Start Lithium Example in development mode.");
+    }
+}

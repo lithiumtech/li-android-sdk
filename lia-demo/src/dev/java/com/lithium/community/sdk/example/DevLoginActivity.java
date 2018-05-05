@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-include ':lia-core', ':lia-ui', ':lia-demo'
+package com.lithium.community.sdk.example;
+
+/**
+ * @author adityasharat
+ */
+public class DevLoginActivity extends LoginActivity {
+
+    @Override
+    protected boolean areCredentialsProvided() {
+        return true;
+    }
+}

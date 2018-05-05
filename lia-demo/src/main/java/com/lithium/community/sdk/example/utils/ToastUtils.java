@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-include ':lia-core', ':lia-ui', ':lia-demo'
+package com.lithium.community.sdk.example.utils;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
+
+/**
+ * @author adityasharat
+ */
+public class ToastUtils {
+
+    public static void notInitialized(@NonNull Context context) {
+        Toast.makeText(context, "Li SDK has not been initialized. ", Toast.LENGTH_SHORT).show();
+    }
+
+}

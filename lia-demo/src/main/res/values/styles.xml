@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright 2018 Lithium Technologies Pvt Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--Attributes for Lithium CoreSDK-->
+        <item name="li_theme_popupOverlay">@style/AppTheme.PopupOverlay</item>
+        <item name="li_theme_appBarOverlay">@style/AppTheme.AppBarOverlay</item>
+
+        <!--Attributes for Lithium SDK UI Components-->
+        <item name="li_theme_articleConversationStyleIcon">@drawable/ic_forum_black</item>
+        <item name="li_theme_articleDoneIcon">@drawable/ic_done_black</item>
+        <item name="li_theme_articlePinnedIcon">@drawable/ic_thumb_tack</item>
+        <item name="li_theme_askQuestBubbleIcon">@drawable/ic_chat_bubble_black</item>
+        <item name="li_theme_uploadPhotoIcon">@android:drawable/ic_menu_camera</item>
+        <item name="li_theme_shareMessageIcon">@android:drawable/ic_menu_share</item>
+        <item name="li_theme_browseListCategoryIcon">@drawable/ic_folder_black</item>
+        <item name="li_theme_browseListBoardIcon">@drawable/ic_forum_black</item>
+        <item name="li_theme_browseHeaderArrow">@drawable/ic_keyboard_arrow_right_black</item>
+        <item name="li_theme_messageKudoBtnIcon">@drawable/ic_thumb_up_black</item>
+        <item name="li_theme_messageReplyBtnIcon">@drawable/ic_reply_black</item>
+        <item name="li_theme_messageAcceptBtnIcon">@drawable/ic_done_black</item>
+        <item name="li_theme_newReplyTxtColor">@color/li_theme_newReplyTxtColor</item>
+        <item name="li_theme_newReplyTxtSize">@dimen/li_theme_articleList_newReplyFontSize</item>
+        <item name="li_theme_messageUserAvatarIcon">@drawable/ic_person_black</item>
+        <item name="li_theme_askQSelectedImageRemoveIcon">@drawable/ic_remove_circle_black</item>
+        <item name="li_theme_messageUnAcceptBtnIcon">@drawable/ic_clear_black</item>
+        <item name="li_theme_askQPostQuestionBtn">@drawable/ic_send_white</item>
+        <item name="li_theme_askQuestSelectedBoardColor">@color/li_theme_askQuestSelectedBoardColor</item>
+        <item name="li_theme_errorLoginBtnTextColor">@color/li_theme_errorLoginBtnTextColor</item>
+        <item name="li_theme_articleListPinnedTxtColor">@color/li_theme_articleListPinnedTxtColor</item>
+        <item name="li_theme_articleListResolvedTxtColor">@color/li_theme_articleListResolvedTxtColor</item>
+        <item name="li_theme_articleListDetailsTxtSize">@dimen/li_theme_articleListDetailsTxtSize</item>
+        <item name="li_theme_background">@android:color/secondary_text_dark</item>
+        <item name="li_theme_backbutton">@drawable/ic_arrow_back_black</item>
+        <item name="li_theme_search_text_hint_color">@color/text_hint_color</item>
+        <item name="li_theme_search_text_color">@android:color/white</item>
+        <item name="li_theme_searchIcon">@android:drawable/ic_menu_search</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+</resources>
