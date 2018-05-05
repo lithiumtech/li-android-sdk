@@ -81,8 +81,8 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
     private int firstDiscussionIdx;
     private String htmlTemplate;
 
-    public LiConversationAdapter(List<LiBaseModel> items, LiOnMessageRowClickListener listener,
-            Activity activity, RecyclerView recyclerView, LiConversationFragment fragment) {
+    public LiConversationAdapter(List<LiBaseModel> items, LiOnMessageRowClickListener listener, Activity activity,
+            RecyclerView recyclerView, LiConversationFragment fragment) {
         super(items, activity, listener);
         analyzeItems();
         htmlTemplate = LiUIUtils.getRawString(activity, R.raw.message_template);
@@ -173,10 +173,10 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.li_action_report_abuse) {
-                    Intent i = new Intent(activity, LiReportAbuseActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString(LiSDKConstants.REPORT_ABUSE_MESSAGE_ID, item.getId() + "");
                     bundle.putString(LiSDKConstants.REPORT_ABUSE_AUTHOR_ID, item.getAuthor().getId() + "");
+                    Intent i = new Intent(activity, LiReportAbuseActivity.class);
                     i.putExtras(bundle);
                     activity.startActivity(i);
                     return true;
@@ -187,31 +187,26 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                             isMarkUnread = true;
                         }
 
-
-                        LiClientRequestParams.LiMarkMessageParams params =
-                                new LiClientRequestParams.LiMarkMessageParams(activity,
-                                        String.valueOf(item.getAuthor().getId()),
-                                        String.valueOf(item.getId()), isMarkUnread);
+                        LiClientRequestParams.LiMarkMessageParams params = new LiClientRequestParams.LiMarkMessageParams(activity,
+                                String.valueOf(item.getAuthor().getId()),
+                                String.valueOf(item.getId()), isMarkUnread);
                         try {
-                            LiClientManager.getMarkMessagePostClient(params).processAsync(
-                                    new LiAsyncRequestCallback<LiPostClientResponse>() {
-                                        @Override
-                                        public void onSuccess(LiBaseRestRequest request,
-                                                LiPostClientResponse response)
-                                                throws LiRestResponseException {
-                                            if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                                                item.getUserContext().setRead(!item.getUserContext().getRead());
-                                                LiUIUtils.showMarkReadSuccessful(activity, item);
-                                            } else {
-                                                LiUIUtils.showMarkReadUnSuccessful(activity, item);
-                                            }
-                                        }
+                            LiClientManager.getMarkMessagePostClient(params).processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
+                                @Override
+                                public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+                                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                        item.getUserContext().setRead(!item.getUserContext().getRead());
+                                        LiUIUtils.showMarkReadSuccessful(activity, item);
+                                    } else {
+                                        LiUIUtils.showMarkReadUnSuccessful(activity, item);
+                                    }
+                                }
 
-                                        @Override
-                                        public void onError(Exception exception) {
-                                            LiUIUtils.showMarkReadUnSuccessful(activity, item);
-                                        }
-                                    });
+                                @Override
+                                public void onError(Exception exception) {
+                                    LiUIUtils.showMarkReadUnSuccessful(activity, item);
+                                }
+                            });
                         } catch (LiRestResponseException e) {
                             Log.d(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
                         }
@@ -221,83 +216,77 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                 } else if (menuItem.getItemId() == R.id.li_action_delete) {
 
                     // Todo: Display 'are you sure' popup, could/should be genericized to util?
-                    DialogInterface.OnClickListener dialogClickListener =
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(final DialogInterface dialog, int which) {
-                                    switch (which) {
-                                        case DialogInterface.BUTTON_POSITIVE:
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
 
-                                            LiClientRequestParams.LiMessageDeleteClientRequestParams params =
-                                                    new LiClientRequestParams.LiMessageDeleteClientRequestParams(activity, String.valueOf(item.getId()));
+                                    LiClientRequestParams.LiMessageDeleteClientRequestParams params;
+                                    params = new LiClientRequestParams.LiMessageDeleteClientRequestParams(activity, String.valueOf(item.getId()));
 
-                                            try {
-                                                LiClientManager.getMessageDeleteClient(params).processAsync(
-                                                        new LiAsyncRequestCallback<LiDeleteClientResponse>() {
-                                                            @Override
-                                                            public void onSuccess(LiBaseRestRequest request,
-                                                                    LiDeleteClientResponse response) throws LiRestResponseException {
-                                                                if (activity == null || fragment == null || !fragment.isAdded()) {
-                                                                    return;
-                                                                }
-                                                                LiBaseResponse deleteResponse =
-                                                                        response.getResponse();
-                                                                if (deleteResponse.getHttpCode()
-                                                                        == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                                                                    activity.runOnUiThread(new Runnable() {
-                                                                        @Override
-                                                                        public void run() {
-                                                                            //if there was only one message in the conversation and delete was successful,
-                                                                            // finish the activity
-                                                                            if (getItems().size() == 1 || position == 0) {
-                                                                                activity.finish();
-                                                                            } else {
-                                                                                fragment.onRefresh();
-                                                                            }
-
-                                                                            Toast.makeText(activity,
-                                                                                    R.string.li_action_delete_successful,
-                                                                                    Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                                    });
-                                                                } else {
-                                                                    dialog.dismiss();
-                                                                    activity.runOnUiThread(new Runnable() {
-                                                                        @Override
-                                                                        public void run() {
-                                                                            Toast.makeText(activity,
-                                                                                    R.string.li_action_delete_unsuccessful,
-                                                                                    Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                                    });
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onError(Exception exception) {
-                                                                dialog.dismiss();
-                                                                activity.runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        Toast.makeText(activity,
-                                                                                R.string.li_action_delete_unsuccessful,
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-                                                            }
+                                    try {
+                                        LiClientManager.getMessageDeleteClient(params).processAsync(
+                                                new LiAsyncRequestCallback<LiDeleteClientResponse>() {
+                                                    @Override
+                                                    public void onSuccess(LiBaseRestRequest request, LiDeleteClientResponse response) {
+                                                        if (activity == null || fragment == null || !fragment.isAdded()) {
+                                                            return;
                                                         }
-                                                );
-                                            } catch (LiRestResponseException e) {
-                                                Log.d(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
-                                            }
-                                            break;
+                                                        LiBaseResponse deleteResponse = response.getResponse();
+                                                        if (deleteResponse.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                                            activity.runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    //if there was only one message in the conversation and delete was successful,
+                                                                    // finish the activity
+                                                                    if (getItems().size() == 1 || position == 0) {
+                                                                        activity.finish();
+                                                                    } else {
+                                                                        fragment.onRefresh();
+                                                                    }
 
-                                        case DialogInterface.BUTTON_NEGATIVE:
-                                            dialog.dismiss();
-                                            break;
+                                                                    Toast.makeText(activity,
+                                                                            R.string.li_action_delete_successful,
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        } else {
+                                                            dialog.dismiss();
+                                                            activity.runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    Toast.makeText(activity, R.string.li_action_delete_unsuccessful, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onError(Exception exception) {
+                                                        dialog.dismiss();
+                                                        activity.runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                Toast.makeText(activity, R.string.li_action_delete_unsuccessful, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                        );
+                                    } catch (LiRestResponseException e) {
+                                        Log.d(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
                                     }
-                                }
-                            };
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    };
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setMessage(R.string.li_are_you_sure)
                             .setPositiveButton(R.string.li_yes, dialogClickListener)
@@ -412,8 +401,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                     public void run() {
                                         liViewHolder.mPostAcceptBtn.setVisibility(View.VISIBLE);
                                         liViewHolder.mPosAcceptProgressBar.setVisibility(View.GONE);
-                                        LiUIUtils.showInAppNotification(activity,
-                                                R.string.li_accept_error_txt);
+                                        LiUIUtils.showInAppNotification(activity, R.string.li_accept_error_txt);
                                     }
                                 });
                             }
@@ -454,12 +442,12 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
         View.OnClickListener replyClickListener = new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Intent i = new Intent(activity, LiCreateMessageActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(LiSDKConstants.ASK_Q_CAN_SELECT_A_BOARD, false);
                 bundle.putLong(LiSDKConstants.SELECTED_MESSAGE_ID, item.getId());
                 LiMessage originalMessage = (LiMessage) mValues.get(0);
                 bundle.putString(LiSDKConstants.ORIGINAL_MESSAGE_TITLE, originalMessage.getSubject());
+                Intent i = new Intent(activity, LiCreateMessageActivity.class);
                 i.putExtras(bundle);
                 activity.startActivity(i);
             }
@@ -495,13 +483,12 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                             String.valueOf(message.getId()));
 
                     if (message.getUserContext().getKudo()) {
-                        LiClientRequestParams liUnKudoClientRequestParams = new LiClientRequestParams.LiUnKudoClientRequestParams(activity,
-                                String.valueOf(message.getId()));
+                        LiClientRequestParams liUnKudoClientRequestParams;
+                        liUnKudoClientRequestParams = new LiClientRequestParams.LiUnKudoClientRequestParams(activity, String.valueOf(message.getId()));
                         final LiClient unKudoClient = LiClientManager.getUnKudoClient(liUnKudoClientRequestParams);
                         unKudoClient.processAsync(new LiAsyncRequestCallback<LiDeleteClientResponse>() {
                             @Override
-                            public void onSuccess(LiBaseRestRequest request, final LiDeleteClientResponse response)
-                                    throws LiRestResponseException {
+                            public void onSuccess(LiBaseRestRequest request, final LiDeleteClientResponse response) {
                                 if (activity == null) {
                                     return;
                                 }
@@ -513,10 +500,8 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                         liViewHolder.mPosKudoBtn.setVisibility(View.VISIBLE);
                                         liViewHolder.mPosKudoProgressBar.setVisibility(View.GONE);
 
-                                        if (response.getResponse().getHttpCode()
-                                                != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                                            LiUIUtils.showInAppNotification(activity,
-                                                    R.string.li_kudo_error_txt);
+                                        if (response.getResponse().getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                            LiUIUtils.showInAppNotification(activity, R.string.li_kudo_error_txt);
                                             return;
                                         }
                                         LiKudoMetrics kudoMetrics = message.getKudoMetrics();
@@ -548,8 +533,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                             liViewHolder.mPostKudoCount.setEnabled(true);
                                             liViewHolder.mPosKudoBtn.setVisibility(View.VISIBLE);
                                             liViewHolder.mPosKudoProgressBar.setVisibility(View.GONE);
-                                            LiUIUtils.showInAppNotification(activity,
-                                                    R.string.li_kudo_error_txt);
+                                            LiUIUtils.showInAppNotification(activity, R.string.li_kudo_error_txt);
                                         }
                                     });
                                 }

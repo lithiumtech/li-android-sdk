@@ -24,7 +24,8 @@ import android.view.View;
  */
 
 public class LiViewHolder extends RecyclerView.ViewHolder {
-    final private View mView;
+
+    private final View mView;
 
     LiViewHolder(View view) {
         super(view);

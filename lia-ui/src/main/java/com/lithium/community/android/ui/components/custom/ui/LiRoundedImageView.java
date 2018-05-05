@@ -29,16 +29,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 
 /**
  * This is a custom ImageView which displays an image with Round layout instead of normal rectangle one.
  */
-public class LiRoundedImageView extends ImageView {
+public class LiRoundedImageView extends AppCompatImageView {
 
     public LiRoundedImageView(Context context) {
         super(context);
@@ -66,7 +66,6 @@ public class LiRoundedImageView extends ImageView {
         }
 
         Bitmap output = Bitmap.createBitmap(radius, radius, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
 
         final String color = "#BAB399";
         final Paint paint = new Paint();
@@ -75,6 +74,8 @@ public class LiRoundedImageView extends ImageView {
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
+
+        Canvas canvas = new Canvas(output);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.parseColor(color));
         canvas.drawCircle(radius / 2 + 0.7f, radius / 2 + 0.7f,
@@ -100,10 +101,12 @@ public class LiRoundedImageView extends ImageView {
         Bitmap b = null;
         if (drawable instanceof BitmapDrawable) {
             b = ((BitmapDrawable) drawable).getBitmap();
-        } else if (drawable instanceof VectorDrawable) {
-            b = getBitmap((VectorDrawable) drawable);
-        } else {
-            Log.e(LiSDKConstants.GENERIC_LOG_TAG, "unsupported drawable type");
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (drawable instanceof VectorDrawable) {
+                b = getBitmap((VectorDrawable) drawable);
+            } else {
+                Log.e(LiSDKConstants.GENERIC_LOG_TAG, "unsupported drawable type");
+            }
         }
 //        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
         if (b != null) {

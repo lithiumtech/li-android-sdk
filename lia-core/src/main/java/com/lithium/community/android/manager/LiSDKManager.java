@@ -145,8 +145,9 @@ public final class LiSDKManager extends LiAuthManager {
 
     private static void updatePreferences(@NonNull Context context) {
         if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID) == null) {
-            getInstance().putInSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID,
-                    LiCoreSDKUtils.getRandomHexString()); // generate a visitor ID and save it
+
+            // generate a visitor ID and save it
+            getInstance().putInSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
     }
 

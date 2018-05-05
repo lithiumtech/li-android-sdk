@@ -209,27 +209,17 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-            @NonNull String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_REQUEST: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted.
                     fragment.startImageChooserActivity();
-
                 } else {
-                    LiUIUtils.showInAppNotification(this,
-                            R.string.li_image_read_no_permission);
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    LiUIUtils.showInAppNotification(this, R.string.li_image_read_no_permission);
                 }
-                return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -250,5 +240,4 @@ public class LiCreateMessageActivity extends AppCompatActivity {
         imageSelectionIntent = data;
         fragment.handleImageSelection(imageSelectionIntent);
     }
-
 }

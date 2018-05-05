@@ -343,8 +343,6 @@ public class LiUserActivityFragment extends LiBaseFragment {
             sb.append("'");
         }
 
-        return "SELECT id, user_context.read, parent FROM messages WHERE parent.id in (" +
-                sb.toString() +
-                ")";
+        return "SELECT id, user_context.read, parent FROM messages WHERE parent.id in (" + sb.toString() + ")";
     }
 }

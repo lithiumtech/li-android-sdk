@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.lithium.community.android.ui.components.adapters;
 
 import android.app.Activity;
@@ -38,7 +39,6 @@ import com.lithium.community.android.ui.components.custom.ui.LiSoftKeyboardLsnrL
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.squareup.picasso.Picasso;
-
 
 /**
  * This adapter extends {@link RecyclerView.Adapter} that can display a form using which user can post a question on reply to a message
@@ -208,6 +208,8 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
                         switch (event.getAction() & MotionEvent.ACTION_MASK) {
                             case MotionEvent.ACTION_UP:
                                 v.getParent().requestDisallowInterceptTouchEvent(false);
+                                break;
+                            default:
                                 break;
                         }
                     }

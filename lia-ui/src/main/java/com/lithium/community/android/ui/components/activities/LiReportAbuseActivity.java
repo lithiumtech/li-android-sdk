@@ -86,21 +86,20 @@ public class LiReportAbuseActivity extends AppCompatActivity {
      */
     public void handleBackButton() {
         if (!TextUtils.isEmpty(reportAbuseDescriptionTxt.getText().toString())) {
-            DialogInterface.OnClickListener dialogClickListener =
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    finish();
-                                    break;
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            finish();
+                            break;
 
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
-                            }
-                        }
-                    };
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            };
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.li_are_you_sure))
                     .setPositiveButton(getString(R.string.li_yes), dialogClickListener)

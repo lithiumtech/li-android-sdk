@@ -145,8 +145,7 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
                 if (item.getUnreadReplyCount() > 1) {
                     countText = activity.getString(R.string.li_article_list_new_reply_count_plural);
                 }
-                viewHolderNormal.mLiArticleNewReplyCount.
-                        setText(String.format(countText, String.valueOf(item.getUnreadReplyCount())));
+                viewHolderNormal.mLiArticleNewReplyCount.setText(String.format(countText, String.valueOf(item.getUnreadReplyCount())));
             } else {
                 viewHolderNormal.mLiArticleNewReplyCount.setVisibility(View.GONE);
             }
@@ -160,12 +159,6 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
                     }
                 }
             });
-//            viewHolderNormal.mliMessageListRowActionBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    showPopupMenu(viewHolderNormal.mliMessageListRowActionBtn, position);
-//                }
-//            });
         }
     }
 
@@ -198,25 +191,22 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
                                         String.valueOf(item.getAuthor().getId()),
                                         String.valueOf(item.getId()), isMarkUnread);
                         try {
-                            LiClientManager.getMarkTopicPostClient(params).processAsync(
-                                    new LiAsyncRequestCallback<LiPostClientResponse>() {
-                                        @Override
-                                        public void onSuccess(LiBaseRestRequest request,
-                                                LiPostClientResponse response)
-                                                throws LiRestResponseException {
-                                            if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                                                item.getUserContext().setRead(!item.getUserContext().getRead());
-                                                LiUIUtils.showMarkReadSuccessful(activity, item);
-                                            } else {
-                                                LiUIUtils.showMarkReadUnSuccessful(activity, item);
-                                            }
-                                        }
+                            LiClientManager.getMarkTopicPostClient(params).processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
+                                @Override
+                                public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) {
+                                    if (response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                                        item.getUserContext().setRead(!item.getUserContext().getRead());
+                                        LiUIUtils.showMarkReadSuccessful(activity, item);
+                                    } else {
+                                        LiUIUtils.showMarkReadUnSuccessful(activity, item);
+                                    }
+                                }
 
-                                        @Override
-                                        public void onError(Exception exception) {
-                                            LiUIUtils.showMarkReadUnSuccessful(activity, item);
-                                        }
-                                    });
+                                @Override
+                                public void onError(Exception exception) {
+                                    LiUIUtils.showMarkReadUnSuccessful(activity, item);
+                                }
+                            });
                         } catch (LiRestResponseException e) {
                             Log.d(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
                         }
@@ -240,8 +230,7 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
      */
     protected void setupResolvedRowStatus(LiMessage item, LiViewHolderItem viewHolderNormal) {
         if (item.getLiConversation() != null && item.getLiConversation().isSolved()) {
-            viewHolderNormal.mArticleStatusSolvedText.setText(
-                    activity.getString(R.string.li_article_status_resolved));
+            viewHolderNormal.mArticleStatusSolvedText.setText(activity.getString(R.string.li_article_status_resolved));
             viewHolderNormal.mArticleStatusSolvedImg.setImageResource(R.drawable.ic_done_black);
             viewHolderNormal.mArticleSatusSolvedSeparator.setVisibility(View.VISIBLE);
             viewHolderNormal.mArticleStatusSolvedText.setVisibility(View.VISIBLE);
@@ -294,10 +283,8 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
             viewHolderNormal.mArticleStatusPinnedImg.setVisibility(View.VISIBLE);
             viewHolderNormal.mArticleStatusPinnedText.setVisibility(View.VISIBLE);
             viewHolderNormal.mArticleSatusPinnedSeparator.setVisibility(View.VISIBLE);
-            viewHolderNormal.mArticleStatusPinnedText.setText(
-                    activity.getString(R.string.li_article_status_pinned));
-            TypedArray a = activity.getTheme().obtainStyledAttributes(
-                    new int[]{R.attr.li_theme_articlePinnedIcon});
+            viewHolderNormal.mArticleStatusPinnedText.setText(activity.getString(R.string.li_article_status_pinned));
+            TypedArray a = activity.getTheme().obtainStyledAttributes(new int[]{R.attr.li_theme_articlePinnedIcon});
             int id = a.getResourceId(0, -1);
             viewHolderNormal.mArticleStatusPinnedImg.setImageResource(id);
             a.recycle();
@@ -309,14 +296,9 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
     }
 
     public LiBaseModel getItem(int position) {
-        // if headers are present then the size of the items will be +2
-        // hence while retrieving the actual item need to subtract 2 to get the original position
-//        if (applyHeaders) {
-//            return mValues.get(position-2);
-//        }
-//        else {
+
         return mValues.get(position);
-//        }
+
     }
 
     @Override
@@ -330,17 +312,6 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
         }
     }
 
-//    @Override
-//    public int getItemCount() {
-//        int itemSize = mValues.size();
-//        if (applyHeaders) {
-//            return itemSize+2;
-//        }
-//        else {
-//            return itemSize;
-//        }
-//    }
-
     private class LiViewHolderItem extends LiViewHolder {
         final View mView;
         final TextView mSubjectView;
@@ -353,7 +324,6 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
         final TextView mArticleSatusPinnedSeparator;
         final TextView mArticleSatusSolvedSeparator;
         final TextView mLiArticleNewReplyCount;
-//        final ImageView mliMessageListRowActionBtn;
 
         LiViewHolderItem(View view) {
             super(view);
@@ -368,7 +338,6 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
             mArticleSatusPinnedSeparator = view.findViewById(R.id.li_article_status_pinned_separator);
             mArticleSatusSolvedSeparator = view.findViewById(R.id.li_article_status_solved_separator);
             mLiArticleNewReplyCount = view.findViewById(R.id.li_article_new_reply_count);
-//            mliMessageListRowActionBtn = (ImageView) view.findViewById(R.id.li_message_list_row_action_btn);
         }
 
         @Override

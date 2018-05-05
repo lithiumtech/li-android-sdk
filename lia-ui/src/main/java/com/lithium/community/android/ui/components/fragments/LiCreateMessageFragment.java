@@ -17,6 +17,7 @@
 package com.lithium.community.android.ui.components.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -154,7 +155,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                 }
             });
         } catch (LiRestResponseException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -225,11 +226,11 @@ public class LiCreateMessageFragment extends DialogFragment {
         final String randomName = UUID.randomUUID().toString().substring(0, 5) + IMAGE_EXTENSION;
         final List<Intent> cameraIntents = new ArrayList<>();
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory()) +
-                File.separator +
-                LiSDKManager.getInstance().getCredentials().getTenantId() +
-                COMMUNITY_SUFFIX +
-                File.separator;
+        String fileDirectory = String.valueOf(android.os.Environment.getExternalStorageDirectory())
+                + File.separator
+                + LiSDKManager.getInstance().getCredentials().getTenantId()
+                + COMMUNITY_SUFFIX
+                + File.separator;
         final File communityRoot = new File(fileDirectory);
         communityRoot.mkdirs();
         if (android.os.Environment.getExternalStorageState().equals(
@@ -414,14 +415,11 @@ public class LiCreateMessageFragment extends DialogFragment {
 
         replyMessageClient.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
             @Override
-            public void onSuccess(LiBaseRestRequest liBaseRestRequest,
-                    LiPostClientResponse liPostClientResponse)
-                    throws LiRestResponseException {
+            public void onSuccess(LiBaseRestRequest liBaseRestRequest, LiPostClientResponse liPostClientResponse) {
                 if (!isAdded() || getActivity() == null) {
                     return;
                 }
-                if (liPostClientResponse.getResponse().getHttpCode() ==
-                        LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                if (liPostClientResponse.getResponse().getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_replyPostSuccess);
                     deleteDownloadedFile();
                     Intent intent = new Intent(getString(R.string.li_messsage_create_successful));
@@ -712,30 +710,36 @@ public class LiCreateMessageFragment extends DialogFragment {
      * then the user will see a confirmation box whether he wants to discard the form data and return back.
      */
     public void handleBackButton() {
-        if (!TextUtils.isEmpty(askQuestionBodyText)
-                || !TextUtils.isEmpty(askQuestionSubjectText)
-                || !TextUtils.isEmpty(selectedImageName)) {
-            DialogInterface.OnClickListener dialogClickListener =
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    getActivity().finish();
-                                    break;
-
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
+        Activity activity = getActivity();
+        if (!TextUtils.isEmpty(askQuestionBodyText) || !TextUtils.isEmpty(askQuestionSubjectText) || !TextUtils.isEmpty(selectedImageName)) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            Activity activity = getActivity();
+                            if (activity != null) {
+                                activity.finish();
                             }
-                        }
-                    };
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getString(R.string.li_are_you_sure))
-                    .setPositiveButton(getString(R.string.li_yes), dialogClickListener)
-                    .setNegativeButton(R.string.li_no, dialogClickListener).show();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            };
+
+            if (activity != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                builder.setMessage(getString(R.string.li_are_you_sure))
+                        .setPositiveButton(getString(R.string.li_yes), dialogClickListener)
+                        .setNegativeButton(R.string.li_no, dialogClickListener).show();
+            }
         } else {
-            getActivity().finish();
+            if (activity != null) {
+                activity.finish();
+            }
         }
     }
 
