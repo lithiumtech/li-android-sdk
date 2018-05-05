@@ -17,9 +17,10 @@
 package com.lithium.community.android.rest;
 
 
+import com.lithium.community.android.exception.LiRestResponseException;
+
 import java.io.IOException;
 
-import com.lithium.community.android.exception.LiRestResponseException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

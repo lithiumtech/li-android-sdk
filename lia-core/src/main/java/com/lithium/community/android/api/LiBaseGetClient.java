@@ -18,17 +18,16 @@ package com.lithium.community.android.api;
 
 import android.content.Context;
 
-import com.lithium.community.android.queryutil.LiQueryBuilder;
-
-import java.util.Iterator;
-import java.util.Map;
-
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.queryutil.LiQueryBuilder;
 import com.lithium.community.android.queryutil.LiQueryRequestParams;
 import com.lithium.community.android.queryutil.LiQueryValueReplacer;
 import com.lithium.community.android.rest.LiRestV2Request;
 import com.lithium.community.android.utils.LiQueryConstant;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * All "get" clients are implemented in same way. They only vary in their TYPE and LIQL query. This class brings all

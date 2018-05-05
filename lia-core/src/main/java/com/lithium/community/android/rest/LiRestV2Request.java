@@ -18,9 +18,10 @@ package com.lithium.community.android.rest;
 
 import android.content.Context;
 
+import com.lithium.community.android.manager.LiSDKManager;
+
 import java.util.Map;
 
-import com.lithium.community.android.manager.LiSDKManager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 

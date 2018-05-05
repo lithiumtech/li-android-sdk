@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.model.response.LiBrowse;
 import com.lithium.community.android.rest.LiRequestHeaderConstants;
@@ -52,8 +53,6 @@ import java.util.Set;
 
 import lithium.community.android.sdk.BuildConfig;
 import lithium.community.android.sdk.R;
-import com.lithium.community.android.manager.LiSDKManager;
-
 import okhttp3.Request;
 
 /**

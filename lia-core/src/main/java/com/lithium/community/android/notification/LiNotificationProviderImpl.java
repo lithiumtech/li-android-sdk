@@ -22,7 +22,6 @@ import android.util.Log;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiClientManager;

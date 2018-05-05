@@ -25,11 +25,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.exception.LiInitializationException;
+import com.lithium.community.android.manager.LiSDKManager;
 
-import lithium.community.android.sdk.auth.LiAppCredentials;
-import lithium.community.android.sdk.exception.LiInitializationException;
-import lithium.community.android.sdk.manager.LiSDKManager;
 
 public class InitializationActivity extends AppCompatActivity {
 

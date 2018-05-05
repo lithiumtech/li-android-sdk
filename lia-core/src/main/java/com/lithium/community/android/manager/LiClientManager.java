@@ -27,6 +27,7 @@ import com.lithium.community.android.api.LiBaseGetClient;
 import com.lithium.community.android.api.LiBasePostClient;
 import com.lithium.community.android.api.LiBasePutClient;
 import com.lithium.community.android.api.LiClient;
+import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.model.LiBaseModelImpl;
 import com.lithium.community.android.model.helpers.LiAvatar;
@@ -54,6 +55,8 @@ import com.lithium.community.android.model.response.LiMessage;
 import com.lithium.community.android.model.response.LiSubscriptions;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.queryutil.LiClientConfig;
+import com.lithium.community.android.queryutil.LiQueryRequestParams;
+import com.lithium.community.android.queryutil.LiQueryValueReplacer;
 import com.lithium.community.android.rest.LiRequestHeaderConstants;
 import com.lithium.community.android.rest.LiRestv2Client;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
@@ -62,10 +65,6 @@ import com.lithium.community.android.utils.LiQueryConstant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.queryutil.LiQueryRequestParams;
-import com.lithium.community.android.queryutil.LiQueryValueReplacer;
 
 
 /**

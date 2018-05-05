@@ -19,14 +19,13 @@ package com.lithium.community.android.model;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.lithium.community.android.model.helpers.LiPrivacyLevel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import com.lithium.community.android.model.helpers.LiPrivacyLevel;
 
 /**
  * Lithium response base model.
@@ -169,12 +168,12 @@ public class LiBaseModelImpl implements LiBaseModel {
             return value;
         }
 
-        public void setValue(@NonNull String valueStr) {
-            setValue(new LiDateInstant());
-        }
-
         public void setValue(LiDateInstant value) {
             this.value = value;
+        }
+
+        public void setValue(@NonNull String valueStr) {
+            setValue(new LiDateInstant());
         }
     }
 
@@ -191,10 +190,6 @@ public class LiBaseModelImpl implements LiBaseModel {
             return this.value;
         }
 
-        public void setValue(long value) {
-            this.value = value;
-        }
-
         public void setValue(@NonNull String valueStr) {
             LIA_DATE_TIME_FORMAT.setTimeZone(TimeZone.getDefault());
             Date dt = null;
@@ -204,6 +199,10 @@ public class LiBaseModelImpl implements LiBaseModel {
                 dt = Calendar.getInstance().getTime();
             }
             setValue(dt.getTime());
+        }
+
+        public void setValue(long value) {
+            this.value = value;
         }
     }
 

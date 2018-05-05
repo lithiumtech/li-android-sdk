@@ -24,12 +24,11 @@ import com.lithium.community.android.model.LiBaseModelImpl;
 import com.lithium.community.android.model.helpers.LiAvatar;
 import com.lithium.community.android.model.helpers.LiImage;
 import com.lithium.community.android.model.helpers.LiRanking;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.lithium.community.android.utils.LiCoreSDKConstants;
-import com.lithium.community.android.utils.LiCoreSDKUtils;
 
 /**
  * A user model represents anonymous and registered community user. Its fields provide

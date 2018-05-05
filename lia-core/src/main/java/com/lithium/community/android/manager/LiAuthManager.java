@@ -29,6 +29,7 @@ import android.webkit.CookieSyncManager;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiSSOAuthResponse;
 import com.lithium.community.android.auth.LiTokenResponse;
+import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.queryutil.LiDefaultQueryHelper;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
@@ -36,8 +37,6 @@ import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.MessageConstants;
 
 import org.json.JSONException;
-
-import com.lithium.community.android.exception.LiInitializationException;
 
 /**
  * <p>

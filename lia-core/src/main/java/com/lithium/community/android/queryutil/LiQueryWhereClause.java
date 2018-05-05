@@ -16,9 +16,9 @@
 
 package com.lithium.community.android.queryutil;
 
-import java.util.ArrayList;
-
 import com.lithium.community.android.manager.LiClientManager.Client;
+
+import java.util.ArrayList;
 
 /**
  * Use to set fields for where clause for different clients.

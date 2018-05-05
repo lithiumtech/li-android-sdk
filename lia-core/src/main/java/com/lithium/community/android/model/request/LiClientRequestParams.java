@@ -20,13 +20,12 @@ import android.content.Context;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.lithium.community.android.manager.LiClientManager;
 import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.queryutil.LiQueryRequestParams;
 
 import java.util.Map;
 import java.util.Set;
-
-import com.lithium.community.android.manager.LiClientManager;
-import com.lithium.community.android.queryutil.LiQueryRequestParams;
 
 public class LiClientRequestParams {
 

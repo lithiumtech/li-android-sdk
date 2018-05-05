@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        IntentFilter filter = new IntentFilter(getString(lithium.community.android.sdk.ui.components.R.string.li_login_complete_broadcast_intent));
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
         registerReceiver(receiver, filter);
 
         if (!areCredentialsProvided()) {

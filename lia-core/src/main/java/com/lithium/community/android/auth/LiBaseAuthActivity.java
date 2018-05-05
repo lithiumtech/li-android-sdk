@@ -23,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
-
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.rest.LiAuthRestClient;

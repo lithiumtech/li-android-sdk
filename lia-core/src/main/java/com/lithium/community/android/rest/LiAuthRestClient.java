@@ -25,12 +25,12 @@ import com.google.gson.Gson;
 import com.lithium.community.android.auth.LiRefreshTokenRequest;
 import com.lithium.community.android.auth.LiSSOAuthorizationRequest;
 import com.lithium.community.android.auth.LiSSOTokenRequest;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.io.IOException;
 import java.net.URI;
 
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.utils.LiCoreSDKConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;

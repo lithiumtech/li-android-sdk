@@ -21,11 +21,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.lithium.community.android.manager.LiSDKManager;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import com.lithium.community.android.manager.LiSDKManager;
 
 /**
  * Created by Lithium Technologies Inc on 6/22/17.

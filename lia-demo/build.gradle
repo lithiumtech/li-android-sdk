@@ -16,6 +16,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'maven'
+apply plugin: 'checkstyle'
 
 android {
 
@@ -52,5 +53,9 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
+preBuild.dependsOn('checkstyle')
+assemble.dependsOn('lint')
+check.dependsOn('checkstyle')
 
 apply plugin: 'com.google.gms.google-services'

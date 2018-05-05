@@ -18,12 +18,12 @@ package com.lithium.community.android.api;
 
 import android.content.Context;
 
-import java.util.Map;
-
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.post.LiPostModel;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiRestV2Request;
+
+import java.util.Map;
 
 /**
  * All "put" clients are implemented in same way. They only vary in their requestBody. This class brings all the

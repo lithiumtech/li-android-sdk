@@ -137,14 +137,16 @@ public final class LiSDKManager extends LiAuthManager {
      */
     public static LiSDKManager getInstance() {
         if (instance == null) {
-            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "SDK was not initialized. Call `LiSDKManager.initialize(Context, LiAppCredentials)` before invoking getInstance().");
+            String message = "SDK was not initialized. Call `LiSDKManager.initialize(Context, LiAppCredentials)` before invoking getInstance().";
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, message);
         }
         return instance;
     }
 
     private static void updatePreferences(@NonNull Context context) {
         if (getInstance() != null && getInstance().getFromSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID) == null) {
-            getInstance().putInSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString()); // generate a visitor ID and save it
+            getInstance().putInSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID,
+                    LiCoreSDKUtils.getRandomHexString()); // generate a visitor ID and save it
         }
     }
 

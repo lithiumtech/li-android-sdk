@@ -17,12 +17,11 @@
 package com.lithium.community.android.rest;
 
 import com.google.gson.JsonObject;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.response.LiBrowse;
 
 import java.util.List;
 import java.util.Map;
-
-import com.lithium.community.android.model.LiBaseModel;
-import com.lithium.community.android.model.response.LiBrowse;
 
 /**
  * Extracts response parameters from LiBaseResponse

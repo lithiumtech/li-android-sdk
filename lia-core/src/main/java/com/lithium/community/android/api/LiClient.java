@@ -17,12 +17,11 @@
 package com.lithium.community.android.api;
 
 import com.google.gson.Gson;
-import com.lithium.community.android.queryutil.LiQueryOrdering;
-
 import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.rest.LiRestClient;
+import com.lithium.community.android.queryutil.LiQueryOrdering;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiClientResponse;
+import com.lithium.community.android.rest.LiRestClient;
 
 /**
  * Created by kunal.shrivastava on 11/2/16.

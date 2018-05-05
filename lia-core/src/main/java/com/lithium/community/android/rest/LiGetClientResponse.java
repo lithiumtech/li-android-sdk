@@ -18,14 +18,13 @@ package com.lithium.community.android.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import java.util.List;
-import java.util.Map;
-
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.model.response.LiBrowse;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Wrapper for LiBaseResponse to GET response. Represents the response to a GET action.

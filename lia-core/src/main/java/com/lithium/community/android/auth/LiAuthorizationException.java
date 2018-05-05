@@ -23,13 +23,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.ArrayMap;
 
+import com.lithium.community.android.utils.LiCoreSDKUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.Map;
-
-import com.lithium.community.android.utils.LiCoreSDKUtils;
 
 /**
  * Returned as a response to OAuth2 requests if they fail. Specifically:

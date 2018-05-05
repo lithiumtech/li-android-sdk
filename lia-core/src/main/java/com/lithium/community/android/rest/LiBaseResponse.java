@@ -23,15 +23,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiClientManager;
+import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.manager.LiClientManager;
-import com.lithium.community.android.model.LiBaseModel;
-import com.lithium.community.android.utils.LiCoreSDKConstants;
 import okhttp3.Response;
 
 /**
@@ -117,14 +117,14 @@ public class LiBaseResponse {
      * @throws LiRestResponseException
      */
     public List<LiBaseModel> toEntityList(final String type, final Class<? extends LiBaseModel> baseModelClass,
-                                          final Gson gson) throws LiRestResponseException {
+            final Gson gson) throws LiRestResponseException {
         final String objectNamePlural = type + "s";
         return singleEntityOrListFromJson(data, objectNamePlural, type, baseModelClass, gson);
     }
 
     private List<LiBaseModel> singleEntityOrListFromJson(final JsonElement node, final String objectNamePlural,
-                                                         final String objectName, final Class<? extends LiBaseModel> baseModelClass,
-                                                         final Gson gson) throws LiRestResponseException {
+            final String objectName, final Class<? extends LiBaseModel> baseModelClass,
+            final Gson gson) throws LiRestResponseException {
         if (node != null && node.getAsJsonObject().has(DATA)) {
             JsonObject response = node.getAsJsonObject().get(DATA).getAsJsonObject();
             if (!response.has(TYPE)) {

@@ -18,10 +18,9 @@ package com.lithium.community.android.model.response;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.lithium.community.android.manager.LiClientManager;
 import com.lithium.community.android.model.LiBaseModelImpl;
 import com.lithium.community.android.model.helpers.LiBoard;
-
-import com.lithium.community.android.manager.LiClientManager;
 
 /**
  * Data Model for GET call to fetch messages a user is subscribed to.

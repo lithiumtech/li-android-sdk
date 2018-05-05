@@ -29,15 +29,12 @@ import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.utils.LiClock;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
+import com.lithium.community.android.utils.LiSystemClock;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Set;
-
-import com.lithium.community.android.utils.LiSystemClock;
-
-import static com.lithium.community.android.utils.LiCoreSDKUtils.checkNotNull;
 
 /**
  * This class holds all the Authorization related responses and the Tokens.

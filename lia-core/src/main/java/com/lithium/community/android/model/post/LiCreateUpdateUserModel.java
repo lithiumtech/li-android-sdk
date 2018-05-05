@@ -17,7 +17,6 @@
 package com.lithium.community.android.model.post;
 
 import com.google.gson.annotations.SerializedName;
-
 import com.lithium.community.android.model.helpers.LiAvatar;
 
 /**

@@ -19,12 +19,11 @@ package com.lithium.community.android.api;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.lithium.community.android.queryutil.LiQueryOrdering;
-
 import com.lithium.community.android.auth.LiAuthConstants;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.queryutil.LiQueryOrdering;
 import com.lithium.community.android.queryutil.LiQueryRequestParams;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseResponse;
@@ -67,7 +66,7 @@ abstract class LiBaseClient implements LiClient {
     }
 
     public LiBaseClient(Context context, String basePath, String type, String querySettingsType,
-                        Class<? extends LiBaseModel> responseClass, RequestType requestType) {
+            Class<? extends LiBaseModel> responseClass, RequestType requestType) {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;
@@ -89,7 +88,7 @@ abstract class LiBaseClient implements LiClient {
     }
 
     public LiBaseClient(Context context, String type, String querySettingsType, Class<? extends LiBaseModel> responseClass,
-                        RequestType requestType, String pathParam) {
+            RequestType requestType, String pathParam) {
         this.context = context;
         this.type = type;
         this.querySettingsType = querySettingsType;

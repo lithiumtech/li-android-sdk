@@ -28,17 +28,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lithium.community.android.api.LiClient;
-import com.lithium.community.android.notification.LiNotificationProviderImpl;
-
-import java.io.InvalidObjectException;
-import java.util.UUID;
-
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiClientManager;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
+import com.lithium.community.android.notification.LiNotificationProviderImpl;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiAuthAsyncRequestCallback;
 import com.lithium.community.android.rest.LiAuthRestClient;
@@ -48,6 +44,9 @@ import com.lithium.community.android.rest.LiGetClientResponse;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
+
+import java.io.InvalidObjectException;
+import java.util.UUID;
 
 /**
  * Implementation class for LiAuthService. Starts login flow, performs authorization, fetches access and refresh tokens.

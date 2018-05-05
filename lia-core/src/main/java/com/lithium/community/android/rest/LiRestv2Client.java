@@ -22,14 +22,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import java.io.IOException;
-
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.MessageConstants;
+
+import java.io.IOException;
 
 /**
  * Rest v2 client for community. Always expects LiQL queries in requests
@@ -148,7 +147,7 @@ public class LiRestv2Client extends LiRestClient {
      * @param requestBody     request body for post call to upload image.
      */
     public void uploadProcessAsync(@NonNull LiBaseRestRequest baseRestRequest, @NonNull LiAsyncRequestCallback callBack, String imagePath,
-                                   String imageName, String requestBody) {
+            String imageName, String requestBody) {
 
         LiCoreSDKUtils.checkNotNull(baseRestRequest, MessageConstants.wasNull("baseRestRequest"));
         LiCoreSDKUtils.checkNotNull(callBack, MessageConstants.wasNull("callBack"));

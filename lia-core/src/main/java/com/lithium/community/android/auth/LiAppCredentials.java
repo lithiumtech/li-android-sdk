@@ -85,7 +85,7 @@ public final class LiAppCredentials {
      *                     and persistence. Example: <code>UUID.randomUUID().toString()</code> persisted in a Shared Preferences.
      */
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-                            @NonNull String tenantId, @NonNull String communityURL, @NonNull String deviceId) {
+            @NonNull String tenantId, @NonNull String communityURL, @NonNull String deviceId) {
         this.clientName = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
         this.clientKey = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
         this.clientSecret = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
@@ -113,8 +113,8 @@ public final class LiAppCredentials {
      */
     @Deprecated
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-                            @NonNull String tenantId, @NonNull String communityURL, @Deprecated @Nullable String apiGatewayHost,
-                            @NonNull String deviceId) {
+            @NonNull String tenantId, @NonNull String communityURL, @Deprecated @Nullable String apiGatewayHost,
+            @NonNull String deviceId) {
         this(clientName, clientKey, clientSecret, tenantId, communityURL, deviceId);
     }
 
