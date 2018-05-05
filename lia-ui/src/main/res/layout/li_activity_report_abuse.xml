@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="lithium.community.android.ui.components.activities.LiConversationActivity">
+    tools:context="com.lithium.community.android.ui.components.activities.LiConversationActivity">
 
     <include layout="@layout/li_toolbar"/>
     <RelativeLayout

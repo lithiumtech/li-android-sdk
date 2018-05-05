@@ -5,38 +5,38 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application>
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiSupportHomeActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiSupportHomeActivity"
             android:label="@string/li_support_activity_title"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiSearchActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiSearchActivity"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiCreateMessageActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiCreateMessageActivity"
             android:label="@string/li_title_activity_create_message"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize"/>
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiConversationActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiConversationActivity"
             android:label="@string/li_title_activity_messages"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiBrowseActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiBrowseActivity"
             android:label="@string/li_title_activity_browse"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiMessageListActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiMessageListActivity"
             android:label="@string/li_title_activity_articles"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name="lithium.community.android.ui.components.activities.LiReportAbuseActivity"
+            android:name="com.lithium.community.android.ui.components.activities.LiReportAbuseActivity"
             android:label="@string/li_notify_moderator"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"/>

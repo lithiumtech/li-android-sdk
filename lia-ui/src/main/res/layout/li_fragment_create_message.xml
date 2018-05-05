@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/li_ask_question_camera"
             android:src="?attr/li_theme_uploadPhotoIcon"/>
-        <lithium.community.android.ui.components.custom.ui.LiRoundedImageView
+        <com.lithium.community.android.ui.components.custom.ui.LiRoundedImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/li_selected_image_to_upload"

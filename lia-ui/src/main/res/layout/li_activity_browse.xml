@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="lithium.community.android.ui.components.activities.LiBrowseActivity">
+    tools:context="com.lithium.community.android.ui.components.activities.LiBrowseActivity">
 
     <include layout="@layout/li_toolbar"/>
     <FrameLayout
