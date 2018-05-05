@@ -115,7 +115,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>lithium.community.android.sdk.rest.LiRestClient</li>
+<li>LiRestClient</li>
 </ul>
 </li>
 </ul>
@@ -191,25 +191,25 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asBytes-lithium.community.android.sdk.rest.LiBaseResponse-">asBytes</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asBytes-LiBaseResponse-">asBytes</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>org.json.JSONObject</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asJSONObject-lithium.community.android.sdk.rest.LiBaseResponse-">asJSONObject</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asJSONObject-LiBaseResponse-">asJSONObject</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asString-lithium.community.android.sdk.rest.LiBaseResponse-">asString</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#asString-LiBaseResponse-">asString</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected Request</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#buildRequest-lithium.community.android.sdk.rest.LiBaseRestRequest-">buildRequest</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#buildRequest-LiBaseRestRequest-">buildRequest</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest)</code>
 <div class="block">Helper to build okHttp Request from RestRequest</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#consume-lithium.community.android.sdk.rest.LiBaseResponse-">consume</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#consume-LiBaseResponse-">consume</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a>&nbsp;response)</code>
 <div class="block">Fully consume response entity content and closes content stream
  Must be called before returning control to the UI thread</div>
 </td>
@@ -220,20 +220,20 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#processAsync-lithium.community.android.sdk.rest.LiBaseRestRequest-lithium.community.android.sdk.rest.LiAsyncRequestCallback-">processAsync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#processAsync-LiBaseRestRequest-LiAsyncRequestCallback-">processAsync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest,
             <a href="../../../../../lithium/community/android/sdk/rest/LiAsyncRequestCallback.html" title="interface in lithium.community.android.sdk.rest">LiAsyncRequestCallback</a>&nbsp;callback)</code>
 <div class="block">Makes Async Network call.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#processSync-lithium.community.android.sdk.rest.LiBaseRestRequest-">processSync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#processSync-LiBaseRestRequest-">processSync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest)</code>
 <div class="block">Makes Sync Network call.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#uploadImageProcessAsync-lithium.community.android.sdk.rest.LiBaseRestRequest-lithium.community.android.sdk.rest.LiAsyncRequestCallback-java.lang.String-java.lang.String-java.lang.String-">uploadImageProcessAsync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiRestClient.html#uploadImageProcessAsync-LiBaseRestRequest-LiAsyncRequestCallback-java.lang.String-java.lang.String-java.lang.String-">uploadImageProcessAsync</a></span>(<a href="../../../../../lithium/community/android/sdk/rest/LiBaseRestRequest.html" title="class in lithium.community.android.sdk.rest">LiBaseRestRequest</a>&nbsp;baseRestRequest,
                        <a href="../../../../../lithium/community/android/sdk/rest/LiAsyncRequestCallback.html" title="interface in lithium.community.android.sdk.rest">LiAsyncRequestCallback</a>&nbsp;callback,
                        java.lang.String&nbsp;imagePath,
                        java.lang.String&nbsp;imageName,
@@ -272,7 +272,7 @@ extends java.lang.Object</pre>
 <pre>public static final&nbsp;java.lang.String TOKEN_REFRESH_TAG</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../constant-values.html#lithium.community.android.sdk.rest.LiRestClient.TOKEN_REFRESH_TAG">Constant Field Values</a></dd>
+<dd><a href="../../../../../constant-values.html#LiRestClient.TOKEN_REFRESH_TAG">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -285,7 +285,7 @@ extends java.lang.Object</pre>
 <pre>public static final&nbsp;int SERVER_TIMEOUT</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../constant-values.html#lithium.community.android.sdk.rest.LiRestClient.SERVER_TIMEOUT">Constant Field Values</a></dd>
+<dd><a href="../../../../../constant-values.html#LiRestClient.SERVER_TIMEOUT">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -328,7 +328,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;Gson&nbsp;getGson()</pre>
 </li>
 </ul>
-<a name="processSync-lithium.community.android.sdk.rest.LiBaseRestRequest-">
+<a name="processSync-LiBaseRestRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -347,7 +347,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="processAsync-lithium.community.android.sdk.rest.LiBaseRestRequest-lithium.community.android.sdk.rest.LiAsyncRequestCallback-">
+<a name="processAsync-LiBaseRestRequest-LiAsyncRequestCallback-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -363,7 +363,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="uploadImageProcessAsync-lithium.community.android.sdk.rest.LiBaseRestRequest-lithium.community.android.sdk.rest.LiAsyncRequestCallback-java.lang.String-java.lang.String-java.lang.String-">
+<a name="uploadImageProcessAsync-LiBaseRestRequest-LiAsyncRequestCallback-java.lang.String-java.lang.String-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -385,7 +385,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="buildRequest-lithium.community.android.sdk.rest.LiBaseRestRequest-">
+<a name="buildRequest-LiBaseRestRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -401,7 +401,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="asString-lithium.community.android.sdk.rest.LiBaseResponse-">
+<a name="asString-LiBaseResponse-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -415,7 +415,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="asBytes-lithium.community.android.sdk.rest.LiBaseResponse-">
+<a name="asBytes-LiBaseResponse-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -431,7 +431,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="asJSONObject-lithium.community.android.sdk.rest.LiBaseResponse-">
+<a name="asJSONObject-LiBaseResponse-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -447,7 +447,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="consume-lithium.community.android.sdk.rest.LiBaseResponse-">
+<a name="consume-LiBaseResponse-">
 <!--   -->
 </a>
 <ul class="blockListLast">

@@ -115,7 +115,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>lithium.community.android.sdk.rest.LiAuthRestClient</li>
+<li>LiAuthRestClient</li>
 </ul>
 </li>
 </ul>
@@ -165,7 +165,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#accessTokenAsync-android.content.Context-lithium.community.android.sdk.auth.LiSSOTokenRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">accessTokenAsync</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#accessTokenAsync-android.content.Context-LiSSOTokenRequest-LiAuthAsyncRequestCallback-">accessTokenAsync</a></span>(android.content.Context&nbsp;context,
                 <a href="../../../../../lithium/community/android/sdk/auth/LiSSOTokenRequest.html" title="class in lithium.community.android.sdk.auth">LiSSOTokenRequest</a>&nbsp;ssoTokenRequest,
                 <a href="../../../../../lithium/community/android/sdk/rest/LiAuthAsyncRequestCallback.html" title="interface in lithium.community.android.sdk.rest">LiAuthAsyncRequestCallback</a>&nbsp;callback)</code>
 <div class="block">Makes Asyn call to fetch Tokens.</div>
@@ -173,7 +173,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#authorizeAsync-android.content.Context-lithium.community.android.sdk.auth.LiSSOAuthorizationRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">authorizeAsync</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#authorizeAsync-android.content.Context-LiSSOAuthorizationRequest-LiAuthAsyncRequestCallback-">authorizeAsync</a></span>(android.content.Context&nbsp;context,
               <a href="../../../../../lithium/community/android/sdk/auth/LiSSOAuthorizationRequest.html" title="class in lithium.community.android.sdk.auth">LiSSOAuthorizationRequest</a>&nbsp;ssoAuthorizationRequest,
               <a href="../../../../../lithium/community/android/sdk/rest/LiAuthAsyncRequestCallback.html" title="interface in lithium.community.android.sdk.rest">LiAuthAsyncRequestCallback</a>&nbsp;callback)</code>
 <div class="block">Makes async call to fetch Auth Code.</div>
@@ -181,7 +181,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#refreshTokenAsync-android.content.Context-lithium.community.android.sdk.auth.LiRefreshTokenRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">refreshTokenAsync</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#refreshTokenAsync-android.content.Context-LiRefreshTokenRequest-LiAuthAsyncRequestCallback-">refreshTokenAsync</a></span>(android.content.Context&nbsp;context,
                  <a href="../../../../../lithium/community/android/sdk/auth/LiRefreshTokenRequest.html" title="class in lithium.community.android.sdk.auth">LiRefreshTokenRequest</a>&nbsp;refreshTokenRequest,
                  <a href="../../../../../lithium/community/android/sdk/rest/LiAuthAsyncRequestCallback.html" title="interface in lithium.community.android.sdk.rest">LiAuthAsyncRequestCallback</a>&nbsp;callback)</code>
 <div class="block">Makes Async call to fetch fresh Access token from Refresh Token.</div>
@@ -189,7 +189,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../lithium/community/android/sdk/rest/LiBaseResponse.html" title="class in lithium.community.android.sdk.rest">LiBaseResponse</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#refreshTokenSync-android.content.Context-lithium.community.android.sdk.auth.LiRefreshTokenRequest-">refreshTokenSync</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/rest/LiAuthRestClient.html#refreshTokenSync-android.content.Context-LiRefreshTokenRequest-">refreshTokenSync</a></span>(android.content.Context&nbsp;context,
                 <a href="../../../../../lithium/community/android/sdk/auth/LiRefreshTokenRequest.html" title="class in lithium.community.android.sdk.auth">LiRefreshTokenRequest</a>&nbsp;refreshTokenRequest)</code>
 <div class="block">Makes Sync call to fetch fresh Access token from Refresh Token.</div>
 </td>
@@ -233,7 +233,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="authorizeAsync-android.content.Context-lithium.community.android.sdk.auth.LiSSOAuthorizationRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">
+<a name="authorizeAsync-android.content.Context-LiSSOAuthorizationRequest-LiAuthAsyncRequestCallback-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -253,7 +253,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="accessTokenAsync-android.content.Context-lithium.community.android.sdk.auth.LiSSOTokenRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">
+<a name="accessTokenAsync-android.content.Context-LiSSOTokenRequest-LiAuthAsyncRequestCallback-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -273,7 +273,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="refreshTokenAsync-android.content.Context-lithium.community.android.sdk.auth.LiRefreshTokenRequest-lithium.community.android.sdk.rest.LiAuthAsyncRequestCallback-">
+<a name="refreshTokenAsync-android.content.Context-LiRefreshTokenRequest-LiAuthAsyncRequestCallback-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -293,7 +293,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="refreshTokenSync-android.content.Context-lithium.community.android.sdk.auth.LiRefreshTokenRequest-">
+<a name="refreshTokenSync-android.content.Context-LiRefreshTokenRequest-">
 <!--   -->
 </a>
 <ul class="blockListLast">

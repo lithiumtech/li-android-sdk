@@ -115,7 +115,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>lithium.community.android.sdk.manager.LiSDKManager</li>
+<li>LiSDKManager</li>
 </ul>
 </li>
 </ul>
@@ -167,7 +167,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#fetchFreshAccessToken-android.content.Context-lithium.community.android.sdk.auth.LiAuthService.FreshTokenCallBack-">fetchFreshAccessToken</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#fetchFreshAccessToken-android.content.Context-LiAuthService.FreshTokenCallBack-">fetchFreshAccessToken</a></span>(android.content.Context&nbsp;context,
                      <a href="../../../../../lithium/community/android/sdk/auth/LiAuthService.FreshTokenCallBack.html" title="interface in lithium.community.android.sdk.auth">LiAuthService.FreshTokenCallBack</a>&nbsp;mFreshTokenCallBack)</code>
 <div class="block">Fetches Fresh Access Token and Persists it.</div>
 </td>
@@ -243,7 +243,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html" title="class in lithium.community.android.sdk.manager">LiSDKManager</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#init-android.content.Context-lithium.community.android.sdk.auth.LiAppCredentials-">init</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#init-android.content.Context-LiAppCredentials-">init</a></span>(android.content.Context&nbsp;context,
     <a href="../../../../../lithium/community/android/sdk/auth/LiAppCredentials.html" title="class in lithium.community.android.sdk.auth">LiAppCredentials</a>&nbsp;liAppCredentials)</code>
 <div class="block">Initiales LiSDKManager and initiates the login flow.</div>
 </td>
@@ -256,7 +256,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#initLoginFlow-android.content.Context-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">initLoginFlow</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#initLoginFlow-android.content.Context-LiDeviceTokenProvider-">initLoginFlow</a></span>(android.content.Context&nbsp;context,
              <a href="../../../../../lithium/community/android/sdk/auth/LiDeviceTokenProvider.html" title="interface in lithium.community.android.sdk.auth">LiDeviceTokenProvider</a>&nbsp;liDeviceTokenProvider)</code>
 <div class="block">Login flow is initiated from here and then call goes to LiAuthService</div>
 </td>
@@ -270,7 +270,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#initLoginFlow-android.content.Context-java.lang.String-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">initLoginFlow</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#initLoginFlow-android.content.Context-java.lang.String-LiDeviceTokenProvider-">initLoginFlow</a></span>(android.content.Context&nbsp;context,
              java.lang.String&nbsp;ssoToken,
              <a href="../../../../../lithium/community/android/sdk/auth/LiDeviceTokenProvider.html" title="interface in lithium.community.android.sdk.auth">LiDeviceTokenProvider</a>&nbsp;liDeviceTokenProvider)</code>
 <div class="block">Login flow is initiated from here and then call goes to LiAuthService</div>
@@ -296,14 +296,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#persistAuthState-android.content.Context-lithium.community.android.sdk.auth.LiSSOAuthResponse-">persistAuthState</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#persistAuthState-android.content.Context-LiSSOAuthResponse-">persistAuthState</a></span>(android.content.Context&nbsp;context,
                 <a href="../../../../../lithium/community/android/sdk/auth/LiSSOAuthResponse.html" title="class in lithium.community.android.sdk.auth">LiSSOAuthResponse</a>&nbsp;authorizationResponse)</code>
 <div class="block">persists Auth State in shared preference when  Authorization Response is received</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#persistAuthState-android.content.Context-lithium.community.android.sdk.auth.LiTokenResponse-">persistAuthState</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#persistAuthState-android.content.Context-LiTokenResponse-">persistAuthState</a></span>(android.content.Context&nbsp;context,
                 <a href="../../../../../lithium/community/android/sdk/auth/LiTokenResponse.html" title="class in lithium.community.android.sdk.auth">LiTokenResponse</a>&nbsp;response)</code>
 <div class="block">persists Auth State in shared preference when  Token Response is received</div>
 </td>
@@ -320,18 +320,18 @@ extends java.lang.Object</pre>
                             java.lang.String&nbsp;key)</code>&nbsp;</td>
 </tr>
 <tr id="i25" class="rowColor">
-<td class="colFirst"><code>lithium.community.android.sdk.manager.LiAuthState</code></td>
+<td class="colFirst"><code>LiAuthState</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#restoreAuthState-android.content.Context-">restoreAuthState</a></span>(android.content.Context&nbsp;context)</code>
 <div class="block">Fetches Auth State from Shared Preference.</div>
 </td>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#setLiDeviceTokenProvider-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">setLiDeviceTokenProvider</a></span>(<a href="../../../../../lithium/community/android/sdk/auth/LiDeviceTokenProvider.html" title="interface in lithium.community.android.sdk.auth">LiDeviceTokenProvider</a>&nbsp;liDeviceTokenProvider)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#setLiDeviceTokenProvider-LiDeviceTokenProvider-">setLiDeviceTokenProvider</a></span>(<a href="../../../../../lithium/community/android/sdk/auth/LiDeviceTokenProvider.html" title="interface in lithium.community.android.sdk.auth">LiDeviceTokenProvider</a>&nbsp;liDeviceTokenProvider)</code>&nbsp;</td>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#setLoggedInUser-android.content.Context-lithium.community.android.sdk.model.response.LiUser-">setLoggedInUser</a></span>(android.content.Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../lithium/community/android/sdk/manager/LiSDKManager.html#setLoggedInUser-android.content.Context-LiUser-">setLoggedInUser</a></span>(android.content.Context&nbsp;context,
                <a href="../../../../../lithium/community/android/sdk/model/response/LiUser.html" title="class in lithium.community.android.sdk.model.response">LiUser</a>&nbsp;user)</code>
 <div class="block">Sets User</div>
 </td>
@@ -393,7 +393,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="init-android.content.Context-lithium.community.android.sdk.auth.LiAppCredentials-">
+<a name="init-android.content.Context-LiAppCredentials-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -472,7 +472,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;<a href="../../../../../lithium/community/android/sdk/auth/LiDeviceTokenProvider.html" title="interface in lithium.community.android.sdk.auth">LiDeviceTokenProvider</a>&nbsp;getLiDeviceTokenProvider()</pre>
 </li>
 </ul>
-<a name="setLiDeviceTokenProvider-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">
+<a name="setLiDeviceTokenProvider-LiDeviceTokenProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -495,7 +495,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="setLoggedInUser-android.content.Context-lithium.community.android.sdk.model.response.LiUser-">
+<a name="setLoggedInUser-android.content.Context-LiUser-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -566,7 +566,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="initLoginFlow-android.content.Context-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">
+<a name="initLoginFlow-android.content.Context-LiDeviceTokenProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -586,7 +586,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="initLoginFlow-android.content.Context-java.lang.String-lithium.community.android.sdk.auth.LiDeviceTokenProvider-">
+<a name="initLoginFlow-android.content.Context-java.lang.String-LiDeviceTokenProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -639,7 +639,7 @@ extends java.lang.Object</pre>
                                                   java.lang.String&nbsp;key)</pre>
 </li>
 </ul>
-<a name="persistAuthState-android.content.Context-lithium.community.android.sdk.auth.LiSSOAuthResponse-">
+<a name="persistAuthState-android.content.Context-LiSSOAuthResponse-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -655,7 +655,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="persistAuthState-android.content.Context-lithium.community.android.sdk.auth.LiTokenResponse-">
+<a name="persistAuthState-android.content.Context-LiTokenResponse-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -705,7 +705,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>restoreAuthState</h4>
-<pre>public final&nbsp;lithium.community.android.sdk.manager.LiAuthState&nbsp;restoreAuthState(android.content.Context&nbsp;context)</pre>
+<pre>public final&nbsp;LiAuthState&nbsp;restoreAuthState(android.content.Context&nbsp;context)</pre>
 <div class="block">Fetches Auth State from Shared Preference.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -745,7 +745,7 @@ extends java.lang.Object</pre>
 <div class="block">Checks if need to getch fresh access tokens.</div>
 </li>
 </ul>
-<a name="fetchFreshAccessToken-android.content.Context-lithium.community.android.sdk.auth.LiAuthService.FreshTokenCallBack-">
+<a name="fetchFreshAccessToken-android.content.Context-LiAuthService.FreshTokenCallBack-">
 <!--   -->
 </a>
 <ul class="blockListLast">
