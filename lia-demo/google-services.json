@@ -8,6 +8,37 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:132005067049:android:0f9e6da30c94c390",
+        "android_client_info": {
+          "package_name": "com.lithium.community.android.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132005067049-hvcbpl18cg4jq6v8m80msci6qd0sv52s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDllGxkiLMGARd2LYkLBqiySfxObVG1EZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:132005067049:android:77275ec6297c571f",
         "android_client_info": {
           "package_name": "lithium.community.sdk.example"

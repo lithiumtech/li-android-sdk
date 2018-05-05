@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example;
+package com.lithium.community.android.example;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +25,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.lithium.community.android.example.utils.MiscUtils;
+
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.manager.LiSDKManager;
-import lithium.community.sdk.example.utils.MiscUtils;
 
 public class InitializationActivity extends AppCompatActivity {
 
@@ -47,24 +48,24 @@ public class InitializationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(lithium.community.sdk.example.R.layout.activity_initialization);
+        setContentView(R.layout.activity_initialization);
         model = new ViewModel();
         setFieldsOfViews();
         updateViews();
     }
 
     private void setFieldsOfViews() {
-        fieldClientName = findViewById(lithium.community.sdk.example.R.id.field_client_name);
-        fieldClientId = findViewById(lithium.community.sdk.example.R.id.field_client_id);
-        fieldClientSecret = findViewById(lithium.community.sdk.example.R.id.field_client_secret);
-        fieldTenantId = findViewById(lithium.community.sdk.example.R.id.field_tenant_id);
-        fieldCommunityUrl = findViewById(lithium.community.sdk.example.R.id.field_community_url);
+        fieldClientName = findViewById(R.id.field_client_name);
+        fieldClientId = findViewById(R.id.field_client_id);
+        fieldClientSecret = findViewById(R.id.field_client_secret);
+        fieldTenantId = findViewById(R.id.field_tenant_id);
+        fieldCommunityUrl = findViewById(R.id.field_community_url);
 
-        layoutSdkCredentialsError = findViewById(lithium.community.sdk.example.R.id.layout_sdk_credentials_error);
-        tipRestartApp = findViewById(lithium.community.sdk.example.R.id.tip_restart_app);
+        layoutSdkCredentialsError = findViewById(R.id.layout_sdk_credentials_error);
+        tipRestartApp = findViewById(R.id.tip_restart_app);
 
-        btnInitialize = findViewById(lithium.community.sdk.example.R.id.btn_initialize_sdk);
-        btnReset = findViewById(lithium.community.sdk.example.R.id.btn_reset);
+        btnInitialize = findViewById(R.id.btn_initialize_sdk);
+        btnReset = findViewById(R.id.btn_reset);
 
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +101,7 @@ public class InitializationActivity extends AppCompatActivity {
 
         if (model.isInitialized()) {
             persistAndUpdate();
-            btnInitialize.setText(lithium.community.sdk.example.R.string.action_proceed);
+            btnInitialize.setText(R.string.action_proceed);
             tipRestartApp.setVisibility(View.VISIBLE);
             btnReset.setEnabled(false);
             fieldClientName.setEnabled(false);
@@ -109,7 +110,7 @@ public class InitializationActivity extends AppCompatActivity {
             fieldTenantId.setEnabled(false);
             fieldCommunityUrl.setEnabled(false);
         } else {
-            btnInitialize.setText(lithium.community.sdk.example.R.string.action_initialize);
+            btnInitialize.setText(R.string.action_initialize);
             tipRestartApp.setVisibility(View.INVISIBLE);
             btnReset.setEnabled(true);
             fieldClientName.setEnabled(true);
@@ -173,11 +174,11 @@ public class InitializationActivity extends AppCompatActivity {
 
         void reset() {
             // TODO: use credentials from shared preferences if available
-            clientName = MiscUtils.sanitize(getString(lithium.community.sdk.example.R.string.clientAppName));
-            clientId = MiscUtils.sanitize(getString(lithium.community.sdk.example.R.string.clientId));
-            clientSecret = MiscUtils.sanitize(getString(lithium.community.sdk.example.R.string.clientSecret));
-            tenantId = MiscUtils.sanitize(getString(lithium.community.sdk.example.R.string.communityTenantId));
-            communityUrl = MiscUtils.sanitize(getString(lithium.community.sdk.example.R.string.communityURL));
+            clientName = MiscUtils.sanitize(getString(R.string.clientAppName));
+            clientId = MiscUtils.sanitize(getString(R.string.clientId));
+            clientSecret = MiscUtils.sanitize(getString(R.string.clientSecret));
+            tenantId = MiscUtils.sanitize(getString(R.string.communityTenantId));
+            communityUrl = MiscUtils.sanitize(getString(R.string.communityURL));
         }
 
         boolean areCredentialsProvided() {

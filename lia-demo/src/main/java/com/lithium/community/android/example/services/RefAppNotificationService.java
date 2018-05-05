@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example.services;
+package com.lithium.community.android.example.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -33,7 +33,7 @@ import java.util.Map;
 import lithium.community.android.sdk.notification.LiNotificationPayload;
 import lithium.community.android.sdk.ui.components.activities.LiConversationActivity;
 import lithium.community.android.sdk.ui.components.utils.LiSDKConstants;
-import com.lithium.community.sdk.example.R;
+import com.lithium.community.android.example.R;
 
 /**
  * This class overrides the class {@link lithium.community.android.sdk.notification.LiFirebaseMessagingService}

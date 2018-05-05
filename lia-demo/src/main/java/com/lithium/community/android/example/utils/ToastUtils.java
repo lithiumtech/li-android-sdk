@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example.utils;
+package com.lithium.community.android.example.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example;
+package com.lithium.community.android.example;
+
+import android.app.Application;
+import android.util.Log;
 
 /**
  * @author adityasharat
  */
-public class DevLoginActivity extends LoginActivity {
-
+public class MainApplicationOverride extends Application {
     @Override
-    protected boolean areCredentialsProvided() {
-        return true;
+    public void onCreate() {
+        super.onCreate();
+        Log.i(MainApplicationOverride.class.getSimpleName(), "Start Lithium Example in development mode.");
     }
 }

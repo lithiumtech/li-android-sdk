@@ -15,15 +15,15 @@
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="lithium.community.sdk.example">
+    package="com.lithium.community.android.example">
 
     <application
-        android:name="com.lithium.community.sdk.example.MainApplicationOverride"
+        android:name=".MainApplicationOverride"
         tools:node="merge"
         tools:replace="name">
 
         <activity
-            android:name="com.lithium.community.sdk.example.InitializationActivity"
+            android:name=".InitializationActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name="com.lithium.community.sdk.example.DevLoginActivity"
+            android:name=".DevLoginActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example.services;
+package com.lithium.community.android.example.services;
 
 import android.util.Log;
 

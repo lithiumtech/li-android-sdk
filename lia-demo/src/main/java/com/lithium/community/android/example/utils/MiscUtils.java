@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example.utils;
+package com.lithium.community.android.example.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,7 +24,7 @@ import android.text.TextUtils;
 
 import java.util.UUID;
 
-import com.lithium.community.sdk.example.R;
+import com.lithium.community.android.example.R;
 
 /**
  * @author adityasharat

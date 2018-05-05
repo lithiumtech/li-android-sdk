@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example;
+package com.lithium.community.android.example;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,8 +31,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.lithium.community.sdk.example.utils.MiscUtils;
-import com.lithium.community.sdk.example.utils.ToastUtils;
+import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.ToastUtils;
 
 import lithium.community.android.sdk.auth.LiDeviceTokenProvider;
 import lithium.community.android.sdk.manager.LiSDKManager;

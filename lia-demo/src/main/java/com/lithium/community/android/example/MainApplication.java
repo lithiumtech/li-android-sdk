@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.sdk.example;
+package com.lithium.community.android.example;
 
 import android.app.Application;
 import android.util.Log;
@@ -22,7 +22,7 @@ import android.util.Log;
 import lithium.community.android.sdk.auth.LiAppCredentials;
 import lithium.community.android.sdk.exception.LiInitializationException;
 import lithium.community.android.sdk.manager.LiSDKManager;
-import com.lithium.community.sdk.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.MiscUtils;
 
 public class MainApplication extends Application {
 
