@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="lithium.community.android.sdk.ui.components.activities.LiBrowseActivity">
+    tools:context="lithium.community.android.ui.components.activities.LiBrowseActivity">
     <item android:id="@+id/li_action_search"
         android:title="@string/li_search_title"
         android:icon="@android:drawable/ic_menu_search"

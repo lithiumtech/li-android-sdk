@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/li_general_padding"
             android:id="@+id/li_post_user_details">
-            <lithium.community.android.sdk.ui.components.custom.ui.LiRoundedImageView
+            <lithium.community.android.ui.components.custom.ui.LiRoundedImageView
                 android:layout_width="@dimen/li_post_user_image_dimen"
                 android:layout_height="@dimen/li_post_user_image_dimen"
                 android:id="@+id/li_user_image"
