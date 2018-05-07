@@ -19,6 +19,7 @@
 
     <application
         android:name=".MainApplicationOverride"
+        android:icon="@mipmap/ic_launcher"
         tools:node="merge"
         tools:replace="name">
 
