@@ -43,7 +43,17 @@
             </intent-filter>
         </service>
 
-        <!-- remove the default firebase messaging service -->
+        <!-- registering custom messaging service -->
+        <service
+            android:name=".services.RefAppNotificationService"
+            android:isolatedProcess="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- remove the above firebase messaging service to use SDKs default implementation -->
+        <!--
         <service
             android:name="lithium.community.android.sdk.notification.LiFirebaseMessagingService"
             android:isolatedProcess="false"
@@ -52,15 +62,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <!-- registering custom messaging service -->
-        <service
-            android:name="com.lithium.community.android.example.services.RefAppNotificationService"
-            android:isolatedProcess="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+        -->
 
 
     </application>

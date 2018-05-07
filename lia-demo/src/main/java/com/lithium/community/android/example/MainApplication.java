@@ -33,11 +33,11 @@ public class MainApplication extends Application {
         try {
             if (MiscUtils.areCredentialsProvided(this)) {
                 LiAppCredentials credentials = new LiAppCredentials(
-                        getString(R.string.clientAppName),
+                        getString(R.string.clientName),
                         getString(R.string.clientId),
                         getString(R.string.clientSecret),
-                        getString(R.string.communityTenantId),
-                        getString(R.string.communityURL),
+                        getString(R.string.tenantId),
+                        getString(R.string.communityUrl),
                         MiscUtils.getInstanceId(this)
                 );
                 LiSDKManager.initialize(this, credentials);

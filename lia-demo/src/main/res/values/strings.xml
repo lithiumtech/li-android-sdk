@@ -17,22 +17,26 @@
 <resources>
     <string name="undefined">undefined</string>
 
-    <string name="clientAppName">undefined</string>
+    <string name="clientName">undefined</string>
     <string name="clientId">undefined</string>
     <string name="clientSecret">undefined</string>
-    <string name="communityTenantId">undefined</string>
-    <string name="communityURL">undefined</string>
+    <string name="tenantId">undefined</string>
+    <string name="communityUrl">undefined</string>
 
     <string name="app_name">Lia Example Application</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">Your Community</string>
-    <string name="support_activity_description">Login into your community.</string>
+    <string name="title_activity_main">Community</string>
+    <string name="title_activity_init">Initialize Community</string>
+    <string name="support_activity_description">Browse through \'%s\' community.</string>
 
 
     <string name="login">Login</string>
+    <string name="browse">Browse</string>
     <string name="logout">Logout</string>
+    <string name="browse_anonymous">Browse Anonymous</string>
     <string name="general_discussion">General Discussion</string>
+    <string name="user_details">Logged in as \'%1$s &lt;%2$s&gt;\', Browse through \'%3$s\' Community</string>
 
     <string name="error_credentials_not_set">Error: Credentials not set. Update credentials to continue!</string>
 

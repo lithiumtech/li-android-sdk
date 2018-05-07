@@ -18,7 +18,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/li_action_logout"
+        android:icon="@android:drawable/ic_lock_power_off"
         android:orderInCategory="99"
         android:title="@string/logout"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

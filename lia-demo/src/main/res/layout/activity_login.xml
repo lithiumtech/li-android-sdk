@@ -44,6 +44,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
             android:paddingTop="128dp"
             android:text="@string/support_activity_description"
             android:textSize="@dimen/generic_text_size" />
@@ -56,12 +62,20 @@
             android:layout_centerHorizontal="true"
             android:text="@string/login" />
 
+        <Button
+            android:id="@+id/btn_launch_anonymous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_login"
+            android:layout_centerHorizontal="true"
+            android:text="@string/browse_anonymous" />
+
         <include
             android:id="@+id/layout_sdk_initialization_error"
             layout="@layout/layout_sdk_initialization_errors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_login"
+            android:layout_below="@id/btn_launch_anonymous"
             android:layout_centerHorizontal="true"
             android:visibility="gone" />
     </RelativeLayout>

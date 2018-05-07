@@ -29,4 +29,7 @@ public class ToastUtils {
         Toast.makeText(context, "Li SDK has not been initialized. ", Toast.LENGTH_SHORT).show();
     }
 
+    public static void initializationError(@NonNull Context context, @NonNull String message) {
+        Toast.makeText(context, "Li SDK initialization failed. ERROR: " + message, Toast.LENGTH_SHORT).show();
+    }
 }

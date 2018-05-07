@@ -38,11 +38,11 @@ public class MiscUtils {
         boolean result = true;
         String undefined = context.getString(R.string.undefined);
         String[] properties = new String[]{
-                context.getString(R.string.clientAppName),
+                context.getString(R.string.clientName),
                 context.getString(R.string.clientId),
                 context.getString(R.string.clientSecret),
-                context.getString(R.string.communityTenantId),
-                context.getString(R.string.communityURL)
+                context.getString(R.string.tenantId),
+                context.getString(R.string.communityUrl)
         };
 
         for (String property : properties) {

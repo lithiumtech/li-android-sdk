@@ -27,6 +27,7 @@ import android.widget.Button;
 
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
 
@@ -48,6 +49,10 @@ public class InitializationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (LiSDKManager.isInitialized()) {
+            proceed();
+            return;
+        }
         setContentView(R.layout.activity_initialization);
         model = new ViewModel();
         setFieldsOfViews();
@@ -140,7 +145,9 @@ public class InitializationActivity extends AppCompatActivity {
                 );
                 LiSDKManager.initialize(this, credentials);
                 LiSDKManager.getInstance().syncWithCommunity(this);
+                proceed();
             } catch (LiInitializationException e) {
+                ToastUtils.initializationError(this, e.getMessage());
                 Log.e(MainApplication.class.getSimpleName(), "Lithium SDK initialization failed.");
                 e.printStackTrace();
             }
@@ -150,6 +157,7 @@ public class InitializationActivity extends AppCompatActivity {
 
     private void proceed() {
         startActivity(new Intent(this, DevLoginActivity.class));
+        finish();
     }
 
     private void persistAndUpdate() {
@@ -174,11 +182,11 @@ public class InitializationActivity extends AppCompatActivity {
 
         void reset() {
             // TODO: use credentials from shared preferences if available
-            clientName = MiscUtils.sanitize(getString(R.string.clientAppName));
+            clientName = MiscUtils.sanitize(getString(R.string.clientName));
             clientId = MiscUtils.sanitize(getString(R.string.clientId));
             clientSecret = MiscUtils.sanitize(getString(R.string.clientSecret));
-            tenantId = MiscUtils.sanitize(getString(R.string.communityTenantId));
-            communityUrl = MiscUtils.sanitize(getString(R.string.communityURL));
+            tenantId = MiscUtils.sanitize(getString(R.string.tenantId));
+            communityUrl = MiscUtils.sanitize(getString(R.string.communityUrl));
         }
 
         boolean areCredentialsProvided() {
