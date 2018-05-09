@@ -23,7 +23,9 @@
     <string name="tenantId">undefined</string>
     <string name="communityUrl">undefined</string>
 
-    <string name="app_name">Lia Example Application</string>
+    <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
+
+    <string name="app_name">Lia Demo</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Community</string>
@@ -34,7 +36,10 @@
     <string name="login">Login</string>
     <string name="browse">Browse</string>
     <string name="logout">Logout</string>
-    <string name="browse_anonymous">Browse Anonymous</string>
+    <string name="login_type_sso">Use SSO Login</string>
+    <string name="login_type_user">User Login</string>
+    <string name="hint_sso_token">SSO Token</string>
+    <string name="browse_anonymous">Browse Anonymously</string>
     <string name="general_discussion">General Discussion</string>
     <string name="user_details">Logged in as \'%1$s &lt;%2$s&gt;\', Browse through \'%3$s\' Community</string>
 
