@@ -28,27 +28,42 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
-import com.lithium.community.android.example.utils.MiscUtils;
-import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
+import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.ToastUtils;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private Button btnLogin = null;
     private Button btnAnonymous = null;
     private TextView textDescription = null;
+    private EditText editSsoToken = null;
+    private ProgressBar progressLogin = null;
+    private CheckBox checkboxSsoLogin = null;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    btnLogin.setEnabled(true);
+                    progressLogin.setVisibility(View.INVISIBLE);
+                }
+            });
             boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, true);
             if (result) {
                 start();
@@ -57,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +88,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             actionbar.setHomeAsUpIndicator(R.mipmap.ic_launcher);
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
-        btnLogin = findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(this);
-        btnAnonymous = findViewById(R.id.btn_launch_anonymous);
-        btnAnonymous.setOnClickListener(this);
-        textDescription = findViewById(R.id.activity_description);
 
-        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        btnLogin = findViewById(R.id.btn_login);
+        btnAnonymous = findViewById(R.id.btn_launch_anonymous);
+        textDescription = findViewById(R.id.activity_description);
+        checkboxSsoLogin = findViewById(R.id.checkbox_sso_login);
+        editSsoToken = findViewById(R.id.txt_sso_token);
+        progressLogin = findViewById(R.id.login_progress);
+
+        btnLogin.setOnClickListener(this);
+        btnAnonymous.setOnClickListener(this);
+        checkboxSsoLogin.setOnCheckedChangeListener(this);
+
+        IntentFilter filter = new IntentFilter(getString(com.lithium.community.android.ui.R.string.li_login_complete_broadcast_intent));
         registerReceiver(receiver, filter);
 
         if (!areCredentialsProvided() || !LiSDKManager.isInitialized()) {
@@ -98,18 +120,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         boolean isInitialized = LiSDKManager.isInitialized();
         btnAnonymous.setEnabled(isInitialized);
         btnLogin.setEnabled(isInitialized);
-        textDescription.setVisibility(isInitialized ? View.VISIBLE : View.GONE);
+        textDescription.setVisibility(isInitialized ? View.VISIBLE : View.INVISIBLE);
+        progressLogin.setVisibility(View.INVISIBLE);
         if (isInitialized) {
-            String tenant = LiSDKManager.getInstance().getCredentials().getTenantId();
+            LiSDKManager manager = LiSDKManager.getInstance();
+            String tenant = manager.getCredentials().getClientName();
             String details = String.format(getString(R.string.support_activity_description), tenant);
-            if (LiSDKManager.getInstance().isUserLoggedIn()) {
-                LiUser user = LiSDKManager.getInstance().getLoggedInUser();
+            boolean isUserLoggedIn = manager.isUserLoggedIn();
+            LiUser user = manager.getLoggedInUser();
+            if (isUserLoggedIn && user != null) {
                 details = String.format(getString(R.string.user_details), user.getLogin(), user.getEmail(), tenant);
             }
             textDescription.setText(details);
-            boolean isUserLoggedIn = LiSDKManager.getInstance().isUserLoggedIn();
             btnLogin.setText(isUserLoggedIn ? R.string.browse : R.string.login);
             btnAnonymous.setVisibility(isUserLoggedIn ? View.GONE : View.VISIBLE);
+            checkboxSsoLogin.setVisibility(isUserLoggedIn ? View.INVISIBLE : View.VISIBLE);
+            editSsoToken.setVisibility(!isUserLoggedIn && checkboxSsoLogin.isChecked() ? View.VISIBLE : View.INVISIBLE);
             invalidateOptionsMenu();
         }
     }
@@ -161,7 +187,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        LiSDKManager.getInstance().initLoginFlow(this, new LiDeviceTokenProvider() {
+        String ssoToken = checkboxSsoLogin.isChecked() ? checkboxSsoLogin.getText().toString() : null;
+        LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
             @Override
             public String getDeviceId() {
 
@@ -187,12 +214,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (LiSDKManager.getInstance().isUserLoggedIn()) {
                     start();
                 } else {
+                    v.setEnabled(false);
+                    progressLogin.setVisibility(View.VISIBLE);
                     login();
                 }
                 break;
             case R.id.btn_launch_anonymous:
                 start();
                 break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId() == R.id.checkbox_sso_login) {
+            editSsoToken.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
         }
     }
 }

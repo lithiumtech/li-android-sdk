@@ -16,10 +16,12 @@
 
 package com.lithium.community.android.queryutil;
 
-import com.lithium.community.android.manager.LiClientManager;
-import com.lithium.community.android.utils.LiQueryConstant;
-
 import java.util.ArrayList;
+import java.util.List;
+
+import com.lithium.community.android.manager.LiClientManager.Client;
+
+import static com.lithium.community.android.utils.LiQueryConstant.DEFAULT_LIQL_QUERY_LIMIT;
 
 /**
  * This class is used to process the where clause, liQueryOrdering and limit of the LIQL query.
@@ -29,8 +31,8 @@ import java.util.ArrayList;
 
 public class LiQueryRequestParams {
 
-    private LiClientManager.Client client;
-    private LiQueryOrdering liQueryOrdering;
+    private Client client;
+    private List<LiQueryOrdering> liQueryOrdering;
     private LiQueryWhereClause liQueryWhereClause;
     private int limit;
 
@@ -45,7 +47,7 @@ public class LiQueryRequestParams {
         return new Builder();
     }
 
-    public LiClientManager.Client getClient() {
+    public Client getClient() {
         return client;
     }
 
@@ -66,17 +68,21 @@ public class LiQueryRequestParams {
             whereClauses.add(whereClause);
         }
 
-        LiQuerySetting.Ordering ordering = null;
-        if (this.liQueryOrdering != null) {
-            ordering = new LiQuerySetting.Ordering();
-            ordering.setKey(this.liQueryOrdering.getColumn().getValue());
-            ordering.setType(this.liQueryOrdering.getOrder().name());
+        List<LiQuerySetting.Ordering> orderings = null;
+        if (this.liQueryOrdering != null && liQueryOrdering.size() > 0) {
+            orderings = new ArrayList<>();
+            for(LiQueryOrdering queryOrdering : liQueryOrdering) {
+                LiQuerySetting.Ordering ordering = new LiQuerySetting.Ordering();
+                ordering.setKey(queryOrdering.getColumn().getValue());
+                ordering.setType(queryOrdering.getOrder().name());
+                orderings.add(ordering);
+            }
         }
 
         if (limit < 1) {
-            limit = LiQueryConstant.DEFAULT_LIQL_QUERY_LIMIT;
+            limit = DEFAULT_LIQL_QUERY_LIMIT;
         }
-        LiQuerySetting liQuerySetting = new LiQuerySetting(whereClauses, ordering, limit);
+        LiQuerySetting liQuerySetting = new LiQuerySetting(whereClauses, orderings, limit);
         return liQuerySetting;
     }
 
@@ -85,17 +91,17 @@ public class LiQueryRequestParams {
      */
     public static class Builder {
 
-        private LiClientManager.Client client;
-        private LiQueryOrdering liQueryOrdering;
+        private Client client;
+        private List<LiQueryOrdering> liQueryOrdering;
         private LiQueryWhereClause liQueryWhereClause;
         private int limit;
 
-        public Builder setClient(LiClientManager.Client client) {
+        public Builder setClient(Client client) {
             this.client = client;
             return this;
         }
 
-        public Builder setLiQueryOrdering(LiQueryOrdering liQueryOrdering) {
+        public Builder setLiQueryOrdering(List<LiQueryOrdering> liQueryOrdering) {
             this.liQueryOrdering = liQueryOrdering;
             return this;
         }
@@ -117,9 +123,13 @@ public class LiQueryRequestParams {
                             liQueryClause.getKey().getClient(), client));
                 }
             }
-            if (!liQueryOrdering.isVaild(client)) {
-                throw new RuntimeException(
-                        String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
+            if(liQueryOrdering != null) {
+                for(LiQueryOrdering queryOrdering : liQueryOrdering) {
+                    if (!queryOrdering.isVaild(client)) {
+                        throw new RuntimeException(
+                                String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
+                    }
+                }
             }
             return new LiQueryRequestParams(this);
         }

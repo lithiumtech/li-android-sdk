@@ -17,11 +17,12 @@
 <resources>
     <string name="undefined">undefined</string>
 
-    <string name="clientName">undefined</string>
-    <string name="clientId">undefined</string>
-    <string name="clientSecret">undefined</string>
-    <string name="tenantId">undefined</string>
-    <string name="communityUrl">undefined</string>
+    <string name="clientName">CommunityNarendra</string>
+    <string name="clientId">8b28u5+Uf+djEObZarm86Q6x8tbqIoucwOZMHetANUk=</string>
+    <string name="clientSecret">jfEfeHin5O+CMvw531vJeL8dmcEebErZVJUbE0Saz5E=</string>
+    <string name="tenantId">narendra</string>
+    <string name="communityUrl">https://narendra.qa.lithium.com/</string>
+    <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
 
     <string name="app_name">Lia Example Application</string>
 
@@ -34,7 +35,10 @@
     <string name="login">Login</string>
     <string name="browse">Browse</string>
     <string name="logout">Logout</string>
-    <string name="browse_anonymous">Browse Anonymous</string>
+    <string name="login_type_sso">Use SSO Login</string>
+    <string name="login_type_user">User Login</string>
+    <string name="hint_sso_token">SSO Token</string>
+    <string name="browse_anonymous">Browse Anonymously</string>
     <string name="general_discussion">General Discussion</string>
     <string name="user_details">Logged in as \'%1$s &lt;%2$s&gt;\', Browse through \'%3$s\' Community</string>
 

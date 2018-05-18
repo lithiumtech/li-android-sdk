@@ -19,6 +19,7 @@ package com.lithium.community.android.queryutil;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kunal.shrivastava on 10/18/16.
@@ -31,21 +32,21 @@ public class LiQuerySetting {
     private static final String ORDER = "order";
     private static final String LIMIT = "limit";
 
-    private ArrayList<WhereClause> whereClauses;
-    private Ordering ordering;
+    private List<WhereClause> whereClauses;
+    private List<Ordering> ordering;
     private int limit;
 
-    public LiQuerySetting(ArrayList<WhereClause> whereClauses, Ordering ordering, int limit) {
+    public LiQuerySetting(ArrayList<WhereClause> whereClauses, List<Ordering> ordering, int limit) {
         this.whereClauses = whereClauses;
         this.ordering = ordering;
         this.limit = limit;
     }
 
-    public ArrayList<WhereClause> getWhereClauses() {
-        return (ArrayList<WhereClause>) whereClauses.clone();
+    public List<WhereClause> getWhereClauses() {
+        return whereClauses;
     }
 
-    public Ordering getOrdering() {
+    public List<Ordering> getOrdering() {
         return ordering;
     }
 
@@ -179,7 +180,7 @@ public class LiQuerySetting {
 
         @Override
         public String toString() {
-            return "LiQueryWhereClause{" + "clause=" + clause + ", key='" + key + '\'' + ", value='" + value + '\'' + ", operator='" + operator + '\'' + '}';
+            return key + " " + clause + " " + value;
         }
     }
 
@@ -208,7 +209,7 @@ public class LiQuerySetting {
 
         @Override
         public String toString() {
-            return "LiQueryOrdering{" + "key='" + key + '\'' + ", type='" + type + '\'' + '}';
+            return key + " " + type;
         }
     }
 }

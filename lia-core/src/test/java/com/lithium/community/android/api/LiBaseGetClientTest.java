@@ -51,8 +51,7 @@ public class LiBaseGetClientTest {
     private static final String LI_ARTICLES_LIQL = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
     private static final String LI_ARTICLES_CLIENT_TYPE = "message";
     private static final String LI_ARTICLES_QUERY_SETTINGS_TYPE = "article";
-    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages WHERE"
-            + " conversation.style in ('forum', 'blog') AND depth = ## ORDER BY conversation.last_post_time desc LIMIT 50";
+    private static final String EXPECTED_QUERY = "SELECT id, subject, post_time, kudos.sum(weight), conversation.style, conversation.solved FROM messages";
 
     private LiBaseGetClient liClient;
 

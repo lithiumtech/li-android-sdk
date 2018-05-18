@@ -17,6 +17,7 @@
 package com.lithium.community.android.queryutil;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -24,6 +25,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.util.List;
+
 import com.lithium.community.android.manager.LiSDKManager;
 
 import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS;
@@ -43,6 +47,7 @@ public class LiQueryBuilder {
     private static final String SPACE = " ";
     private static final String ORDER_BY = "ORDER BY";
     private static final String LIMIT = "LIMIT";
+    private static final String COMMA = ", ";
 
     private static volatile LiQuerySetting liQuerySetting;
 
@@ -148,18 +153,18 @@ public class LiQueryBuilder {
             int index = 0;
             for (LiQuerySetting.WhereClause whereClause : liQuerySetting.getWhereClauses()) {
                 query.append(SPACE);
-                query.append(whereClause.getKey()).append(SPACE)
-                        .append(whereClause.getClause()).append(SPACE).append(whereClause.getValue());
+                query.append(whereClause.toString());
                 if (index < querySettingWhereClauseSize - 1) {
                     query.append(SPACE).append(whereClause.getOperator());
                 }
                 index++;
             }
         }
-        if (liQuerySetting.getOrdering() != null) {
-            query.append(SPACE).append(ORDER_BY).append(SPACE)
-                    .append(liQuerySetting.getOrdering().getKey()).append(SPACE)
-                    .append(liQuerySetting.getOrdering().getType());
+
+        List<LiQuerySetting.Ordering> orderings = liQuerySetting.getOrdering();
+        if (orderings != null) {
+            query.append(SPACE).append(ORDER_BY).append(SPACE);
+            query.append(TextUtils.join(", ", orderings));
         }
 
         if (liQuerySetting.getLimit() > 0) {
