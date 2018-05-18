@@ -24,7 +24,7 @@
     <string name="communityUrl">https://narendra.qa.lithium.com/</string>
     <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
 
-    <string name="app_name">Lia Example Application</string>
+    <string name="app_name">Lia Demo</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Community</string>

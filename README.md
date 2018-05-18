@@ -55,3 +55,7 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 * Learn about [authentication options](https://github.com/lithiumtech/li-android-sdk-core/wiki/Authentication-with-the-Community-Android-SDK)
 * Create your [app key and secret credentials](https://github.com/lithiumtech/li-android-sdk-core/wiki/Getting-Started-with-the-Community-Android-SDK#get-authorization-credentials)
 * Check out our [reference app](https://github.com/lithiumtech/li-android-sdk-example)
+
+### Status
+
+[![Build Status](https://travis-ci.org/lithiumtech/li-android-sdk-core.svg?branch=master)](https://travis-ci.org/lithiumtech/li-android-sdk-core)

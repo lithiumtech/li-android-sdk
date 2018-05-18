@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, false);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -64,7 +65,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     progressLogin.setVisibility(View.INVISIBLE);
                 }
             });
-            boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, true);
             if (result) {
                 start();
             } else {
@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void reset() {
         boolean isInitialized = LiSDKManager.isInitialized();
+
         btnAnonymous.setEnabled(isInitialized);
         btnLogin.setEnabled(isInitialized);
         textDescription.setVisibility(isInitialized ? View.VISIBLE : View.INVISIBLE);
@@ -131,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (isUserLoggedIn && user != null) {
                 details = String.format(getString(R.string.user_details), user.getLogin(), user.getEmail(), tenant);
             }
+
             textDescription.setText(details);
             btnLogin.setText(isUserLoggedIn ? R.string.browse : R.string.login);
             btnAnonymous.setVisibility(isUserLoggedIn ? View.GONE : View.VISIBLE);

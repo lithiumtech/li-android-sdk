@@ -21,7 +21,11 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'checkstyle'
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def propertiesFile = file('local.properties')
+if (propertiesFile.canRead()) {
+    properties.load(new FileInputStream(propertiesFile))
+}
 
 siteUrl = project.ext.siteUrl
 gitUrl = project.ext.gitUrl
