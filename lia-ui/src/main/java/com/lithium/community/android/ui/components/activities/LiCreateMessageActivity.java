@@ -101,11 +101,14 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE
-        );
-        imm.hideSoftInputFromWindow(errorTextView.getWindowToken(), 0);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null) {
+            imm.hideSoftInputFromWindow(errorTextView.getWindowToken(), 0);
+        }
         unregisterReceiver(networkBroadcastReceiver);
+
+        //unregister login complete listener
+        unregisterReceiver(loginCompleteReceiver);
     }
 
     @Override
@@ -118,13 +121,6 @@ public class LiCreateMessageActivity extends AppCompatActivity {
                 loginCompleteIntentFilter);
         registerReceiver(networkBroadcastReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //unregister login complete listener
-        unregisterReceiver(loginCompleteReceiver);
     }
 
     @Override
