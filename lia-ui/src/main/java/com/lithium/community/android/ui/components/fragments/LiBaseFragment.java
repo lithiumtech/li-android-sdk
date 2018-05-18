@@ -146,17 +146,22 @@ public abstract class LiBaseFragment extends DialogFragment
         if (refreshOnResume) {
             isFetchComplete = false;
         }
+        Activity activity = getActivity();
+        if (activity != null && loginCompleteReceiver != null) {
+            activity.unregisterReceiver(loginCompleteReceiver);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter loginCompleteIntentFilter =
-                new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
-        getActivity().registerReceiver(loginCompleteReceiver,
-                loginCompleteIntentFilter);
-        if (refreshOnResume) {
-            populateData();
+        IntentFilter loginCompleteIntentFilter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.registerReceiver(loginCompleteReceiver, loginCompleteIntentFilter);
+            if (refreshOnResume) {
+                populateData();
+            }
         }
     }
 
@@ -344,9 +349,6 @@ public abstract class LiBaseFragment extends DialogFragment
     public void onDestroy() {
         super.onDestroy();
         mListener = null;
-        if (getActivity() != null && loginCompleteReceiver != null) {
-            getActivity().unregisterReceiver(loginCompleteReceiver);
-        }
     }
 
     /**
