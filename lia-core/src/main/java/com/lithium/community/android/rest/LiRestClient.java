@@ -49,6 +49,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -172,7 +173,7 @@ public abstract class LiRestClient {
 
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Response response = null;
 
         try {
@@ -240,7 +241,7 @@ public abstract class LiRestClient {
     private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Call call = clientBuilder.build().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -533,12 +534,15 @@ public abstract class LiRestClient {
     /**
      * Interceptor to intercept if Token has expired. It then fetches new token and re tries.
      */
-    private class RefreshAndRetryInterceptor implements Interceptor {
-        private int maxTries = 2;
-        private Context context;
+    private static class RefreshAndRetryInterceptor implements Interceptor {
+        private static int MAX_RETRY = 2;
 
-        public RefreshAndRetryInterceptor(Context context) {
-            this.context = context;
+        private WeakReference<Context> context;
+        private LiSDKManager sdk;
+
+        RefreshAndRetryInterceptor(Context context, LiSDKManager sdk) {
+            this.context = new WeakReference<>(context);
+            this.sdk = sdk;
         }
 
         @Override
@@ -546,8 +550,7 @@ public abstract class LiRestClient {
             Request request = chain.request();
             int currentCount = 0;
             Response response = null;
-            while (currentCount < maxTries
-                    && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
+            while (currentCount < MAX_RETRY && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
                 boolean proceed = false;
                 if (response == null) {
                     proceed = true;
@@ -565,13 +568,16 @@ public abstract class LiRestClient {
                     }
                     if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {
-                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdkManager).performSyncRefreshTokenRequest();
-                            sdkManager.persistAuthState(context, liTokenResponse);
+                            Context context = this.context.get();
+                            if (context != null) {
+                                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdk).performSyncRefreshTokenRequest();
+                                sdk.persistAuthState(context, liTokenResponse);
 
-                            request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
-
-                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken())
-                                    .build();
+                                request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
+                                request = request.newBuilder()
+                                        .addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdk.getAuthToken())
+                                        .build();
+                            }
                         } catch (LiRestResponseException e) {
                             Log.e(LiAuthConstants.LOG_TAG, "Error making rest call for refresh token", e);
                         }
