@@ -58,4 +58,4 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 
 ### Status
 
-[![Build Status](https://travis-ci.org/lithiumtech/li-android-sdk-core.svg?branch=master)](https://travis-ci.org/lithiumtech/li-android-sdk-core)
+[![Build Status](https://travis-ci.org/lithiumtech/lia-sdk-android.svg?branch=master)](https://travis-ci.org/lithiumtech/lia-sdk-android)
