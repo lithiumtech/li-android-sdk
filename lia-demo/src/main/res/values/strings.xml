@@ -17,11 +17,11 @@
 <resources>
     <string name="undefined">undefined</string>
 
-    <string name="clientName">CommunityNarendra</string>
-    <string name="clientId">8b28u5+Uf+djEObZarm86Q6x8tbqIoucwOZMHetANUk=</string>
-    <string name="clientSecret">jfEfeHin5O+CMvw531vJeL8dmcEebErZVJUbE0Saz5E=</string>
-    <string name="tenantId">narendra</string>
-    <string name="communityUrl">https://narendra.qa.lithium.com/</string>
+    <string name="clientId"><!--PLEASE ADD THE CLIENT ID HERE--></string>
+    <string name="clientSecret"><!--PLEASE ADD THE CLIENT SECRET HERE--></string>
+    <string name="clientName"><!--PLEASE ADD THE CLIENT NAME HERE--></string>
+    <string name="tenantId"><!--PLEASE ADD THE CLIENT TENANT ID HERE--></string>
+    <string name="communityUrl"><!--PLEASE ADD THE COMMUNITY BASE URL HERE--></string>
     <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
 
     <string name="app_name">Lia Demo</string>

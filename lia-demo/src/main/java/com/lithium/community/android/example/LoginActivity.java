@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnAnonymous.setOnClickListener(this);
         checkboxSsoLogin.setOnCheckedChangeListener(this);
 
-        IntentFilter filter = new IntentFilter(getString(com.lithium.community.android.ui.R.string.li_login_complete_broadcast_intent));
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
         registerReceiver(receiver, filter);
 
         if (!areCredentialsProvided() || !LiSDKManager.isInitialized()) {
