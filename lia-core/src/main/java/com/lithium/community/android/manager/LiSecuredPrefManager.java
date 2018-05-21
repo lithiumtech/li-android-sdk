@@ -119,12 +119,12 @@ class LiSecuredPrefManager {
 
     @NonNull
     private static String encode(@NonNull byte[] input) {
-        return Base64.encodeToString(input, Base64.DEFAULT);
+        return Base64.encodeToString(input, Base64.NO_WRAP);
     }
 
     @NonNull
     private static byte[] decode(String input) {
-        return Base64.decode(input, Base64.DEFAULT);
+        return Base64.decode(input, Base64.NO_WRAP);
     }
 
     /**

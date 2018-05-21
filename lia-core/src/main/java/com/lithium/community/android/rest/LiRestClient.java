@@ -31,6 +31,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import lithium.community.android.sdk.R;
 import com.lithium.community.android.auth.LiAuthConstants;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiTokenResponse;
@@ -43,19 +57,6 @@ import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiImageUtils;
 import com.lithium.community.android.utils.LiUriUtils;
 import com.lithium.community.android.utils.MessageConstants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import lithium.community.android.sdk.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -66,6 +67,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.lithium.community.android.auth.LiAuthConstants.LOG_TAG;
 import static com.lithium.community.android.utils.LiCoreSDKConstants.HTTP_CODE_FORBIDDEN;
 import static com.lithium.community.android.utils.LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL;
 import static com.lithium.community.android.utils.LiCoreSDKConstants.HTTP_CODE_UNAUTHORIZED;
@@ -172,7 +174,7 @@ public abstract class LiRestClient {
 
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Response response = null;
 
         try {
@@ -189,7 +191,7 @@ public abstract class LiRestClient {
                         LiCoreSDKConstants.HTTP_CODE_SERVER_ERROR);
             }
         } catch (IOException e) {
-            Log.e(LiAuthConstants.LOG_TAG, "Error making rest call", e);
+            Log.e(LOG_TAG, "Error making rest call", e);
             throw LiRestResponseException.networkError(e.getMessage());
         } finally {
             if (response != null && response.body() != null) {
@@ -240,7 +242,7 @@ public abstract class LiRestClient {
     private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext()));
+        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Call call = clientBuilder.build().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -284,7 +286,7 @@ public abstract class LiRestClient {
      * @param requestBody     Request body of image upload API.
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
-            final String imagePath, final String imageName, final String requestBody) {
+                                        final String imagePath, final String imageName, final String requestBody) {
         if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
             if (sdkManager.getNeedsTokenRefresh()) {
                 try {
@@ -315,7 +317,7 @@ public abstract class LiRestClient {
      * @param imgRequestBody  Request body of image upload API.
      */
     private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback, String imagePath,
-            String imageName, String imgRequestBody) {
+                                   String imageName, String imgRequestBody) {
 
         final MediaType MEDIA_TYPE = MediaType.parse("image/*");
         File originalFile = new File(imagePath);
@@ -533,12 +535,16 @@ public abstract class LiRestClient {
     /**
      * Interceptor to intercept if Token has expired. It then fetches new token and re tries.
      */
-    private class RefreshAndRetryInterceptor implements Interceptor {
-        private int maxTries = 2;
-        private Context context;
+    private static class RefreshAndRetryInterceptor implements Interceptor {
 
-        public RefreshAndRetryInterceptor(Context context) {
-            this.context = context;
+        private static int MAX_TRIES = 2;
+
+        private WeakReference<Context> context;
+        private LiSDKManager sdk;
+
+        RefreshAndRetryInterceptor(Context context, LiSDKManager sdk) {
+            this.context = new WeakReference<>(context);
+            this.sdk = sdk;
         }
 
         @Override
@@ -546,15 +552,17 @@ public abstract class LiRestClient {
             Request request = chain.request();
             int currentCount = 0;
             Response response = null;
-            while (currentCount < maxTries
-                    && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
+
+            while (currentCount < MAX_TRIES && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
                 boolean proceed = false;
+
                 if (response == null) {
                     proceed = true;
                 } else if (response.code() != HTTP_CODE_SUCCESSFUL) {
                     int httpCode = response.code();
                     JsonObject data;
                     String responseStr = response.body().string();
+
                     try {
                         data = new Gson().fromJson(responseStr, JsonObject.class);
                         if (data != null && data.has("statusCode")) {
@@ -563,19 +571,24 @@ public abstract class LiRestClient {
                     } catch (JsonSyntaxException ex) {
                         Log.e(LI_LOG_TAG, "wrong json, not able to parse " + ex.getMessage());
                     }
+
                     if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
                         try {
-                            LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdkManager).performSyncRefreshTokenRequest();
-                            sdkManager.persistAuthState(context, liTokenResponse);
+                            Context context = this.context.get();
+                            if (context != null) {
+                                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdk).performSyncRefreshTokenRequest();
+                                sdk.persistAuthState(context, liTokenResponse);
 
-                            request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
-
-                            request = request.newBuilder().addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken())
-                                    .build();
+                                request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
+                                request = request.newBuilder()
+                                        .addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdk.getAuthToken())
+                                        .build();
+                            }
                         } catch (LiRestResponseException e) {
-                            Log.e(LiAuthConstants.LOG_TAG, "Error making rest call for refresh token", e);
+                            Log.e(LOG_TAG, "Error making rest call for refresh token", e);
                         }
                     }
+
                     proceed = true;
                 }
 
