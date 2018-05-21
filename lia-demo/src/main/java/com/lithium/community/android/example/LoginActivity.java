@@ -193,7 +193,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        String ssoToken = checkboxSsoLogin.isChecked() ? checkboxSsoLogin.getText().toString() : null;
+        String ssoToken = checkboxSsoLogin.isChecked() ? editSsoToken.getText().toString() : null;
         LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
             @Override
             public String getDeviceId() {
