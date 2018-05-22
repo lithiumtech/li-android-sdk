@@ -70,4 +70,4 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 * Review our [providers and models documentation](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-API-providers)
 * Learn about [authentication options](https://github.com/lithiumtech/lia-sdk-android/wiki/Authentication-with-the-Community-Android-SDK)
 * Create your [app key and secret credentials](https://github.com/lithiumtech/lia-sdk-android/wiki/Getting-Started-with-the-Community-Android-SDK#get-authorization-credentials)
-* Check out our [example app](https://github.com/lithiumtech/li-android-sdk-example)
+* Check out our [example app](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo)
