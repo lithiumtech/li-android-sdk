@@ -1,6 +1,6 @@
 # Lithium Community Android SDK UI
 
-The `lia-ui` package is an optional UI library that includes a support-focused Community workflow. The package includes set of activities and fragments supporting message lists, message posting, community browsing and navigation, and keyword search. For full details about the SDK components, see [Community Android SDK UI components](https://github.com/lithiumtech/li-android-sdk-ui/wiki/Community-Android-SDK-UI-components) and the [li-android-sdk-ui Javadoc](https://lithiumtech.github.io/li-android-sdk-ui/)
+The `lia-ui` package is an optional UI library that includes a support-focused Community workflow. The package includes set of activities and fragments supporting message lists, message posting, community browsing and navigation, and keyword search. For full details about the SDK components, see [Community Android SDK UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-UI-components) and the [li-android-sdk-ui Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
 
 The UI components module requires the `lia-core` module, and is compatible with Android Level 19 (4.4) and above.
 
@@ -59,7 +59,7 @@ Copyright 2018 Lithium Technologies
 
 ### Example app
 
-The [Lithium Community Example Application](https://github.com/lithiumtech/li-android-sdk-ui/tree/master/lia-demo) is a basic implementation of the Community Android SDK. The reference application shows the fastest way to get a Lithium Community backed application running quickly. You can download the reference app from Github.
+The [Lithium Community Example Application](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo) is a basic implementation of the Community Android SDK. The reference application shows the fastest way to get a Lithium Community backed application running quickly. You can download the reference app from Github.
 
 ### Getting help
 

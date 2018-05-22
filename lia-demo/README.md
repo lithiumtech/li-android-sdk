@@ -32,10 +32,6 @@ Except as otherwise noted, the Community Android SDK and the Lithium Community R
 
 Copyright 2018 Lithium Technologies
 
-## Getting help
-
-Visit the [Developers Discussion forum](https://community.lithium.com/t5/Developers-Discussion/bd-p/studio) on the Lithium Community to ask questions and talk with other members of the Lithium Developer community.
-
 ## Setting up the dev branch
 
 If this is not the `master` branch then the required SDK version may not be available
