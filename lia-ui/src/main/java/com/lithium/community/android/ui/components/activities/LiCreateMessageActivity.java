@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
+import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
@@ -72,7 +74,6 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     protected TextView errorTextView;
     protected View errorViewContainer;
     protected TextView errorBtn;
-    Intent imageSelectionIntent;
     // listener for login flow to be completed and then refresh accordingly.
     BroadcastReceiver loginCompleteReceiver = new BroadcastReceiver() {
         @Override
@@ -144,7 +145,13 @@ public class LiCreateMessageActivity extends AppCompatActivity {
             fragmentBundle.putAll(actBundle);
         }
         fragment = LiCreateMessageFragment.newInstance(fragmentBundle);
-        ft.replace(R.id.li_create_message_fragment_container, fragment, fragment.getClass().getName());
+        Fragment f = fm.findFragmentById(R.id.li_create_message_fragment_container);
+        if(f instanceof LiCreateMessageFragment){
+            fragment = (LiCreateMessageFragment) f;
+            f.setArguments(fragmentBundle);
+        }else {
+            ft.replace(R.id.li_create_message_fragment_container, fragment, fragment.getClass().getName());
+        }
         ft.commit();
         configureLayout();
     }
@@ -233,7 +240,8 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageSelectionIntent = data;
-        fragment.handleImageSelection(imageSelectionIntent);
+        if(requestCode == LiSDKConstants.PICK_IMAGE_REQUEST) {
+            fragment.handleImageSelection(data);
+        }
     }
 }

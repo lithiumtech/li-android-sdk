@@ -159,6 +159,20 @@ public class LiCreateMessageFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            outputFileUri = savedInstanceState.getParcelable(MediaStore.EXTRA_OUTPUT);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MediaStore.EXTRA_OUTPUT, outputFileUri);
+    }
+
     /**
      * Set up the views and populated the views if the UI is used a reply to a selected message.
      */
@@ -221,6 +235,8 @@ public class LiCreateMessageFragment extends DialogFragment {
         });
     }
 
+
+
     public void startImageChooserActivity() {
         // Determine Uri of camera image to save.
         final String randomName = UUID.randomUUID().toString().substring(0, 5) + IMAGE_EXTENSION;
@@ -263,7 +279,7 @@ public class LiCreateMessageFragment extends DialogFragment {
         // Add the camera options.
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
 
-        startActivityForResult(chooserIntent, LiSDKConstants.PICK_IMAGE_REQUEST);
+        getActivity().startActivityForResult(chooserIntent, LiSDKConstants.PICK_IMAGE_REQUEST);
     }
 
     private void initializeAdapter() {
