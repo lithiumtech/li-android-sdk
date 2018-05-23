@@ -36,14 +36,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
-import com.lithium.community.android.example.utils.MiscUtils;
-import com.lithium.community.android.example.utils.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -227,6 +226,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_launch_anonymous:
                 start();
+                break;
+            default:
                 break;
         }
     }

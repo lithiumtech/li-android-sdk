@@ -31,6 +31,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import com.lithium.community.android.auth.LiAuthConstants;
+import com.lithium.community.android.auth.LiAuthServiceImpl;
+import com.lithium.community.android.auth.LiTokenResponse;
+import com.lithium.community.android.exception.LiInitializationException;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.LiBaseModelImpl;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKUtils;
+import com.lithium.community.android.utils.LiImageUtils;
+import com.lithium.community.android.utils.LiUriUtils;
+import com.lithium.community.android.utils.MessageConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,18 +57,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import lithium.community.android.sdk.R;
-import com.lithium.community.android.auth.LiAuthConstants;
-import com.lithium.community.android.auth.LiAuthServiceImpl;
-import com.lithium.community.android.auth.LiTokenResponse;
-import com.lithium.community.android.exception.LiInitializationException;
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.manager.LiSDKManager;
-import com.lithium.community.android.model.LiBaseModelImpl;
-import com.lithium.community.android.utils.LiCoreSDKConstants;
-import com.lithium.community.android.utils.LiCoreSDKUtils;
-import com.lithium.community.android.utils.LiImageUtils;
-import com.lithium.community.android.utils.LiUriUtils;
-import com.lithium.community.android.utils.MessageConstants;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -286,7 +286,7 @@ public abstract class LiRestClient {
      * @param requestBody     Request body of image upload API.
      */
     public void uploadImageProcessAsync(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback,
-                                        final String imagePath, final String imageName, final String requestBody) {
+            final String imagePath, final String imageName, final String requestBody) {
         if (baseRestRequest.isAuthenticatedRequest() && sdkManager.isUserLoggedIn()) {
             if (sdkManager.getNeedsTokenRefresh()) {
                 try {
@@ -317,7 +317,7 @@ public abstract class LiRestClient {
      * @param imgRequestBody  Request body of image upload API.
      */
     private void uploadEnqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback, String imagePath,
-                                   String imageName, String imgRequestBody) {
+            String imageName, String imgRequestBody) {
 
         final MediaType MEDIA_TYPE = MediaType.parse("image/*");
         File originalFile = new File(imagePath);

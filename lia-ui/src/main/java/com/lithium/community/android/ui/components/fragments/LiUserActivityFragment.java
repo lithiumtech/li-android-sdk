@@ -115,7 +115,7 @@ public class LiUserActivityFragment extends LiBaseFragment {
     public void onResume() {
         try {
             getClient();
-        }catch (LiRestResponseException e) {
+        } catch (LiRestResponseException e) {
             e.printStackTrace();
         }
         super.onResume();
