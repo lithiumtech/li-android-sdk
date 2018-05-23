@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,9 +53,21 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
     private LiCreateMessageFragment liCreateMessageFragment;
     private Activity activity;
     private String htmlTemplate;
+    private String currentMessage;
+    private String currentTitle;
+
+    public void setCurrentMessage(String currentMessage) {
+        this.currentMessage = currentMessage;
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentTitle(String title){
+        this.currentTitle = title;
+        notifyDataSetChanged();
+    }
 
     public LiCreateMessageAdapter(Activity activity, boolean canSelectABoard,
-            LiCreateMessageFragment liCreateMessageFragment) {
+                                  LiCreateMessageFragment liCreateMessageFragment) {
         this.canSelectABoard = canSelectABoard;
         this.liCreateMessageFragment = liCreateMessageFragment;
         this.activity = activity;
@@ -137,6 +150,14 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
                     Context.INPUT_METHOD_SERVICE
             );
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+            if(!TextUtils.isEmpty(currentTitle)){
+                liAuthoringViewHolder.askQuestionSubject.setText(currentTitle);
+            }
+
+            if(!TextUtils.isEmpty(currentMessage)){
+                liAuthoringViewHolder.askQuestionBody.setText(currentMessage);
+            }
 
             if (canSelectABoard) {
                 liAuthoringViewHolder.inReplyToContainer.setVisibility(View.GONE);

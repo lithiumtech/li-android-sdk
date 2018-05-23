@@ -164,6 +164,18 @@ public class LiCreateMessageFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null){
             outputFileUri = savedInstanceState.getParcelable(MediaStore.EXTRA_OUTPUT);
+            String message = savedInstanceState.getString(Intent.EXTRA_TEXT);
+            if(!TextUtils.isEmpty(message)) {
+                askQuestionBodyText = message.replaceAll("\\n", "<br />");
+            }
+            askQuestionSubjectText = savedInstanceState.getString(Intent.EXTRA_TITLE);
+            if(outputFileUri != null) {
+                handleImageSelection(null);
+            }
+            if(adapter != null){
+                adapter.setCurrentMessage(message);
+                adapter.setCurrentTitle(askQuestionSubjectText);
+            }
         }
     }
 
@@ -171,6 +183,11 @@ public class LiCreateMessageFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(MediaStore.EXTRA_OUTPUT, outputFileUri);
+        if(!TextUtils.isEmpty(askQuestionBodyText)) {
+            outState.putString(Intent.EXTRA_TEXT, askQuestionBodyText.replaceAll("<br />", "\\n"));
+        }
+        outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
+
     }
 
     /**
@@ -285,6 +302,8 @@ public class LiCreateMessageFragment extends DialogFragment {
     private void initializeAdapter() {
         adapter = new LiCreateMessageAdapter(getActivity(), canSelectABoard, this);
         recyclerView.setAdapter(adapter);
+        adapter.setCurrentTitle(askQuestionSubjectText);
+        adapter.setCurrentMessage(TextUtils.isEmpty(askQuestionBodyText)? null : askQuestionBodyText.replaceAll("<br />", "\\n"));
     }
 
     protected void openBrowseDialog() {
