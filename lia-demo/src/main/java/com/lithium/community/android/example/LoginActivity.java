@@ -36,14 +36,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.example.utils.MiscUtils;
+import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
-import com.lithium.community.android.example.utils.MiscUtils;
-import com.lithium.community.android.example.utils.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -100,9 +99,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnAnonymous.setOnClickListener(this);
         checkboxSsoLogin.setOnCheckedChangeListener(this);
 
-        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
-        registerReceiver(receiver, filter);
-
         if (!areCredentialsProvided() || !LiSDKManager.isInitialized()) {
             View layoutErrorMessage = findViewById(R.id.layout_sdk_initialization_error);
             layoutErrorMessage.setVisibility(View.VISIBLE);
@@ -114,6 +110,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         reset();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     private void reset() {
@@ -140,12 +149,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             editSsoToken.setVisibility(!isUserLoggedIn && checkboxSsoLogin.isChecked() ? View.VISIBLE : View.INVISIBLE);
             invalidateOptionsMenu();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);
     }
 
     @Override
@@ -189,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        String ssoToken = checkboxSsoLogin.isChecked() ? checkboxSsoLogin.getText().toString() : null;
+        String ssoToken = checkboxSsoLogin.isChecked() ? editSsoToken.getText().toString() : null;
         LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
             @Override
             public String getDeviceId() {
@@ -223,6 +226,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_launch_anonymous:
                 start();
+                break;
+            default:
                 break;
         }
     }

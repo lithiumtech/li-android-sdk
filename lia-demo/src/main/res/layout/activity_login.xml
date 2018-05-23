@@ -108,7 +108,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:hint="@string/hint_sso_token"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:text="@string/sample_sso_token"
                 android:visibility="invisible" />
 

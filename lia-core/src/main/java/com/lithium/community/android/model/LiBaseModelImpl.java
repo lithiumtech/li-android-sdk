@@ -168,12 +168,12 @@ public class LiBaseModelImpl implements LiBaseModel {
             return value;
         }
 
-        public void setValue(LiDateInstant value) {
-            this.value = value;
-        }
-
         public void setValue(@NonNull String valueStr) {
             setValue(new LiDateInstant());
+        }
+
+        public void setValue(LiDateInstant value) {
+            this.value = value;
         }
     }
 
@@ -190,6 +190,10 @@ public class LiBaseModelImpl implements LiBaseModel {
             return this.value;
         }
 
+        public void setValue(long value) {
+            this.value = value;
+        }
+
         public void setValue(@NonNull String valueStr) {
             LIA_DATE_TIME_FORMAT.setTimeZone(TimeZone.getDefault());
             Date dt = null;
@@ -199,10 +203,6 @@ public class LiBaseModelImpl implements LiBaseModel {
                 dt = Calendar.getInstance().getTime();
             }
             setValue(dt.getTime());
-        }
-
-        public void setValue(long value) {
-            this.value = value;
         }
     }
 
