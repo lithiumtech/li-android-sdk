@@ -141,11 +141,11 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
             );
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-            if(!TextUtils.isEmpty(currentTitle)){
+            if (!TextUtils.isEmpty(currentTitle)) {
                 liAuthoringViewHolder.askQuestionSubject.setText(currentTitle);
             }
 
-            if(!TextUtils.isEmpty(currentMessage)){
+            if (!TextUtils.isEmpty(currentMessage)) {
                 liAuthoringViewHolder.askQuestionBody.setText(currentMessage);
             }
 
@@ -266,7 +266,7 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void setCurrentTitle(String title){
+    public void setCurrentTitle(String title) {
         this.currentTitle = title;
         notifyDataSetChanged();
     }

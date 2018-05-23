@@ -162,17 +162,17 @@ public class LiCreateMessageFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             outputFileUri = savedInstanceState.getParcelable(MediaStore.EXTRA_OUTPUT);
             String message = savedInstanceState.getString(Intent.EXTRA_TEXT);
-            if(!TextUtils.isEmpty(message)) {
+            if (!TextUtils.isEmpty(message)) {
                 askQuestionBodyText = message.replaceAll("\\n", "<br />");
             }
             askQuestionSubjectText = savedInstanceState.getString(Intent.EXTRA_TITLE);
-            if(outputFileUri != null) {
+            if (outputFileUri != null) {
                 handleImageSelection(null);
             }
-            if(adapter != null){
+            if (adapter != null) {
                 adapter.setCurrentMessage(message);
                 adapter.setCurrentTitle(askQuestionSubjectText);
             }
@@ -183,7 +183,7 @@ public class LiCreateMessageFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        if(!TextUtils.isEmpty(askQuestionBodyText)) {
+        if (!TextUtils.isEmpty(askQuestionBodyText)) {
             outState.putString(Intent.EXTRA_TEXT, askQuestionBodyText.replaceAll("<br />", "\\n"));
         }
         outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
@@ -301,7 +301,7 @@ public class LiCreateMessageFragment extends DialogFragment {
         adapter = new LiCreateMessageAdapter(getActivity(), canSelectABoard, this);
         recyclerView.setAdapter(adapter);
         adapter.setCurrentTitle(askQuestionSubjectText);
-        adapter.setCurrentMessage(TextUtils.isEmpty(askQuestionBodyText)? null : askQuestionBodyText.replaceAll("<br />", "\\n"));
+        adapter.setCurrentMessage(TextUtils.isEmpty(askQuestionBodyText) ? null : askQuestionBodyText.replaceAll("<br />", "\\n"));
     }
 
     protected void openBrowseDialog() {
@@ -758,6 +758,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
                             break;
+                        default:
                     }
                 }
             };

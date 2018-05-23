@@ -103,7 +103,7 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm != null) {
+        if (imm != null) {
             imm.hideSoftInputFromWindow(errorTextView.getWindowToken(), 0);
         }
         unregisterReceiver(networkBroadcastReceiver);
@@ -144,10 +144,10 @@ public class LiCreateMessageActivity extends AppCompatActivity {
             fragmentBundle.putAll(actBundle);
         }
         Fragment f = fm.findFragmentById(R.id.li_create_message_fragment_container);
-        if(f instanceof LiCreateMessageFragment){
+        if (f instanceof LiCreateMessageFragment) {
             fragment = (LiCreateMessageFragment) f;
             fragment.setArguments(fragmentBundle);
-        }else {
+        } else {
             FragmentTransaction ft = fm.beginTransaction();
             fragment = LiCreateMessageFragment.newInstance(fragmentBundle);
             fragment.setArguments(fragmentBundle);
@@ -213,7 +213,7 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_REQUEST: {
                 // If request is cancelled, the result arrays are empty.
@@ -224,6 +224,8 @@ public class LiCreateMessageActivity extends AppCompatActivity {
                     LiUIUtils.showInAppNotification(this, R.string.li_image_read_no_permission);
                 }
             }
+            break;
+            default:
         }
     }
 
@@ -241,7 +243,7 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == LiSDKConstants.PICK_IMAGE_REQUEST) {
+        if (requestCode == LiSDKConstants.PICK_IMAGE_REQUEST) {
             fragment.handleImageSelection(data);
         }
     }
