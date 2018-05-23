@@ -537,7 +537,7 @@ public abstract class LiRestClient {
      */
     private static class RefreshAndRetryInterceptor implements Interceptor {
 
-        private static int MAX_TRIES = 2;
+        private static final int MAX_TRIES = 2;
 
         private WeakReference<Context> context;
         private LiSDKManager sdk;
