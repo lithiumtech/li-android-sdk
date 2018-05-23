@@ -56,16 +56,6 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
     private String currentMessage;
     private String currentTitle;
 
-    public void setCurrentMessage(String currentMessage) {
-        this.currentMessage = currentMessage;
-        notifyDataSetChanged();
-    }
-
-    public void setCurrentTitle(String title){
-        this.currentTitle = title;
-        notifyDataSetChanged();
-    }
-
     public LiCreateMessageAdapter(Activity activity, boolean canSelectABoard,
                                   LiCreateMessageFragment liCreateMessageFragment) {
         this.canSelectABoard = canSelectABoard;
@@ -269,5 +259,15 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
             inReplyToContainer = mView.findViewById(R.id.in_reply_to_container);
             liAskQuestionSubjectContainer = mView.findViewById(R.id.li_ask_question_subject_container);
         }
+    }
+
+    public void setCurrentMessage(String currentMessage) {
+        this.currentMessage = currentMessage;
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentTitle(String title){
+        this.currentTitle = title;
+        notifyDataSetChanged();
     }
 }

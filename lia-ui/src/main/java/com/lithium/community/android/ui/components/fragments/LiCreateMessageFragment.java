@@ -252,8 +252,6 @@ public class LiCreateMessageFragment extends DialogFragment {
         });
     }
 
-
-
     public void startImageChooserActivity() {
         // Determine Uri of camera image to save.
         final String randomName = UUID.randomUUID().toString().substring(0, 5) + IMAGE_EXTENSION;

@@ -139,20 +139,21 @@ public class LiCreateMessageActivity extends AppCompatActivity {
             ssoToken = actBundle.getString(LiCoreSDKConstants.LI_SSO_TOKEN, null);
         }
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
         Bundle fragmentBundle = new Bundle();
         if (actBundle != null) {
             fragmentBundle.putAll(actBundle);
         }
-        fragment = LiCreateMessageFragment.newInstance(fragmentBundle);
         Fragment f = fm.findFragmentById(R.id.li_create_message_fragment_container);
         if(f instanceof LiCreateMessageFragment){
             fragment = (LiCreateMessageFragment) f;
-            f.setArguments(fragmentBundle);
+            fragment.setArguments(fragmentBundle);
         }else {
+            FragmentTransaction ft = fm.beginTransaction();
+            fragment = LiCreateMessageFragment.newInstance(fragmentBundle);
+            fragment.setArguments(fragmentBundle);
             ft.replace(R.id.li_create_message_fragment_container, fragment, fragment.getClass().getName());
+            ft.commit();
         }
-        ft.commit();
         configureLayout();
     }
 
