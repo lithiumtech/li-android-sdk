@@ -16,10 +16,10 @@
 
 package com.lithium.community.android.queryutil;
 
+import com.lithium.community.android.manager.LiClientManager.Client;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.lithium.community.android.manager.LiClientManager.Client;
 
 import static com.lithium.community.android.utils.LiQueryConstant.DEFAULT_LIQL_QUERY_LIMIT;
 
@@ -71,7 +71,7 @@ public class LiQueryRequestParams {
         List<LiQuerySetting.Ordering> orderings = null;
         if (this.liQueryOrdering != null && liQueryOrdering.size() > 0) {
             orderings = new ArrayList<>();
-            for(LiQueryOrdering queryOrdering : liQueryOrdering) {
+            for (LiQueryOrdering queryOrdering : liQueryOrdering) {
                 LiQuerySetting.Ordering ordering = new LiQuerySetting.Ordering();
                 ordering.setKey(queryOrdering.getColumn().getValue());
                 ordering.setType(queryOrdering.getOrder().name());
@@ -123,8 +123,8 @@ public class LiQueryRequestParams {
                             liQueryClause.getKey().getClient(), client));
                 }
             }
-            if(liQueryOrdering != null) {
-                for(LiQueryOrdering queryOrdering : liQueryOrdering) {
+            if (liQueryOrdering != null) {
+                for (LiQueryOrdering queryOrdering : liQueryOrdering) {
                     if (!queryOrdering.isVaild(client)) {
                         throw new RuntimeException(
                                 String.format("Invalid liQueryOrdering !!! Use LiQueryOrdering of  %s", client));
