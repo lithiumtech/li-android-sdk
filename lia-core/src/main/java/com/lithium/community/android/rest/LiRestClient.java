@@ -56,7 +56,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import lithium.community.android.sdk.R;
+import com.lithium.community.android.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;

@@ -45,7 +45,7 @@ import com.lithium.community.android.utils.MessageConstants;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import lithium.community.android.sdk.BuildConfig;
+import com.lithium.community.android.BuildConfig;
 
 /**
  * <p>

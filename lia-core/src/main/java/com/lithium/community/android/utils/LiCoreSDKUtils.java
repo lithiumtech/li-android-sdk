@@ -51,8 +51,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import lithium.community.android.sdk.BuildConfig;
-import lithium.community.android.sdk.R;
+import com.lithium.community.android.BuildConfig;
+import com.lithium.community.android.R;
 import okhttp3.Request;
 
 /**
