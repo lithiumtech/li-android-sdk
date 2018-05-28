@@ -48,4 +48,4 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 * Read about our [Support UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-UI-components)
 * Learn about [authentication options](https://github.com/lithiumtech/lia-sdk-android/wiki/Authentication-with-the-Community-Android-SDK)
 * Create your [app key and secret credentials](https://github.com/lithiumtech/lia-sdk-android/wiki/Getting-Started-with-the-Community-Android-SDK#get-app-credentials)
-* Check out our [reference app](https://github.com/lithiumtech//lia-sdk-android/tree/master/lia-demo)
+* Check out our [reference app](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo)
