@@ -24,7 +24,6 @@
     <string name="communityUrl"><!--PLEASE ADD THE COMMUNITY BASE URL HERE--></string>
     <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
 
-    
     <string name="app_name">Lia Demo</string>
 
     <string name="action_settings">Settings</string>
