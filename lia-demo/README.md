@@ -8,7 +8,6 @@ This README assumes that you have Android Studio installed and a working Communi
 1. Jump to [Setting up the dev branch](#setting-up-the-dev-branch) if this is not the `master` branch.
 1. Sign in to your Community and go to **Community Admin > System > API Apps**.
 1. Create an app key and secret for your Community integration app following the steps in the [Get Authorization Credentials](https://github.com/lithiumtech/lia-sdk-android/wiki/Getting-Started-with-the-Community-Android-SDK#get-app-credentials) section of Getting Started with the Community Android SDK.
-1. Clone [lia-demo](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo).
 1. Open the project in Android Studio.
 1. Add your credentials and the Community URL to `strings.xml`.
 
