@@ -26,7 +26,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import lithium.community.android.sdk.R;
+import com.lithium.community.android.R;
 
 /**
  * This class is for receiving a notification from FireBase and showing it on the notification bar of the device.

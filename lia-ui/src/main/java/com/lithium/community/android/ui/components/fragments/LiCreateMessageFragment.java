@@ -641,7 +641,7 @@ public class LiCreateMessageFragment extends DialogFragment {
 
             if (originalFile.length() >= LiCoreSDKConstants.LI_MIN_IMAGE_SIZE_TO_COMPRESS) {
                 int imageCompressionSize = getResources().getDimensionPixelSize(
-                        lithium.community.android.sdk.R.dimen.li_image_compression_size);
+                        R.dimen.li_image_compression_size);
                 int imageQuality = getResources().getInteger(R.integer.li_image_compression_quality);
                 selectedPhotoFile = LiImageUtils.compressImage(
                         imageAbsolutePath, selectedImageName, getActivity(),
