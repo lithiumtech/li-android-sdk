@@ -1,17 +1,11 @@
 
-# Lithium Community Android SDK
-
-The Lithium Community Android SDK helps application developers integrate Lithium Community into Android applications, providing support for browsing boards, posting and interacting with messages, managing attachments, sending push notifications, and authenticating users.
-
-* The Community Android SDK is written in Java
-* The Community Android SDK packages are compatible with Android API level 19 and above
-* We recommend installing the SDK using [Gradle](https://gradle.org/)
+# Lithium Community Android SDK - Core Module
 
 All native Lithium Community implementations using the Community Android SDK must use the `lia-core` library module. This library delivers the basic capabilities of authenticating and interacting with a community while adding support for third-party push notification providers.
 
 The SDK also includes an optional Support UI library. (See the `lia-ui` [module and readme](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-ui).)
 
-The SDK supports Lithium Registration authentication, Lithium SSO, and custom SSO implementations.
+The Core SDK supports Lithium Registration authentication, Lithium SSO, and custom SSO implementations.
 
 | Package | Provides |
 | ------- | -------- |
@@ -34,7 +28,7 @@ The guide will take you through generating credentials, building your AARs, addi
 
 ### License
 
-Except as otherwise noted, the Community Android SDK and the Lithium Community Reference app are licensed under the Apache 2.0 License.
+Except as otherwise notified, the Community Android SDK and the Lithium Community Reference app are licensed under the Apache 2.0 License.
 
 Copyright 2018 Lithium Technologies
 
@@ -49,13 +43,9 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 ### Next steps
 
 * Review our [providers and models documentation](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-API-providers)
-* Review the [li-android-sdk-core Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
+* Review the [lia-core Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
 * Run through our [tutorials](https://github.com/lithiumtech/lia-sdk-android/wiki/Tutorials)
 * Read about our [Support UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-UI-components)
 * Learn about [authentication options](https://github.com/lithiumtech/lia-sdk-android/wiki/Authentication-with-the-Community-Android-SDK)
 * Create your [app key and secret credentials](https://github.com/lithiumtech/lia-sdk-android/wiki/Getting-Started-with-the-Community-Android-SDK#get-app-credentials)
 * Check out our [reference app](https://github.com/lithiumtech//lia-sdk-android/tree/master/lia-demo)
-
-### Status
-
-[![Build Status](https://travis-ci.org/lithiumtech/li-android-sdk-core.svg?branch=master)](https://travis-ci.org/lithiumtech/li-android-sdk-core)

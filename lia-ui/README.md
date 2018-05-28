@@ -1,12 +1,12 @@
 # Lithium Community Android SDK UI
 
-The `lia-ui` package is an optional UI library that includes a support-focused Community workflow. The package includes set of activities and fragments supporting message lists, message posting, community browsing and navigation, and keyword search. For full details about the SDK components, see [Community Android SDK UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-UI-components) and the [li-android-sdk-ui Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
+The `lia-ui` module package is an optional UI library that includes a support-focused Community workflow. The module includes set of activities and fragments supporting message lists, message posting, community browsing and navigation, and keyword search. For full details about the SDK components, see [Community Android SDK UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Community-Android-SDK-UI-components) and the [lia-ui Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
 
 The UI components module requires the `lia-core` module, and is compatible with Android Level 19 (4.4) and above.
 
 ### Getting started
 
-1. Complete the tasks in the Quick Start section of the `li-android-sdk-core` library readme.
+1. Complete the tasks in the Quick Start section of the `lia-core` library readme.
 2. Build an intent to start the `LiSupportHomeActivity`, like:
 ```java
 private void startHelpAndSupport() {
@@ -53,7 +53,7 @@ These fragments are used by the activities listed above. You can use them in cus
 
 ### License
 
-Except as otherwise noted, the Community Android SDK and the Lithium Community Reference app are licensed under the Apache 2.0 License.
+Except as otherwise notified, the Community Android SDK and the Lithium Community Reference app are licensed under the Apache 2.0 License.
 
 Copyright 2018 Lithium Technologies
 

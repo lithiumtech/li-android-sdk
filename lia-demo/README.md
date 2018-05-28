@@ -8,7 +8,7 @@ This README assumes that you have Android Studio installed and a working Communi
 1. Jump to [Setting up the dev branch](#setting-up-the-dev-branch) if this is not the `master` branch.
 1. Sign in to your Community and go to **Community Admin > System > API Apps**.
 1. Create an app key and secret for your Community integration app following the steps in the [Get Authorization Credentials](https://github.com/lithiumtech/lia-sdk-android/wiki/Getting-Started-with-the-Community-Android-SDK#get-app-credentials) section of Getting Started with the Community Android SDK.
-1. Clone [li-android-sdk-example](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo).
+1. Clone [lia-demo](https://github.com/lithiumtech/lia-sdk-android/tree/master/lia-demo).
 1. Open the project in Android Studio.
 1. Add your credentials and the Community URL to `strings.xml`.
 
@@ -48,13 +48,13 @@ Follow these instructions:
 
 This will publish the core sdk to the local maven repository. By default the local maven repository
 is at `~/.m2`. We can validate that the SDK is published by navigating to 
-`<MAVEN_HOME>/repository/lithium/community/android/sdk/li-android-sdk-core`.
+`<MAVEN_HOME>/repository/com/lithium/community/android/lia-core`.
 
 1. cd to lia-ui module
 1. follow step 5 for the ui sdk also.
 
 This will publish the ui sdk to the local maven repository. You can validate that the SDK is published by
-navigating to `<MAVEN_HOME>/repository/lithium/community/android/sdk/li-android-sdk-ui`.
+navigating to `<MAVEN_HOME>/repository/com/lithium/community/android/lia-ui`.
 
 Now the required artifacts are available locally and we can build the example app and run it. Continue
 to the [Getting Started](#getting-started) section.
