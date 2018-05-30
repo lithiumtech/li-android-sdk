@@ -842,31 +842,10 @@ public class LiClientManager {
     public static LiClient getSubscriptionPostClient(LiClientRequestParams params) throws LiRestResponseException {
         params.validate(Client.LI_SUBSCRIPTION_POST_CLIENT);
         LiClientRequestParams.LiPostSubscriptionParams liPostSubscriptionParams = ((LiClientRequestParams.LiPostSubscriptionParams) params);
-        LiBaseModel liBaseModel = liPostSubscriptionParams.getTarget();
-        LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.Target();
-        String targetID = null;
-        String targetType = null;
-        if (liBaseModel != null) {
-            if (liBaseModel.getModel() instanceof LiMessage) {
-                LiMessage message = (LiMessage) liBaseModel.getModel();
-                targetType = "message";
-                targetID = String.valueOf(message.getId());
-            } else if (liBaseModel.getModel() instanceof LiBrowse) {
-                LiBrowse board = (LiBrowse) liBaseModel.getModel();
-                targetType = "board";
-                targetID = extractBoardId(board.getId());
-            }
-        } else {
-            targetType = liPostSubscriptionParams.getTargetType();
-            targetID = liPostSubscriptionParams.getTargetId();
-        }
-        target.setType(targetType);
-        target.setId(targetID);
+        LiSubscriptionPostModel.Target target = liPostSubscriptionParams.getTarget();
         String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "subscriptions");
         LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
-        LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel();
-        liSubscriptionPostModel.setType(LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE);
-        liSubscriptionPostModel.setTarget(target);
+        LiSubscriptionPostModel liSubscriptionPostModel = new LiSubscriptionPostModel(target);
         liBasePostClient.postModel = liSubscriptionPostModel;
 
         return liBasePostClient;
