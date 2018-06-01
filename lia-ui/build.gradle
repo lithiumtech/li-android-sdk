@@ -155,6 +155,13 @@ task uploadLocalArchives(type: Upload) {
             pom.artifactId = artifactId
             pom.version = versionName + "+${getGitHash()}"
             repository(url: mavenLocal().url)
+            pom.whenConfigured{ pom ->
+                pom.dependencies.each{ dep ->
+                    if(dep.getGroupId() == groupId){
+                        dep.setVersion(versionName + "+${getGitHash()}")
+                    }
+                }
+            }
         }
     }
 }
