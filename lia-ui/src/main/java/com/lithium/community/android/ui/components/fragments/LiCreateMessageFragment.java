@@ -187,7 +187,7 @@ public class LiCreateMessageFragment extends DialogFragment {
         if (!TextUtils.isEmpty(askQuestionBodyText)) {
             outState.putString(Intent.EXTRA_TEXT, askQuestionBodyText.replaceAll("<br />", "\\n"));
         }
-        if (TextUtils.isEmpty(selectedImageName)) {
+        if (!TextUtils.isEmpty(selectedImageName)) {
             outState.putString(MediaStore.EXTRA_MEDIA_TITLE, selectedImageName);
         }
         outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
