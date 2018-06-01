@@ -67,8 +67,6 @@ import com.lithium.community.android.utils.LiImageUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +187,7 @@ public class LiCreateMessageFragment extends DialogFragment {
         if (!TextUtils.isEmpty(askQuestionBodyText)) {
             outState.putString(Intent.EXTRA_TEXT, askQuestionBodyText.replaceAll("<br />", "\\n"));
         }
-        if (selectedImageName != null) {
+        if (TextUtils.isEmpty(selectedImageName)) {
             outState.putString(MediaStore.EXTRA_MEDIA_TITLE, selectedImageName);
         }
         outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
@@ -613,7 +611,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                 outputFileUri = intent.getData();
             }
 
-            imageAbsolutePath = LiImageHelper.getPath(getActivity(), outputFileUri);;
+            imageAbsolutePath = LiImageHelper.getPath(getActivity(), outputFileUri);
             if (TextUtils.isEmpty(imageAbsolutePath)) {
                 //The code couldn't find any image selected by the user.
                 LiUIUtils.showInAppNotification(getActivity(), R.string.li_image_upload_generic_error);
