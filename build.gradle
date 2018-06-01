@@ -59,8 +59,8 @@ allprojects {
         gitUrl = 'https://github.com/lithiumtech/lia-sdk-android.git'
 
         // version information
-        versionCode = 140000    // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
-        versionName = '1.4.0'
+        versionCode = 130000    // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+        versionName = '1.3.0'
 
         // Sdk and tools
         minSdkVersion = 19

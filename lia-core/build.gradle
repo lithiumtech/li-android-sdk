@@ -23,7 +23,7 @@ apply plugin: 'checkstyle'
 
 Properties properties = new Properties()
 
-def propertiesFile = file('local.properties')
+def propertiesFile = file("${rootDir}/local.properties")
 if (propertiesFile.canRead()) {
     properties.load(new FileInputStream(propertiesFile))
 }
