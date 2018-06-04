@@ -38,15 +38,6 @@ def artifactId = 'lia-core'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
 
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-
 android {
 
     testOptions {
@@ -64,11 +55,6 @@ android {
     }
 
     buildTypes {
-        buildTypes.each { variant ->
-            if (variant.isDebuggable()) {
-                variant.versionNameSuffix = "+${getGitHash()}"
-            }
-        }
 
         debug {
             minifyEnabled false
@@ -95,8 +81,6 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = "+${getGitHash()}"
-            versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
         flavor.versionName = versionName
@@ -196,7 +180,7 @@ task uploadArchivesLocally(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + "+${getGitHash()}"
+            pom.version = versionName
             repository(url: mavenLocal().url)
         }
     }
@@ -240,7 +224,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + "+${getGitHash()}"
+                version versionName
                 url siteUrl
 
                 // Set your license
