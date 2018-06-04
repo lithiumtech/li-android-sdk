@@ -37,15 +37,6 @@ def artifactId = 'lia-ui'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
 
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-
 android {
 
     testOptions {
@@ -63,12 +54,6 @@ android {
     }
 
     buildTypes {
-
-        buildTypes.each { variant ->
-            if (variant.isDebuggable()) {
-                variant.versionNameSuffix = "+${getGitHash()}"
-            }
-        }
 
         debug {
             minifyEnabled false
@@ -94,8 +79,6 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = "+${getGitHash()}"
-            versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
         flavor.versionName = versionName
@@ -153,12 +136,12 @@ task uploadLocalArchives(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + "+${getGitHash()}"
+            pom.version = version
             repository(url: mavenLocal().url)
             pom.whenConfigured{ pom ->
                 pom.dependencies.each{ dep ->
                     if(dep.getGroupId() == groupId){
-                        dep.setVersion(versionName + "+${getGitHash()}")
+                        dep.version = versionName
                     }
                 }
             }
@@ -204,7 +187,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + "+${getGitHash()}"
+                version versionName
                 url siteUrl
 
                 // Set your license
