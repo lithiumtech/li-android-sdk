@@ -33,6 +33,8 @@ gitUrl = project.ext.gitUrl
 version = project.ext.versionName
 group = project.ext.groupId
 
+def isDebuggable = true
+
 def artifactId = 'lia-ui'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
@@ -44,6 +46,10 @@ def getGitHash = { ->
         standardOutput = stdout
     }
     return stdout.toString().trim()
+}
+
+def getPublishVersionSuffix = { ->
+    return isDebuggable ? "+{$getGitHash()}" : ""
 }
 
 android {
@@ -66,7 +72,7 @@ android {
 
         buildTypes.each { variant ->
             if (variant.isDebuggable()) {
-                variant.versionNameSuffix = "+${getGitHash()}"
+                variant.versionNameSuffix = getPublishVersionSuffix()
             }
         }
 
@@ -84,6 +90,8 @@ android {
 
         release {
             minifyEnabled false
+            isDebuggable = false
+            debuggable = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -94,7 +102,7 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = "+${getGitHash()}"
+            def suffix = getPublishVersionSuffix()
             versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
@@ -153,12 +161,12 @@ task uploadLocalArchives(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + "+${getGitHash()}"
+            pom.version = versionName + getPublishVersionSuffix()
             repository(url: mavenLocal().url)
             pom.whenConfigured{ pom ->
                 pom.dependencies.each{ dep ->
                     if(dep.getGroupId() == groupId){
-                        dep.setVersion(versionName + "+${getGitHash()}")
+                        dep.setVersion(versionName + getPublishVersionSuffix())
                     }
                 }
             }
@@ -204,7 +212,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + "+${getGitHash()}"
+                version versionName + getPublishVersionSuffix()
                 url siteUrl
 
                 // Set your license
