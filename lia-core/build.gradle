@@ -34,8 +34,6 @@ gitUrl = project.ext.gitUrl
 version = project.ext.versionName
 group = project.ext.groupId
 
-def isDebuggable = true
-
 def artifactId = 'lia-core'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
@@ -48,11 +46,6 @@ def getGitHash = { ->
     }
     return stdout.toString().trim()
 }
-
-def getPublishVersionSuffix = { ->
-    return isDebuggable ? "+{$getGitHash()}" : ""
-}
-
 
 android {
 
@@ -73,7 +66,7 @@ android {
     buildTypes {
         buildTypes.each { variant ->
             if (variant.isDebuggable()) {
-                variant.versionNameSuffix = getPublishVersionSuffix()
+                variant.versionNameSuffix = "+${getGitHash()}"
             }
         }
 
@@ -91,8 +84,6 @@ android {
 
         release {
             minifyEnabled true
-            isDebuggable = false
-            debuggable = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled false
         }
@@ -104,7 +95,7 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = getPublishVersionSuffix()
+            def suffix = "+${getGitHash()}"
             versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
@@ -205,7 +196,7 @@ task uploadArchivesLocally(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + getPublishVersionSuffix()
+            pom.version = versionName + "+${getGitHash()}"
             repository(url: mavenLocal().url)
         }
     }
@@ -249,7 +240,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + getPublishVersionSuffix()
+                version versionName + "+${getGitHash()}"
                 url siteUrl
 
                 // Set your license
