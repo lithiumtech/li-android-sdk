@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation files(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
     implementation "com.android.support:support-v4:$project.ext.supportLibraryVersion"
     implementation "com.android.support:design:$project.ext.supportLibraryVersion"
