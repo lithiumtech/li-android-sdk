@@ -31,6 +31,11 @@ android {
         versionName project.ext.versionName
     }
     buildTypes {
+        debug{
+            minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -45,12 +50,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:design:$project.ext.supportLibraryVersion"
+    implementation "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation project(':lia-core')
+    implementation project(':lia-ui')
 
-    compile project(':lia-core')
-    compile project(':lia-ui')
-
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 preBuild.dependsOn('checkstyle')
