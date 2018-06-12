@@ -71,6 +71,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        dev {
+            initWith debug
+        }
     }
 
     libraryVariants.all { variant ->
@@ -93,11 +97,15 @@ android {
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:design:$project.ext.supportLibraryVersion"
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile project(':lia-core')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:design:$project.ext.supportLibraryVersion"
+    implementation "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation project(':lia-core')
 }
 
 preBuild.dependsOn('checkstyle')
@@ -164,14 +172,14 @@ task zipRelease(type: Zip) {
     archiveName "${artifactId}-${versionName}.zip"
 }
 
-task generateRelease << {
+task generateRelease {
     println "Release ${versionName} can be found at ${localReleaseDest}/"
     println "Release ${versionName} zipped can be found ${buildDir}/release-${versionName}.zip"
 }
 
-generateRelease.dependsOn(uploadArchives)
-generateRelease.dependsOn(zipRelease)
-generateRelease.dependsOn(javadoc)
+uploadArchives.doLast {generateRelease}
+zipRelease.doLast {generateRelease}
+javadoc.doLast {generateRelease}
 
 artifacts {
     archives androidSourcesJar
