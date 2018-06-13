@@ -86,6 +86,10 @@ public class LiCreateMessageFragment extends DialogFragment {
     public static final String IMAGE_TYPE = "image/*";
     public static final String COMMUNITY_SUFFIX = "-community";
     public static final String IMAGE_EXTENSION = ".jpg";
+
+    public static final String EXTRA_SELECTED_BOARD = "board";
+    public static final String EXTRA_SELECTED_BOARD_ID = "board_id";
+
     private static final int SELECTED_BOARD_ID_REQUEST = 1001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST = 1002;
     public LiMessage selectedMessage;
@@ -177,6 +181,12 @@ public class LiCreateMessageFragment extends DialogFragment {
                 adapter.setCurrentMessage(message);
                 adapter.setCurrentTitle(askQuestionSubjectText);
             }
+
+            String selectedBoard = savedInstanceState.getString(EXTRA_SELECTED_BOARD);
+            String selectedBoardId = savedInstanceState.getString(EXTRA_SELECTED_BOARD_ID);
+            if (!TextUtils.isEmpty(selectedBoard) && !TextUtils.isEmpty(selectedBoardId)) {
+                setSelectedBoard(selectedBoard, selectedBoardId);
+            }
         }
     }
 
@@ -191,6 +201,12 @@ public class LiCreateMessageFragment extends DialogFragment {
             outState.putString(MediaStore.EXTRA_MEDIA_TITLE, selectedImageName);
         }
         outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
+        if (!TextUtils.isEmpty(selectedBoard)) {
+            outState.putString(EXTRA_SELECTED_BOARD, selectedBoard);
+        }
+        if (!TextUtils.isEmpty(selectedBoardId)) {
+            outState.putString(EXTRA_SELECTED_BOARD_ID, LiSDKConstants.LI_BOARD_ID_PREFIX + selectedBoardId);
+        }
 
     }
 
