@@ -545,24 +545,6 @@ public class LiCreateMessageFragment extends DialogFragment {
         }
     }
 
-    private class EditsEnablerRunnable implements Runnable {
-        private boolean enable;
-
-        public EditsEnablerRunnable(boolean enable) {
-            this.enable = enable;
-        }
-
-        @Override
-        public void run() {
-            postQuestionProgBar.setVisibility(enable ? View.GONE : View.VISIBLE);
-            MenuItem item = menu.findItem(R.id.li_action_post_question);
-            item.setEnabled(enable);
-            selectCategoryBtn.setEnabled(enable);
-            selectCategoryLabel.setEnabled(enable);
-            removeSelectedImage.setEnabled(enable);
-        }
-    }
-
     /**
      * Validate if the data entered in the form is valid or not.
      * If not then show appropriate error message.
@@ -804,5 +786,23 @@ public class LiCreateMessageFragment extends DialogFragment {
      */
     public void setAskQuestionBody(String body) {
         this.askQuestionBodyText = body.replaceAll("\\n", "<br />");
+    }
+
+    private class EditsEnablerRunnable implements Runnable {
+        private boolean enable;
+
+        public EditsEnablerRunnable(boolean enable) {
+            this.enable = enable;
+        }
+
+        @Override
+        public void run() {
+            postQuestionProgBar.setVisibility(enable ? View.GONE : View.VISIBLE);
+            MenuItem item = menu.findItem(R.id.li_action_post_question);
+            item.setEnabled(enable);
+            selectCategoryBtn.setEnabled(enable);
+            selectCategoryLabel.setEnabled(enable);
+            removeSelectedImage.setEnabled(enable);
+        }
     }
 }
