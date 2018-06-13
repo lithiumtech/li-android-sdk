@@ -17,7 +17,6 @@
 package com.lithium.community.android.ui.components.fragments;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -424,12 +423,11 @@ public class LiCreateMessageFragment extends DialogFragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.li_action_post_question) {
-            enableFormFields(false);
 
             if (!isFormValid()) {
-                enableFormFields(true);
                 return true;
             }
+            enableEditing(false);
             uploadImageToCommunity();
 
             return true;
@@ -466,13 +464,13 @@ public class LiCreateMessageFragment extends DialogFragment {
                 } else {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_replyPostError);
                 }
-                enableFormFields(true);
+                enableEditing(true);
             }
 
             @Override
             public void onError(Exception e) {
                 if (isAdded() || getActivity() == null) {
-                    enableFormFields(true);
+                    enableEditing(true);
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_replyPostError);
                 }
             }
@@ -524,7 +522,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                         LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_error);
                         break;
                 }
-                enableFormFields(true);
+                enableEditing(true);
             }
 
             @Override
@@ -541,26 +539,22 @@ public class LiCreateMessageFragment extends DialogFragment {
      *
      * @param enable
      */
-    protected void enableFormFields(final boolean enable) {
+    protected void enableEditing(final boolean enable) {
         if (isAdded() && getActivity() != null) {
-            getActivity().runOnUiThread(new FormFieldsEnablerRunnable(enable));
+            getActivity().runOnUiThread(new EditsEnablerRunnable(enable));
         }
     }
 
-    private class FormFieldsEnablerRunnable implements Runnable {
+    private class EditsEnablerRunnable implements Runnable {
         private boolean enable;
 
-        public FormFieldsEnablerRunnable(boolean enable) {
+        public EditsEnablerRunnable(boolean enable) {
             this.enable = enable;
         }
 
         @Override
         public void run() {
-            if (!enable) {
-                postQuestionProgBar.setVisibility(View.VISIBLE);
-            } else {
-                postQuestionProgBar.setVisibility(View.GONE);
-            }
+            postQuestionProgBar.setVisibility(enable ? View.GONE : View.VISIBLE);
             MenuItem item = menu.findItem(R.id.li_action_post_question);
             item.setEnabled(enable);
             selectCategoryBtn.setEnabled(enable);
@@ -728,14 +722,14 @@ public class LiCreateMessageFragment extends DialogFragment {
                 @Override
                 public void onError(Exception e) {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
-                    enableFormFields(true);
+                    enableEditing(true);
                     Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
                 }
             };
             uploadImage.processAsync(callback, imageAbsolutePath, selectedImageName);
         } catch (LiRestResponseException e) {
             LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
-            enableFormFields(true);
+            enableEditing(true);
             Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
         }
     }
@@ -749,7 +743,7 @@ public class LiCreateMessageFragment extends DialogFragment {
             }
         } catch (LiRestResponseException e) {
             LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
-            enableFormFields(true);
+            enableEditing(true);
             Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.toString());
         }
     }
