@@ -54,17 +54,14 @@
         </service>
 
         <!-- remove the above firebase messaging service to use SDKs default implementation -->
-        <!--
-        <service
-            android:name="lithium.community.android.sdk.notification.LiFirebaseMessagingService"
+        <!--<service
+            android:name="com.lithium.community.android.notification.LiFirebaseMessagingService"
             android:isolatedProcess="false"
             tools:node="remove">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-        -->
-
+        </service>-->
 
     </application>
 

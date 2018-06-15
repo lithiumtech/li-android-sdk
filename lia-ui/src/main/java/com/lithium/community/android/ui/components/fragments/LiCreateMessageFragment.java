@@ -86,6 +86,10 @@ public class LiCreateMessageFragment extends DialogFragment {
     public static final String IMAGE_TYPE = "image/*";
     public static final String COMMUNITY_SUFFIX = "-community";
     public static final String IMAGE_EXTENSION = ".jpg";
+
+    public static final String EXTRA_SELECTED_BOARD = "board";
+    public static final String EXTRA_SELECTED_BOARD_ID = "board_id";
+
     private static final int SELECTED_BOARD_ID_REQUEST = 1001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST = 1002;
     public LiMessage selectedMessage;
@@ -157,6 +161,53 @@ public class LiCreateMessageFragment extends DialogFragment {
         } catch (LiRestResponseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            selectedImageName = savedInstanceState.getString(MediaStore.EXTRA_MEDIA_TITLE);
+            outputFileUri = savedInstanceState.getParcelable(MediaStore.EXTRA_OUTPUT);
+            String message = savedInstanceState.getString(Intent.EXTRA_TEXT);
+            if (!TextUtils.isEmpty(message)) {
+                askQuestionBodyText = message.replaceAll("\\n", "<br />");
+            }
+            askQuestionSubjectText = savedInstanceState.getString(Intent.EXTRA_TITLE);
+            if (outputFileUri != null && !TextUtils.isEmpty(selectedImageName)) {
+                handleImageSelection(null);
+            }
+            if (adapter != null) {
+                adapter.setCurrentMessage(message);
+                adapter.setCurrentTitle(askQuestionSubjectText);
+            }
+
+            String selectedBoard = savedInstanceState.getString(EXTRA_SELECTED_BOARD);
+            String selectedBoardId = savedInstanceState.getString(EXTRA_SELECTED_BOARD_ID);
+            if (!TextUtils.isEmpty(selectedBoard) && !TextUtils.isEmpty(selectedBoardId)) {
+                setSelectedBoard(selectedBoard, selectedBoardId);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MediaStore.EXTRA_OUTPUT, outputFileUri);
+        if (!TextUtils.isEmpty(askQuestionBodyText)) {
+            outState.putString(Intent.EXTRA_TEXT, askQuestionBodyText.replaceAll("<br />", "\\n"));
+        }
+        if (!TextUtils.isEmpty(selectedImageName)) {
+            outState.putString(MediaStore.EXTRA_MEDIA_TITLE, selectedImageName);
+        }
+        outState.putString(Intent.EXTRA_TITLE, askQuestionSubjectText);
+        if (!TextUtils.isEmpty(selectedBoard)) {
+            outState.putString(EXTRA_SELECTED_BOARD, selectedBoard);
+        }
+        if (!TextUtils.isEmpty(selectedBoardId)) {
+            outState.putString(EXTRA_SELECTED_BOARD_ID, LiSDKConstants.LI_BOARD_ID_PREFIX + selectedBoardId);
+        }
+
     }
 
     /**
@@ -263,12 +314,14 @@ public class LiCreateMessageFragment extends DialogFragment {
         // Add the camera options.
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
 
-        startActivityForResult(chooserIntent, LiSDKConstants.PICK_IMAGE_REQUEST);
+        getActivity().startActivityForResult(chooserIntent, LiSDKConstants.PICK_IMAGE_REQUEST);
     }
 
     private void initializeAdapter() {
         adapter = new LiCreateMessageAdapter(getActivity(), canSelectABoard, this);
         recyclerView.setAdapter(adapter);
+        adapter.setCurrentTitle(askQuestionSubjectText);
+        adapter.setCurrentMessage(TextUtils.isEmpty(askQuestionBodyText) ? null : askQuestionBodyText.replaceAll("<br />", "\\n"));
     }
 
     protected void openBrowseDialog() {
@@ -386,12 +439,11 @@ public class LiCreateMessageFragment extends DialogFragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.li_action_post_question) {
-            enableFormFields(false);
 
             if (!isFormValid()) {
-                enableFormFields(true);
                 return true;
             }
+            enableEditing(false);
             uploadImageToCommunity();
 
             return true;
@@ -428,13 +480,13 @@ public class LiCreateMessageFragment extends DialogFragment {
                 } else {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_replyPostError);
                 }
-                enableFormFields(true);
+                enableEditing(true);
             }
 
             @Override
             public void onError(Exception e) {
                 if (isAdded() || getActivity() == null) {
-                    enableFormFields(true);
+                    enableEditing(true);
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_replyPostError);
                 }
             }
@@ -486,7 +538,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                         LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_error);
                         break;
                 }
-                enableFormFields(true);
+                enableEditing(true);
             }
 
             @Override
@@ -503,23 +555,9 @@ public class LiCreateMessageFragment extends DialogFragment {
      *
      * @param enable
      */
-    protected void enableFormFields(final boolean enable) {
+    protected void enableEditing(final boolean enable) {
         if (isAdded() && getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!enable) {
-                        postQuestionProgBar.setVisibility(View.VISIBLE);
-                    } else {
-                        postQuestionProgBar.setVisibility(View.GONE);
-                    }
-                    MenuItem item = menu.findItem(R.id.li_action_post_question);
-                    item.setEnabled(enable);
-                    selectCategoryBtn.setEnabled(enable);
-                    selectCategoryLabel.setEnabled(enable);
-                    removeSelectedImage.setEnabled(enable);
-                }
-            });
+            getActivity().runOnUiThread(new EditsEnablerRunnable(enable));
         }
     }
 
@@ -608,7 +646,7 @@ public class LiCreateMessageFragment extends DialogFragment {
 
             if (originalFile.length() >= LiCoreSDKConstants.LI_MIN_IMAGE_SIZE_TO_COMPRESS) {
                 int imageCompressionSize = getResources().getDimensionPixelSize(
-                        lithium.community.android.sdk.R.dimen.li_image_compression_size);
+                        R.dimen.li_image_compression_size);
                 int imageQuality = getResources().getInteger(R.integer.li_image_compression_quality);
                 selectedPhotoFile = LiImageUtils.compressImage(
                         imageAbsolutePath, selectedImageName, getActivity(),
@@ -681,11 +719,15 @@ public class LiCreateMessageFragment extends DialogFragment {
 
                 @Override
                 public void onError(Exception e) {
+                    LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
+                    enableEditing(true);
                     Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
                 }
             };
             uploadImage.processAsync(callback, imageAbsolutePath, selectedImageName);
         } catch (LiRestResponseException e) {
+            LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
+            enableEditing(true);
             Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
         }
     }
@@ -699,7 +741,7 @@ public class LiCreateMessageFragment extends DialogFragment {
             }
         } catch (LiRestResponseException e) {
             LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
-            enableFormFields(true);
+            enableEditing(true);
             Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.toString());
         }
     }
@@ -725,6 +767,7 @@ public class LiCreateMessageFragment extends DialogFragment {
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
                             break;
+                        default:
                     }
                 }
             };
@@ -759,5 +802,23 @@ public class LiCreateMessageFragment extends DialogFragment {
      */
     public void setAskQuestionBody(String body) {
         this.askQuestionBodyText = body.replaceAll("\\n", "<br />");
+    }
+
+    private class EditsEnablerRunnable implements Runnable {
+        private boolean enable;
+
+        public EditsEnablerRunnable(boolean enable) {
+            this.enable = enable;
+        }
+
+        @Override
+        public void run() {
+            postQuestionProgBar.setVisibility(enable ? View.GONE : View.VISIBLE);
+            MenuItem item = menu.findItem(R.id.li_action_post_question);
+            item.setEnabled(enable);
+            selectCategoryBtn.setEnabled(enable);
+            selectCategoryLabel.setEnabled(enable);
+            removeSelectedImage.setEnabled(enable);
+        }
     }
 }

@@ -19,6 +19,7 @@
 buildscript {
 
     repositories {
+        google()
         mavenLocal()
         jcenter()
         mavenCentral()
@@ -29,8 +30,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'de.mobilej.unmock:UnMockPlugin:0.5.0'
+        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'de.mobilej.unmock:UnMockPlugin:0.6.5'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         classpath 'com.google.gms:google-services:3.2.0'
@@ -42,6 +43,7 @@ apply plugin: 'checkstyle'
 allprojects {
 
     repositories {
+        google()
         mavenLocal()
         jcenter()
         maven {
@@ -59,8 +61,8 @@ allprojects {
         gitUrl = 'https://github.com/lithiumtech/lia-sdk-android.git'
 
         // version information
-        versionCode = 140000    // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
-        versionName = '1.4.0'
+        versionCode = 130000    // `major` + `minor` + `revision` + `build` (must have leading zeros up to 1000)
+        versionName = '1.3.0'
 
         // Sdk and tools
         minSdkVersion = 19

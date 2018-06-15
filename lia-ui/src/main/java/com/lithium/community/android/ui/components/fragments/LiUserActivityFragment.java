@@ -112,6 +112,16 @@ public class LiUserActivityFragment extends LiBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        try {
+            getClient();
+        } catch (LiRestResponseException e) {
+            e.printStackTrace();
+        }
+        super.onResume();
+    }
+
+    @Override
     protected void fetchData() {
 
         isFetchComplete = false;

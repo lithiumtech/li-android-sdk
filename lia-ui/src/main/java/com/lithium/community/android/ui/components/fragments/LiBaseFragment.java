@@ -147,7 +147,7 @@ public abstract class LiBaseFragment extends DialogFragment
             isFetchComplete = false;
         }
         Activity activity = getActivity();
-        if(activity != null && loginCompleteReceiver != null) {
+        if (activity != null && loginCompleteReceiver != null) {
             activity.unregisterReceiver(loginCompleteReceiver);
         }
     }
@@ -158,7 +158,7 @@ public abstract class LiBaseFragment extends DialogFragment
         IntentFilter loginCompleteIntentFilter =
                 new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
         Activity activity = getActivity();
-        if(activity != null) {
+        if (activity != null) {
             activity.registerReceiver(loginCompleteReceiver,
                     loginCompleteIntentFilter);
         }

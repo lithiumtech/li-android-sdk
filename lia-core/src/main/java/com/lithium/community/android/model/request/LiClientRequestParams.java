@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lithium.community.android.manager.LiClientManager;
 import com.lithium.community.android.model.LiBaseModel;
+import com.lithium.community.android.model.post.LiSubscriptionPostModel;
 import com.lithium.community.android.queryutil.LiQueryRequestParams;
 
 import java.util.Map;
@@ -942,9 +943,7 @@ public class LiClientRequestParams {
     //Request params for LiSubscriptionPost client
     public static class LiPostSubscriptionParams extends LiClientRequestParams {
 
-        private LiBaseModel target;
-        private String targetId;
-        private String targetType;
+        private LiSubscriptionPostModel.Target target;
 
         /**
          * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
@@ -952,36 +951,17 @@ public class LiClientRequestParams {
          * @param context the Android context (required)
          * @param target  the ID of the target of the subscription, either a message ID or a board ID (required)
          */
-        public LiPostSubscriptionParams(Context context, LiBaseModel target) {
+        public LiPostSubscriptionParams(Context context, LiSubscriptionPostModel.Target target) {
             super(context);
             this.target = target;
             this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
         }
 
-        /**
-         * Builds the parameters for {@link LiClientManager#getSubscriptionPostClient(LiClientRequestParams)}.
-         *
-         * @param context    the Android context (required)
-         * @param targetId   the ID of the target of the subscription, either a message ID or a board ID (required)
-         * @param targetType the type of the target of the subscription, either a "message" or a "board" (required)
-         */
-        public LiPostSubscriptionParams(Context context, String targetId, String targetType) {
-            super(context);
-            this.target = target;
-            this.client = LiClientManager.Client.LI_SUBSCRIPTION_POST_CLIENT;
-        }
 
-        public LiBaseModel getTarget() {
+        public LiSubscriptionPostModel.Target getTarget() {
             return target;
         }
 
-        public String getTargetId() {
-            return targetId;
-        }
-
-        public String getTargetType() {
-            return targetType;
-        }
     }
 
     //Request params for LiMarkMessagePost client

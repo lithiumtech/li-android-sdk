@@ -23,7 +23,7 @@ apply plugin: 'checkstyle'
 
 Properties properties = new Properties()
 
-def propertiesFile = file('local.properties')
+def propertiesFile = file("${rootDir}/local.properties")
 if (propertiesFile.canRead()) {
     properties.load(new FileInputStream(propertiesFile))
 }
@@ -37,15 +37,6 @@ group = project.ext.groupId
 def artifactId = 'lia-core'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
-
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
 
 android {
 
@@ -64,11 +55,6 @@ android {
     }
 
     buildTypes {
-        buildTypes.each { variant ->
-            if (variant.isDebuggable()) {
-                variant.versionNameSuffix = "+${getGitHash()}"
-            }
-        }
 
         debug {
             minifyEnabled false
@@ -87,6 +73,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled false
         }
+
+        dev {
+            initWith debug
+        }
     }
 
     libraryVariants.all { variant ->
@@ -95,8 +85,6 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = "+${getGitHash()}"
-            versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
         flavor.versionName = versionName
@@ -139,25 +127,23 @@ unMock {
 }
 
 dependencies {
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    compile "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
-    /* support v4 added to avoid miss matches from firebase-messaging:11.8.0 dependencies */
-    compile "com.android.support:support-v4:$project.ext.supportLibraryVersion"
-    compile "com.google.code.gson:gson:$project.ext.gsonVersion"
-    compile "com.squareup.okhttp3:okhttp:$project.ext.okhttpVersion"
-    compile "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:design:$project.ext.supportLibraryVersion"
+    implementation "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "com.squareup.okhttp3:okhttp:$project.ext.okhttpVersion"
 
     // Dependencies for local unit tests
-    testCompile 'junit:junit:4.12'
-    testCompile "junit:junit:$project.ext.junitVersion"
-    testCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
-    testCompile "org.mockito:mockito-all:$project.ext.mockitoVersion"
-    testCompile "org.powermock:powermock-module-junit4:$project.ext.powerMockito"
-    testCompile "org.powermock:powermock-api-mockito:$project.ext.powerMockito"
-    testCompile "com.squareup.okhttp3:mockwebserver:$project.ext.okhttpVersion"
-    testCompile "com.squareup.assertj:assertj-android:$project.ext.assertjAndroidVersion"
+    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$project.ext.junitVersion"
+    testImplementation "org.mockito:mockito-core:$project.ext.mockitoVersion"
+    testImplementation "org.mockito:mockito-all:$project.ext.mockitoVersion"
+    testImplementation "org.powermock:powermock-module-junit4:$project.ext.powerMockito"
+    testImplementation "org.powermock:powermock-api-mockito:$project.ext.powerMockito"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$project.ext.okhttpVersion"
+    testImplementation "com.squareup.assertj:assertj-android:$project.ext.assertjAndroidVersion"
 }
 
 preBuild.dependsOn('checkstyle')
@@ -196,7 +182,7 @@ task uploadArchivesLocally(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + "+${getGitHash()}"
+            pom.version = versionName
             repository(url: mavenLocal().url)
         }
     }
@@ -217,14 +203,14 @@ task zipRelease(type: Zip) {
     archiveName "${artifactId}-${versionName}.zip"
 }
 
-task generateRelease << {
+task generateRelease {
     println "Release ${versionName} can be found at ${localReleaseDest}/"
     println "Release ${versionName} zipped can be found ${buildDir}/release-${versionName}.zip"
 }
 
-generateRelease.dependsOn(uploadArchives)
-generateRelease.dependsOn(zipRelease)
-generateRelease.dependsOn(javadoc)
+uploadArchives.doLast {generateRelease}
+zipRelease.doLast {generateRelease}
+javadoc.doLast {generateRelease}
 
 artifacts {
     archives androidSourcesJar
@@ -240,7 +226,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + "+${getGitHash()}"
+                version versionName
                 url siteUrl
 
                 // Set your license
