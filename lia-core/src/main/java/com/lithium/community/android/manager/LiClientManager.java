@@ -41,6 +41,7 @@ import com.lithium.community.android.model.post.LiMarkMessageModel;
 import com.lithium.community.android.model.post.LiMarkMessagesModel;
 import com.lithium.community.android.model.post.LiMarkTopicModel;
 import com.lithium.community.android.model.post.LiPostKudoModel;
+import com.lithium.community.android.model.post.LiPostLogoutModel;
 import com.lithium.community.android.model.post.LiPostMessageModel;
 import com.lithium.community.android.model.post.LiReplyMessageModel;
 import com.lithium.community.android.model.post.LiSubscriptionPostModel;
@@ -1141,6 +1142,16 @@ public class LiClientManager {
         return getGenericQueryDeleteClient(deleteParams);
     }
 
+    public static LiClient getLogoutClient(LiClientRequestParams.LiLogoutRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_LOGOUT_CLIENT);
+
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(),"auth/signout");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
+        LiPostLogoutModel model = new LiPostLogoutModel(params.getClientId(), params.getDeviceId());
+        liBasePostClient.postModel = model;
+
+        return liBasePostClient;
+    }
 
     /**
      * Enum of all clients.
@@ -1191,7 +1202,8 @@ public class LiClientManager {
         LI_MARK_MESSAGE_POST_CLIENT,
         LI_MARK_MESSAGES_POST_CLIENT,
         LI_MARK_TOPIC_POST_CLIENT,
-        LI_UPDATE_MESSAGE_CLIENT
+        LI_UPDATE_MESSAGE_CLIENT,
+        LI_LOGOUT_CLIENT
     }
 
     /**

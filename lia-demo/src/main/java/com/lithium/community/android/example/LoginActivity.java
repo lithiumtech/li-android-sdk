@@ -37,11 +37,13 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.callback.LogoutCallback;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
+import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -176,14 +178,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (id == R.id.li_action_logout) {
             boolean isUserLoggedIn = LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn();
             if (isUserLoggedIn) {
-                LiSDKManager.getInstance().logout(this);
-                reset();
+                LiSDKManager.getInstance().logout(this, new LogoutCallback1());
+                blockUiForLogout();
             }
 
             return true;
         } else {
 
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void blockUiForLogout() {
+        btnLogin.setEnabled(false);
+        progressLogin.setVisibility(View.VISIBLE);
+    }
+
+    private class LogoutCallback1 implements LogoutCallback {
+
+        @Override
+        public void success() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    reset();
+                }
+            });
+        }
+
+        @Override
+        public void failure(Throwable t) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LiUIUtils.showInAppNotification(LoginActivity.this, R.string.error_logout_failed);
+                    reset();
+                }
+            });
         }
     }
 

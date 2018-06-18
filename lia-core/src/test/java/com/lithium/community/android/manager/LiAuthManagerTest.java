@@ -26,6 +26,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.lithium.community.android.callback.LogoutCallback;
+import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.manager.LiSecuredPrefManager;
 import com.lithium.community.android.TestHelper;
@@ -104,5 +106,52 @@ public class LiAuthManagerTest {
         Assert.assertEquals(ACCESS_TOKEN, LiSDKManager.getInstance().getAuthToken());
         Assert.assertEquals(NEW_REFRESH_TOKEN, LiSDKManager.getInstance().getRefreshToken());
         Assert.assertTrue(LiSDKManager.getInstance().isUserLoggedIn());
+    }
+
+    @Test
+    public void testLogout(){
+        Context context = TestHelper.createMockContext();
+        LiSDKManager manager = LiSDKManager.getInstance();
+        manager.logout(context, new LogoutCallback() {
+            @Override
+            public void success() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void failure(Throwable t) {
+                Assert.assertNotNull(t);
+            }
+        });
+    }
+
+    @Test
+    public void testLogoutRequestCallback(){
+        Context context = TestHelper.createMockContext();
+        try {
+            LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
+            LiSDKManager manager = LiSDKManager.getInstance();
+            LiAuthManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new LogoutCallback() {
+                @Override
+                public void success() {
+                    Assert.assertTrue(true);
+                }
+
+                @Override
+                public void failure(Throwable t) {
+                    Assert.assertNotNull(t);
+                }
+            });
+            Assert.assertNotNull(callback);
+            try {
+                callback.onSuccess(null, null);
+            } catch (LiRestResponseException r) {
+                callback.onError(r);
+            }
+            callback.onError(new LiRestResponseException(400, "Sample error", 400));
+        }catch (Exception e){
+            e.printStackTrace();
+            Assert.assertTrue(true);
+        }
     }
 }
