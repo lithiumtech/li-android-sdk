@@ -352,12 +352,13 @@ public final class LiSDKManager extends LiAuthManager {
      * @param callback - instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
      * success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
      */
-    public void logout(@NonNull  Context context, final Callback<Void, Throwable> callback) {
+    public void logout(@NonNull  Context context, @NonNull Callback<Void, Throwable> callback) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
         if (!isUserLoggedIn()) {
             callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
             return;
         }
-        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
         String deviceId = null;
         if (provider != null) {
