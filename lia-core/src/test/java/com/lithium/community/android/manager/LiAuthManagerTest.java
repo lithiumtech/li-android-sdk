@@ -125,33 +125,4 @@ public class LiAuthManagerTest {
         });
     }
 
-    @Test
-    public void testLogoutRequestCallback(){
-        Context context = TestHelper.createMockContext();
-        try {
-            LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
-            LiSDKManager manager = LiSDKManager.getInstance();
-            LiAuthManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new LogoutCallback() {
-                @Override
-                public void success() {
-                    Assert.assertTrue(true);
-                }
-
-                @Override
-                public void failure(Throwable t) {
-                    Assert.assertNotNull(t);
-                }
-            });
-            Assert.assertNotNull(callback);
-            try {
-                callback.onSuccess(null, null);
-            } catch (LiRestResponseException r) {
-                callback.onError(r);
-            }
-            callback.onError(new LiRestResponseException(400, "Sample error", 400));
-        }catch (Exception e){
-            e.printStackTrace();
-            Assert.assertTrue(true);
-        }
-    }
 }
