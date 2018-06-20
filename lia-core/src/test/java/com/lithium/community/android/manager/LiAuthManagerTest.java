@@ -19,17 +19,6 @@ package com.lithium.community.android.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.lithium.community.android.callback.LogoutCallback;
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.manager.LiSDKManager;
-import com.lithium.community.android.manager.LiSecuredPrefManager;
 import com.lithium.community.android.TestHelper;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.model.LiBaseModelImpl;
@@ -37,6 +26,13 @@ import com.lithium.community.android.model.helpers.LiAvatar;
 import com.lithium.community.android.model.helpers.LiImage;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -106,23 +102,6 @@ public class LiAuthManagerTest {
         Assert.assertEquals(ACCESS_TOKEN, LiSDKManager.getInstance().getAuthToken());
         Assert.assertEquals(NEW_REFRESH_TOKEN, LiSDKManager.getInstance().getRefreshToken());
         Assert.assertTrue(LiSDKManager.getInstance().isUserLoggedIn());
-    }
-
-    @Test
-    public void testLogout(){
-        Context context = TestHelper.createMockContext();
-        LiSDKManager manager = LiSDKManager.getInstance();
-        manager.logout(context, new LogoutCallback() {
-            @Override
-            public void success() {
-                Assert.assertTrue(true);
-            }
-
-            @Override
-            public void failure(Throwable t) {
-                Assert.assertNotNull(t);
-            }
-        });
     }
 
 }
