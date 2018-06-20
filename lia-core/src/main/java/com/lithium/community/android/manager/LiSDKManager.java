@@ -21,14 +21,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiAuthService;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.auth.LiTokenResponse;
+import com.lithium.community.android.callback.LogoutCallback;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.request.LiClientRequestParams;
@@ -37,6 +40,7 @@ import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.rest.LiPostClientResponse;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
@@ -341,6 +345,59 @@ public final class LiSDKManager extends LiAuthManager {
                 }
             }
         });
+    }
+
+    /**
+     * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
+     * @param context - instance of {@link Context} to access local cache and storage
+     * @param callback - instance of {@link LogoutCallback} to inform about the state of the logout operation, success() will be called if everything goes well,
+     *                 a necessary exception will be returned in failure(..) if something isn't done.
+     */
+    public void logout(@NonNull  Context context, final LogoutCallback callback) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
+        String deviceId = null;
+        if (provider != null) {
+            deviceId = provider.getDeviceId();
+        }
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
+        try {
+            LiClient client = LiClientManager.getLogoutClient(params);
+            client.processAsync(new LogoutRequestCallback(context, callback));
+        } catch (LiRestResponseException lrre) {
+            lrre.printStackTrace();
+            callback.failure(lrre);
+        }
+    }
+
+    public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
+
+        private LogoutCallback callback = null;
+        private Context context;
+
+        public LogoutRequestCallback(Context context, LogoutCallback callback) {
+            this.callback = callback;
+            this.context = context;
+        }
+
+        @Override
+        public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+            if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                callback.failure(new LiRestResponseException(response.getHttpCode(), response.getResponse().getMessage(), response.getHttpCode()));
+                return;
+            }
+            logout(context);
+            if (callback != null) {
+                callback.success();
+            }
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            if (callback != null) {
+                callback.failure(exception);
+            }
+        }
     }
 }
 

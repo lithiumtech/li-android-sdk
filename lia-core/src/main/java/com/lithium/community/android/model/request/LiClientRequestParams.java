@@ -17,6 +17,8 @@
 package com.lithium.community.android.model.request;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -1668,14 +1670,16 @@ public class LiClientRequestParams {
 
     public static class LiLogoutRequestParams extends LiClientRequestParams {
 
-        private String deviceId;
+        @Nullable
+        private final String deviceId;
 
-        public LiLogoutRequestParams(Context context, String clientId, String deviceId) {
+        public LiLogoutRequestParams(@NonNull Context context, @Nullable  String deviceId) {
             super(context);
             this.deviceId = deviceId;
             this.client = LiClientManager.Client.LI_LOGOUT_CLIENT;
         }
 
+        @Nullable
         public String getDeviceId() {
             return deviceId;
         }
