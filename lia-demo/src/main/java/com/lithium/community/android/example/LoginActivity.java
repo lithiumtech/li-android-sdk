@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
-import com.lithium.community.android.callback.LogoutCallback;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
@@ -194,10 +194,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressLogin.setVisibility(View.VISIBLE);
     }
 
-    private class LogoutCallback1 implements LogoutCallback {
+    private class LogoutCallback1 implements Callback<Void, Throwable> {
 
         @Override
-        public void success() {
+        public void success(Void v) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -215,6 +215,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     reset();
                 }
             });
+        }
+
+        @Override
+        public void abort(Throwable throwable) {
+
         }
     }
 

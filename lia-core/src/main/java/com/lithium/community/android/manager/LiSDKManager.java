@@ -21,17 +21,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lithium.community.android.BuildConfig;
 import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiAuthService;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.auth.LiTokenResponse;
-import com.lithium.community.android.callback.LogoutCallback;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.request.LiClientRequestParams;
@@ -48,8 +48,6 @@ import com.lithium.community.android.utils.MessageConstants;
 
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.lithium.community.android.BuildConfig;
 
 /**
  * <p>
@@ -350,10 +348,10 @@ public final class LiSDKManager extends LiAuthManager {
     /**
      * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
      * @param context - instance of {@link Context} to access local cache and storage
-     * @param callback - instance of {@link LogoutCallback} to inform about the state of the logout operation, success() will be called if everything goes well,
-     *                 a necessary exception will be returned in failure(..) if something isn't done.
+     * @param callback - instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
+     * success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
      */
-    public void logout(@NonNull  Context context, final LogoutCallback callback) {
+    public void logout(@NonNull  Context context, final Callback<Void, Throwable> callback) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
         String deviceId = null;
@@ -372,10 +370,10 @@ public final class LiSDKManager extends LiAuthManager {
 
     public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
 
-        private LogoutCallback callback = null;
+        private Callback<Void, Throwable> callback = null;
         private Context context;
 
-        public LogoutRequestCallback(Context context, LogoutCallback callback) {
+        public LogoutRequestCallback(Context context, Callback<Void, Throwable> callback) {
             this.callback = callback;
             this.context = context;
         }
@@ -388,7 +386,7 @@ public final class LiSDKManager extends LiAuthManager {
             }
             logout(context);
             if (callback != null) {
-                callback.success();
+                callback.success(null);
             }
         }
 

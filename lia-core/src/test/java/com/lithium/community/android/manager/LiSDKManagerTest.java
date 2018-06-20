@@ -18,6 +18,12 @@ package com.lithium.community.android.manager;
 
 import android.content.Context;
 
+import com.lithium.community.android.TestHelper;
+import com.lithium.community.android.auth.LiAppCredentials;
+import com.lithium.community.android.callback.Callback;
+import com.lithium.community.android.exception.LiInitializationException;
+import com.lithium.community.android.exception.LiRestResponseException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -32,14 +38,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.lithium.community.android.callback.LogoutCallback;
-import com.lithium.community.android.exception.LiRestResponseException;
-import com.lithium.community.android.manager.LiSDKManager;
-import com.lithium.community.android.manager.LiSecuredPrefManager;
-import com.lithium.community.android.TestHelper;
-import com.lithium.community.android.auth.LiAppCredentials;
-import com.lithium.community.android.exception.LiInitializationException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -186,15 +184,20 @@ public class LiSDKManagerTest {
         try {
             LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
             LiSDKManager manager = LiSDKManager.getInstance();
-            LiSDKManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new LogoutCallback() {
+            LiSDKManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new Callback<Void, Throwable>() {
                 @Override
-                public void success() {
+                public void success(Void v) {
                     Assert.assertTrue(true);
                 }
 
                 @Override
                 public void failure(Throwable t) {
                     Assert.assertNotNull(t);
+                }
+
+                @Override
+                public void abort(Throwable throwable) {
+                    Assert.assertNotNull(throwable);
                 }
             });
             Assert.assertNotNull(callback);
