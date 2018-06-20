@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.lithium.community.android.auth.LiAppCredentials;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
@@ -164,7 +165,22 @@ public class InitializationActivity extends AppCompatActivity {
         // TODO: save the credentials in shared preferences
         // TODO: logout only if credentials have changes since last session.
         if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            LiSDKManager.getInstance().logout(this);
+            LiSDKManager.getInstance().logout(this, new Callback<Void, Throwable>() {
+                @Override
+                public void success(Void aVoid) {
+
+                }
+
+                @Override
+                public void failure(Throwable throwable) {
+
+                }
+
+                @Override
+                public void abort(Throwable throwable) {
+
+                }
+            });
         }
     }
 
