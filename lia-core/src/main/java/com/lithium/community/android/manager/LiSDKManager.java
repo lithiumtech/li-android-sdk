@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lithium.community.android.BuildConfig;
+import com.lithium.community.android.R;
 import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiAuthService;
@@ -352,6 +353,10 @@ public final class LiSDKManager extends LiAuthManager {
      * success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
      */
     public void logout(@NonNull  Context context, final Callback<Void, Throwable> callback) {
+        if (!isUserLoggedIn()) {
+            callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
+            return;
+        }
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
         String deviceId = null;
