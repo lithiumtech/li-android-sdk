@@ -158,12 +158,9 @@ public class LiClientManagerTest {
 
     @Test
     public void testLogout(){
-        String clientId = "client-id-asdewr23";
         String deviceId = "device-id-13413233";
-        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(mContext, clientId, deviceId);
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(mContext, deviceId);
         Assert.assertNotNull(params);
-        Assert.assertNotNull(params.getClientId());
-        Assert.assertEquals(clientId, params.getClientId());
         Assert.assertNotNull(params.getContext());
         Assert.assertNotNull(params.getDeviceId());
         Assert.assertEquals(deviceId, params.getDeviceId());
