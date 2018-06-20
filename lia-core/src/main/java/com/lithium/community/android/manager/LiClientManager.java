@@ -1147,7 +1147,7 @@ public class LiClientManager {
 
         String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(),"auth/signout");
         final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
-        LiPostLogoutModel model = new LiPostLogoutModel(params.getClientId(), params.getDeviceId());
+        LiPostLogoutModel model = new LiPostLogoutModel(params.getDeviceId());
         liBasePostClient.postModel = model;
 
         return liBasePostClient;

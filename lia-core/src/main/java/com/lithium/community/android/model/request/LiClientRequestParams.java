@@ -1668,18 +1668,12 @@ public class LiClientRequestParams {
 
     public static class LiLogoutRequestParams extends LiClientRequestParams {
 
-        private String clientId;
         private String deviceId;
 
         public LiLogoutRequestParams(Context context, String clientId, String deviceId) {
             super(context);
-            this.clientId = clientId;
             this.deviceId = deviceId;
             this.client = LiClientManager.Client.LI_LOGOUT_CLIENT;
-        }
-
-        public String getClientId() {
-            return clientId;
         }
 
         public String getDeviceId() {
