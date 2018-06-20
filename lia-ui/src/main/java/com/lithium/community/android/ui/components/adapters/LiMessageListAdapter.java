@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.lithium.community.android.ui.components.adapters;
 
 import android.app.Activity;

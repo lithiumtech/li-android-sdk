@@ -16,50 +16,59 @@
 
 package com.lithium.community.android.model.post;
 
+import com.lithium.community.android.utils.LiQueryConstant;
+
 /**
  * Created by shoureya.kant on 3/30/17.
  */
 
 public class LiSubscriptionPostModel extends LiBasePostModel {
 
-    private String type;
-    private Target target;
+    private final String type = LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE;
+    private final Target target;
+
+    public LiSubscriptionPostModel(Target target) {
+        this.target = target;
+    }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Target getTarget() {
         return target;
     }
 
-    public void setTarget(Target target) {
-        this.target = target;
-    }
-
+    /**
+     * Use {@link MessageTarget} or {@link BoardTarget} to select a respective target for subscriptions
+     */
     public static class Target {
-        private String type;
-        private String id;
+        private final String type;
+        private final String id;
+
+        Target(String type, String id) {
+            this.type = type;
+            this.id = id;
+        }
 
         public String getType() {
             return type;
         }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
         public String getId() {
             return id;
         }
+    }
 
-        public void setId(String id) {
-            this.id = id;
+    public static class MessageTarget extends Target {
+        public MessageTarget(String id) {
+            super("message", id);
         }
+    }
 
+    public static class BoardTarget extends Target {
+        public BoardTarget(String id) {
+            super("board", id);
+        }
     }
 }

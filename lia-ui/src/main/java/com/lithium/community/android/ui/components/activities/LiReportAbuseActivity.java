@@ -97,6 +97,8 @@ public class LiReportAbuseActivity extends AppCompatActivity {
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
                             break;
+                        default:
+                            break;
                     }
                 }
             };

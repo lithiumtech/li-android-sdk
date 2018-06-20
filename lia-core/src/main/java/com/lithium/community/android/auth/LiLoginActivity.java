@@ -39,7 +39,7 @@ import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 
-import lithium.community.android.sdk.R;
+import com.lithium.community.android.R;
 
 /**
  * <p>

@@ -125,11 +125,11 @@ public class LiConversationFragment extends LiBaseFragment {
             @Override
             public void onClick(View v) {
                 if (isFetchComplete) {
-                    Intent i = new Intent(view.getContext(), LiCreateMessageActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(LiSDKConstants.ASK_Q_CAN_SELECT_A_BOARD, false);
                     bundle.putLong(LiSDKConstants.SELECTED_MESSAGE_ID, selectedMessageId);
                     bundle.putString(LiSDKConstants.ORIGINAL_MESSAGE_TITLE, originalMessage.getSubject());
+                    Intent i = new Intent(view.getContext(), LiCreateMessageActivity.class);
                     i.putExtras(bundle);
                     startActivity(i);
                 }

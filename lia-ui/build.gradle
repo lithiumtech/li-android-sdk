@@ -22,7 +22,7 @@ apply plugin: 'checkstyle'
 
 Properties properties = new Properties()
 
-def propertiesFile = file('local.properties')
+def propertiesFile = file("${rootDir}/local.properties")
 if (propertiesFile.canRead()) {
     properties.load(new FileInputStream(propertiesFile))
 }
@@ -36,15 +36,6 @@ group = project.ext.groupId
 def artifactId = 'lia-ui'
 
 def localReleaseDest = "${buildDir}/release/${project.ext.versionName}"
-
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
 
 android {
 
@@ -64,12 +55,6 @@ android {
 
     buildTypes {
 
-        buildTypes.each { variant ->
-            if (variant.isDebuggable()) {
-                variant.versionNameSuffix = "+${getGitHash()}"
-            }
-        }
-
         debug {
             minifyEnabled false
             debuggable true
@@ -86,6 +71,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        dev {
+            initWith debug
+        }
     }
 
     libraryVariants.all { variant ->
@@ -94,8 +83,6 @@ android {
         def versionName = flavor.versionName
         if (variant.buildType.isDebuggable()) {
             versionCode += 1
-            def suffix = "+${getGitHash()}"
-            versionName = versionName + suffix
         }
         flavor.versionCode = versionCode
         flavor.versionName = versionName
@@ -110,11 +97,15 @@ android {
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:design:$project.ext.supportLibraryVersion"
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile project(':lia-core')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+    implementation "com.android.support:design:$project.ext.supportLibraryVersion"
+    implementation "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation project(':lia-core')
 }
 
 preBuild.dependsOn('checkstyle')
@@ -153,8 +144,15 @@ task uploadLocalArchives(type: Upload) {
         mavenDeployer {
             pom.groupId = groupId
             pom.artifactId = artifactId
-            pom.version = versionName + "+${getGitHash()}"
+            pom.version = version
             repository(url: mavenLocal().url)
+            pom.whenConfigured{ pom ->
+                pom.dependencies.each{ dep ->
+                    if(dep.getGroupId() == groupId){
+                        dep.version = versionName
+                    }
+                }
+            }
         }
     }
 }
@@ -174,14 +172,14 @@ task zipRelease(type: Zip) {
     archiveName "${artifactId}-${versionName}.zip"
 }
 
-task generateRelease << {
+task generateRelease {
     println "Release ${versionName} can be found at ${localReleaseDest}/"
     println "Release ${versionName} zipped can be found ${buildDir}/release-${versionName}.zip"
 }
 
-generateRelease.dependsOn(uploadArchives)
-generateRelease.dependsOn(zipRelease)
-generateRelease.dependsOn(javadoc)
+uploadArchives.doLast {generateRelease}
+zipRelease.doLast {generateRelease}
+javadoc.doLast {generateRelease}
 
 artifacts {
     archives androidSourcesJar
@@ -197,7 +195,7 @@ install {
 
                 // Add your description here
                 name artifactId
-                version versionName + "+${getGitHash()}"
+                version versionName
                 url siteUrl
 
                 // Set your license

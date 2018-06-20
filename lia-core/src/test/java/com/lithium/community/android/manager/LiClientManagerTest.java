@@ -35,6 +35,7 @@ import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.TestHelper;
 import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.model.post.LiSubscriptionPostModel;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.rest.LiBaseResponse;
 import com.lithium.community.android.rest.LiRestV2Request;
@@ -138,6 +139,20 @@ public class LiClientManagerTest {
         PowerMockito.verifyStatic();
         Assert.assertNull(liClient.getType());
         Assert.assertEquals(PUT, "" + liClient.getRequestType());
+    }
+
+    @Test
+    public void testPostSubscriptionClient(){
+        LiSubscriptionPostModel.Target target = new LiSubscriptionPostModel.MessageTarget("message:hello");
+        LiClientRequestParams.LiPostSubscriptionParams params = new LiClientRequestParams.LiPostSubscriptionParams(mContext, target);
+        LiClient liClient = null;
+        try {
+            liClient = LiClientManager.getSubscriptionPostClient(params);
+            liClient.processSync();
+        }catch (LiRestResponseException lrre){
+        }
+        PowerMockito.verifyStatic();
+        Assert.assertNotNull(liClient);
     }
 /*
     @Test
