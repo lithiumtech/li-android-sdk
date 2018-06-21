@@ -374,16 +374,30 @@ public final class LiSDKManager extends LiAuthManager {
         }
     }
 
+    /**
+     * A callback on Logout rest API operation
+     */
     public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
 
         private Callback<Void, Throwable, Throwable> callback = null;
         private Context context;
 
+        /**
+         * Initialize a callback for Logout rest operation
+         * @param context - And android context {@link Context}
+         * @param callback - the generic SDK callback {@link Callback}, which is the feeder fort SDK clients.
+         */
         public LogoutRequestCallback(Context context, Callback<Void, Throwable, Throwable> callback) {
             this.callback = callback;
             this.context = context;
         }
 
+        /**
+         * API call succeeded, but doesn't necessarily mean operation succeeded. It has more internal meaning.
+         * @param request  {@link LiBaseRestRequest} actual request made with this callback
+         * @param response Generic success response.
+         * @throws LiRestResponseException
+         */
         @Override
         public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
             if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
@@ -396,6 +410,10 @@ public final class LiSDKManager extends LiAuthManager {
             }
         }
 
+        /**
+         * API call itself failed
+         * @param exception {@link Exception}
+         */
         @Override
         public void onError(Exception exception) {
             if (callback != null) {
