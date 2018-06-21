@@ -1673,6 +1673,11 @@ public class LiClientRequestParams {
         @Nullable
         private final String deviceId;
 
+        /**
+         * Builds the parameters for {@link LiClientManager#getLogoutClient(LiLogoutRequestParams)}
+         * @param context - the Android context
+         * @param deviceId - The device-id registered for push notification subscriptions, like Firebase instance id in case of FCM notifications.
+         */
         public LiLogoutRequestParams(@NonNull Context context, @Nullable  String deviceId) {
             super(context);
             this.deviceId = deviceId;

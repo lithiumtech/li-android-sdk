@@ -165,7 +165,7 @@ public class InitializationActivity extends AppCompatActivity {
         // TODO: save the credentials in shared preferences
         // TODO: logout only if credentials have changes since last session.
         if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            LiSDKManager.getInstance().logout(this, new Callback<Void, Throwable>() {
+            LiSDKManager.getInstance().logout(this, new Callback<Void, Throwable, Throwable>() {
                 @Override
                 public void success(Void aVoid) {
 

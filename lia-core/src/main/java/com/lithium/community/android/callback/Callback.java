@@ -1,10 +1,10 @@
 package com.lithium.community.android.callback;
 
-public interface Callback<R, T> {
+public interface Callback<Result, Exception, Reason> {
 
-    void success(R r);
+    void success(Result r);
 
-    void failure(T t);
+    void failure(Exception t);
 
-    void abort(T t);
+    void abort(Reason t);
 }

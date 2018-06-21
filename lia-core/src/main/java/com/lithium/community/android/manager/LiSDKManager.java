@@ -352,7 +352,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @param callback - instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
      * success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
      */
-    public void logout(@NonNull  Context context, @NonNull Callback<Void, Throwable> callback) {
+    public void logout(@NonNull  Context context, @NonNull Callback<Void, Throwable, Throwable> callback) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
         LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
         if (!isUserLoggedIn()) {
@@ -370,16 +370,16 @@ public final class LiSDKManager extends LiAuthManager {
             client.processAsync(new LogoutRequestCallback(context, callback));
         } catch (LiRestResponseException lrre) {
             lrre.printStackTrace();
-            callback.failure(lrre);
+            callback.abort(lrre);
         }
     }
 
     public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
 
-        private Callback<Void, Throwable> callback = null;
+        private Callback<Void, Throwable, Throwable> callback = null;
         private Context context;
 
-        public LogoutRequestCallback(Context context, Callback<Void, Throwable> callback) {
+        public LogoutRequestCallback(Context context, Callback<Void, Throwable, Throwable> callback) {
             this.callback = callback;
             this.context = context;
         }

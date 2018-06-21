@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressLogin.setVisibility(View.VISIBLE);
     }
 
-    private class LogoutCallback1 implements Callback<Void, Throwable> {
+    private class LogoutCallback1 implements Callback<Void, Throwable, Throwable> {
 
         @Override
         public void success(Void v) {

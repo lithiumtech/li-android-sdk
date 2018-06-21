@@ -184,7 +184,7 @@ public class LiSDKManagerTest {
         try {
             LiSDKManager.initialize(context, TestHelper.getTestAppCredentials());
             LiSDKManager manager = LiSDKManager.getInstance();
-            LiSDKManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new Callback<Void, Throwable>() {
+            LiSDKManager.LogoutRequestCallback callback = manager.new LogoutRequestCallback(context, new Callback<Void, Throwable, Throwable>() {
                 @Override
                 public void success(Void v) {
                     Assert.assertTrue(true);

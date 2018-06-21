@@ -8,7 +8,6 @@ public class LiPostLogoutModelTest {
 
     @Test
     public void testModel(){
-        String clientId = "client-id-asdewr23";
         String deviceId = "device-id-13413233";
         LiPostLogoutModel model = new LiPostLogoutModel(deviceId);
         Assert.assertNotNull(model);
