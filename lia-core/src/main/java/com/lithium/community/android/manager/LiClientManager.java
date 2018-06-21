@@ -1142,6 +1142,12 @@ public class LiClientManager {
         return getGenericQueryDeleteClient(deleteParams);
     }
 
+    /**
+     * Builds a POST client which logs out the current logged in user
+     * @param params - the {@link LiClientRequestParams.LiLogoutRequestParams} which contains parameters to the client for logout operation
+     * @return - LiClient essentially an instance of {@link LiBasePostClient}
+     * @throws LiRestResponseException
+     */
     public static LiClient getLogoutClient(LiClientRequestParams.LiLogoutRequestParams params) throws LiRestResponseException {
         params.validate(Client.LI_LOGOUT_CLIENT);
 
