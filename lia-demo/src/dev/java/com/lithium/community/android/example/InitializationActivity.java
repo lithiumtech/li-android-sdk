@@ -106,7 +106,6 @@ public class InitializationActivity extends AppCompatActivity {
         }
 
         if (model.isInitialized()) {
-            persistAndUpdate();
             btnInitialize.setText(R.string.action_proceed);
             tipRestartApp.setVisibility(View.VISIBLE);
             btnReset.setEnabled(false);
@@ -159,29 +158,6 @@ public class InitializationActivity extends AppCompatActivity {
     private void proceed() {
         startActivity(new Intent(this, DevLoginActivity.class));
         finish();
-    }
-
-    private void persistAndUpdate() {
-        // TODO: save the credentials in shared preferences
-        // TODO: logout only if credentials have changes since last session.
-        if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            LiSDKManager.getInstance().logout(this, new Callback<Void, Throwable, Throwable>() {
-                @Override
-                public void success(Void aVoid) {
-
-                }
-
-                @Override
-                public void failure(Throwable throwable) {
-
-                }
-
-                @Override
-                public void abort(Throwable throwable) {
-
-                }
-            });
-        }
     }
 
     class ViewModel {
