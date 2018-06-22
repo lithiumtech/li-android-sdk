@@ -98,6 +98,7 @@ public class LiBrowseFragment extends LiBaseFragment {
             } else {
                 if (!parentNode.isEmpty()) {
                     currentCategory = parentNode.pop();
+                    swipeable.setRefreshing(true);
                     if (currentCategory == null) {
                         populateRootLevel();
                     } else {
