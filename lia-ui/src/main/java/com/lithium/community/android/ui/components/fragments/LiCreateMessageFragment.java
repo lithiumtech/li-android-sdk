@@ -721,14 +721,14 @@ public class LiCreateMessageFragment extends DialogFragment {
                 public void onError(Exception e) {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
                     enableEditing(true);
-                    Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
+                    Log.e(LiSDKConstants.GENERIC_LOG_TAG, "Exception - "+e.getMessage());
                 }
             };
             uploadImage.processAsync(callback, imageAbsolutePath, selectedImageName);
         } catch (LiRestResponseException e) {
             LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
             enableEditing(true);
-            Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
+            Log.e(LiSDKConstants.GENERIC_LOG_TAG, "Exception "+e.getMessage());
         }
     }
 
