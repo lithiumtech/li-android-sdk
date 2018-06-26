@@ -55,6 +55,7 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
     private String htmlTemplate;
     private String currentMessage;
     private String currentTitle;
+    private boolean enableSubjectBodyEditing = true;
 
     public LiCreateMessageAdapter(Activity activity, boolean canSelectABoard,
             LiCreateMessageFragment liCreateMessageFragment) {
@@ -67,6 +68,15 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
         typedArrForBrowse.recycle();
         htmlTemplate = LiUIUtils.getRawString(activity, R.raw.message_template);
         this.liMessage = liCreateMessageFragment.selectedMessage;
+    }
+
+    public void enableSubjectBodyEditing(boolean enableSubjectBodyEditing) {
+        this.enableSubjectBodyEditing = enableSubjectBodyEditing;
+        notifyDataSetChanged();
+    }
+
+    public boolean isSubjectBodyEditingEnabled() {
+        return enableSubjectBodyEditing;
     }
 
     @Override
@@ -227,6 +237,7 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
                     return false;
                 }
             });
+            liAuthoringViewHolder.enableEditing(isSubjectBodyEditingEnabled());
         }
     }
 
@@ -268,6 +279,11 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
             inReplyToText = mView.findViewById(R.id.in_reply_to_text);
             inReplyToContainer = mView.findViewById(R.id.in_reply_to_container);
             liAskQuestionSubjectContainer = mView.findViewById(R.id.li_ask_question_subject_container);
+        }
+
+        public void enableEditing(boolean enable) {
+            askQuestionBody.setEnabled(enable);
+            askQuestionSubject.setEnabled(enable);
         }
     }
 }
