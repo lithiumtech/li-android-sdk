@@ -819,6 +819,7 @@ public class LiCreateMessageFragment extends DialogFragment {
             selectCategoryBtn.setEnabled(enable);
             selectCategoryLabel.setEnabled(enable);
             removeSelectedImage.setEnabled(enable);
+            askQuestionCameraIcon.setEnabled(enable);
         }
     }
 }
