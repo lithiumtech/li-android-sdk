@@ -52,11 +52,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editSsoToken = null;
     private ProgressBar progressLogin = null;
     private CheckBox checkboxSsoLogin = null;
+    private boolean isLoginReceiverRegistered = false;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, false);
+            unregisterReceiver(receiver);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -113,16 +115,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
-        registerReceiver(receiver, filter);
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        isLoginReceiverRegistered = true;
+        return super.registerReceiver(receiver, filter);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        isLoginReceiverRegistered = false;
+        super.unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isLoginReceiverRegistered) {
+            unregisterReceiver(receiver);
+        }
     }
 
     private void reset() {
@@ -192,6 +201,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        registerReceiver(receiver, filter);
         String ssoToken = checkboxSsoLogin.isChecked() ? editSsoToken.getText().toString() : null;
         LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
             @Override
