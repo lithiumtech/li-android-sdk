@@ -72,7 +72,7 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
 
     public void enableSubjectBodyEditing(boolean enableSubjectBodyEditing) {
         this.enableSubjectBodyEditing = enableSubjectBodyEditing;
-        notifyDataSetChanged();
+        notifyItemChanged(getItemCount() - 1);
     }
 
     public boolean isSubjectBodyEditingEnabled() {
