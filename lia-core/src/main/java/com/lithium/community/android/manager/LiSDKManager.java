@@ -24,11 +24,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lithium.community.android.BuildConfig;
+import com.lithium.community.android.R;
+import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiAuthService;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.auth.LiTokenResponse;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.request.LiClientRequestParams;
@@ -37,6 +41,7 @@ import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.rest.LiPostClientResponse;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
@@ -44,8 +49,6 @@ import com.lithium.community.android.utils.MessageConstants;
 
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.lithium.community.android.BuildConfig;
 
 /**
  * <p>
@@ -341,6 +344,82 @@ public final class LiSDKManager extends LiAuthManager {
                 }
             }
         });
+    }
+
+    /**
+     * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
+     * @param context - instance of {@link Context} to access local cache and storage
+     * @param callback - instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
+     * success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
+     */
+    public void logout(@NonNull  Context context, @NonNull Callback<Void, Throwable, Throwable> callback) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
+        if (!isUserLoggedIn()) {
+            callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
+            return;
+        }
+        LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
+        String deviceId = null;
+        if (provider != null) {
+            deviceId = provider.getDeviceId();
+        }
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
+        try {
+            LiClient client = LiClientManager.getLogoutClient(params);
+            client.processAsync(new LogoutRequestCallback(context, callback));
+        } catch (LiRestResponseException lrre) {
+            lrre.printStackTrace();
+            callback.abort(lrre);
+        }
+    }
+
+    /**
+     * A callback on Logout rest API operation
+     */
+    public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
+
+        private Callback<Void, Throwable, Throwable> callback = null;
+        private Context context;
+
+        /**
+         * Initialize a callback for Logout rest operation
+         * @param context - And android context {@link Context}
+         * @param callback - the generic SDK callback {@link Callback}, which is the feeder fort SDK clients.
+         */
+        public LogoutRequestCallback(Context context, Callback<Void, Throwable, Throwable> callback) {
+            this.callback = callback;
+            this.context = context;
+        }
+
+        /**
+         * API call succeeded, but doesn't necessarily mean operation succeeded. It has more internal meaning.
+         * @param request  {@link LiBaseRestRequest} actual request made with this callback
+         * @param response Generic success response.
+         * @throws LiRestResponseException
+         */
+        @Override
+        public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+            if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                callback.failure(new LiRestResponseException(response.getHttpCode(), response.getResponse().getMessage(), response.getHttpCode()));
+                return;
+            }
+            logout(context);
+            if (callback != null) {
+                callback.success(null);
+            }
+        }
+
+        /**
+         * API call itself failed
+         * @param exception {@link Exception}
+         */
+        @Override
+        public void onError(Exception exception) {
+            if (callback != null) {
+                callback.failure(exception);
+            }
+        }
     }
 }
 

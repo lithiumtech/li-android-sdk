@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.lithium.community.android.auth.LiAppCredentials;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
@@ -105,7 +106,6 @@ public class InitializationActivity extends AppCompatActivity {
         }
 
         if (model.isInitialized()) {
-            persistAndUpdate();
             btnInitialize.setText(R.string.action_proceed);
             tipRestartApp.setVisibility(View.VISIBLE);
             btnReset.setEnabled(false);
@@ -158,14 +158,6 @@ public class InitializationActivity extends AppCompatActivity {
     private void proceed() {
         startActivity(new Intent(this, DevLoginActivity.class));
         finish();
-    }
-
-    private void persistAndUpdate() {
-        // TODO: save the credentials in shared preferences
-        // TODO: logout only if credentials have changes since last session.
-        if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            LiSDKManager.getInstance().logout(this);
-        }
     }
 
     class ViewModel {

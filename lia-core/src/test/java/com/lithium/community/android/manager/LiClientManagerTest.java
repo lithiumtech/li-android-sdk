@@ -35,6 +35,7 @@ import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.TestHelper;
 import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.model.post.LiPostLogoutModel;
 import com.lithium.community.android.model.post.LiSubscriptionPostModel;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.rest.LiBaseResponse;
@@ -153,6 +154,24 @@ public class LiClientManagerTest {
         }
         PowerMockito.verifyStatic();
         Assert.assertNotNull(liClient);
+    }
+
+    @Test
+    public void testLogout(){
+        String deviceId = "device-id-13413233";
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(mContext, deviceId);
+        Assert.assertNotNull(params);
+        Assert.assertNotNull(params.getContext());
+        Assert.assertNotNull(params.getDeviceId());
+        Assert.assertEquals(deviceId, params.getDeviceId());
+        LiClient client = null;
+        try{
+            client = LiClientManager.getLogoutClient(params);
+            client.processSync();
+        }catch (LiRestResponseException lrre){
+            lrre.printStackTrace();
+        }
+        PowerMockito.verifyStatic();
     }
 /*
     @Test

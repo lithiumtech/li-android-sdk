@@ -212,7 +212,7 @@ class LiAuthManager {
      *
      * @param context {@link Context}
      */
-    public void logout(@NonNull Context context) {
+    protected void logout(@NonNull Context context) {
         Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#logout() - logging out from SDK");
 
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));

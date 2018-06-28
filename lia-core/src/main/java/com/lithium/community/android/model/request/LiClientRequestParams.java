@@ -17,6 +17,8 @@
 package com.lithium.community.android.model.request;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -1663,6 +1665,28 @@ public class LiClientRequestParams {
 
         public String getSubResourcePath() {
             return subResourcePath;
+        }
+    }
+
+    public static class LiLogoutRequestParams extends LiClientRequestParams {
+
+        @Nullable
+        private final String deviceId;
+
+        /**
+         * Builds the parameters for {@link LiClientManager#getLogoutClient(LiLogoutRequestParams)}
+         * @param context - the Android context
+         * @param deviceId - The device-id registered for push notification subscriptions, like Firebase instance id in case of FCM notifications.
+         */
+        public LiLogoutRequestParams(@NonNull Context context, @Nullable  String deviceId) {
+            super(context);
+            this.deviceId = deviceId;
+            this.client = LiClientManager.Client.LI_LOGOUT_CLIENT;
+        }
+
+        @Nullable
+        public String getDeviceId() {
+            return deviceId;
         }
     }
 }

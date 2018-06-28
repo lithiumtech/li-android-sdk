@@ -39,4 +39,6 @@
 
     <string name="error_credentials_not_set">Error: Credentials not set. Update credentials to continue!</string>
 
+    <string name="error_logout_failed">Logout failed</string>
+
 </resources>
