@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "132005067049-5cvv12799ujii8j8eji4utr6pg6vc95c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.lithium.community.android.example",
-            "certificate_hash": "f75e7b3382a5db68f41708e23c70437a24684ba4"
-          }
-        },
-        {
           "client_id": "132005067049-oeag37l35b60s4t7jnbrpk4pbien6kdu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -31,8 +23,12 @@
           }
         },
         {
-          "client_id": "132005067049-hvcbpl18cg4jq6v8m80msci6qd0sv52s.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "132005067049-5cvv12799ujii8j8eji4utr6pg6vc95c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lithium.community.android.example",
+            "certificate_hash": "f75e7b3382a5db68f41708e23c70437a24684ba4"
+          }
         },
         {
           "client_id": "132005067049-hvcbpl18cg4jq6v8m80msci6qd0sv52s.apps.googleusercontent.com",
