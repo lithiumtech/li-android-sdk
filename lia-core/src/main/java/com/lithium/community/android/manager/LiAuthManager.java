@@ -59,7 +59,7 @@ class LiAuthManager {
 
     LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
         this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-        LiSecuredPrefManager.initialize(credentials.getClientSecret() + credentials.getDeviceId());
+        LiSecuredPrefManager.initialize(credentials.getClientSecret() + credentials.getEncryptionKey());
         LiDefaultQueryHelper.initialize(context);
         this.preferences = LiSecuredPrefManager.getInstance();
         this.state = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
