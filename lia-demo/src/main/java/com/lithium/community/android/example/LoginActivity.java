@@ -35,8 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
@@ -204,13 +202,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
         registerReceiver(receiver, filter);
         String ssoToken = checkboxSsoLogin.isChecked() ? editSsoToken.getText().toString() : null;
-        LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
-            @Override
-            public String getDeviceId() {
-
-                return FirebaseInstanceId.getInstance().getToken();
-            }
-        });
+        LiSDKManager.getInstance().login(this, ssoToken);
     }
 
     private void start() {

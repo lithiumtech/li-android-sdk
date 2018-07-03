@@ -34,6 +34,7 @@ import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
+import com.lithium.community.android.notification.DeviceTokenProvider;
 import com.lithium.community.android.notification.LiNotificationProviderImpl;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiAuthAsyncRequestCallback;
@@ -348,9 +349,9 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - API returned invalid response for SDK settings");
                     }
 
-                    LiDeviceTokenProvider provider = sdkManager.getLiDeviceTokenProvider();
-                    if (provider != null && !TextUtils.isEmpty(provider.getDeviceId())) {
-                        new LiNotificationProviderImpl().onIdRefresh(provider.getDeviceId(), context);
+                    DeviceTokenProvider provider = sdkManager.getDeviceTokenProvider();
+                    if (provider != null && !TextUtils.isEmpty(provider.getDeviceToken())) {
+                        new LiNotificationProviderImpl().onIdRefresh(provider.getDeviceToken(), context);
                     }
 
                     Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthServiceImpl - successfully fetched user and settings.");

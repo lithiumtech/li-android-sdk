@@ -50,7 +50,6 @@ import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -320,12 +319,7 @@ public abstract class LiBaseFragment extends DialogFragment
         liErrorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    LiSDKManager.getInstance().initLoginFlow(getActivity(), ssoToken);
-                } catch (URISyntaxException e) {
-                    Log.d(LiSDKConstants.GENERIC_LOG_TAG, "Could not initiate login flow");
-                    LiUIUtils.showInAppNotification(getActivity(), R.string.li_login_failure);
-                }
+                LiSDKManager.getInstance().login(v.getContext(), ssoToken);
             }
         });
         showEmptyView(true);

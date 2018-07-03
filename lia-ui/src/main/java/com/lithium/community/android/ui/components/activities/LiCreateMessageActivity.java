@@ -41,8 +41,6 @@ import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
-import java.net.URISyntaxException;
-
 /**
  * This class is responsible for displaying the Ask a Question screen.
  * The activity inflates {@link LiCreateMessageFragment} for the actual elements that post a question.
@@ -189,11 +187,8 @@ public class LiCreateMessageActivity extends AppCompatActivity {
     }
 
     protected void startLoginFlow() {
-        try {
-            LiSDKManager.getInstance().initLoginFlow(this, ssoToken);
-        } catch (URISyntaxException e) {
-            LiUIUtils.showInAppNotification(this, R.string.li_login_failure);
-        }
+        LiSDKManager.getInstance().login(this, ssoToken);
+
     }
 
     protected void showUserNotLoggedIn() {

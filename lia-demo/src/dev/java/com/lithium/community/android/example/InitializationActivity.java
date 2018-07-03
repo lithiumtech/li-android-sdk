@@ -18,6 +18,8 @@ package com.lithium.community.android.example;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -25,11 +27,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.notification.DeviceTokenProvider;
 
 
 public class InitializationActivity extends AppCompatActivity {
@@ -144,7 +148,11 @@ public class InitializationActivity extends AppCompatActivity {
                         MiscUtils.getInstanceId(this)
                 );
                 LiSDKManager.initialize(this, credentials);
-                LiSDKManager.getInstance().syncWithCommunity(this);
+
+                LiSDKManager sdk = LiSDKManager.getInstance();
+                sdk.setDeviceTokenProvider(getDeviceTokenProvider());
+                sdk.syncWithCommunity(this);
+
                 proceed();
             } catch (LiInitializationException e) {
                 ToastUtils.initializationError(this, e.getMessage());
@@ -166,6 +174,28 @@ public class InitializationActivity extends AppCompatActivity {
         if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
             LiSDKManager.getInstance().logout(this);
         }
+    }
+
+    @Nullable
+    protected DeviceTokenProvider getDeviceTokenProvider() {
+        final String senderId = getString(R.string.li_sender_id);
+        if (!TextUtils.isEmpty(senderId)) {
+            return new DeviceTokenProvider() {
+
+                @NonNull
+                @Override
+                public FirebaseInstanceId getFirebaseInstanceId() {
+                    return FirebaseInstanceId.getInstance();
+                }
+
+                @NonNull
+                @Override
+                public String getAuthorizedEntity() {
+                    return senderId;
+                }
+            };
+        }
+        return null;
     }
 
     class ViewModel {

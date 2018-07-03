@@ -17,12 +17,17 @@
 package com.lithium.community.android.example;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.notification.DeviceTokenProvider;
 
 public class MainApplication extends Application {
 
@@ -41,7 +46,11 @@ public class MainApplication extends Application {
                         MiscUtils.getInstanceId(this)
                 );
                 LiSDKManager.initialize(this, credentials);
-                LiSDKManager.getInstance().syncWithCommunity(this);
+
+                LiSDKManager sdk = LiSDKManager.getInstance();
+                sdk.setDeviceTokenProvider(getDeviceTokenProvider());
+                sdk.syncWithCommunity(this);
+
                 Log.i(MainApplication.class.getSimpleName(), "Lithium SDK initialized successfully");
             } else {
                 Log.e(MainApplication.class.getSimpleName(), "Lithium SDK Credentials not set");
@@ -50,5 +59,27 @@ public class MainApplication extends Application {
             Log.e(MainApplication.class.getSimpleName(), "Lithium SDK initialization failed.");
             e.printStackTrace();
         }
+    }
+
+    @Nullable
+    protected DeviceTokenProvider getDeviceTokenProvider() {
+        final String senderId = getString(R.string.li_sender_id);
+        if (!TextUtils.isEmpty(senderId)) {
+            return new DeviceTokenProvider() {
+
+                @NonNull
+                @Override
+                public FirebaseInstanceId getFirebaseInstanceId() {
+                    return FirebaseInstanceId.getInstance();
+                }
+
+                @NonNull
+                @Override
+                public String getAuthorizedEntity() {
+                    return senderId;
+                }
+            };
+        }
+        return null;
     }
 }
