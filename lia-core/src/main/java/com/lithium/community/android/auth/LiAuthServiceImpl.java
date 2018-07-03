@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -46,6 +45,7 @@ import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.UUID;
 
@@ -350,8 +350,14 @@ public class LiAuthServiceImpl implements LiAuthService {
                     }
 
                     DeviceTokenProvider provider = sdkManager.getDeviceTokenProvider();
-                    if (provider != null && !TextUtils.isEmpty(provider.getDeviceToken())) {
-                        new LiNotificationProviderImpl().onIdRefresh(provider.getDeviceToken(), context);
+                    if (provider != null) {
+                        try {
+                            String deviceId = provider.getDeviceToken();
+                            new LiNotificationProviderImpl().onIdRefresh(deviceId, context);
+                        } catch (IOException e) {
+                            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in generating device token");
+                            e.printStackTrace();
+                        }
                     }
 
                     Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthServiceImpl - successfully fetched user and settings.");

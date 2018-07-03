@@ -48,6 +48,7 @@ import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
 import com.lithium.community.android.utils.MessageConstants;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -275,6 +276,40 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
+     * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
+     *
+     * @param context  instance of {@link Context} to access local cache and storage
+     * @param callback instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
+     *                 success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
+     */
+    public void logout(@NonNull Context context, @NonNull Callback<Void, Throwable, Throwable> callback) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
+        if (!isUserLoggedIn()) {
+            callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
+            return;
+        }
+        DeviceTokenProvider provider = getDeviceTokenProvider();
+        String deviceId = null;
+        if (provider != null) {
+            try {
+                deviceId = provider.getDeviceToken();
+            } catch (IOException e) {
+                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in getting device token");
+                e.printStackTrace();
+            }
+        }
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
+        try {
+            LiClient client = LiClientManager.getLogoutClient(params);
+            client.processAsync(new LogoutRequestCallback(context, callback));
+        } catch (LiRestResponseException e) {
+            e.printStackTrace();
+            callback.abort(e);
+        }
+    }
+
+    /**
      * Fetches Fresh Access Token and Persists it.
      *
      * @param context  An Android context.
@@ -387,35 +422,6 @@ public final class LiSDKManager extends LiAuthManager {
     @Deprecated
     public void initLoginFlow(Context context) {
         login(context, null);
-    }
-
-    /**
-     * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
-     *
-     * @param context  - instance of {@link Context} to access local cache and storage
-     * @param callback - instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
-     *                 success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
-     */
-    public void logout(@NonNull Context context, @NonNull Callback<Void, Throwable, Throwable> callback) {
-        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
-        if (!isUserLoggedIn()) {
-            callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
-            return;
-        }
-        LiDeviceTokenProvider provider = getLiDeviceTokenProvider();
-        String deviceId = null;
-        if (provider != null) {
-            deviceId = provider.getDeviceId();
-        }
-        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
-        try {
-            LiClient client = LiClientManager.getLogoutClient(params);
-            client.processAsync(new LogoutRequestCallback(context, callback));
-        } catch (LiRestResponseException lrre) {
-            lrre.printStackTrace();
-            callback.abort(lrre);
-        }
     }
 
     /**

@@ -68,6 +68,7 @@ public interface LiDeviceTokenProvider {
             throw new UnsupportedOperationException(getClass().getSimpleName());
         }
 
+        @NonNull
         @Override
         public String getDeviceToken() {
             return provider.getDeviceId();

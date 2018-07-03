@@ -2,10 +2,8 @@ package com.lithium.community.android.notification;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.io.IOException;
 
@@ -50,13 +48,17 @@ public abstract class DeviceTokenProvider {
     }
 
     @WorkerThread
-    public String getDeviceToken() {
-        try {
-            return getFirebaseInstanceId().getToken(getAuthorizedEntity(), getScope());
-        } catch (IOException e) {
-            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in generating device token");
-            e.printStackTrace();
-            return null;
-        }
+    @NonNull
+    public String getDeviceToken() throws IOException {
+        return getFirebaseInstanceId().getToken(getAuthorizedEntity(), getScope());
+    }
+
+    /**
+     * Deletes the device token so FCM stops sending push notifications to this device. Signing in will
+     * register the device again to receive push notifications.
+     */
+    @WorkerThread
+    public void deleteDeviceToken() throws IOException {
+        getFirebaseInstanceId().deleteToken(getAuthorizedEntity(), getScope());
     }
 }
