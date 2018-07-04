@@ -1144,6 +1144,7 @@ public class LiClientManager {
 
     /**
      * Builds a POST client which logs out the current logged in user
+     *
      * @param params - the {@link LiClientRequestParams.LiLogoutRequestParams} which contains parameters to the client for logout operation
      * @return - LiClient essentially an instance of {@link LiBasePostClient}
      * @throws LiRestResponseException
@@ -1151,7 +1152,7 @@ public class LiClientManager {
     public static LiClient getLogoutClient(LiClientRequestParams.LiLogoutRequestParams params) throws LiRestResponseException {
         params.validate(Client.LI_LOGOUT_CLIENT);
 
-        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(),"auth/signout");
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "auth/signout");
         final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
         LiPostLogoutModel model = new LiPostLogoutModel(params.getDeviceId());
         liBasePostClient.postModel = model;

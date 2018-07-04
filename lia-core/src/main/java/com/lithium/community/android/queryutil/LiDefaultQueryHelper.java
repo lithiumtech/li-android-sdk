@@ -23,10 +23,9 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.lithium.community.android.R;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.MessageConstants;
-
-import com.lithium.community.android.R;
 
 /**
  * This class is use to fetch default LIQL query settings for LIQL calls.

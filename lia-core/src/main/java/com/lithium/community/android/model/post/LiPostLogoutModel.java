@@ -12,6 +12,7 @@ public class LiPostLogoutModel extends LiBasePostModel {
 
     /**
      * Initializes with the registered device-Id, if any.
+     *
      * @param deviceId - the device-id registered essentially for push notifications, otherwise null
      */
     public LiPostLogoutModel(@Nullable String deviceId) {
@@ -20,6 +21,7 @@ public class LiPostLogoutModel extends LiBasePostModel {
 
     /**
      * Retrieve the device-ID
+     *
      * @return - the device id which was passed in.
      */
     @Nullable

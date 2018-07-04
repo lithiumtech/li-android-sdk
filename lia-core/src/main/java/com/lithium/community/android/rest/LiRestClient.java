@@ -31,6 +31,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import com.lithium.community.android.R;
 import com.lithium.community.android.auth.LiAuthConstants;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiTokenResponse;
@@ -56,7 +57,6 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.lithium.community.android.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
