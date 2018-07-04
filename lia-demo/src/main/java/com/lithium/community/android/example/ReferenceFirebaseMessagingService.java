@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lithium.community.android.example.services;
+package com.lithium.community.android.example;
 
 import android.app.Notification;
 import android.app.NotificationManager;
