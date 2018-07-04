@@ -25,7 +25,7 @@ public abstract class DeviceTokenProvider {
      * @return A {@link FirebaseInstanceId}.
      */
     @NonNull
-    public abstract FirebaseInstanceId getFirebaseInstanceId();
+    protected abstract FirebaseInstanceId getFirebaseInstanceId();
 
     /**
      * Return the id of the Authorized Entity which will be used to send community push notifications. This is the
@@ -36,14 +36,14 @@ public abstract class DeviceTokenProvider {
      * @return The sender ID of the firebase application which will be used to send community push notifications
      */
     @NonNull
-    public abstract String getAuthorizedEntity();
+    protected abstract String getAuthorizedEntity();
 
     /**
      * Return the action authorized for Authorized Entity. The default scope is {@link #SCOPE_FCM}.
      *
      * @return The action authorized by the Authorized Entity. By default it is {@link #SCOPE_FCM}.
      */
-    public String getScope() {
+    protected String getScope() {
         return SCOPE_FCM;
     }
 

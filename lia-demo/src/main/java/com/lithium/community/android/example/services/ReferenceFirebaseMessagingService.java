@@ -28,17 +28,32 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonParser;
 import com.lithium.community.android.example.R;
+import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.notification.LiNotificationPayload;
+import com.lithium.community.android.notification.LiNotificationProviderImpl;
 import com.lithium.community.android.ui.components.activities.LiConversationActivity;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
+import com.lithium.community.android.utils.LiCoreSDKConstants;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
- * This class overrides the class {@link com.lithium.community.android.notification.LiFirebaseMessagingService}
- * behavior for showing the notification received from community
+ * @author adityasharat
  */
-public class RefAppNotificationService extends FirebaseMessagingService {
+public class ReferenceFirebaseMessagingService extends FirebaseMessagingService {
+
+    /**
+     * Called if InstanceID token is updated. This may occur if the security of
+     * the previous token had been compromised. Note that this is called when the InstanceID token
+     * is initially generated so this is where you would retrieve the token.
+     */
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        registerToCommunityPushNotifications();
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -100,8 +115,29 @@ public class RefAppNotificationService extends FirebaseMessagingService {
         if (manager != null) {
             manager.notify(1, builder.build());
         } else {
-            Log.e(RefAppNotificationService.class.getSimpleName(), "Notification Manager was null");
+            Log.e(getClass().getSimpleName(), "Notification Manager was null");
         }
     }
-    // [END receive_message]
+
+    /**
+     * Persist token to the Community Notification Service.
+     */
+    private void registerToCommunityPushNotifications() {
+        // Get updated Instance ID token.
+        try {
+            if (LiSDKManager.isInitialized()) {
+                LiSDKManager sdk = LiSDKManager.getInstance();
+                if (sdk.getDeviceTokenProvider() != null) {
+                    String token = sdk.getDeviceTokenProvider().getDeviceToken();
+                    new LiNotificationProviderImpl().onIdRefresh(token, this);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in getting updated device token");
+            e.printStackTrace();
+        } catch (LiRestResponseException e) {
+            Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in registering device token with community");
+            e.printStackTrace();
+        }
+    }
 }

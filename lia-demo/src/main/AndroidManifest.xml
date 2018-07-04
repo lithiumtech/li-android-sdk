@@ -38,20 +38,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.lithium.community.android.example.services.LiFirebaseInstanceIdService">
+        <service android:name=".services.ReferenceFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- registering custom messaging service -->
-        <service
-            android:name=".services.RefAppNotificationService"
-            android:isolatedProcess="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
 
         <!-- remove the above firebase messaging service to use SDKs default implementation -->
         <!--<service

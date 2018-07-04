@@ -51,6 +51,9 @@ import com.lithium.community.android.utils.MessageConstants;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_ERROR_LOG_TAG;
+import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
+
 /**
  * <p>
  * Interface to Lithium Community Android SDK. Provides the entry point into
@@ -289,16 +292,7 @@ public final class LiSDKManager extends LiAuthManager {
             callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
             return;
         }
-        DeviceTokenProvider provider = getDeviceTokenProvider();
-        String deviceId = null;
-        if (provider != null) {
-            try {
-                deviceId = provider.getDeviceToken();
-            } catch (IOException e) {
-                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in getting device token");
-                e.printStackTrace();
-            }
-        }
+        String deviceId = getFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
         LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
         try {
             LiClient client = LiClientManager.getLogoutClient(params);
@@ -448,18 +442,11 @@ public final class LiSDKManager extends LiAuthManager {
          *
          * @param request  {@link LiBaseRestRequest} actual request made with this callback
          * @param response Generic success response.
-         * @throws LiRestResponseException
+         * @throws LiRestResponseException response or request exception
          */
         @Override
         public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
-            if (response.getHttpCode() != LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                callback.failure(new LiRestResponseException(response.getHttpCode(), response.getResponse().getMessage(), response.getHttpCode()));
-                return;
-            }
-            logout(context);
-            if (callback != null) {
-                callback.success(null);
-            }
+            done();
         }
 
         /**
@@ -469,8 +456,21 @@ public final class LiSDKManager extends LiAuthManager {
          */
         @Override
         public void onError(Exception exception) {
+            done();
+        }
+
+        private void done() {
+            if (getDeviceTokenProvider() != null) {
+                try {
+                    getDeviceTokenProvider().deleteDeviceToken();
+                } catch (IOException e) {
+                    Log.e(LI_ERROR_LOG_TAG, "Exception while deleting device token");
+                    e.printStackTrace();
+                }
+            }
+            logout(context);
             if (callback != null) {
-                callback.failure(exception);
+                callback.success(null);
             }
         }
     }
