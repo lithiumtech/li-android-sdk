@@ -38,7 +38,7 @@ import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
-import com.lithium.community.android.notification.DeviceTokenProvider;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
@@ -68,7 +68,7 @@ public final class LiSDKManager extends LiAuthManager {
     private static LiSDKManager instance;
 
     @Nullable
-    private DeviceTokenProvider deviceTokenProvider;
+    private FirebaseTokenProvider deviceTokenProvider;
 
     /**
      * Default private constructor.
@@ -247,11 +247,11 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     @Nullable
-    public DeviceTokenProvider getDeviceTokenProvider() {
+    public FirebaseTokenProvider getDeviceTokenProvider() {
         return deviceTokenProvider;
     }
 
-    public void setDeviceTokenProvider(@Nullable DeviceTokenProvider provider) {
+    public void setDeviceTokenProvider(@Nullable FirebaseTokenProvider provider) {
         this.deviceTokenProvider = provider;
     }
 
@@ -361,7 +361,7 @@ public final class LiSDKManager extends LiAuthManager {
      * Set a new device token provider to be used by the SDK.
      *
      * @param provider A device token provider.
-     * @deprecated Use {@link #setDeviceTokenProvider(DeviceTokenProvider)} instead.
+     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} instead.
      */
     @Deprecated
     public void setLiDeviceTokenProvider(@Nullable LiDeviceTokenProvider provider) {
@@ -374,7 +374,7 @@ public final class LiSDKManager extends LiAuthManager {
      * @param context  An Android context.
      * @param ssoToken Single SignOn token if the community uses its own identity provider.
      * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     * @deprecated Use {@link #setDeviceTokenProvider(DeviceTokenProvider)} and  {@link #login(Context, String)} instead.
+     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} and  {@link #login(Context, String)} instead.
      */
     @Deprecated
     public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider provider) {
@@ -399,7 +399,7 @@ public final class LiSDKManager extends LiAuthManager {
      *
      * @param context  An Android context.
      * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     * @deprecated Use {@link #setDeviceTokenProvider(DeviceTokenProvider)} and {@link #login(Context)} instead.
+     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} and {@link #login(Context)} instead.
      */
     @Deprecated
     public void initLoginFlow(Context context, LiDeviceTokenProvider provider) {

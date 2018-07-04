@@ -33,7 +33,7 @@ import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
-import com.lithium.community.android.notification.DeviceTokenProvider;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 
 
 public class InitializationActivity extends AppCompatActivity {
@@ -168,10 +168,10 @@ public class InitializationActivity extends AppCompatActivity {
     }
 
     @Nullable
-    protected DeviceTokenProvider getDeviceTokenProvider() {
+    protected FirebaseTokenProvider getDeviceTokenProvider() {
         final String senderId = getString(R.string.li_sender_id);
         if (!TextUtils.isEmpty(senderId)) {
-            return new DeviceTokenProvider() {
+            return new FirebaseTokenProvider() {
 
                 @NonNull
                 @Override

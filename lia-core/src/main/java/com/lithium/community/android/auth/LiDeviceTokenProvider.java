@@ -20,14 +20,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.lithium.community.android.notification.DeviceTokenProvider;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 
 /**
  * This interface is used by the SDK to get the device token to
  * register the device to receive push notifications from the
  * Community via Firebase Cloud Messaging.
  *
- * @deprecated Use {@link com.lithium.community.android.notification.DeviceTokenProvider} instead.
+ * @deprecated Use {@link FirebaseTokenProvider} instead.
  */
 @Deprecated
 public interface LiDeviceTokenProvider {
@@ -39,7 +39,7 @@ public interface LiDeviceTokenProvider {
      */
     String getDeviceId();
 
-    class Wrapper extends DeviceTokenProvider {
+    class Wrapper extends FirebaseTokenProvider {
 
         public LiDeviceTokenProvider provider;
 
@@ -48,7 +48,7 @@ public interface LiDeviceTokenProvider {
         }
 
         @Nullable
-        public static LiDeviceTokenProvider getWrappedProvider(DeviceTokenProvider wrapper) {
+        public static LiDeviceTokenProvider getWrappedProvider(FirebaseTokenProvider wrapper) {
             if (wrapper instanceof LiDeviceTokenProvider.Wrapper) {
                 return ((LiDeviceTokenProvider.Wrapper) wrapper).provider;
             } else {

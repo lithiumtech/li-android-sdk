@@ -33,7 +33,7 @@ import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
-import com.lithium.community.android.notification.DeviceTokenProvider;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 import com.lithium.community.android.notification.LiNotificationProviderImpl;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiAuthAsyncRequestCallback;
@@ -349,7 +349,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - API returned invalid response for SDK settings");
                     }
 
-                    DeviceTokenProvider provider = sdkManager.getDeviceTokenProvider();
+                    FirebaseTokenProvider provider = sdkManager.getDeviceTokenProvider();
                     if (provider != null) {
                         try {
                             String deviceId = provider.getDeviceToken();

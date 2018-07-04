@@ -15,9 +15,9 @@ import java.io.IOException;
  * @author adityasharat
  * @since 1.3.1
  */
-public abstract class DeviceTokenProvider {
+public abstract class FirebaseTokenProvider {
 
-    public static final String SCOPE_FCM = "FCM";
+    private static final String SCOPE_FCM = "FCM";
 
     /**
      * Return the {@link FirebaseInstanceId} to be used to generate the device token
