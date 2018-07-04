@@ -17,12 +17,10 @@
 package com.lithium.community.android.example;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.exception.LiInitializationException;
@@ -48,7 +46,7 @@ public class MainApplication extends Application {
                 LiSDKManager.initialize(this, credentials);
 
                 LiSDKManager sdk = LiSDKManager.getInstance();
-                sdk.setDeviceTokenProvider(getDeviceTokenProvider());
+                sdk.setFirebaseTokenProvider(getFirebaseTokenProvider());
                 sdk.syncWithCommunity(this);
 
                 Log.i(MainApplication.class.getSimpleName(), "Lithium SDK initialized successfully");
@@ -62,23 +60,10 @@ public class MainApplication extends Application {
     }
 
     @Nullable
-    protected FirebaseTokenProvider getDeviceTokenProvider() {
+    protected FirebaseTokenProvider getFirebaseTokenProvider() {
         final String senderId = getString(R.string.li_sender_id);
         if (!TextUtils.isEmpty(senderId)) {
-            return new FirebaseTokenProvider() {
-
-                @NonNull
-                @Override
-                public FirebaseInstanceId getFirebaseInstanceId() {
-                    return FirebaseInstanceId.getInstance();
-                }
-
-                @NonNull
-                @Override
-                public String getAuthorizedEntity() {
-                    return senderId;
-                }
-            };
+            return new ReferenceFirebaseTokenProvider(senderId);
         }
         return null;
     }

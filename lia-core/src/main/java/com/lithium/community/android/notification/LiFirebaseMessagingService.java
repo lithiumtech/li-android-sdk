@@ -113,8 +113,8 @@ public class LiFirebaseMessagingService extends FirebaseMessagingService {
         try {
             if (LiSDKManager.isInitialized()) {
                 LiSDKManager sdk = LiSDKManager.getInstance();
-                if (sdk.getDeviceTokenProvider() != null) {
-                    String token = sdk.getDeviceTokenProvider().getDeviceToken();
+                if (sdk.getFirebaseTokenProvider() != null) {
+                    String token = sdk.getFirebaseTokenProvider().getDeviceToken();
                     new LiNotificationProviderImpl().onIdRefresh(token, this);
                 }
             }

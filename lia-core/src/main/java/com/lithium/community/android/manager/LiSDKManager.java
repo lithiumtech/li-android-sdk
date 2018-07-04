@@ -68,7 +68,7 @@ public final class LiSDKManager extends LiAuthManager {
     private static LiSDKManager instance;
 
     @Nullable
-    private FirebaseTokenProvider deviceTokenProvider;
+    private FirebaseTokenProvider firebaseTokenProvider;
 
     /**
      * Default private constructor.
@@ -247,12 +247,12 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     @Nullable
-    public FirebaseTokenProvider getDeviceTokenProvider() {
-        return deviceTokenProvider;
+    public FirebaseTokenProvider getFirebaseTokenProvider() {
+        return firebaseTokenProvider;
     }
 
-    public void setDeviceTokenProvider(@Nullable FirebaseTokenProvider provider) {
-        this.deviceTokenProvider = provider;
+    public void setFirebaseTokenProvider(@Nullable FirebaseTokenProvider provider) {
+        this.firebaseTokenProvider = provider;
     }
 
     /**
@@ -348,12 +348,12 @@ public final class LiSDKManager extends LiAuthManager {
      * Get the device token provider currently being used by the SDK.
      *
      * @return the device token provider.
-     * @deprecated Use {@link #getDeviceTokenProvider()} instead.
+     * @deprecated Use {@link #getFirebaseTokenProvider()} instead.
      */
     @Deprecated
     @Nullable
     public LiDeviceTokenProvider getLiDeviceTokenProvider() {
-        return LiDeviceTokenProvider.Wrapper.getWrappedProvider(deviceTokenProvider);
+        return LiDeviceTokenProvider.Wrapper.getWrappedProvider(firebaseTokenProvider);
 
     }
 
@@ -361,11 +361,11 @@ public final class LiSDKManager extends LiAuthManager {
      * Set a new device token provider to be used by the SDK.
      *
      * @param provider A device token provider.
-     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} instead.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} instead.
      */
     @Deprecated
     public void setLiDeviceTokenProvider(@Nullable LiDeviceTokenProvider provider) {
-        this.deviceTokenProvider = new LiDeviceTokenProvider.Wrapper(provider);
+        this.firebaseTokenProvider = new LiDeviceTokenProvider.Wrapper(provider);
     }
 
     /**
@@ -374,11 +374,11 @@ public final class LiSDKManager extends LiAuthManager {
      * @param context  An Android context.
      * @param ssoToken Single SignOn token if the community uses its own identity provider.
      * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} and  {@link #login(Context, String)} instead.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} and  {@link #login(Context, String)} instead.
      */
     @Deprecated
     public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider provider) {
-        setDeviceTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
+        setFirebaseTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
         login(context, ssoToken);
     }
 
@@ -399,11 +399,11 @@ public final class LiSDKManager extends LiAuthManager {
      *
      * @param context  An Android context.
      * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     * @deprecated Use {@link #setDeviceTokenProvider(FirebaseTokenProvider)} and {@link #login(Context)} instead.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} and {@link #login(Context)} instead.
      */
     @Deprecated
     public void initLoginFlow(Context context, LiDeviceTokenProvider provider) {
-        setDeviceTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
+        setFirebaseTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
         login(context, null);
     }
 
@@ -460,9 +460,9 @@ public final class LiSDKManager extends LiAuthManager {
         }
 
         private void done() {
-            if (getDeviceTokenProvider() != null) {
+            if (getFirebaseTokenProvider() != null) {
                 try {
-                    getDeviceTokenProvider().deleteDeviceToken();
+                    getFirebaseTokenProvider().deleteDeviceToken();
                 } catch (IOException e) {
                     Log.e(LI_ERROR_LOG_TAG, "Exception while deleting device token");
                     e.printStackTrace();

@@ -349,7 +349,7 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - API returned invalid response for SDK settings");
                     }
 
-                    FirebaseTokenProvider provider = sdkManager.getDeviceTokenProvider();
+                    FirebaseTokenProvider provider = sdkManager.getFirebaseTokenProvider();
                     if (provider != null) {
                         try {
                             String deviceId = provider.getDeviceToken();
