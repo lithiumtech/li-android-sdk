@@ -182,11 +182,11 @@ public class InitializationActivity extends AppCompatActivity {
 
         void reset() {
             // TODO: use credentials from shared preferences if available
-            clientName = MiscUtils.sanitize(getString(R.string.clientName));
-            clientId = MiscUtils.sanitize(getString(R.string.clientId));
-            clientSecret = MiscUtils.sanitize(getString(R.string.clientSecret));
-            tenantId = MiscUtils.sanitize(getString(R.string.tenantId));
-            communityUrl = MiscUtils.sanitize(getString(R.string.communityUrl));
+            clientName = MiscUtils.sanitize(getString(R.string.li_client_name));
+            clientId = MiscUtils.sanitize(getString(R.string.li_client_id));
+            clientSecret = MiscUtils.sanitize(getString(R.string.li_client_secret));
+            tenantId = MiscUtils.sanitize(getString(R.string.li_tenant_id));
+            communityUrl = MiscUtils.sanitize(getString(R.string.li_community_url));
         }
 
         boolean areCredentialsProvided() {
