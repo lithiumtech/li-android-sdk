@@ -560,7 +560,7 @@ public abstract class LiRestClient {
 
                 if (response == null) {
                     proceed = true;
-                } else if (response.code() != HTTP_CODE_SUCCESSFUL || response.code() != HttpURLConnection.HTTP_CREATED) {
+                } else if (response.code() != HTTP_CODE_SUCCESSFUL && response.code() != HttpURLConnection.HTTP_CREATED) {
 
                     try {
                         synchronized (this) {
