@@ -577,8 +577,8 @@ public abstract class LiRestClient {
 
                         try {
                             JsonObject data = new Gson().fromJson(responseStr, JsonObject.class);
-                            if (data != null && data.has("statusCode")) {
-                                httpCode = data.get("statusCode").getAsInt();
+                            if (data != null && data.has("http_code")) {
+                                httpCode = data.get("http_code").getAsInt();
                             }
                         } catch (JsonSyntaxException ex) {
                             Log.e(LI_LOG_TAG, "wrong json, not able to parse " + ex.getMessage());
