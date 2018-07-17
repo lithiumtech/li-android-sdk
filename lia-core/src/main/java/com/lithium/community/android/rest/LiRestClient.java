@@ -538,7 +538,7 @@ public abstract class LiRestClient {
      */
     private static class RefreshAndRetryInterceptor implements Interceptor {
 
-        private static final int MAX_TRIES = 4; // One actual call + 3 trials
+        private static final int MAX_TRIES = 4; // One actual call + 3 Retries
 
         private WeakReference<Context> context;
         private LiSDKManager sdk;
@@ -555,7 +555,8 @@ public abstract class LiRestClient {
             Response response = null;
 
             while (currentCount < MAX_TRIES
-                    && (response == null || ((response.code() != HTTP_CODE_SUCCESSFUL) && (response.code() != HttpURLConnection.HTTP_CREATED)))) {
+                    && (response == null
+                    || ((response.code() != HTTP_CODE_SUCCESSFUL) && (response.code() != HttpURLConnection.HTTP_CREATED)))) {
                 boolean proceed = false;
 
                 if (response == null) {
