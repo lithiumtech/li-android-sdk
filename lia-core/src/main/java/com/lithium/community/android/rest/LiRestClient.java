@@ -564,6 +564,8 @@ public abstract class LiRestClient {
                 } else if (response.code() != HTTP_CODE_SUCCESSFUL && response.code() != HttpURLConnection.HTTP_CREATED) {
 
                     try {
+                        int httpCode = response.code();
+                        String responseStr = response.body().string();
                         synchronized (this) {
                             Thread.sleep((long) (Math.pow(2, currentCount - 1) * 2000));
                             // first time reaching this point, currentCount will always be 1, hence currentCount-1.
@@ -572,9 +574,6 @@ public abstract class LiRestClient {
                             // third time it waits for 2^2 = 8 seconds
                             // next time perhaps!, God help.
                         }
-
-                        int httpCode = response.code();
-                        String responseStr = response.body().string();
 
                         try {
                             JsonObject data = new Gson().fromJson(responseStr, JsonObject.class);
