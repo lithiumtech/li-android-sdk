@@ -73,7 +73,7 @@ allprojects {
         // App dependencies
         supportLibraryVersion = '27.0.2'
         gsonVersion = '2.8.0'
-        okhttpVersion = '3.4.1'
+        okhttpVersion = '3.11.0'
         firebaseMessagingVersion = '11.8.0'
 
         // Test dependencies
