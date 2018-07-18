@@ -175,7 +175,7 @@ public abstract class LiRestClient {
 
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
+        clientBuilder.retryOnConnectionFailure(false).interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Response response = null;
 
         try {
@@ -243,6 +243,7 @@ public abstract class LiRestClient {
     private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
+        clientBuilder.retryOnConnectionFailure(false);
         clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Call call = clientBuilder.build().newCall(request);
         call.enqueue(new Callback() {
