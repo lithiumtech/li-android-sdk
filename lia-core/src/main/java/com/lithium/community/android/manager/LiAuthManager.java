@@ -217,7 +217,7 @@ class LiAuthManager {
 
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
 
-        preferences.clear(context);
+        preferences.clearAuthState(context);
 
         // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
         // way of using CookieManager else use the deprecate methods for older versions.

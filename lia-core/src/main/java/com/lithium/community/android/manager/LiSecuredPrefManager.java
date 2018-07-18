@@ -213,6 +213,20 @@ class LiSecuredPrefManager {
         getSecuredPreferences(context).edit().clear().apply();
     }
 
+    /**
+     * Clears the Authentication state of a user (necessarily a logged out user)
+     * @param context - the Android base context to access preferences
+     */
+    public void clearAuthState(@NonNull Context context) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        getSecuredPreferences(context)
+                .edit()
+                .putString(LiCoreSDKConstants.LI_AUTH_STATE, null)
+                .putString(LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS, null)
+                .apply();
+    }
+
+
     @NonNull
     private String encrypt(@NonNull String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
