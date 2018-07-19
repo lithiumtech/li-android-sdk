@@ -54,6 +54,9 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -566,9 +569,45 @@ public abstract class LiRestClient {
 
                     try {
                         int httpCode = response.code();
-                        String responseStr = response.body().string();
+                        String responseStr = "";
+                        //Some server may specify retry-after
+                        //1. either in http-date format, 'EEE, dd MM yyyy HH:mm:ss zzz', ex: 'Wed, 21 Jul 2018 07:28:00 GMT'
+                        //2. or in seconds
+                        String retryAfter = response.header("Retry-After");
+                        long retryDuration = 0;
+                        if (!TextUtils.isEmpty(retryAfter)) {
+                            try {
+                                SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+                                Date d = format.parse(retryAfter);
+                                retryDuration = d.getTime() - System.currentTimeMillis();
+                                if (retryDuration < 0) {
+                                    retryDuration = 0;
+                                }
+                            } catch (ParseException pe) {
+                                pe.printStackTrace();
+                                try {
+                                    retryDuration = Long.parseLong(retryAfter) * 1000; //seconds * milliseconds
+                                } catch (NumberFormatException nfe) {
+                                    nfe.printStackTrace();
+                                    retryDuration = 0;
+                                }
+                            }
+                        }
+
+                        if (retryDuration == 0) {
+                            // if server didn't specify anything or specified something erroneous
+                            retryDuration = (long) (Math.pow(2, currentCount - 1) * 2000);
+                        }
+                        try {
+                            responseStr = response.body().string();
+                        } catch (IllegalStateException ise) {
+                            //This could happen for non-transient failures which are not happening below.
+                            //unless retried, this could be read twice (second time on the closed stream) which leads to this exception.
+                            ise.printStackTrace();
+                            responseStr = "";
+                        }
                         synchronized (this) {
-                            Thread.sleep((long) (Math.pow(2, currentCount - 1) * 2000));
+                            Thread.sleep(retryDuration);
                             // first time reaching this point, currentCount will always be 1, hence currentCount-1.
                             // so first time it waits for 2^0 = 2 seconds
                             // second time it waits for 2^1 = 4 seconds
@@ -644,6 +683,8 @@ public abstract class LiRestClient {
                 if (proceed) {
                     response = chain.proceed(request);
                     currentCount++;
+                } else {
+                    break;
                 }
             }
             return response;
