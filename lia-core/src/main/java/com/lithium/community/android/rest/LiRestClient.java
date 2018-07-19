@@ -584,11 +584,9 @@ public abstract class LiRestClient {
                                     retryDuration = 0;
                                 }
                             } catch (ParseException pe) {
-                                pe.printStackTrace();
                                 try {
                                     retryDuration = Long.parseLong(retryAfter) * 1000; //seconds * milliseconds
                                 } catch (NumberFormatException nfe) {
-                                    nfe.printStackTrace();
                                     retryDuration = 0;
                                 }
                             }
@@ -603,7 +601,6 @@ public abstract class LiRestClient {
                         } catch (IllegalStateException ise) {
                             //This could happen for non-transient failures which are not happening below.
                             //unless retried, this could be read twice (second time on the closed stream) which leads to this exception.
-                            ise.printStackTrace();
                             responseStr = "";
                         }
                         synchronized (this) {
@@ -676,7 +673,6 @@ public abstract class LiRestClient {
 
                     } catch (InterruptedException e) {
                         proceed = false; // operation was incomplete do not proceed
-                        e.printStackTrace();
                     }
                 }
 
