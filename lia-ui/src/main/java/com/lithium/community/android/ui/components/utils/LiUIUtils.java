@@ -215,4 +215,7 @@ public class LiUIUtils {
         }
     }
 
+    public static void showDeleteMessageStatus(Activity activity, boolean successful){
+
+    }
 }

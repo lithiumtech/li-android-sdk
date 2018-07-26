@@ -110,8 +110,8 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
         String avatarImageUrl = null;
         String loginName = null;
         if (item.getAuthor() != null) {
-            if (item.getAuthor().getLoginAsLiString() != null) {
-                loginName = item.getAuthor().getLoginAsLiString().getValue();
+            if (item.getAuthor().getLogin() != null) {
+                loginName = item.getAuthor().getLogin();
             }
 
             if (item.getAuthor() != null
@@ -182,8 +182,8 @@ public class LiCreateMessageAdapter extends RecyclerView.Adapter<LiViewHolder> {
                 liAuthoringViewHolder.inReplyToContainer.setVisibility(View.VISIBLE);
                 String loginName = null;
                 if (liMessage.getAuthor() != null) {
-                    if (liMessage.getAuthor().getLoginAsLiString() != null) {
-                        loginName = liMessage.getAuthor().getLoginAsLiString().getValue();
+                    if (liMessage.getAuthor().getLogin() != null) {
+                        loginName = liMessage.getAuthor().getLogin();
                     }
                 }
                 String inReplyTo = String.format(activity.getString(R.string.li_in_reply_to_text), loginName);

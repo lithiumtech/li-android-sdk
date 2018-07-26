@@ -58,19 +58,15 @@ public class LiSubscriptionsTest {
 
     @Test
     public void getTargetMessageTest() {
-        JsonObject messageObject = new JsonObject();
-        messageObject.addProperty("id", id);
-        messageObject.addProperty("type", "message");
-        subscriptions.setTargetObject(messageObject);
+        LiMessage message = new LiMessage();
+        subscriptions.setTargetObject(message);
         assertEquals(id, subscriptions.getLiMessage().getId());
     }
 
     @Test
     public void getTargetBoardTest() {
-        JsonObject messageObject = new JsonObject();
-        messageObject.addProperty("id", id);
-        messageObject.addProperty("type", "board");
-        subscriptions.setTargetObject(messageObject);
+        LiMessage message = new LiMessage();
+        subscriptions.setTargetObject(message);
         assertEquals(id, Long.valueOf(subscriptions.getLiBoard().getId()));
     }
 

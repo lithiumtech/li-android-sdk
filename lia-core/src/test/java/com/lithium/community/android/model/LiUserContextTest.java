@@ -32,18 +32,21 @@ public class LiUserContextTest {
     private final Boolean read = true;
     private final boolean canKudo = true;
     private final boolean canReply = true;
+    private final boolean isSubscribed = true;
+
 
     private LiUserContext liUserContext = new LiUserContext();
-
     @Test
     public void getParamsTest() {
         liUserContext.setKudo(kudo);
         liUserContext.setRead(read);
         liUserContext.setCanKudo(canKudo);
         liUserContext.setCanReply(canReply);
+        liUserContext.setSubscribed(isSubscribed);
         assertEquals(kudo, liUserContext.getKudo());
         assertEquals(read, liUserContext.getRead());
         assertEquals(canKudo, liUserContext.isCanKudo());
         assertEquals(canReply, liUserContext.isCanReply());
+        assertEquals(isSubscribed, liUserContext.isSubscribed());
     }
 }
