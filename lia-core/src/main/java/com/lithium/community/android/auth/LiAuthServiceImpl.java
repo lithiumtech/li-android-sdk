@@ -320,7 +320,7 @@ public class LiAuthServiceImpl implements LiAuthService {
      *
      * @param callBack {@link LoginCompleteCallBack}
      */
-    private void getSDKSettings(final LoginCompleteCallBack callBack) {
+    private void getSDKSettings(final LoginCompleteCallBack callBack, final boolean syncDeviceId) {
         try {
             String clientId = LiUUIDUtils.toUUID(this.sdkManager.getCredentials().getClientKey().getBytes()).toString();
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiSdkSettingsClientRequestParams(context, clientId);
@@ -349,8 +349,8 @@ public class LiAuthServiceImpl implements LiAuthService {
                     }
 
                     LiDeviceTokenProvider provider = sdkManager.getLiDeviceTokenProvider();
-                    if (provider != null && !TextUtils.isEmpty(provider.getDeviceId())) {
-                        new LiNotificationProviderImpl().onIdRefresh(provider.getDeviceId(), context);
+                    if (provider != null && !TextUtils.isEmpty(provider.getDeviceId()) && syncDeviceId) {
+                        new LiNotificationProviderImpl().refreshId(provider.getDeviceId(), context);
                     }
 
                     Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthServiceImpl - successfully fetched user and settings.");
@@ -391,14 +391,14 @@ public class LiAuthServiceImpl implements LiAuthService {
                         sdkManager.setLoggedInUser(context, user);
                     }
                     Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthServiceImpl - Successfully fetched user details");
-                    getSDKSettings(callBack);
+                    getSDKSettings(callBack, true);
                 }
 
                 @Override
                 public void onError(Exception e) {
                     Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - API returned invalid response for user details");
                     e.printStackTrace();
-                    getSDKSettings(callBack);
+                    getSDKSettings(callBack, false);
                     LiAuthorizationException ex = LiAuthorizationException.generalEx(LiAuthorizationException.GeneralErrors.SERVER_ERROR.code, e.getMessage());
                     callBack.onLoginComplete(ex, false);
                 }
@@ -406,7 +406,7 @@ public class LiAuthServiceImpl implements LiAuthService {
         } catch (LiRestResponseException e) {
             Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - request failed for user details");
             e.printStackTrace();
-            getSDKSettings(callBack);
+            getSDKSettings(callBack,false);
         }
     }
 
