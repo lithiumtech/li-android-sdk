@@ -31,6 +31,7 @@ import com.lithium.community.android.model.LiBaseModelImpl;
 import com.lithium.community.android.model.response.LiSubscriptions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by shoureya.kant on 12/5/16.
@@ -59,6 +60,9 @@ public class LiSubscriptionsTest {
     @Test
     public void getTargetMessageTest() {
         LiMessage message = new LiMessage();
+        LiBaseModelImpl.LiInt idInt = new LiBaseModelImpl.LiInt();
+        idInt.setValue(id);
+        message.setId(idInt);
         subscriptions.setTargetObject(message);
         assertEquals(id, subscriptions.getLiMessage().getId());
     }
@@ -67,7 +71,7 @@ public class LiSubscriptionsTest {
     public void getTargetBoardTest() {
         LiMessage message = new LiMessage();
         subscriptions.setTargetObject(message);
-        assertEquals(id, Long.valueOf(subscriptions.getLiBoard().getId()));
+        assertNull(subscriptions.getLiBoard());
     }
 
 }
