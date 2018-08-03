@@ -245,7 +245,6 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
 
                 return true;
             } else if (menuItem.getItemId() == R.id.li_action_subscribe) {
-
                 boolean isSubscribed = item.getUserContext().isSubscribed();
                 if (isSubscribed) {
                     unsubscribe(item, position);
