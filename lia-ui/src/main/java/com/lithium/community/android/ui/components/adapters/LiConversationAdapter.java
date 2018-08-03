@@ -189,7 +189,8 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
         boolean isSubscribed = item.getUserContext().isSubscribed();
         popup.getMenu().findItem(R.id.li_action_subscribe).setVisible(showSubscribe);
         popup.getMenu().findItem(R.id.li_action_subscribe).setTitle(isSubscribed ? R.string.li_unsubscribe : R.string.li_subscribe);
-        popup.setOnMenuItemClickListener(new PopupMenuClickListener(item, getItems().size() == 1 || position == 0, position));
+        boolean isParentItem = ((getItems().size() == 1) || (position == 0));
+        popup.setOnMenuItemClickListener(new PopupMenuClickListener(item, isParentItem, position));
         popup.show();
     }
 
@@ -270,7 +271,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
     private void markRead(LiMessage item) {
         if (item.getUserContext() != null) {
             boolean isMarkUnread = false;
-            if (item.getUserContext() != null && item.getUserContext().getRead()) {
+            if (item.getUserContext().getRead()) {
                 isMarkUnread = true;
             }
             actionInProgress(true);
@@ -432,7 +433,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                 = new LiClientRequestParams.LiUserMessageSusbscriptionRequestParans(activity, "" + item.getId(), "" + user.getId());
         try {
             LiClient client = LiClientManager.getUserMessageSubscriptionsClient(params);
-            client.processAsync(new MessageUserSubscriptionsCallback());
+            client.processAsync(new MessageUserSubscriptionsCallback(item, position));
         } catch (LiRestResponseException lrre) {
             actionInProgress(false);
             LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_unsuccessful);
@@ -442,31 +443,39 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
 
     public class MessageUserSubscriptionsCallback implements LiAsyncRequestCallback<LiGetClientResponse> {
 
+        private final int position;
+        private final LiMessage item;
+
+        public MessageUserSubscriptionsCallback(LiMessage item, int position) {
+            this.position = position;
+            this.item = item;
+        }
+
         @Override
         public void onSuccess(LiBaseRestRequest request, LiGetClientResponse response) throws LiRestResponseException {
             if (response.getHttpCode() == HttpURLConnection.HTTP_OK || response.getHttpCode() == HttpURLConnection.HTTP_CREATED) {
                 JsonObject responseObject = response.getJsonObject();
-                if (!responseObject.has("data")) {
+                if (!responseObject.has(LiBaseResponse.DATA)) {
                     LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_unsuccessful);
                     actionInProgress(false);
                     return;
                 }
-                JsonObject dataObject = responseObject.getAsJsonObject("data");
-                if (!dataObject.has("items")) {
+                JsonObject dataObject = responseObject.getAsJsonObject(LiBaseResponse.DATA);
+                if (!dataObject.has(LiBaseResponse.ITEMS)) {
                     LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_unsuccessful);
                     actionInProgress(false);
                     return;
                 }
-                JsonArray array = dataObject.getAsJsonArray("items");
+                JsonArray array = dataObject.getAsJsonArray(LiBaseResponse.ITEMS);
                 if (array == null || array.size() != 1) {
                     LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_unsuccessful);
                     actionInProgress(false);
                     return;
                 }
-                String id = array.get(0).getAsJsonObject().get("id").getAsString();
+                String id = array.get(0).getAsJsonObject().get(LiBaseResponse.ID).getAsString();
                 LiClientRequestParams.LiDeleteSubscriptionParams deleteSubscriptionParams = new LiClientRequestParams.LiDeleteSubscriptionParams(activity, id);
                 LiClient client = LiClientManager.getSubscriptionDeleteClient(deleteSubscriptionParams);
-                client.processAsync(new MessageSubscriptionDeleteCallback());
+                client.processAsync(new MessageSubscriptionDeleteCallback(item, position));
             }
         }
 
@@ -480,10 +489,25 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
 
     private class MessageSubscriptionDeleteCallback implements LiAsyncRequestCallback<LiDeleteClientResponse> {
 
+        private final int position;
+        private final LiMessage item;
+
+        public MessageSubscriptionDeleteCallback(LiMessage item, int position) {
+            this.position = position;
+            this.item = item;
+        }
+
         @Override
         public void onSuccess(LiBaseRestRequest request, LiDeleteClientResponse response) throws LiRestResponseException {
             if (response.getHttpCode() == HttpURLConnection.HTTP_OK || response.getHttpCode() == HttpURLConnection.HTTP_CREATED) {
                 LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_successful);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        item.getUserContext().setSubscribed(false);
+                        notifyItemChanged(position);
+                    }
+                });
             } else {
                 LiUIUtils.showInAppNotification(activity, R.string.li_action_unsubscribe_unsuccessful);
             }
