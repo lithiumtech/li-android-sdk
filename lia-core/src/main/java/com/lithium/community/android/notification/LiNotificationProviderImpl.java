@@ -48,10 +48,6 @@ import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_RECEIVER
 public class LiNotificationProviderImpl implements LiNotificationProvider {
     private static final String PUSH_NOTIFICATION_ADAPTER = "push_notification_adapter";
 
-    public void refreshId(final String deviceId, final Context context) throws LiRestResponseException {
-        register(context, deviceId);
-    }
-
     @Override
     public void onIdRefresh(final String deviceId, final Context context) throws LiRestResponseException {
 
@@ -68,7 +64,47 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
          * shared preferences.
          */
         if (savedId == null || savedId.isEmpty()) {
-            register(context, deviceId);
+            String settingFromServer;
+            settingFromServer = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
+            String provider = "FIREBASE";
+            JsonObject settingFromServerJson;
+            if (settingFromServer != null && !settingFromServer.isEmpty()) {
+                JsonElement jsonElement = new JsonParser().parse(settingFromServer);
+                if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
+                    settingFromServerJson = jsonElement.getAsJsonObject();
+                    if (settingFromServerJson.has(PUSH_NOTIFICATION_ADAPTER) && settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER) != null) {
+                        provider = settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER).getAsString();
+                    }
+                }
+            }
+
+            LiClientRequestParams requestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, provider);
+            LiClient client = LiClientManager.getDeviceIdFetchClient(requestParams);
+            client.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
+                @Override
+                public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) {
+                    if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
+                        LiBaseResponse liBaseResponse = response.getResponse();
+                        JsonObject data = liBaseResponse.getData();
+                        if (data != null && data.has("data")) {
+                            JsonObject dataObj = data.get("data").getAsJsonObject();
+                            if (dataObj.has("id")) {
+                                String id = dataObj.get("id").getAsString();
+                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
+                                LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
+                            }
+                        }
+                    } else {
+                        Log.e(LI_ERROR_LOG_TAG, "Unable to fetch device id");
+                    }
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Log.e(LI_ERROR_LOG_TAG, "Device Id API request failed.");
+                    exception.printStackTrace();
+                }
+            });
         } else {
             /*
              * If 'id' is present then device id corresponding to it on the community end is update with the passed device id.
@@ -96,49 +132,5 @@ public class LiNotificationProviderImpl implements LiNotificationProvider {
                 }
             });
         }
-    }
-
-    private void register(final Context context, final String deviceId) throws LiRestResponseException {
-        String settingFromServer;
-        settingFromServer = LiSDKManager.getInstance().getFromSecuredPreferences(context, LI_DEFAULT_SDK_SETTINGS);
-        String provider = "FIREBASE";
-        JsonObject settingFromServerJson;
-        if (settingFromServer != null && !settingFromServer.isEmpty()) {
-            JsonElement jsonElement = new JsonParser().parse(settingFromServer);
-            if (!jsonElement.isJsonNull() && jsonElement.isJsonObject()) {
-                settingFromServerJson = jsonElement.getAsJsonObject();
-                if (settingFromServerJson.has(PUSH_NOTIFICATION_ADAPTER) && settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER) != null) {
-                    provider = settingFromServerJson.get(PUSH_NOTIFICATION_ADAPTER).getAsString();
-                }
-            }
-        }
-
-        LiClientRequestParams requestParams = new LiClientRequestParams.LiDeviceIdFetchClientRequestParams(context, deviceId, provider);
-        LiClient client = LiClientManager.getDeviceIdFetchClient(requestParams);
-        client.processAsync(new LiAsyncRequestCallback<LiPostClientResponse>() {
-            @Override
-            public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) {
-                if (response != null && response.getHttpCode() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL) {
-                    LiBaseResponse liBaseResponse = response.getResponse();
-                    JsonObject data = liBaseResponse.getData();
-                    if (data != null && data.has("data")) {
-                        JsonObject dataObj = data.get("data").getAsJsonObject();
-                        if (dataObj.has("id")) {
-                            String id = dataObj.get("id").getAsString();
-                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_DEVICE_ID, id);
-                            LiSDKManager.getInstance().putInSecuredPreferences(context, LI_RECEIVER_DEVICE_ID, deviceId);
-                        }
-                    }
-                } else {
-                    Log.e(LI_ERROR_LOG_TAG, "Unable to fetch device id");
-                }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                Log.e(LI_ERROR_LOG_TAG, "Device Id API request failed.");
-                exception.printStackTrace();
-            }
-        });
     }
 }
