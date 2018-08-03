@@ -219,11 +219,10 @@ class LiSecuredPrefManager {
      */
     public void clearAuthState(@NonNull Context context) {
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
-        getSecuredPreferences(context)
-                .edit()
-                .putString(LiCoreSDKConstants.LI_AUTH_STATE, null)
-                .putString(LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS, null)
-                .apply();
+        remove(context, LiCoreSDKConstants.LI_AUTH_STATE);
+        remove(context, LiCoreSDKConstants.LI_DEFAULT_SDK_SETTINGS);
+        remove(context, LiCoreSDKConstants.LI_DEVICE_ID);
+        remove(context, LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID);
     }
 
 
