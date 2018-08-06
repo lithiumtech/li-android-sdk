@@ -66,7 +66,8 @@ public class LiUser extends LiBaseModelImpl {
     @SerializedName("last_visit_time")
     private LiDateInstant lastVisitInstant;
 
-    private LiBaseModelImpl.LiString login;
+    @SerializedName("login")
+    private String login;
 
     private Long id;
 
@@ -97,8 +98,7 @@ public class LiUser extends LiBaseModelImpl {
         LiAvatar avatar = LiAvatar.deserialize(jsonObject.getJSONObject(USER_AVATAR));
         user.setAvatar(avatar);
         LiString loginStr = new LiString();
-        loginStr.setValue(jsonObject.getString(USER_LOGIN));
-        user.setLogin(loginStr);
+        user.setLogin(jsonObject.getString(USER_LOGIN));
         user.setHref(jsonObject.getString(USER_HREF));
         user.setProfilePageUrl(jsonObject.getString(USER_VIEW_HREF));
 
@@ -293,15 +293,11 @@ public class LiUser extends LiBaseModelImpl {
         profilePageUrl = url;
     }
 
-    public LiBaseModelImpl.LiString getLoginAsLiString() {
+    public String getLogin() {
         return login;
     }
 
-    public String getLogin() {
-        return login.getValue();
-    }
-
-    public void setLogin(LiBaseModelImpl.LiString login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
@@ -330,7 +326,7 @@ public class LiUser extends LiBaseModelImpl {
             //Logger we cannot handle null/empty author id
 
             if (login != null) {
-                return login.getValue();
+                return login;
             } else {
                 return null;
             }
@@ -343,7 +339,7 @@ public class LiUser extends LiBaseModelImpl {
         }
 
         if (login != null) {
-            return login.getValue();
+            return login;
         } else {
             return null;
         }
@@ -358,7 +354,7 @@ public class LiUser extends LiBaseModelImpl {
         LiCoreSDKUtils.putIfNotNull(json, USER_ID, String.valueOf(this.id));
         LiCoreSDKUtils.put(json, USER_EMAIL, this.email);
         LiCoreSDKUtils.put(json, USER_AVATAR, this.avatar.serialize());
-        LiCoreSDKUtils.put(json, USER_LOGIN, this.login.getValue());
+        LiCoreSDKUtils.put(json, USER_LOGIN, this.login);
         LiCoreSDKUtils.put(json, USER_HREF, this.href);
         if (!TextUtils.isEmpty(profilePageUrl)) {
             LiCoreSDKUtils.put(json, USER_VIEW_HREF, this.profilePageUrl);
@@ -368,6 +364,6 @@ public class LiUser extends LiBaseModelImpl {
 
     @Override
     public String toString() {
-        return "LiUser{email='" + login.getValue() + "'}";
+        return "LiUser{email='" + login + "'}";
     }
 }

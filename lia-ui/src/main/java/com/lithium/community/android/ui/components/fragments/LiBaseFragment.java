@@ -167,6 +167,12 @@ public abstract class LiBaseFragment extends DialogFragment
         }
     }
 
+    protected void setRefreshing(boolean refreshing) {
+        if (swipeable != null) {
+            swipeable.setRefreshing(refreshing);
+        }
+    }
+
     /**
      * Check if the network is available or not, If the user is logged in or not.
      * If not then refresh the UI else go ahead and fetch the data from server

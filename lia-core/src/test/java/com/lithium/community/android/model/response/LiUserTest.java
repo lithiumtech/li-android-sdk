@@ -156,13 +156,9 @@ public class LiUserTest {
 
     @Test
     public void getLoginTest() {
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         assertNotEquals(null, liUser.getLogin());
         assertEquals(LI_LOGIN, liUser.getLogin());
-        assertTrue(liUser.getLoginAsLiString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(LI_LOGIN, liUser.getLoginAsLiString().getValue());
     }
 
     @Test
@@ -225,9 +221,7 @@ public class LiUserTest {
         avatar.setMessage("AVATAR");
         liUser.setAvatarImage(avatarImage);
         liUser.setId(ID);
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
         LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
@@ -254,9 +248,7 @@ public class LiUserTest {
         LiUser liUser = new LiUser();
         liUser.setAvatarImage(avatarImage);
         liUser.setId(ID);
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
         LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();

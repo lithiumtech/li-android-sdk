@@ -150,6 +150,27 @@ public class LiClientManager {
     }
 
     /**
+     * Retains a Rest GET client which retrieves all subscriptions by a user to a message
+     * @param params - the client params an instance of
+     * {@link com.lithium.community.android.model.request.LiClientRequestParams.LiUserMessageSusbscriptionRequestParans}
+     * @return - a rest client
+     * @throws LiRestResponseException
+     */
+    public static LiClient getUserMessageSubscriptionsClient(LiClientRequestParams.LiUserMessageSusbscriptionRequestParans params)
+            throws LiRestResponseException {
+        params.validate(Client.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT);
+        LiQueryValueReplacer replacer = new LiQueryValueReplacer();
+        replacer.replaceAll("##", params.getMessageId());
+        replacer.replaceAll("&&", params.getUserId());
+        return new LiBaseGetClient(params.getContext(),
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_LIQL,
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_TYPE,
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTTION_QUERYSETTINGS_TYPE,
+                LiSubscriptions.class)
+                .setReplacer(replacer);
+    }
+
+    /**
      * Fetches a list of boards for a given category, along with board and category details. Create parameters with
      * {@link LiClientRequestParams.LiCategoryBoardsClientRequestParams}.
      *
@@ -1151,6 +1172,7 @@ public class LiClientManager {
         LI_MESSAGES_BY_BOARD_ID_CLIENT,
         LI_SDK_SETTINGS_CLIENT,
         LI_USER_SUBSCRIPTIONS_CLIENT,
+        LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT,
         LI_CATEGORY_BOARDS_CLIENT,
         LI_BOARDS_BY_DEPTH_CLIENT,
         LI_REPLIES_CLIENT,

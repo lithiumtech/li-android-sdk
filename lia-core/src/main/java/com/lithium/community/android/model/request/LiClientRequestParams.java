@@ -126,6 +126,33 @@ public class LiClientRequestParams {
         }
     }
 
+    public static class LiUserMessageSusbscriptionRequestParans extends LiClientRequestParams {
+
+        private final String messageId;
+        private final String userId;
+
+        /**
+         * This is to help process the subscriptions query for a user with respect to a message
+         * @param context - the Android context
+         * @param messageId - the message id
+         * @param userId - the user who has susbcribed
+         */
+        public LiUserMessageSusbscriptionRequestParans(Context context, String messageId, String userId) {
+            super(context);
+            this.messageId = messageId;
+            this.userId = userId;
+            this.client = LiClientManager.Client.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+    }
+
     //Request params class for LiUserSubscriptionsClient
     public static class LiUserSubscriptionsClientRequestParams extends LiClientRequestParams {
 

@@ -28,6 +28,8 @@ public class LiQueryConstant {
             = "SELECT id, target.author, target.id, target.subject, target.post_time, target.kudos.sum(weight), "
             + "target.body, target.conversation.style, target.conversation.solved, target.conversation.last_post_time"
             + " FROM subscriptions";
+    public static final String LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_LIQL
+            = "SELECT id FROM subscriptions";
     public static final String LI_BROWSE_CLIENT_BASE_LIQL
             = "select id, title, parent.id, parent.title, depth from nodes";
     public static final String LI_CATEGORY_CLIENT_BASE_LIQL
@@ -43,7 +45,7 @@ public class LiQueryConstant {
             + "messages";
     public static final String LI_MESSAGE_CONVERSATION_BASE_LIQL
             = "SELECT id, body, subject, view_href, post_time, kudos.sum(weight), can_accept_solution, is_solution, "
-            + "user_context.kudo, user_context.can_kudo, user_context.can_reply, user_context.can_delete, "
+            + "user_context.kudo, user_context.can_kudo, user_context.can_reply, user_context.can_delete, user_context.is_subscribed, "
             + "user_context.read, author, author.id, author.href, author.email,  author.avatar, author.rank, author"
             + ".login, parent.id, metrics, replies.count(*) FROM messages";
 
@@ -53,6 +55,7 @@ public class LiQueryConstant {
     public static final String LI_REPLY_MESSAGE_TYPE = "message";
     public static final String LI_ARTICLES_CLIENT_TYPE = "message";
     public static final String LI_SUBSCRIPTIONS_CLIENT_TYPE = "subscription";
+    public static final String LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_TYPE = "message_user_subscriptions";
     public static final String LI_BROWSE_CLIENT_TYPE = "node";
     public static final String LI_SEARCH_CLIENT_TYPE = "message";
     public static final String LI_MESSAGE_CHILDREN_CLIENT_TYPE = "message";
@@ -70,6 +73,7 @@ public class LiQueryConstant {
     public static final String LI_FLOATED_MESSAGE_CLIENT_TYPE = "floated_message";
     public static final String LI_ARTICLES_QUERYSETTINGS_TYPE = "article";
     public static final String LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE = "subscription";
+    public static final String LI_USER_MESSAGE_SUBSCRIPTTION_QUERYSETTINGS_TYPE = "message_user_subscriptions";
     public static final String LI_BROWSE_QUERYSETTINGS_TYPE = "node";
     public static final String LI_BROWSE_BY_DEPTH_QUERYSETTINGS_TYPE = "node_depth";
     public static final String LI_SEARCH_QUERYSETTINGS_TYPE = "search";
