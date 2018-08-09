@@ -185,9 +185,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
             popup.getMenu().removeItem(R.id.li_action_delete);
         }
 
-        boolean showSubscribe = (position == 0);
         boolean isSubscribed = item.getUserContext().isSubscribed();
-        popup.getMenu().findItem(R.id.li_action_subscribe).setVisible(showSubscribe);
         popup.getMenu().findItem(R.id.li_action_subscribe).setTitle(isSubscribed ? R.string.li_unsubscribe : R.string.li_subscribe);
         boolean isParentItem = ((getItems().size() == 1) || (position == 0));
         popup.setOnMenuItemClickListener(new PopupMenuClickListener(item, isParentItem, position));
