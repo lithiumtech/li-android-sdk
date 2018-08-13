@@ -42,9 +42,7 @@ public class LiPostKudoTest {
 
     @Test
     public void getMessageTest() {
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue((long) 100);
-        liMessage.setId(liInt);
+        liMessage.setId((long)100);
         kudoModel.setMessage(liMessage);
         assertEquals(liMessage, kudoModel.getMessage());
     }

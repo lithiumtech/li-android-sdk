@@ -138,18 +138,12 @@ public class LiRanking extends LiBaseModelImpl {
         this.name = name;
     }
 
-    public LiBaseModelImpl.LiInt getIdAsLithiumInt() {
-        final LiBaseModelImpl.LiInt ret = new LiBaseModelImpl.LiInt();
-        ret.setValue(getId());
-        return ret;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiInt id) {
-        this.id = id.getValue();
+    public void setId(long id) {
+        this.id = id;
     }
 
     public LiRankingDisplay getLithiumRankingDisplay() {

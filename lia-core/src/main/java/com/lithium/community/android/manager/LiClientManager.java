@@ -377,9 +377,7 @@ public class LiClientManager {
 
         LiPostKudoModel liPostKudoModel = new LiPostKudoModel();
         LiMessage liMessage = new LiMessage();
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(Long.valueOf(messageId));
-        liMessage.setId(liInt);
+        liMessage.setId(Long.valueOf(messageId));
         liPostKudoModel.setType(LiQueryConstant.LI_KUDO_TYPE);
         liPostKudoModel.setMessage(liMessage);
         liBasePostClient.postModel = liPostKudoModel;
@@ -534,9 +532,7 @@ public class LiClientManager {
 
         final LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
         LiMessage parent = new LiMessage();
-        LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
-        liId.setValue(Long.valueOf(messageId));
-        parent.setId(liId);
+        parent.setId(Long.valueOf(messageId));
 
         String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getBody();
         body = embedImageTag(body, imageId, imageName);
@@ -611,9 +607,7 @@ public class LiClientManager {
 
         LiMessage liMessage = new LiMessage();
 
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(Long.valueOf(messageId));
-        liMessage.setId(liInt);
+        liMessage.setId(Long.valueOf(messageId));
 
         LiUser liUser = new LiUser();
         liUser.setId(Long.valueOf(userId));

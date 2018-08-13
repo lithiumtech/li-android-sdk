@@ -300,12 +300,6 @@ public class LiUser extends LiBaseModelImpl {
         this.id = numericId;
     }
 
-    public LiBaseModelImpl.LiInt getNumericIdAsLiInt() {
-        final LiBaseModelImpl.LiInt ret = new LiBaseModelImpl.LiInt();
-        ret.setValue(getId());
-        return ret;
-    }
-
     /**
      * This is NOT the numeric id.  This method existed before I added the numeric id.
      *

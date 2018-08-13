@@ -58,8 +58,8 @@ public class LiSubscriptions extends LiBaseModelImpl implements LiTargetModel {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiInt result) {
-        this.id = result.getValue();
+    public void setId(long result) {
+        this.id = result;
     }
 
     public LiMessage getLiMessage() {

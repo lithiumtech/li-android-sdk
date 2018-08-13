@@ -40,13 +40,13 @@ public class LiBaseModelImpl implements LiBaseModel {
     public static class LiCount {
 
         @SerializedName("count")
-        protected LiInt count;
+        protected int count;
 
-        public LiInt getCount() {
+        public int getCount() {
             return count;
         }
 
-        public void setCount(LiInt count) {
+        public void setCount(int count) {
             this.count = count;
         }
     }
@@ -54,26 +54,14 @@ public class LiBaseModelImpl implements LiBaseModel {
     public static class LiSum {
 
         @SerializedName("weight")
-        protected LiInt weight;
+        protected int weight;
 
-        public LiInt getWeight() {
+        public int getWeight() {
             return weight;
         }
 
-        public void setWeight(LiInt weight) {
+        public void setWeight(int weight) {
             this.weight = weight;
-        }
-    }
-
-    public static class LiInt extends LiBaseModelImpl {
-        private Long value;
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
         }
     }
 

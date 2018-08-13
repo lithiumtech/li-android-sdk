@@ -127,9 +127,7 @@ public class LiUIUtils {
      */
     public static LiMessage clone(LiMessage item) {
         LiMessage newLiMessage = new LiMessage();
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(item.getId());
-        newLiMessage.setId(liInt);
+        newLiMessage.setId(item.getId());
         newLiMessage.setIsAcceptedSolution(item.isAcceptedSolution());
         newLiMessage.setAuthor(item.getAuthor());
         newLiMessage.setBoard(item.getBoard());

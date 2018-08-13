@@ -169,8 +169,8 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         }
     }
 
-    public void setBoardId(LiBaseModelImpl.LiInt result) {
-        this.boardId = result.getValue();
+    public void setBoardId(long result) {
+        this.boardId = result;
     }
 
     public void setLastEditTime(LiBaseModelImpl.LiDate result) {
@@ -181,8 +181,8 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiInt result) {
-        this.id = result.getValue();
+    public void setId(long result) {
+        this.id = result;
     }
 
     public String getSubject() {
