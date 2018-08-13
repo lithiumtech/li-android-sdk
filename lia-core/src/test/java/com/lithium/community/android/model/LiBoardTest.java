@@ -47,41 +47,31 @@ public class LiBoardTest {
 
     @Test
     public void getIdTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(ID);
-        liBoard.setId(liString);
+        liBoard.setId(ID);
         assertEquals(ID, liBoard.getId());
     }
 
     @Test
     public void getInteractionStyleTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(INTERACTION_STYLE);
-        liBoard.setInteractionStyle(liString);
+        liBoard.setInteractionStyle(INTERACTION_STYLE);
         assertEquals(INTERACTION_STYLE, liBoard.getInteractionStyle());
     }
 
     @Test
     public void getTitleTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(TITLE);
-        liBoard.setTitle(liString);
+        liBoard.setTitle(TITLE);
         assertEquals(TITLE, liBoard.getTitle());
     }
 
     @Test
     public void getShortTitleTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(SHORT_TITLE);
-        liBoard.setShortTitle(liString);
+        liBoard.setShortTitle(SHORT_TITLE);
         assertEquals(SHORT_TITLE, liBoard.getShortTitle());
     }
 
     @Test
     public void getDescriptionTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(DESCRIPTION);
-        liBoard.setDescription(liString);
+        liBoard.setDescription(DESCRIPTION);
         assertEquals(DESCRIPTION, liBoard.getDescription());
     }
 }

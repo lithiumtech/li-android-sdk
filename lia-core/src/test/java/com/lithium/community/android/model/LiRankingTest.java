@@ -55,12 +55,8 @@ public class LiRankingTest {
 
     @Test
     public void getNameTest() {
-        LiBaseModelImpl.LiString name = new LiBaseModelImpl.LiString();
-        name.setValue(this.NAME);
-        liRanking.setName(name);
+        liRanking.setName(NAME);
         assertEquals(NAME, liRanking.getName());
-        assertTrue(liRanking.getNameAsLithiumString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(NAME, liRanking.getNameAsLithiumString().getValue());
     }
 
     @Test

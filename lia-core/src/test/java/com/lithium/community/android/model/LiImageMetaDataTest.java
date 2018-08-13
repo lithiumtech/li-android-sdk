@@ -36,12 +36,8 @@ public class LiImageMetaDataTest {
 
     @Test
     public void getFormatTest() {
-        LiBaseModelImpl.LiString format = new LiBaseModelImpl.LiString();
-        format.setValue(this.FORMAT);
-        liImageMetaData.setFormat(format);
+        liImageMetaData.setFormat(FORMAT);
         assertEquals(FORMAT, liImageMetaData.getFormat());
-        assertTrue(liImageMetaData.getFormatAsLithiumString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(FORMAT, liImageMetaData.getFormatAsLithiumString().getValue());
     }
 
     @Test

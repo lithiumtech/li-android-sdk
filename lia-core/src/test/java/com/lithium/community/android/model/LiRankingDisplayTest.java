@@ -58,12 +58,8 @@ public class LiRankingDisplayTest {
 
     @Test
     public void getColorTest() {
-        LiBaseModelImpl.LiString color = new LiBaseModelImpl.LiString();
-        color.setValue(this.COLOR);
-        liRankingDisplay.setColor(color);
+        liRankingDisplay.setColor(COLOR);
         assertEquals(COLOR, liRankingDisplay.getColor());
-        assertTrue(liRankingDisplay.getColorAsLithiumString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(COLOR, liRankingDisplay.getColorAsLithiumString().getValue());
     }
 
     @Test

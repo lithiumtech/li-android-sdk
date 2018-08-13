@@ -43,20 +43,8 @@ public class LiImage extends LiBaseModelImpl {
         return height;
     }
 
-    public void setHeight(LiBaseModelImpl.LiInteger result) {
-        this.height = result.getValue();
-    }
-
-    public LiBaseModelImpl.LiInteger getHeightAsLiInteger() {
-        final LiBaseModelImpl.LiInteger ret = new LiBaseModelImpl.LiInteger();
-        ret.setValue(getHeight());
-        return ret;
-    }
-
-    public LiBaseModelImpl.LiInteger getWidthAsLiInteger() {
-        final LiBaseModelImpl.LiInteger ret = new LiBaseModelImpl.LiInteger();
-        ret.setValue(getWidth());
-        return ret;
+    public void setHeight(Long result) {
+        this.height = result;
     }
 
     public String getUrl() {
@@ -79,8 +67,8 @@ public class LiImage extends LiBaseModelImpl {
         return width;
     }
 
-    public void setWidth(LiBaseModelImpl.LiInteger result) {
-        this.width = result.getValue();
+    public void setWidth(Long result) {
+        this.width = result;
     }
 
     public String getTitle() {

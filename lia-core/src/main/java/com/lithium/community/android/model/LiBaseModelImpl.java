@@ -77,18 +77,6 @@ public class LiBaseModelImpl implements LiBaseModel {
         }
     }
 
-    public static class LiInteger extends LiBaseModelImpl {
-        private Long value;
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
     public static class LiLong extends LiBaseModelImpl {
         private Long value;
 

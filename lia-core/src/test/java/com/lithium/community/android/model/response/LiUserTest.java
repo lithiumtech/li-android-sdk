@@ -62,7 +62,7 @@ public class LiUserTest {
     private LiImage avatarImage;
     @Mock
     private LiRanking ranking;
-    private LiBaseModelImpl.LiString login;
+    private String login;
     private LiUser liUser;
 
     @Before
@@ -123,8 +123,7 @@ public class LiUserTest {
 
     @Test
     public void getEmailTest() {
-        LiBaseModelImpl.LiString emailStr = new LiBaseModelImpl.LiString();
-        emailStr.setValue(EMAIL);
+        String emailStr = EMAIL;
         liUser.setEmail(emailStr);
         assertNotEquals(null, liUser.getEmail());
         assertEquals(EMAIL, liUser.getEmail());
@@ -224,8 +223,7 @@ public class LiUserTest {
         liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
         Assert.assertEquals(
@@ -240,9 +238,7 @@ public class LiUserTest {
 
     @Test
     public void jsonDeserializeTest() throws JSONException {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue("Avatar image URL");
-        avatarImage.setUrl(liString);
+        avatarImage.setUrl("Avatar image URL");
         LiAvatar avatar = new LiAvatar();
         avatar.setMessage("AVATAR");
         LiUser liUser = new LiUser();
@@ -251,8 +247,7 @@ public class LiUserTest {
         liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
         JSONObject jsonObject = liUser.serialize();
@@ -263,6 +258,6 @@ public class LiUserTest {
         Assert.assertEquals(liUser.getEmail(), liUser1.getEmail());
         Assert.assertEquals(liUser.getAvatarImageUrl(), liUser1.getAvatarImageUrl());
         Assert.assertEquals(liUser.getLoginId(), liUser1.getLoginId());
-        Assert.assertEquals(liUser.getAnonymousAsLiString().getValue(), liUser.getAnonymousAsLiString().getValue());
+        Assert.assertEquals(liUser.getEmail(), liUser1.getEmail());
     }
 }
