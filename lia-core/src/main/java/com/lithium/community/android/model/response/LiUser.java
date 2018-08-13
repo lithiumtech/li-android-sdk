@@ -92,12 +92,9 @@ public class LiUser extends LiBaseModelImpl {
     public static LiUser deserialize(JSONObject jsonObject) throws JSONException {
         LiUser user = new LiUser();
         user.setId(jsonObject.getLong(USER_ID));
-        LiString emailStr = new LiString();
-        emailStr.setValue(jsonObject.getString(USER_EMAIL));
-        user.setEmail(emailStr);
+        user.setEmail(jsonObject.getString(USER_EMAIL));
         LiAvatar avatar = LiAvatar.deserialize(jsonObject.getJSONObject(USER_AVATAR));
         user.setAvatar(avatar);
-        LiString loginStr = new LiString();
         user.setLogin(jsonObject.getString(USER_LOGIN));
         user.setHref(jsonObject.getString(USER_HREF));
         user.setProfilePageUrl(jsonObject.getString(USER_VIEW_HREF));
@@ -207,18 +204,12 @@ public class LiUser extends LiBaseModelImpl {
         this.anonymous = anonymous.getValue();
     }
 
-    public LiBaseModelImpl.LiString getAnonymousAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getEmail());
-        return ret;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(LiBaseModelImpl.LiString email) {
-        this.email = email.getValue();
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LiDateInstant getLastVisitInstant() {

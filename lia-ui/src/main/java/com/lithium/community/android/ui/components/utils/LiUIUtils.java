@@ -133,12 +133,8 @@ public class LiUIUtils {
         newLiMessage.setIsAcceptedSolution(item.isAcceptedSolution());
         newLiMessage.setAuthor(item.getAuthor());
         newLiMessage.setBoard(item.getBoard());
-        LiBaseModelImpl.LiString body = new LiBaseModelImpl.LiString();
-        body.setValue(item.getBody());
-        newLiMessage.setBody(body);
-        LiBaseModelImpl.LiString subject = new LiBaseModelImpl.LiString();
-        subject.setValue(item.getSubject());
-        newLiMessage.setSubject(subject);
+        newLiMessage.setBody(item.getBody());
+        newLiMessage.setSubject(item.getSubject());
         newLiMessage.setKudoMetrics(item.getKudoMetrics());
         newLiMessage.setPostTime(item.getPostTime());
         newLiMessage.setLiConversation(item.getLiConversation());

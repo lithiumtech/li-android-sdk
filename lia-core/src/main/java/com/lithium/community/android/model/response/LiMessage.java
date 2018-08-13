@@ -156,8 +156,8 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         this.deleted = result.getValue();
     }
 
-    public void setTeaser(LiBaseModelImpl.LiString result) {
-        this.teaser = result.getValue();
+    public void setTeaser(String result) {
+        this.teaser = result;
     }
 
     public String getRootId() {
@@ -189,16 +189,16 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         return subject;
     }
 
-    public void setSubject(LiBaseModelImpl.LiString result) {
-        subject = result.getValue();
+    public void setSubject(String result) {
+        subject = result;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(LiBaseModelImpl.LiString result) {
-        this.body = result.getValue();
+    public void setBody(String result) {
+        this.body = result;
     }
 
     public LiBaseModelImpl.LiDateInstant getPostTime() {

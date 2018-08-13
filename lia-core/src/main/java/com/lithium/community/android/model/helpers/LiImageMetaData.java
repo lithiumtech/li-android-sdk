@@ -30,14 +30,8 @@ public class LiImageMetaData extends LiBaseModelImpl {
         return format;
     }
 
-    public void setFormat(LiBaseModelImpl.LiString format) {
-        this.format = format.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getFormatAsLithiumString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getFormat());
-        return ret;
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     public Long getSize() {

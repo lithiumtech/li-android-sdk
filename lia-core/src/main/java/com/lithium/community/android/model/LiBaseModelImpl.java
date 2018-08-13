@@ -111,24 +111,6 @@ public class LiBaseModelImpl implements LiBaseModel {
         }
     }
 
-    public static class LiString extends LiBaseModelImpl {
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiMimeType extends LiString {
-    }
-
-    public static class LiModerationStatusType extends LiString {
-    }
-
     public static class LiBoolean extends LiBaseModelImpl {
 
         private Boolean value;

@@ -111,14 +111,6 @@ public abstract class LiRestClient {
                 return dateInstant;
             }
         });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
-            @Override
-            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-                liString.setValue(json.getAsString());
-                return liString;
-            }
-        });
         gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
             @Override
             public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

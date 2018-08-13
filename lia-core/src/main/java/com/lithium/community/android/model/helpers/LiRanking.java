@@ -130,18 +130,12 @@ public class LiRanking extends LiBaseModelImpl {
         this.href = href;
     }
 
-    public LiBaseModelImpl.LiString getNameAsLithiumString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getName());
-        return ret;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(LiBaseModelImpl.LiString name) {
-        this.name = name.getValue();
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LiBaseModelImpl.LiInt getIdAsLithiumInt() {

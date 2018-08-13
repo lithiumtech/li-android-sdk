@@ -63,14 +63,8 @@ public class LiImage extends LiBaseModelImpl {
         return url;
     }
 
-    public void setUrl(LiBaseModelImpl.LiString result) {
-        url = result.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getUrlAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getUrl());
-        return ret;
+    public void setUrl(String result) {
+        url = result;
     }
 
     public String getViewHref() {
@@ -93,28 +87,17 @@ public class LiImage extends LiBaseModelImpl {
         return title;
     }
 
-    public void setTitle(LiBaseModelImpl.LiString title) {
-        this.title = title.getValue();
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LiBaseModelImpl.LiString getTitleAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getTitle());
-        return ret;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(LiBaseModelImpl.LiString description) {
-        this.description = description.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getDescriptionAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getDescription());
-        return ret;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LiImageMetaData getMetaData() {

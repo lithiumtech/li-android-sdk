@@ -450,9 +450,7 @@ public class LiClientManager {
 
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         LiBoard liBoard = new LiBoard();
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(boardId);
-        liBoard.setId(liString);
+        liBoard.setId(boardId);
         liPostMessageModel.setType(LiQueryConstant.LI_POST_QUESTION_TYPE);
         liPostMessageModel.setSubject(subject);
 
