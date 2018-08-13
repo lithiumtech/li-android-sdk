@@ -16,6 +16,7 @@
 
 package com.lithium.community.android.ui.components.activities;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -23,32 +24,50 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.adapters.LiSupportHomeViewPagerAdapter;
+import com.lithium.community.android.ui.components.fragments.LiBaseFragment;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.fragments.LiMessageListFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * The main entry point for Support action workflow.
  * The activity inflates {@link LiMessageListFragment}
  * and {@link LiCreateMessageFragment} as two different tabs
  */
-public class LiSupportHomeActivity extends AppCompatActivity {
+public class LiSupportHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String EXTRA_PARAM_TITLE = LiSupportHomeActivity.class.getCanonicalName() + ".PARAM_TITLE";
 
@@ -61,6 +80,9 @@ public class LiSupportHomeActivity extends AppCompatActivity {
     LiSupportHomeViewPagerAdapter adapter;
     SearchView searchView;
     Menu menu;
+    DrawerLayout drawerLayout;
+    private boolean isLoginReceiverRegistered = false;
+
     BroadcastReceiver createMessageSuccessReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -110,11 +132,12 @@ public class LiSupportHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.li_activity_support_home);
+        drawerLayout = findViewById(R.id.li_main_drawer);
         Toolbar toolbar = findViewById(R.id.li_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         supportHomeViewPager = findViewById(R.id.li_support_viewpager);
         tabLayout = findViewById(R.id.li_support_home_tabs);
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String title = null;
@@ -158,6 +181,85 @@ public class LiSupportHomeActivity extends AppCompatActivity {
                 new IntentFilter(getString(R.string.li_messsage_create_successful));
 
         registerReceiver(createMessageSuccessReceiver, createMessageSuccessFilter);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBarDrawerToggle drawerToggle = new NavigationListener(this);
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        updateNavigationView();
+    }
+
+    private void updateNavigationView() {
+        NavigationView nv = drawerLayout.findViewById(R.id.li_main_navigation_view);
+        nv.setNavigationItemSelectedListener(this);
+        boolean isUserLoggedIn = LiSDKManager.getInstance().isUserLoggedIn();
+        LiUser user = LiSDKManager.getInstance().getLoggedInUser();
+        isUserLoggedIn = isUserLoggedIn && (user != null);
+        Menu menu = nv.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            int id = item.getItemId();
+            boolean visibility = (isUserLoggedIn && (id != R.id.li_main_navigation_menu_login)
+                    || (!isUserLoggedIn && (id == R.id.li_main_navigation_menu_login)));
+            item.setVisible(visibility);
+        }
+        View headerView = nv.getHeaderView(0);
+        final ImageView icon = headerView.findViewById(R.id.li_main_navigation_header_icon);
+        final TextView title = headerView.findViewById(R.id.li_main_navigation_header_title);
+        final TextView subTitle = headerView.findViewById(R.id.li_main_navigation_header_sub_title);
+
+        subTitle.setText(LiSDKManager.getInstance().getCredentials().getCommunityUri().toString());
+
+        if (isUserLoggedIn) {
+            title.setText(String.format("%1$s\n<%2$s>", user.getLogin(), user.getEmail()));
+            String url = user.getAvatar() != null ? user.getAvatar().getProfile() : null;
+            if (TextUtils.isEmpty(url)) {
+                return;
+            }
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    icon.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                    icon.setImageDrawable(errorDrawable);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            };
+            icon.setTag(target);
+            Picasso.with(this).load(url).resize(80, 80)
+                    .onlyScaleDown().into(target);
+        } else {
+            icon.setImageResource(R.mipmap.ic_launcher);
+            title.setText(R.string.li_main_navigation_header_title);
+        }
+    }
+
+    @Override
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        isLoginReceiverRegistered = true;
+        return super.registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        isLoginReceiverRegistered = false;
+        super.unregisterReceiver(receiver);
+    }
+
+    private class NavigationListener extends ActionBarDrawerToggle {
+
+        public NavigationListener(Activity context) {
+            super(context, drawerLayout, R.string.li_main_navigation_drawer_open, R.string.li_main_navigation_drawer_close);
+        }
     }
 
     @Override
@@ -165,6 +267,9 @@ public class LiSupportHomeActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(questionsTabUnreadReplyReceiver);
         unregisterReceiver(createMessageSuccessReceiver);
+        if (isLoginReceiverRegistered) {
+            unregisterReceiver(receiver);
+        }
     }
 
     @Override
@@ -207,17 +312,60 @@ public class LiSupportHomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.li_action_search) {
+        if (i == R.id.li_action_search) {
             return onSearchRequested();
+        } else if (i == android.R.id.home) {
+            if (drawerLayout.isDrawerOpen(Gravity.START)) {
+                drawerLayout.closeDrawer(Gravity.START);
+            } else {
+                drawerLayout.openDrawer(Gravity.START);
+            }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, false);
+            unregisterReceiver(receiver);
+            if (!result) {
+                Toast.makeText(context, "Login failed", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private void login() {
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        registerReceiver(receiver, filter);
+        LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
+            @Override
+            public String getDeviceId() {
+
+                return FirebaseInstanceId.getInstance().getToken();
+            }
+        });
+    }
+
+    private void logout() {
+        LiSDKManager.getInstance().logout(this);
+        finish();
+        startActivity(new Intent(this, getClass()));
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.li_main_navigation_menu_login) {
+            drawerLayout.closeDrawer(Gravity.START);
+            login();
+        } else if (item.getItemId() == R.id.li_main_navigation_menu_logout) {
+            logout();
+        }
+        return false;
     }
 }
