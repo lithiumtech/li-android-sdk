@@ -87,19 +87,6 @@ public class LiBaseModelImpl implements LiBaseModel {
         }
     }
 
-    public static class LiFloat extends LiBaseModelImpl {
-
-        private Float value;
-
-        public Float getValue() {
-            return value;
-        }
-
-        public void setValue(Float value) {
-            this.value = value;
-        }
-    }
-
     public static class LiDate extends LiBaseModelImpl {
         private static final SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 

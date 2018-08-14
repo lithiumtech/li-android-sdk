@@ -220,28 +220,16 @@ public class LiUser extends LiBaseModelImpl {
         return averageMessageRating;
     }
 
-    public void setAverageMessageRating(LiBaseModelImpl.LiFloat averageMessageRating) {
-        this.averageMessageRating = averageMessageRating.getValue();
-    }
-
-    public LiBaseModelImpl.LiFloat getAverageMessageRatingAsLiFloat() {
-        final LiBaseModelImpl.LiFloat ret = new LiBaseModelImpl.LiFloat();
-        ret.setValue(getAverageMessageRating());
-        return ret;
+    public void setAverageMessageRating(float averageMessageRating) {
+        this.averageMessageRating = averageMessageRating;
     }
 
     public Float getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(LiBaseModelImpl.LiFloat averageRating) {
-        this.averageRating = averageRating.getValue();
-    }
-
-    public LiBaseModelImpl.LiFloat getAverageRatingAsLiFloat() {
-        final LiBaseModelImpl.LiFloat ret = new LiBaseModelImpl.LiFloat();
-        ret.setValue(getAverageRating());
-        return ret;
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
     }
 
     public String getHref() {

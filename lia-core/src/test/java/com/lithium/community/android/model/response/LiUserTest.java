@@ -81,22 +81,14 @@ public class LiUserTest {
 
     @Test
     public void getAverageMessageRatingTest() {
-        LiBaseModelImpl.LiFloat liFloat = new LiBaseModelImpl.LiFloat();
-        liFloat.setValue(AVERAGE_MESSAGE_RATING);
-        liUser.setAverageMessageRating(liFloat);
+        liUser.setAverageMessageRating(AVERAGE_MESSAGE_RATING);
         assertEquals(AVERAGE_MESSAGE_RATING, liUser.getAverageMessageRating());
-        assertTrue(liUser.getAverageMessageRatingAsLiFloat() instanceof LiBaseModelImpl.LiFloat);
-        assertEquals(AVERAGE_MESSAGE_RATING, liUser.getAverageMessageRatingAsLiFloat().getValue());
     }
 
     @Test
     public void getAverageRatingTest() {
-        LiBaseModelImpl.LiFloat liFloat = new LiBaseModelImpl.LiFloat();
-        liFloat.setValue(AVERAGE_RATING);
-        liUser.setAverageRating(liFloat);
+        liUser.setAverageRating(AVERAGE_RATING);
         assertEquals(AVERAGE_RATING, liUser.getAverageRating());
-        assertTrue(liUser.getAverageRatingAsLiFloat() instanceof LiBaseModelImpl.LiFloat);
-        assertEquals(AVERAGE_RATING, liUser.getAverageRatingAsLiFloat().getValue());
     }
 
     @Test
