@@ -148,12 +148,12 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
 
     //We use this jackson trick to have just pure values instead of lithium objects
     //the downside is serialization again will produce something we cannot deserialize
-    public void setReadOnly(LiBaseModelImpl.LiBoolean result) {
-        this.readOnly = result.getValue();
+    public void setReadOnly(boolean result) {
+        this.readOnly = result;
     }
 
-    public void setDeleted(LiBaseModelImpl.LiBoolean result) {
-        this.deleted = result.getValue();
+    public void setDeleted(boolean result) {
+        this.deleted = result;
     }
 
     public void setTeaser(String result) {

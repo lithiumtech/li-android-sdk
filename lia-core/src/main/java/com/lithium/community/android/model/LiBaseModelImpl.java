@@ -87,19 +87,6 @@ public class LiBaseModelImpl implements LiBaseModel {
         }
     }
 
-    public static class LiBoolean extends LiBaseModelImpl {
-
-        private Boolean value;
-
-        public Boolean getValue() {
-            return value;
-        }
-
-        public void setValue(Boolean value) {
-            this.value = value;
-        }
-    }
-
     public static class LiFloat extends LiBaseModelImpl {
 
         private Float value;

@@ -39,9 +39,7 @@ public class LiBoardTest {
 
     @Test
     public void getBlogTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(BLOG);
-        liBoard.setBlog(liBoolean);
+        liBoard.setBlog(BLOG);
         assertEquals(BLOG, liBoard.getBlog());
     }
 

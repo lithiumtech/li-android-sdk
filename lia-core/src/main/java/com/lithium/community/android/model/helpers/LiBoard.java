@@ -51,8 +51,8 @@ public class LiBoard extends LiBaseModelImpl {
         return blog;
     }
 
-    public void setBlog(LiBaseModelImpl.LiBoolean result) {
-        blog = result.getValue();
+    public void setBlog(boolean result) {
+        blog = result;
     }
 
     public String getHref() {

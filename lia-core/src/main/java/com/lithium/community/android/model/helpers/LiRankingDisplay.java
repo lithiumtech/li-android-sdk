@@ -60,14 +60,8 @@ public class LiRankingDisplay extends LiBaseModelImpl {
         return bold;
     }
 
-    public void setBold(LiBaseModelImpl.LiBoolean bold) {
-        this.bold = bold.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getBoldAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getBold());
-        return ret;
+    public void setBold(boolean bold) {
+        this.bold = bold;
     }
 
     public LiImage getLeftImage() {

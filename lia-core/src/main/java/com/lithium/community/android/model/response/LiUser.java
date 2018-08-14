@@ -128,18 +128,12 @@ public class LiUser extends LiBaseModelImpl {
         this.ranking = ranking;
     }
 
-    public LiBaseModelImpl.LiBoolean getBannedAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getBanned());
-        return ret;
-    }
-
     public Boolean getBanned() {
         return banned;
     }
 
-    public void setBanned(LiBaseModelImpl.LiBoolean banned) {
-        this.banned = banned.getValue();
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public LiImage getAvatarImage() {
@@ -162,46 +156,28 @@ public class LiUser extends LiBaseModelImpl {
 
     }
 
-    public LiBaseModelImpl.LiBoolean getRegisteredAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getRegistered());
-        return ret;
-    }
-
     public Boolean getRegistered() {
         return registered;
     }
 
-    public void setRegistered(LiBaseModelImpl.LiBoolean registered) {
-        this.registered = registered.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getDeletedAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getDeleted());
-        return ret;
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     public Boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(LiBaseModelImpl.LiBoolean deleted) {
-        this.deleted = deleted.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getAnonymousAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getAnonymous());
-        return ret;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Boolean getAnonymous() {
         return anonymous;
     }
 
-    public void setAnonymous(LiBaseModelImpl.LiBoolean anonymous) {
-        this.anonymous = anonymous.getValue();
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
     }
 
     public String getEmail() {

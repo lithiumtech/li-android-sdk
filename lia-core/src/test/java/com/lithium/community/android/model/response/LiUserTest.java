@@ -101,24 +101,16 @@ public class LiUserTest {
 
     @Test
     public void getBannedTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(BANNED);
-        liUser.setBanned(liBoolean);
+        liUser.setBanned(BANNED);
         assertNotEquals(null, liUser.getBanned());
         assertEquals(BANNED, liUser.getBanned());
-        assertTrue(liUser.getBannedAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(BANNED, liUser.getBannedAsLithiumBoolean().getValue());
     }
 
     @Test
     public void getDeletedTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(DELETED);
-        liUser.setDeleted(liBoolean);
+        liUser.setDeleted(DELETED);
         assertNotEquals(null, liUser.getDeleted());
         assertEquals(DELETED, liUser.getDeleted());
-        assertTrue(liUser.getDeletedAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(DELETED, liUser.getDeletedAsLithiumBoolean().getValue());
     }
 
     @Test
@@ -176,13 +168,9 @@ public class LiUserTest {
 
     @Test
     public void getRegisteredTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(REGISTERED);
-        liUser.setRegistered(liBoolean);
+        liUser.setRegistered(REGISTERED);
         assertNotEquals(null, liUser.getRegistered());
         assertEquals(REGISTERED, liUser.getRegistered());
-        assertTrue(liUser.getRegisteredAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(REGISTERED, liUser.getRegisteredAsLithiumBoolean().getValue());
     }
 
     @Test
@@ -203,13 +191,9 @@ public class LiUserTest {
 
     @Test
     public void getAnonymousTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(ANONYMOUS);
-        liUser.setAnonymous(liBoolean);
+        liUser.setAnonymous(ANONYMOUS);
         assertNotEquals(null, liUser.getAnonymous());
         assertEquals(ANONYMOUS, liUser.getAnonymous());
-        assertTrue(liUser.getAnonymousAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(ANONYMOUS, liUser.getAnonymousAsLithiumBoolean().getValue());
     }
 
     @Test

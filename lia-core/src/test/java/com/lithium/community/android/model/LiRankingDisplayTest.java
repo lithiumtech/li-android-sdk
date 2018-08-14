@@ -48,12 +48,8 @@ public class LiRankingDisplayTest {
 
     @Test
     public void getBoldTest() {
-        LiBaseModelImpl.LiBoolean bold = new LiBaseModelImpl.LiBoolean();
-        bold.setValue(this.BOLD);
-        liRankingDisplay.setBold(bold);
+        liRankingDisplay.setBold(BOLD);
         assertEquals(true, liRankingDisplay.getBold());
-        assertTrue(liRankingDisplay.getBoldAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(BOLD, liRankingDisplay.getBoldAsLithiumBoolean().getValue());
     }
 
     @Test
