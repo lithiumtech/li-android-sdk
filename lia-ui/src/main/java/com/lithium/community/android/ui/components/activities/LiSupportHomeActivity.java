@@ -260,6 +260,12 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
         public NavigationListener(Activity context) {
             super(context, drawerLayout, R.string.li_main_navigation_drawer_open, R.string.li_main_navigation_drawer_close);
         }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+            updateNavigationView();
+        }
     }
 
     @Override
