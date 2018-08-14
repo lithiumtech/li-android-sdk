@@ -61,12 +61,8 @@ public class LiRankingTest {
 
     @Test
     public void getIdTest() {
-        LiBaseModelImpl.LiInt id = new LiBaseModelImpl.LiInt();
-        id.setValue(this.ID);
-        liRanking.setId(id);
+        liRanking.setId(ID);
         assertEquals(this.ID, liRanking.getId());
-        assertTrue(liRanking.getIdAsLithiumInt() instanceof LiBaseModelImpl.LiInt);
-        assertEquals(this.ID, liRanking.getIdAsLithiumInt().getValue());
     }
 
     @Test

@@ -165,7 +165,6 @@ public class LiUserTest {
         liUser.setId(ID);
         assertNotEquals(null, liUser.getId());
         assertEquals(ID, liUser.getId());
-        assertEquals(ID, liUser.getNumericIdAsLiInt().getValue());
     }
 
     @Test

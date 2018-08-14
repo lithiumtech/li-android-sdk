@@ -51,18 +51,14 @@ public class LiSubscriptionsTest {
 
     @Test
     public void getIdTest() {
-        LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
-        liId.setValue(id);
-        subscriptions.setId(liId);
+        subscriptions.setId(id);
         assertEquals(id, subscriptions.getId());
     }
 
     @Test
     public void getTargetMessageTest() {
         LiMessage message = new LiMessage();
-        LiBaseModelImpl.LiInt idInt = new LiBaseModelImpl.LiInt();
-        idInt.setValue(id);
-        message.setId(idInt);
+        message.setId(id);
         subscriptions.setTargetObject(message);
         assertEquals(id, subscriptions.getLiMessage().getId());
     }
