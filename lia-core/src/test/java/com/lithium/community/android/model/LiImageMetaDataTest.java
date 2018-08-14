@@ -42,11 +42,7 @@ public class LiImageMetaDataTest {
 
     @Test
     public void getSizeTest() {
-        LiBaseModelImpl.LiLong liInteger = new LiBaseModelImpl.LiLong();
-        liInteger.setValue(this.SIZE);
-        liImageMetaData.setSize(liInteger);
+        liImageMetaData.setSize(SIZE);
         assertEquals(this.SIZE, liImageMetaData.getSize());
-        assertTrue(liImageMetaData.getSizeAsLithiumLong() instanceof LiBaseModelImpl.LiLong);
-        assertEquals(this.SIZE, liImageMetaData.getSizeAsLithiumLong().getValue());
     }
 }

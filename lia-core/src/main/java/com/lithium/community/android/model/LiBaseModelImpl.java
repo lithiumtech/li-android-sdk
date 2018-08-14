@@ -65,28 +65,6 @@ public class LiBaseModelImpl implements LiBaseModel {
         }
     }
 
-    public static class LiLong extends LiBaseModelImpl {
-        private Long value;
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
     public static class LiDate extends LiBaseModelImpl {
         private static final SimpleDateFormat LIA_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 

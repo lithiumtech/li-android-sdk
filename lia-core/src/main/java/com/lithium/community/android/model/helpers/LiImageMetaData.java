@@ -38,13 +38,8 @@ public class LiImageMetaData extends LiBaseModelImpl {
         return size;
     }
 
-    public void setSize(LiBaseModelImpl.LiLong size) {
-        this.size = size.getValue();
+    public void setSize(long size) {
+        this.size = size;
     }
 
-    public LiBaseModelImpl.LiLong getSizeAsLithiumLong() {
-        final LiBaseModelImpl.LiLong ret = new LiBaseModelImpl.LiLong();
-        ret.setValue(getSize());
-        return ret;
-    }
 }
