@@ -220,7 +220,7 @@ public class LiUser extends LiBaseModelImpl {
         return averageMessageRating;
     }
 
-    public void setAverageMessageRating(float averageMessageRating) {
+    public void setAverageMessageRating(Float averageMessageRating) {
         this.averageMessageRating = averageMessageRating;
     }
 
@@ -228,7 +228,7 @@ public class LiUser extends LiBaseModelImpl {
         return averageRating;
     }
 
-    public void setAverageRating(float averageRating) {
+    public void setAverageRating(Float averageRating) {
         this.averageRating = averageRating;
     }
 

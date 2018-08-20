@@ -38,7 +38,7 @@ public class LiImageMetaData extends LiBaseModelImpl {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 

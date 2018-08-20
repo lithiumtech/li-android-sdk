@@ -35,7 +35,7 @@ public class LiSearchTest {
 
     @Test
     public void getLiMessage() {
-        liMessage.setId(100);
+        liMessage.setId(100L);
         search.setLiMessage(liMessage);
         assertEquals(liMessage.getId(), search.getLiMessage().getId());
 

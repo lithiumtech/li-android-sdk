@@ -142,7 +142,7 @@ public class LiRanking extends LiBaseModelImpl {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

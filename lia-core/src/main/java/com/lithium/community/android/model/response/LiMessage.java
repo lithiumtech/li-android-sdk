@@ -169,7 +169,7 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         }
     }
 
-    public void setBoardId(long result) {
+    public void setBoardId(Long result) {
         this.boardId = result;
     }
 
@@ -181,7 +181,7 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         return id;
     }
 
-    public void setId(long result) {
+    public void setId(Long result) {
         this.id = result;
     }
 

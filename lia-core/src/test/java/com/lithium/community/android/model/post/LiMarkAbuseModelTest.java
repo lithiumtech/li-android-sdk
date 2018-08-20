@@ -40,7 +40,7 @@ public class LiMarkAbuseModelTest {
         liUser.setId(100L);
 
         LiMessage liMessage = new LiMessage();
-        liMessage.setId(10);
+        liMessage.setId(10l);
 
         LiMarkAbuseModel liMarkAbuseModel = new LiMarkAbuseModel();
         liMarkAbuseModel.setReporter(liUser);
