@@ -111,31 +111,6 @@ public abstract class LiRestClient {
                 return dateInstant;
             }
         });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
-            @Override
-            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-                liString.setValue(json.getAsString());
-                return liString;
-            }
-        });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
-            @Override
-            public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-                liBoolean.setValue(json.getAsBoolean());
-                return liBoolean;
-            }
-        });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
-            @Override
-            public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
-                liBoolean.setValue(json.getAsLong());
-                return liBoolean;
-            }
-        });
-
         gson = gsonBuilder.create();
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS)

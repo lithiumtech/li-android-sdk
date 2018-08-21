@@ -56,9 +56,7 @@ public class LiPostMessageModelTest {
 
     @Test
     public void getBoardTest() {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue("Board Description");
-        board.setDescription(liString);
+        board.setDescription("Board Description");
         liPostMessageModel.setBoard(board);
         assertEquals(board, liPostMessageModel.getBoard());
     }

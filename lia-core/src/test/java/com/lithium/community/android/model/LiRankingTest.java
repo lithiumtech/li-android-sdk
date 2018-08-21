@@ -55,22 +55,14 @@ public class LiRankingTest {
 
     @Test
     public void getNameTest() {
-        LiBaseModelImpl.LiString name = new LiBaseModelImpl.LiString();
-        name.setValue(this.NAME);
-        liRanking.setName(name);
+        liRanking.setName(NAME);
         assertEquals(NAME, liRanking.getName());
-        assertTrue(liRanking.getNameAsLithiumString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(NAME, liRanking.getNameAsLithiumString().getValue());
     }
 
     @Test
     public void getIdTest() {
-        LiBaseModelImpl.LiInt id = new LiBaseModelImpl.LiInt();
-        id.setValue(this.ID);
-        liRanking.setId(id);
+        liRanking.setId(ID);
         assertEquals(this.ID, liRanking.getId());
-        assertTrue(liRanking.getIdAsLithiumInt() instanceof LiBaseModelImpl.LiInt);
-        assertEquals(this.ID, liRanking.getIdAsLithiumInt().getValue());
     }
 
     @Test

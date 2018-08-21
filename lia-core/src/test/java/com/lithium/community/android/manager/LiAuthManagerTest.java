@@ -85,8 +85,7 @@ public class LiAuthManagerTest {
         liAvatar.setMessage(AVATAR_MESSAGE);
         liUser.setAvatar(liAvatar);
 
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
 
         liUser.setLogin(LOGIN);

@@ -40,13 +40,13 @@ public class LiBaseModelImpl implements LiBaseModel {
     public static class LiCount {
 
         @SerializedName("count")
-        protected LiInt count;
+        protected int count;
 
-        public LiInt getCount() {
+        public int getCount() {
             return count;
         }
 
-        public void setCount(LiInt count) {
+        public void setCount(int count) {
             this.count = count;
         }
     }
@@ -54,104 +54,14 @@ public class LiBaseModelImpl implements LiBaseModel {
     public static class LiSum {
 
         @SerializedName("weight")
-        protected LiInt weight;
+        protected int weight;
 
-        public LiInt getWeight() {
+        public int getWeight() {
             return weight;
         }
 
-        public void setWeight(LiInt weight) {
+        public void setWeight(int weight) {
             this.weight = weight;
-        }
-    }
-
-    public static class LiInt extends LiBaseModelImpl {
-        private Long value;
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiInteger extends LiBaseModelImpl {
-        private Long value;
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiLong extends LiBaseModelImpl {
-        private Long value;
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiString extends LiBaseModelImpl {
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiMimeType extends LiString {
-    }
-
-    public static class LiModerationStatusType extends LiString {
-    }
-
-    public static class LiBoolean extends LiBaseModelImpl {
-
-        private Boolean value;
-
-        public Boolean getValue() {
-            return value;
-        }
-
-        public void setValue(Boolean value) {
-            this.value = value;
-        }
-    }
-
-    public static class LiFloat extends LiBaseModelImpl {
-
-        private Float value;
-
-        public Float getValue() {
-            return value;
-        }
-
-        public void setValue(Float value) {
-            this.value = value;
         }
     }
 

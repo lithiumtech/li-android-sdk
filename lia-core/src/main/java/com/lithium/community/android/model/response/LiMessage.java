@@ -148,16 +148,16 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
 
     //We use this jackson trick to have just pure values instead of lithium objects
     //the downside is serialization again will produce something we cannot deserialize
-    public void setReadOnly(LiBaseModelImpl.LiBoolean result) {
-        this.readOnly = result.getValue();
+    public void setReadOnly(boolean result) {
+        this.readOnly = result;
     }
 
-    public void setDeleted(LiBaseModelImpl.LiBoolean result) {
-        this.deleted = result.getValue();
+    public void setDeleted(boolean result) {
+        this.deleted = result;
     }
 
-    public void setTeaser(LiBaseModelImpl.LiString result) {
-        this.teaser = result.getValue();
+    public void setTeaser(String result) {
+        this.teaser = result;
     }
 
     public String getRootId() {
@@ -169,8 +169,8 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         }
     }
 
-    public void setBoardId(LiBaseModelImpl.LiInt result) {
-        this.boardId = result.getValue();
+    public void setBoardId(Long result) {
+        this.boardId = result;
     }
 
     public void setLastEditTime(LiBaseModelImpl.LiDate result) {
@@ -181,24 +181,24 @@ public class LiMessage extends LiBaseModelImpl implements LiTargetModel {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiInt result) {
-        this.id = result.getValue();
+    public void setId(Long result) {
+        this.id = result;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(LiBaseModelImpl.LiString result) {
-        subject = result.getValue();
+    public void setSubject(String result) {
+        subject = result;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(LiBaseModelImpl.LiString result) {
-        this.body = result.getValue();
+    public void setBody(String result) {
+        this.body = result;
     }
 
     public LiBaseModelImpl.LiDateInstant getPostTime() {

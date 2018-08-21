@@ -133,9 +133,7 @@ public class LiBaseClientTest {
         ArrayList<LiBaseModel> arrayList = new ArrayList<>();
 
         LiMessage liMessage = new LiMessage();
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue("test");
-        liMessage.setBody(liString);
+        liMessage.setBody("test");
         arrayList.add(liMessage);
 
         PowerMockito.when(liRestv2Client.processSync(isA(LiBaseRestRequest.class))).thenReturn(liBaseResponse);

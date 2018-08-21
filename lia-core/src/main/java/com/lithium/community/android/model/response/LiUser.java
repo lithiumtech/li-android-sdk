@@ -92,12 +92,9 @@ public class LiUser extends LiBaseModelImpl {
     public static LiUser deserialize(JSONObject jsonObject) throws JSONException {
         LiUser user = new LiUser();
         user.setId(jsonObject.getLong(USER_ID));
-        LiString emailStr = new LiString();
-        emailStr.setValue(jsonObject.getString(USER_EMAIL));
-        user.setEmail(emailStr);
+        user.setEmail(jsonObject.getString(USER_EMAIL));
         LiAvatar avatar = LiAvatar.deserialize(jsonObject.getJSONObject(USER_AVATAR));
         user.setAvatar(avatar);
-        LiString loginStr = new LiString();
         user.setLogin(jsonObject.getString(USER_LOGIN));
         user.setHref(jsonObject.getString(USER_HREF));
         user.setProfilePageUrl(jsonObject.getString(USER_VIEW_HREF));
@@ -131,18 +128,12 @@ public class LiUser extends LiBaseModelImpl {
         this.ranking = ranking;
     }
 
-    public LiBaseModelImpl.LiBoolean getBannedAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getBanned());
-        return ret;
-    }
-
     public Boolean getBanned() {
         return banned;
     }
 
-    public void setBanned(LiBaseModelImpl.LiBoolean banned) {
-        this.banned = banned.getValue();
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public LiImage getAvatarImage() {
@@ -165,60 +156,36 @@ public class LiUser extends LiBaseModelImpl {
 
     }
 
-    public LiBaseModelImpl.LiBoolean getRegisteredAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getRegistered());
-        return ret;
-    }
-
     public Boolean getRegistered() {
         return registered;
     }
 
-    public void setRegistered(LiBaseModelImpl.LiBoolean registered) {
-        this.registered = registered.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getDeletedAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getDeleted());
-        return ret;
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     public Boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(LiBaseModelImpl.LiBoolean deleted) {
-        this.deleted = deleted.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getAnonymousAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getAnonymous());
-        return ret;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Boolean getAnonymous() {
         return anonymous;
     }
 
-    public void setAnonymous(LiBaseModelImpl.LiBoolean anonymous) {
-        this.anonymous = anonymous.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getAnonymousAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getEmail());
-        return ret;
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(LiBaseModelImpl.LiString email) {
-        this.email = email.getValue();
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LiDateInstant getLastVisitInstant() {
@@ -253,28 +220,16 @@ public class LiUser extends LiBaseModelImpl {
         return averageMessageRating;
     }
 
-    public void setAverageMessageRating(LiBaseModelImpl.LiFloat averageMessageRating) {
-        this.averageMessageRating = averageMessageRating.getValue();
-    }
-
-    public LiBaseModelImpl.LiFloat getAverageMessageRatingAsLiFloat() {
-        final LiBaseModelImpl.LiFloat ret = new LiBaseModelImpl.LiFloat();
-        ret.setValue(getAverageMessageRating());
-        return ret;
+    public void setAverageMessageRating(Float averageMessageRating) {
+        this.averageMessageRating = averageMessageRating;
     }
 
     public Float getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(LiBaseModelImpl.LiFloat averageRating) {
-        this.averageRating = averageRating.getValue();
-    }
-
-    public LiBaseModelImpl.LiFloat getAverageRatingAsLiFloat() {
-        final LiBaseModelImpl.LiFloat ret = new LiBaseModelImpl.LiFloat();
-        ret.setValue(getAverageRating());
-        return ret;
+    public void setAverageRating(Float averageRating) {
+        this.averageRating = averageRating;
     }
 
     public String getHref() {
@@ -307,12 +262,6 @@ public class LiUser extends LiBaseModelImpl {
 
     public void setId(Long numericId) {
         this.id = numericId;
-    }
-
-    public LiBaseModelImpl.LiInt getNumericIdAsLiInt() {
-        final LiBaseModelImpl.LiInt ret = new LiBaseModelImpl.LiInt();
-        ret.setValue(getId());
-        return ret;
     }
 
     /**

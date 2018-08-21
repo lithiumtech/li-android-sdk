@@ -689,7 +689,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
      */
     protected void setupKudoUI(final LiMessage message, final LiViewHolderConversationMessage liViewHolder) {
         liViewHolder.mPostKudoCount.setText(String.valueOf(message.getKudoMetrics() == null ? 0
-                : message.getKudoMetrics().getSum().getWeight().getValue()));
+                : message.getKudoMetrics().getSum().getWeight()));
         final View.OnClickListener kudosClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -724,8 +724,8 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                             return;
                                         }
                                         LiKudoMetrics kudoMetrics = message.getKudoMetrics();
-                                        Long kudoCount = kudoMetrics.getSum()
-                                                .getWeight().getValue();
+                                        int kudoCount = kudoMetrics.getSum()
+                                                .getWeight();
                                         //extract kudo weight for subtracting it to the number of kudos
                                         //TODO in future this logic must be left to the LIA backend. We should read the kudo metrics that will come from the
                                         // response and update the kudos count directly
@@ -736,7 +736,7 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                         liViewHolder.mPostKudoCount.setText(
                                                 String.valueOf(kudoCount - kudoWeight));
                                         message.getUserContext().setKudo(false);
-                                        kudoMetrics.getSum().getWeight().setValue(kudoCount - kudoWeight);
+                                        kudoMetrics.getSum().setWeight((int)(kudoCount - kudoWeight));
                                         setTint(liViewHolder.mPosKudoBtn, R.color.li_theme_remove_tint);
                                     }
                                 });
@@ -790,15 +790,14 @@ public class LiConversationAdapter extends LiBaseRecyclerAdapter {
                                         }
 
                                         if (kudoMetrics == null
-                                                || kudoMetrics.getSum().getWeight().getValue() == 0) {
+                                                || kudoMetrics.getSum().getWeight() == 0) {
                                             liViewHolder.mPostKudoCount.setText(String.valueOf(kudoWeight));
                                         } else {
                                             liViewHolder.mPostKudoCount.setText(
                                                     String.valueOf(kudoMetrics.getSum()
-                                                            .getWeight().getValue() + kudoWeight));
+                                                            .getWeight() + kudoWeight));
                                         }
-                                        kudoMetrics.getSum().getWeight()
-                                                .setValue(kudoMetrics.getSum().getWeight().getValue() + kudoWeight);
+                                        kudoMetrics.getSum().setWeight(kudoMetrics.getSum().getWeight() + kudoWeight);
                                         message.getUserContext().setKudo(true);
                                         setTint(liViewHolder.mPosKudoBtn, R.color.li_theme_already_kudoed);
                                     }
