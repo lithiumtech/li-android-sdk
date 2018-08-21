@@ -263,9 +263,9 @@ public class LiMessageListAdapter extends LiBaseRecyclerAdapter {
      * @param viewHolderNormal The view where the status needs to updated
      */
     protected void setupKudoCount(LiMessage item, LiViewHolderItem viewHolderNormal) {
-        Long kudoCount = 0L;
+        int kudoCount = 0;
         if (item.getKudoMetrics() != null) {
-            kudoCount = item.getKudoMetrics().getSum().getWeight().getValue();
+            kudoCount = item.getKudoMetrics().getSum().getWeight();
         }
         String kudoCountTxt = String.format(activity
                 .getString(R.string.li_kudos_plural_txt), kudoCount);

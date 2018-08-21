@@ -49,9 +49,7 @@ public class LiReplyMessageModelTest {
 
     @Test
     public void getParentTest() {
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue((long) 100);
-        parent.setId(liInt);
+        parent.setId((long)100);
         liReplyMessageModel.setParent(parent);
         assertEquals(parent, liReplyMessageModel.getParent());
     }

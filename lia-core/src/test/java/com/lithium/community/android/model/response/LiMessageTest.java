@@ -275,7 +275,7 @@ public class LiMessageTest {
             assertEquals(1, responseList.size());
             LiMessage returnedMessage = (LiMessage) responseList.get(0);
             assertEquals(213824, returnedMessage.getId().intValue());
-            assertEquals(0, returnedMessage.getKudoMetrics().getSum().getWeight().getValue().intValue());
+            assertEquals(0, returnedMessage.getKudoMetrics().getSum().getWeight());
         } catch (LiRestResponseException e) {
             fail(e.getMessage());
         }

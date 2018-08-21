@@ -32,4 +32,9 @@
         android:orderInCategory="99"
         app:showAsAction="never"
         android:title="@string/li_report_inappropriate_content"/>
+    <item
+        android:id="@+id/li_action_subscribe"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/li_subscribe"/>
 </menu>

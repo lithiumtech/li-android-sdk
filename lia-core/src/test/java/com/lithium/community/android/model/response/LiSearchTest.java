@@ -35,9 +35,7 @@ public class LiSearchTest {
 
     @Test
     public void getLiMessage() {
-        LiBaseModelImpl.LiInt id = new LiBaseModelImpl.LiInt();
-        id.setValue(100L);
-        liMessage.setId(id);
+        liMessage.setId(100L);
         search.setLiMessage(liMessage);
         assertEquals(liMessage.getId(), search.getLiMessage().getId());
 

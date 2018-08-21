@@ -61,7 +61,7 @@ import java.util.ArrayList;
  * <p>
  * {@link LiSDKConstants#SELECTED_MESSAGE_ID} It requires a message/topic id to display the conversation.
  */
-public class LiConversationFragment extends LiBaseFragment {
+public class LiConversationFragment extends LiBaseFragment implements LiConversationAdapter.ActionInProgressListener {
     LiMessage originalMessage;
     private Long selectedMessageId;
     private boolean updateTitle;
@@ -81,6 +81,7 @@ public class LiConversationFragment extends LiBaseFragment {
     protected RecyclerView.Adapter getAdapter() {
         if (adapter == null) {
             adapter = new LiConversationAdapter(response, mListener, getActivity(), recyclerView, this);
+            ((LiConversationAdapter)adapter).setActionInProgressListener(this);
         }
         return adapter;
     }
@@ -331,5 +332,24 @@ public class LiConversationFragment extends LiBaseFragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void actionInProgress(boolean inProgress) {
+        getActivity().runOnUiThread(new UiAction(inProgress));
+    }
+
+    private class UiAction implements Runnable {
+
+        private final boolean inProgress;
+
+        private UiAction(boolean inProgress) {
+            this.inProgress = inProgress;
+        }
+
+        @Override
+        public void run() {
+            setRefreshing(inProgress);
+        }
     }
 }

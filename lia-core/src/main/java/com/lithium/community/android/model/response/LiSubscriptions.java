@@ -16,6 +16,7 @@
 
 package com.lithium.community.android.model.response;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.lithium.community.android.manager.LiClientManager;
@@ -33,7 +34,7 @@ public class LiSubscriptions extends LiBaseModelImpl implements LiTargetModel {
     @SerializedName("id")
     private Long id;
     @SerializedName("target")
-    private JsonObject targetObject;
+    private LiMessage targetObject;
     @SerializedName("subscriber")
     private LiUser user;
 
@@ -57,31 +58,31 @@ public class LiSubscriptions extends LiBaseModelImpl implements LiTargetModel {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiInt result) {
-        this.id = result.getValue();
+    public void setId(Long result) {
+        this.id = result;
     }
 
     public LiMessage getLiMessage() {
-        if (targetObject.has("type") && targetObject.get("type").getAsString().equals("message")) {
-            return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiMessage.class);
+        if (targetObject != null) {
+            return targetObject;
         } else {
             return null;
         }
     }
 
     public LiBoard getLiBoard() {
-        if (targetObject.has("type") && targetObject.get("type").getAsString().equals("board")) {
-            return LiClientManager.getRestClient().getGson().fromJson(targetObject.toString(), LiBoard.class);
-        } else {
-            return null;
-        }
+        return null;//subscriptions will not have board
     }
 
-    public JsonObject getTargetObject() {
+    public LiMessage getTargetObject() {
         return targetObject;
     }
 
-    public void setTargetObject(JsonObject targetObject) {
+    public void setTargetObject(LiMessage targetObject) {
         this.targetObject = targetObject;
+    }
+
+    public static LiSubscriptions fromJson(String json) {
+        return new GsonBuilder().create().fromJson(json, LiSubscriptions.class);
     }
 }

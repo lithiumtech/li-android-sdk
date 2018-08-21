@@ -28,7 +28,7 @@
         tools:targetApi="n">
 
         <activity
-            android:name="com.lithium.community.android.example.LoginActivity"
+            android:name="com.lithium.community.android.example.LauncherActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -37,6 +37,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.lithium.community.android.example.LoginActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service android:name=".ReferenceFirebaseMessagingService">
             <intent-filter>

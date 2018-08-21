@@ -52,8 +52,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -107,31 +111,6 @@ public abstract class LiRestClient {
                 return dateInstant;
             }
         });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiString.class, new JsonDeserializer<LiBaseModelImpl.LiString>() {
-            @Override
-            public LiBaseModelImpl.LiString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-                liString.setValue(json.getAsString());
-                return liString;
-            }
-        });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiBoolean.class, new JsonDeserializer<LiBaseModelImpl.LiBoolean>() {
-            @Override
-            public LiBaseModelImpl.LiBoolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-                liBoolean.setValue(json.getAsBoolean());
-                return liBoolean;
-            }
-        });
-        gsonBuilder.registerTypeAdapter(LiBaseModelImpl.LiInt.class, new JsonDeserializer<LiBaseModelImpl.LiInt>() {
-            @Override
-            public LiBaseModelImpl.LiInt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                LiBaseModelImpl.LiInt liBoolean = new LiBaseModelImpl.LiInt();
-                liBoolean.setValue(json.getAsLong());
-                return liBoolean;
-            }
-        });
-
         gson = gsonBuilder.create();
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS)
@@ -174,7 +153,7 @@ public abstract class LiRestClient {
 
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
-        clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
+        clientBuilder.retryOnConnectionFailure(false).interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Response response = null;
 
         try {
@@ -242,6 +221,7 @@ public abstract class LiRestClient {
     private void enqueueCall(@NonNull final LiBaseRestRequest baseRestRequest, @NonNull final LiAsyncRequestCallback callback) {
         Request request = buildRequest(baseRestRequest);
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
+        clientBuilder.retryOnConnectionFailure(false);
         clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
         Call call = clientBuilder.build().newCall(request);
         call.enqueue(new Callback() {
@@ -537,7 +517,7 @@ public abstract class LiRestClient {
      */
     private static class RefreshAndRetryInterceptor implements Interceptor {
 
-        private static final int MAX_TRIES = 2;
+        private static final int MAX_TRIES = 4; // One actual call + 3 Retries
 
         private WeakReference<Context> context;
         private LiSDKManager sdk;
@@ -553,48 +533,129 @@ public abstract class LiRestClient {
             int currentCount = 0;
             Response response = null;
 
-            while (currentCount < MAX_TRIES && (response == null || (response.code() != HTTP_CODE_SUCCESSFUL))) {
+            while (currentCount < MAX_TRIES
+                    && (response == null
+                    || ((response.code() != HTTP_CODE_SUCCESSFUL) && (response.code() != HttpURLConnection.HTTP_CREATED)))) {
                 boolean proceed = false;
 
                 if (response == null) {
                     proceed = true;
-                } else if (response.code() != HTTP_CODE_SUCCESSFUL) {
-                    int httpCode = response.code();
-                    JsonObject data;
-                    String responseStr = response.body().string();
+                } else if (response.code() != HTTP_CODE_SUCCESSFUL && response.code() != HttpURLConnection.HTTP_CREATED) {
 
                     try {
-                        data = new Gson().fromJson(responseStr, JsonObject.class);
-                        if (data != null && data.has("statusCode")) {
-                            httpCode = data.get("statusCode").getAsInt();
-                        }
-                    } catch (JsonSyntaxException ex) {
-                        Log.e(LI_LOG_TAG, "wrong json, not able to parse " + ex.getMessage());
-                    }
-
-                    if (httpCode == HTTP_CODE_UNAUTHORIZED || httpCode == HTTP_CODE_FORBIDDEN) {
-                        try {
-                            Context context = this.context.get();
-                            if (context != null) {
-                                LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdk).performSyncRefreshTokenRequest();
-                                sdk.persistAuthState(context, liTokenResponse);
-
-                                request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
-                                request = request.newBuilder()
-                                        .addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdk.getAuthToken())
-                                        .build();
+                        int httpCode = response.code();
+                        String responseStr = "";
+                        //Some server may specify retry-after
+                        //1. either in http-date format, 'EEE, dd MM yyyy HH:mm:ss zzz', ex: 'Wed, 21 Jul 2018 07:28:00 GMT'
+                        //2. or in seconds
+                        String retryAfter = response.header("Retry-After");
+                        long retryDuration = 0;
+                        if (!TextUtils.isEmpty(retryAfter)) {
+                            try {
+                                SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+                                Date d = format.parse(retryAfter);
+                                retryDuration = d.getTime() - System.currentTimeMillis();
+                                if (retryDuration < 0) {
+                                    retryDuration = 0;
+                                }
+                            } catch (ParseException pe) {
+                                try {
+                                    retryDuration = Long.parseLong(retryAfter) * 1000; //seconds * milliseconds
+                                } catch (NumberFormatException nfe) {
+                                    retryDuration = 0;
+                                }
                             }
-                        } catch (LiRestResponseException e) {
-                            Log.e(LOG_TAG, "Error making rest call for refresh token", e);
                         }
-                    }
 
-                    proceed = true;
+                        if (retryDuration == 0) {
+                            // if server didn't specify anything or specified something erroneous
+                            retryDuration = (long) (Math.pow(2, currentCount - 1) * 2000);
+                        }
+                        try {
+                            responseStr = response.body().string();
+                        } catch (IllegalStateException ise) {
+                            //This could happen for non-transient failures which are not happening below.
+                            //unless retried, this could be read twice (second time on the closed stream) which leads to this exception.
+                            responseStr = "";
+                        }
+                        synchronized (this) {
+                            Thread.sleep(retryDuration);
+                            // first time reaching this point, currentCount will always be 1, hence currentCount-1.
+                            // so first time it waits for 2^0 = 2 seconds
+                            // second time it waits for 2^1 = 4 seconds
+                            // third time it waits for 2^2 = 8 seconds
+                            // next time perhaps!, God help.
+                        }
+
+                        try {
+                            JsonObject data = new Gson().fromJson(responseStr, JsonObject.class);
+                            if (data != null && data.has("http_code")) {
+                                httpCode = data.get("http_code").getAsInt();
+                            }
+                        } catch (JsonSyntaxException ex) {
+                            Log.e(LI_LOG_TAG, "wrong json, not able to parse " + ex.getMessage());
+                        }
+
+                        switch (httpCode) {
+                            //Not including 3XX codes as Lia doesn't handle re-directions
+
+                            //The below auth error codes needs to check refresh tokens before retry.
+                            case HTTP_CODE_UNAUTHORIZED:
+                                //{@link HttpURLConnection.HTTP_UNAUTHORIZED} 401 - Unauthorized access, because of authentication.
+                            case HTTP_CODE_FORBIDDEN: {
+                                //{@link HttpURLConnection.HTTP_FORBIDDEN} 403 - Forbidden access, because of authentication again.
+
+                                try {
+                                    Context context = this.context.get();
+                                    if (context != null) {
+                                        LiTokenResponse liTokenResponse = new LiAuthServiceImpl(context, sdk).performSyncRefreshTokenRequest();
+                                        sdk.persistAuthState(context, liTokenResponse);
+
+                                        request = request.newBuilder().removeHeader(LiAuthConstants.AUTHORIZATION).build();
+                                        request = request.newBuilder()
+                                                .addHeader(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdk.getAuthToken())
+                                                .build();
+                                        proceed = true;
+                                    }
+                                } catch (LiRestResponseException e) {
+                                    Log.e(LOG_TAG, "Error making rest call for refresh token", e);
+                                }
+                                break;
+                            }
+
+                            //As described under https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+                            //Retries needs to be done for all the selected cases below -
+                            case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                                //{@link HttpURLConnection.HTTP_INTERNAL_ERROR} 500 - Internal server error, this could succeed for unsafe &
+                                // non idempotent calls on retrying.
+                                proceed = !((request.method() + "").equalsIgnoreCase("GET"));
+                                break;
+
+                            case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
+                                //{@link HttpURLConnection.HTTP_CLIENT_TIMEOUT} 408 - Client-Timeout, retry should be made
+                            case HttpURLConnection.HTTP_BAD_GATEWAY:
+                                //{@link HttpURLConnection.HTTP_BAD_GATEWAY} 502 - Bad Gateway, An auxiliary dependency could get solved
+                            case HttpURLConnection.HTTP_UNAVAILABLE:
+                                //{@link HttpURLConnection.HTTP_UNAVAILABLE} 503 - Currently unavailable, this is temporary denial of service
+                            case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+                                //{@link HttpURLConnection.HTTP_GATEWAY_TIMEOUT} 504 - Gateway-Timeout, usually dependencies on Auxiliary services
+                                proceed = true;
+                                break;
+
+                            default:
+                                proceed = false;
+                        }
+
+                    } catch (InterruptedException e) {
+                        proceed = false; // operation was incomplete do not proceed
+                    }
                 }
 
                 if (proceed) {
                     response = chain.proceed(request);
                     currentCount++;
+                } else {
+                    break;
                 }
             }
             return response;

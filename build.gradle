@@ -66,9 +66,9 @@ allprojects {
         // App dependencies
         supportLibraryVersion = '27.0.2'
         gsonVersion = '2.8.0'
-        okhttpVersion = '3.4.1'
         firebaseCoreVersion = '16.0.1'
         firebaseMessagingVersion = '17.1.0'
+        okhttpVersion = '3.11.0'
 
         // Test dependencies
         junitVersion = '4.12'

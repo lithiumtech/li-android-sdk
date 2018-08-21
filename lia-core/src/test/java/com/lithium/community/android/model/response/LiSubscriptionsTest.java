@@ -31,6 +31,7 @@ import com.lithium.community.android.model.LiBaseModelImpl;
 import com.lithium.community.android.model.response.LiSubscriptions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by shoureya.kant on 12/5/16.
@@ -50,28 +51,23 @@ public class LiSubscriptionsTest {
 
     @Test
     public void getIdTest() {
-        LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
-        liId.setValue(id);
-        subscriptions.setId(liId);
+        subscriptions.setId(id);
         assertEquals(id, subscriptions.getId());
     }
 
     @Test
     public void getTargetMessageTest() {
-        JsonObject messageObject = new JsonObject();
-        messageObject.addProperty("id", id);
-        messageObject.addProperty("type", "message");
-        subscriptions.setTargetObject(messageObject);
+        LiMessage message = new LiMessage();
+        message.setId(id);
+        subscriptions.setTargetObject(message);
         assertEquals(id, subscriptions.getLiMessage().getId());
     }
 
     @Test
     public void getTargetBoardTest() {
-        JsonObject messageObject = new JsonObject();
-        messageObject.addProperty("id", id);
-        messageObject.addProperty("type", "board");
-        subscriptions.setTargetObject(messageObject);
-        assertEquals(id, Long.valueOf(subscriptions.getLiBoard().getId()));
+        LiMessage message = new LiMessage();
+        subscriptions.setTargetObject(message);
+        assertNull(subscriptions.getLiBoard());
     }
 
 }

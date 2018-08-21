@@ -62,7 +62,7 @@ public class LiUserTest {
     private LiImage avatarImage;
     @Mock
     private LiRanking ranking;
-    private LiBaseModelImpl.LiString login;
+    private String login;
     private LiUser liUser;
 
     @Before
@@ -81,50 +81,33 @@ public class LiUserTest {
 
     @Test
     public void getAverageMessageRatingTest() {
-        LiBaseModelImpl.LiFloat liFloat = new LiBaseModelImpl.LiFloat();
-        liFloat.setValue(AVERAGE_MESSAGE_RATING);
-        liUser.setAverageMessageRating(liFloat);
+        liUser.setAverageMessageRating(AVERAGE_MESSAGE_RATING);
         assertEquals(AVERAGE_MESSAGE_RATING, liUser.getAverageMessageRating());
-        assertTrue(liUser.getAverageMessageRatingAsLiFloat() instanceof LiBaseModelImpl.LiFloat);
-        assertEquals(AVERAGE_MESSAGE_RATING, liUser.getAverageMessageRatingAsLiFloat().getValue());
     }
 
     @Test
     public void getAverageRatingTest() {
-        LiBaseModelImpl.LiFloat liFloat = new LiBaseModelImpl.LiFloat();
-        liFloat.setValue(AVERAGE_RATING);
-        liUser.setAverageRating(liFloat);
+        liUser.setAverageRating(AVERAGE_RATING);
         assertEquals(AVERAGE_RATING, liUser.getAverageRating());
-        assertTrue(liUser.getAverageRatingAsLiFloat() instanceof LiBaseModelImpl.LiFloat);
-        assertEquals(AVERAGE_RATING, liUser.getAverageRatingAsLiFloat().getValue());
     }
 
     @Test
     public void getBannedTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(BANNED);
-        liUser.setBanned(liBoolean);
+        liUser.setBanned(BANNED);
         assertNotEquals(null, liUser.getBanned());
         assertEquals(BANNED, liUser.getBanned());
-        assertTrue(liUser.getBannedAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(BANNED, liUser.getBannedAsLithiumBoolean().getValue());
     }
 
     @Test
     public void getDeletedTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(DELETED);
-        liUser.setDeleted(liBoolean);
+        liUser.setDeleted(DELETED);
         assertNotEquals(null, liUser.getDeleted());
         assertEquals(DELETED, liUser.getDeleted());
-        assertTrue(liUser.getDeletedAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(DELETED, liUser.getDeletedAsLithiumBoolean().getValue());
     }
 
     @Test
     public void getEmailTest() {
-        LiBaseModelImpl.LiString emailStr = new LiBaseModelImpl.LiString();
-        emailStr.setValue(EMAIL);
+        String emailStr = EMAIL;
         liUser.setEmail(emailStr);
         assertNotEquals(null, liUser.getEmail());
         assertEquals(EMAIL, liUser.getEmail());
@@ -156,13 +139,9 @@ public class LiUserTest {
 
     @Test
     public void getLoginTest() {
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         assertNotEquals(null, liUser.getLogin());
         assertEquals(LI_LOGIN, liUser.getLogin());
-        assertTrue(liUser.getLoginAsLiString() instanceof LiBaseModelImpl.LiString);
-        assertEquals(LI_LOGIN, liUser.getLoginAsLiString().getValue());
     }
 
     @Test
@@ -170,7 +149,6 @@ public class LiUserTest {
         liUser.setId(ID);
         assertNotEquals(null, liUser.getId());
         assertEquals(ID, liUser.getId());
-        assertEquals(ID, liUser.getNumericIdAsLiInt().getValue());
     }
 
     @Test
@@ -182,13 +160,9 @@ public class LiUserTest {
 
     @Test
     public void getRegisteredTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(REGISTERED);
-        liUser.setRegistered(liBoolean);
+        liUser.setRegistered(REGISTERED);
         assertNotEquals(null, liUser.getRegistered());
         assertEquals(REGISTERED, liUser.getRegistered());
-        assertTrue(liUser.getRegisteredAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(REGISTERED, liUser.getRegisteredAsLithiumBoolean().getValue());
     }
 
     @Test
@@ -209,13 +183,9 @@ public class LiUserTest {
 
     @Test
     public void getAnonymousTest() {
-        LiBaseModelImpl.LiBoolean liBoolean = new LiBaseModelImpl.LiBoolean();
-        liBoolean.setValue(ANONYMOUS);
-        liUser.setAnonymous(liBoolean);
+        liUser.setAnonymous(ANONYMOUS);
         assertNotEquals(null, liUser.getAnonymous());
         assertEquals(ANONYMOUS, liUser.getAnonymous());
-        assertTrue(liUser.getAnonymousAsLithiumBoolean() instanceof LiBaseModelImpl.LiBoolean);
-        assertEquals(ANONYMOUS, liUser.getAnonymousAsLithiumBoolean().getValue());
     }
 
     @Test
@@ -225,13 +195,10 @@ public class LiUserTest {
         avatar.setMessage("AVATAR");
         liUser.setAvatarImage(avatarImage);
         liUser.setId(ID);
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
         Assert.assertEquals(
@@ -246,21 +213,16 @@ public class LiUserTest {
 
     @Test
     public void jsonDeserializeTest() throws JSONException {
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue("Avatar image URL");
-        avatarImage.setUrl(liString);
+        avatarImage.setUrl("Avatar image URL");
         LiAvatar avatar = new LiAvatar();
         avatar.setMessage("AVATAR");
         LiUser liUser = new LiUser();
         liUser.setAvatarImage(avatarImage);
         liUser.setId(ID);
-        login = new LiBaseModelImpl.LiString();
-        login.setValue(LI_LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LI_LOGIN);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
         liUser.setHref(HREF);
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
         liUser.setAvatar(avatar);
         JSONObject jsonObject = liUser.serialize();
@@ -271,6 +233,6 @@ public class LiUserTest {
         Assert.assertEquals(liUser.getEmail(), liUser1.getEmail());
         Assert.assertEquals(liUser.getAvatarImageUrl(), liUser1.getAvatarImageUrl());
         Assert.assertEquals(liUser.getLoginId(), liUser1.getLoginId());
-        Assert.assertEquals(liUser.getAnonymousAsLiString().getValue(), liUser.getAnonymousAsLiString().getValue());
+        Assert.assertEquals(liUser.getEmail(), liUser1.getEmail());
     }
 }

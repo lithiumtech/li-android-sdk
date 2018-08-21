@@ -37,13 +37,11 @@ public class LiKudoMetricesTest {
     public void getParamsTest() {
 
         sum = new LiBaseModelImpl.LiSum();
-        LiBaseModelImpl.LiInt value = new LiBaseModelImpl.LiInt();
-        value.setValue(100L);
-        sum.setWeight(value);
+        sum.setWeight(100);
 
         liKudoMetrics.setSum(sum);
 
-        assertEquals(value, liKudoMetrics.getSum().getWeight());
+        assertEquals(100, liKudoMetrics.getSum().getWeight());
 
     }
 }
