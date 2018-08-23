@@ -18,6 +18,7 @@ package com.lithium.community.android.example;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 
 
 public class InitializationActivity extends AppCompatActivity {
@@ -105,7 +107,6 @@ public class InitializationActivity extends AppCompatActivity {
         }
 
         if (model.isInitialized()) {
-            persistAndUpdate();
             btnInitialize.setText(R.string.action_proceed);
             tipRestartApp.setVisibility(View.VISIBLE);
             btnReset.setEnabled(false);
@@ -144,7 +145,11 @@ public class InitializationActivity extends AppCompatActivity {
                         MiscUtils.getInstanceId(this)
                 );
                 LiSDKManager.initialize(this, credentials);
-                LiSDKManager.getInstance().syncWithCommunity(this);
+
+                LiSDKManager sdk = LiSDKManager.getInstance();
+                sdk.setFirebaseTokenProvider(getFirebaseTokenProvider());
+                sdk.syncWithCommunity(this);
+
                 proceed();
             } catch (LiInitializationException e) {
                 ToastUtils.initializationError(this, e.getMessage());
@@ -160,12 +165,13 @@ public class InitializationActivity extends AppCompatActivity {
         finish();
     }
 
-    private void persistAndUpdate() {
-        // TODO: save the credentials in shared preferences
-        // TODO: logout only if credentials have changes since last session.
-        if (LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn()) {
-            LiSDKManager.getInstance().logout(this);
+    @Nullable
+    protected FirebaseTokenProvider getFirebaseTokenProvider() {
+        final String senderId = getString(R.string.li_sender_id);
+        if (!TextUtils.isEmpty(senderId)) {
+            return new ReferenceFirebaseTokenProvider(senderId);
         }
+        return null;
     }
 
     class ViewModel {

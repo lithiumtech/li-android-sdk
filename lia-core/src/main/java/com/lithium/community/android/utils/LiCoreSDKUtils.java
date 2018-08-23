@@ -26,6 +26,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.lithium.community.android.BuildConfig;
+import com.lithium.community.android.R;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.model.response.LiBrowse;
@@ -51,8 +53,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.lithium.community.android.BuildConfig;
-import com.lithium.community.android.R;
 import okhttp3.Request;
 
 /**

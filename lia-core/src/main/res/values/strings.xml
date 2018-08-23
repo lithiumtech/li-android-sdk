@@ -26,6 +26,7 @@
     <string name="li_message_messages_notif_alert_text">Message Alert!</string>
     <string name="li_login_complete_broadcast_intent">lithium.sdk.auth.HANDLE_AUTHORIZATION_RESPONSE</string>
     <string name="li_login_error_missing_url">Something went wrong. Please contact us.</string>
+    <string name="li_error_logout_user_not_looged_in">User not logged in</string>
     <string-array name="li_supported_image_formats">
         <item>jpeg</item>
         <item>jpg</item>
