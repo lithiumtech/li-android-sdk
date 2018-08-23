@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.R;
@@ -57,7 +58,9 @@ import com.lithium.community.android.ui.components.adapters.LiSupportHomeViewPag
 import com.lithium.community.android.ui.components.fragments.LiBaseFragment;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.fragments.LiMessageListFragment;
+import com.lithium.community.android.ui.components.fragments.LiProgressFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
+import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -82,6 +85,7 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
     Menu menu;
     DrawerLayout drawerLayout;
     private boolean isLoginReceiverRegistered = false;
+    private LiProgressFragment progressFragment = null;
 
     BroadcastReceiver createMessageSuccessReceiver = new BroadcastReceiver() {
         @Override
@@ -349,19 +353,12 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
     private void login() {
         IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
         registerReceiver(receiver, filter);
-        LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
-            @Override
-            public String getDeviceId() {
-
-                return FirebaseInstanceId.getInstance().getToken();
-            }
-        });
+        LiSDKManager.getInstance().login(this);
     }
 
     private void logout() {
-        LiSDKManager.getInstance().logout(this);
-        finish();
-        startActivity(new Intent(this, getClass()));
+        LiSDKManager.getInstance().logout(this, new LogoutCallback());
+        showProgress(true);
     }
 
     @Override
@@ -373,5 +370,52 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
             logout();
         }
         return false;
+    }
+
+    private class LogoutCallback implements Callback<Void, Throwable, Throwable> {
+
+        @Override
+        public void success(Void v) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showProgress(false);
+                    LiUIUtils.showInAppNotification(LiSupportHomeActivity.this, R.string.li_info_logout_succeeded);
+                    finish();
+                    startActivity(new Intent(LiSupportHomeActivity.this, LiSupportHomeActivity.class));
+                }
+            });
+        }
+
+        @Override
+        public void failure(Throwable t) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LiUIUtils.showInAppNotification(LiSupportHomeActivity.this, R.string.li_warning_logout_failed);
+                    showProgress(false);
+                }
+            });
+        }
+
+        @Override
+        public void abort(Throwable throwable) {
+            LiUIUtils.showInAppNotification(LiSupportHomeActivity.this, R.string.li_warning_logout_cancelled);
+        }
+    }
+
+    private void showProgress(boolean show) {
+        if (show) {
+            progressFragment = new LiProgressFragment();
+            Bundle b = new Bundle();
+            b.putString(LiProgressFragment.EXTRA_TITLE, getString(R.string.li_logout_progress_title));
+            b.putString(LiProgressFragment.EXTRA_MESSAGE, getString(R.string.li_logout_progress_message));
+            progressFragment.setArguments(b);
+            progressFragment.show(getSupportFragmentManager(), "logout");
+        } else {
+            if (progressFragment != null && !progressFragment.getDialog().isShowing()) {
+                progressFragment.dismiss();
+            }
+        }
     }
 }

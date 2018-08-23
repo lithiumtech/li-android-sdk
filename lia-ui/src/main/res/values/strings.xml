@@ -136,4 +136,9 @@
     <string name="li_main_navigation_drawer_close">Close</string>
     <string name="li_main_navigation_header_title">Anonymous User</string>
     <string name="li_main_navigation_header_img_desc">icon</string>
+    <string name="li_warning_logout_failed">Logout Failed!</string>
+    <string name="li_warning_logout_cancelled">Logout Cancelled!</string>
+    <string name="li_info_logout_succeeded">Logout Success!</string>
+    <string name="li_logout_progress_title">Logout</string>
+    <string name="li_logout_progress_message">Logging out...</string>
 </resources>
