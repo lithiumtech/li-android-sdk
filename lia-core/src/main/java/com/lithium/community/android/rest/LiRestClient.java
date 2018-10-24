@@ -652,7 +652,10 @@ public abstract class LiRestClient {
                 }
 
                 if (proceed) {
-                    response = chain.proceed(request);
+                    Request requestWithUserAgent = request.newBuilder()
+                            .header("User-Agent", System.getProperty("http.agent"))
+                            .build();
+                    response = chain.proceed(requestWithUserAgent);
                     currentCount++;
                 } else {
                     break;
