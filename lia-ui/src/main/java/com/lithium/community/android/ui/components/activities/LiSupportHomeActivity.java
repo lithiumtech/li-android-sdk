@@ -436,7 +436,7 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
         if (supportHomeViewPager != null) {
             currentFragment = supportHomeViewPager.getCurrentItem();
         }
-        if (adapter != null ) {
+        if (adapter != null && currentFragment != -1) {
             Object fragment = adapter.instantiateItem(supportHomeViewPager, currentFragment);
             if (fragment instanceof LiBaseFragment) {
                 ((LiBaseFragment) fragment).cancelNetworkCalls();
