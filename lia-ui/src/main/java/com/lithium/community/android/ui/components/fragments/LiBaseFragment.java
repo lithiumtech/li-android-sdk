@@ -409,4 +409,9 @@ public abstract class LiBaseFragment extends DialogFragment
         }
     }
 
+    public void cancelNetworkCalls() {
+        if (client != null) {
+            client.cancel();
+        }
+    }
 }

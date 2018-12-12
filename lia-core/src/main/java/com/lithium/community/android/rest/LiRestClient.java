@@ -92,6 +92,7 @@ public abstract class LiRestClient {
 
     private LiSDKManager sdkManager;
     private OkHttpClient httpClient;
+    private Call currentNetworkCall;
 
     /**
      * Default public constructor.
@@ -157,7 +158,8 @@ public abstract class LiRestClient {
         Response response = null;
 
         try {
-            response = clientBuilder.build().newCall(request).execute();
+            currentNetworkCall = clientBuilder.build().newCall(request);
+            response = currentNetworkCall.execute();
             if (response != null) {
                 if (response.code() == LiCoreSDKConstants.HTTP_CODE_SUCCESSFUL && response.body() != null) {
                     setVisitorTime(response, baseRestRequest);
@@ -223,8 +225,8 @@ public abstract class LiRestClient {
         OkHttpClient.Builder clientBuilder = getOkHttpClient().newBuilder();
         clientBuilder.retryOnConnectionFailure(false);
         clientBuilder.interceptors().add(new RefreshAndRetryInterceptor(baseRestRequest.getContext(), sdkManager));
-        Call call = clientBuilder.build().newCall(request);
-        call.enqueue(new Callback() {
+        currentNetworkCall = clientBuilder.build().newCall(request);
+        currentNetworkCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.onError(e);
@@ -348,8 +350,8 @@ public abstract class LiRestClient {
         }
         request.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS).build();
-        Call call = clientBuilder.newCall(request.build());
-        call.enqueue(new Callback() {
+        currentNetworkCall = clientBuilder.newCall(request.build());
+        currentNetworkCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.onError(e);
@@ -662,6 +664,12 @@ public abstract class LiRestClient {
                 }
             }
             return response;
+        }
+    }
+
+    public void cancel() {
+        if (currentNetworkCall != null && !currentNetworkCall.isCanceled()) {
+            currentNetworkCall.cancel();
         }
     }
 }

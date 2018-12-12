@@ -84,5 +84,10 @@ public interface LiClient {
      * @param liQueryOrdering {@link LiQueryOrdering}
      */
     public LiClient setOrdering(LiQueryOrdering liQueryOrdering);
+
+    /**
+     * Cancels the current on-going network request
+     */
+    public void cancel();
 }
 

@@ -277,6 +277,14 @@ abstract class LiBaseClient implements LiClient {
         return requestType;
     }
 
+
+    @Override
+    public void cancel() {
+        if (liRestv2Client != null) {
+            liRestv2Client.cancel();
+        }
+    }
+
     /**
      * Use to set liQueryOrdering in LIQL if any
      */
