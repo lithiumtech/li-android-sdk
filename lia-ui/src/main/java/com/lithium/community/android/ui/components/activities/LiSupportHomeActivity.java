@@ -41,6 +41,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +60,7 @@ import com.lithium.community.android.ui.components.fragments.LiBaseFragment;
 import com.lithium.community.android.ui.components.fragments.LiCreateMessageFragment;
 import com.lithium.community.android.ui.components.fragments.LiMessageListFragment;
 import com.lithium.community.android.ui.components.fragments.LiProgressFragment;
+import com.lithium.community.android.ui.components.fragments.LiUserActivityFragment;
 import com.lithium.community.android.ui.components.utils.LiSDKConstants;
 import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
@@ -415,6 +417,29 @@ public class LiSupportHomeActivity extends AppCompatActivity implements Navigati
         } else {
             if (progressFragment != null && !progressFragment.getDialog().isShowing()) {
                 progressFragment.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int currentFragment = -1;
+        if (supportHomeViewPager != null) {
+            currentFragment = supportHomeViewPager.getCurrentItem();
+        }
+        if (adapter != null && currentFragment != -1) {
+            Object fragment = adapter.instantiateItem(supportHomeViewPager, currentFragment);
+            if (fragment instanceof LiBaseFragment) {
+                ((LiBaseFragment) fragment).cancelNetworkCalls();
             }
         }
     }
