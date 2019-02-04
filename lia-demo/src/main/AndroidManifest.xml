@@ -27,6 +27,15 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
 
+        <activity android:name="com.lithium.community.android.example.TestActivity">
+            android:label="TestApplicaiton"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="com.lithium.community.android.example.LauncherActivity"
             android:label="@string/title_activity_main"
