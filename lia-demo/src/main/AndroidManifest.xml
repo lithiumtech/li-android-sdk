@@ -52,6 +52,20 @@
             </intent-filter>
         </service>
 
+        <receiver android:name="NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="action.reply"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="action.Kudo"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="action.AS"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
 
         <!-- remove the above firebase messaging service to use SDKs default implementation -->
         <!--<service
