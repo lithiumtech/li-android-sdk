@@ -17,14 +17,9 @@
 <resources>
     <string name="undefined">undefined</string>
 
-    <string name="clientId"><!--PLEASE ADD THE CLIENT ID HERE--></string>
-    <string name="clientSecret"><!--PLEASE ADD THE CLIENT SECRET HERE--></string>
-    <string name="clientName"><!--PLEASE ADD THE CLIENT NAME HERE--></string>
-    <string name="tenantId"><!--PLEASE ADD THE CLIENT TENANT ID HERE--></string>
-    <string name="communityUrl"><!--PLEASE ADD THE COMMUNITY BASE URL HERE--></string>
-    <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
-
     <string name="app_name">Lia Demo</string>
+
+    <string name="sample_sso_token"><!--PLEASE ADD THE SSO TOKEN HERE--></string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Community</string>
@@ -43,5 +38,8 @@
     <string name="user_details">Logged in as \'%1$s &lt;%2$s&gt;\', Browse through \'%3$s\' Community</string>
 
     <string name="error_credentials_not_set">Error: Credentials not set. Update credentials to continue!</string>
+
+    <string name="error_logout_failed">Logout failed</string>
+    <string name="error_credentials_invalid">Please update credentials.xml</string>
 
 </resources>

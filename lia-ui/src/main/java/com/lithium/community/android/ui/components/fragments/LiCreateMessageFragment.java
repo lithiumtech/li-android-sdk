@@ -118,6 +118,8 @@ public class LiCreateMessageFragment extends DialogFragment {
     private String imageAbsolutePath;
     private Uri outputFileUri;
 
+    private boolean enablePostMenuItem = true;
+
     public LiCreateMessageFragment() {
     }
 
@@ -431,6 +433,15 @@ public class LiCreateMessageFragment extends DialogFragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem postMenuItem = menu.findItem(R.id.li_action_post_question);
+        if (postMenuItem != null) {
+            postMenuItem.setEnabled(enablePostMenuItem);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -544,6 +555,7 @@ public class LiCreateMessageFragment extends DialogFragment {
             @Override
             public void onError(Exception e) {
                 if (isAdded() || getActivity() == null) {
+                    enableEditing(true);
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_error);
                 }
             }
@@ -721,14 +733,14 @@ public class LiCreateMessageFragment extends DialogFragment {
                 public void onError(Exception e) {
                     LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
                     enableEditing(true);
-                    Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
+                    Log.e(LiSDKConstants.GENERIC_LOG_TAG, "Exception - " + e.getMessage());
                 }
             };
             uploadImage.processAsync(callback, imageAbsolutePath, selectedImageName);
         } catch (LiRestResponseException e) {
             LiUIUtils.showInAppNotification(getActivity(), R.string.li_create_message_image_upload_error);
             enableEditing(true);
-            Log.e(LiSDKConstants.GENERIC_LOG_TAG, e.getMessage());
+            Log.e(LiSDKConstants.GENERIC_LOG_TAG, "Exception " + e.getMessage());
         }
     }
 
@@ -819,6 +831,10 @@ public class LiCreateMessageFragment extends DialogFragment {
             selectCategoryBtn.setEnabled(enable);
             selectCategoryLabel.setEnabled(enable);
             removeSelectedImage.setEnabled(enable);
+            askQuestionCameraIcon.setEnabled(enable);
+            adapter.enableSubjectBodyEditing(enable);
+            enablePostMenuItem = enable;
+            getActivity().invalidateOptionsMenu();
         }
     }
 }

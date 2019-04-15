@@ -24,28 +24,35 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lithium.community.android.BuildConfig;
+import com.lithium.community.android.R;
+import com.lithium.community.android.api.LiClient;
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.auth.LiAuthService;
 import com.lithium.community.android.auth.LiAuthServiceImpl;
 import com.lithium.community.android.auth.LiDeviceTokenProvider;
 import com.lithium.community.android.auth.LiTokenResponse;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
+import com.lithium.community.android.rest.LiPostClientResponse;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 import com.lithium.community.android.utils.LiUUIDUtils;
 import com.lithium.community.android.utils.MessageConstants;
 
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.lithium.community.android.BuildConfig;
+import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_ERROR_LOG_TAG;
+import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_RECEIVER_DEVICE_ID;
 
 /**
  * <p>
@@ -61,7 +68,7 @@ public final class LiSDKManager extends LiAuthManager {
     private static LiSDKManager instance;
 
     @Nullable
-    private LiDeviceTokenProvider deviceTokenProvider;
+    private FirebaseTokenProvider firebaseTokenProvider;
 
     /**
      * Default private constructor.
@@ -90,43 +97,12 @@ public final class LiSDKManager extends LiAuthManager {
     }
 
     /**
-     * Initializes Lia SDK Manager.
-     *
-     * @param context     The android context.
-     * @param credentials The credentials for authentication.
-     * @return An instance of Li SDK Manager
-     * @deprecated Use {@link #initialize(Context, LiAppCredentials)} instead.
-     */
-    @Deprecated
-    @Nullable
-    public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) {
-        try {
-            initialize(context, credentials);
-        } catch (LiInitializationException e) {
-            e.printStackTrace();
-        }
-
-        return getInstance();
-    }
-
-    /**
      * To check if the the SDK is initialized correctly. Should be used before invoking
      * APIs of the SDK or components which depend on it.
      *
      * @return {@code true} iff SDK is fully initialized, otherwise {@code false}.
      */
     public static boolean isInitialized() {
-        return isInitialized.get() && instance != null;
-    }
-
-    /**
-     * Checks whether the SDK is initialized.
-     *
-     * @return true or false depending on whether the SDK is initialized
-     * @deprecated Use {@link #isInitialized()} instead.
-     */
-    @Deprecated
-    public static boolean isEnvironmentInitialized() {
         return isInitialized.get() && instance != null;
     }
 
@@ -149,6 +125,37 @@ public final class LiSDKManager extends LiAuthManager {
             // generate a visitor ID and save it
             getInstance().putInSecuredPreferences(context, LiCoreSDKConstants.LI_VISITOR_ID, LiCoreSDKUtils.getRandomHexString());
         }
+    }
+
+    /**
+     * Initializes Lia SDK Manager.
+     *
+     * @param context     The android context.
+     * @param credentials The credentials for authentication.
+     * @return An instance of Li SDK Manager
+     * @deprecated Use {@link #initialize(Context, LiAppCredentials)} instead.
+     */
+    @Deprecated
+    @Nullable
+    public static synchronized LiSDKManager init(@NonNull final Context context, @NonNull final LiAppCredentials credentials) {
+        try {
+            initialize(context, credentials);
+        } catch (LiInitializationException e) {
+            e.printStackTrace();
+        }
+
+        return getInstance();
+    }
+
+    /**
+     * Checks whether the SDK is initialized.
+     *
+     * @return true or false depending on whether the SDK is initialized
+     * @deprecated Use {@link #isInitialized()} instead.
+     */
+    @Deprecated
+    public static boolean isEnvironmentInitialized() {
+        return isInitialized.get() && instance != null;
     }
 
     /**
@@ -239,79 +246,61 @@ public final class LiSDKManager extends LiAuthManager {
         return BuildConfig.LI_SDK_CORE_VERSION;
     }
 
-    /**
-     * Gets version name of the SDK.
-     *
-     * @return the version name of the SDK.
-     * @deprecated Use {@link #getVersion()} instead.
-     */
-    @Deprecated
-    @NonNull
-    public String getCoreSDKVersion() {
-        return getVersion();
-    }
-
-    /**
-     * Get the device token provider currently being used by the SDK.
-     *
-     * @return the device token provider.
-     */
     @Nullable
-    public LiDeviceTokenProvider getLiDeviceTokenProvider() {
-        return deviceTokenProvider;
+    public FirebaseTokenProvider getFirebaseTokenProvider() {
+        return firebaseTokenProvider;
+    }
+
+    public void setFirebaseTokenProvider(@Nullable FirebaseTokenProvider provider) {
+        this.firebaseTokenProvider = provider;
     }
 
     /**
-     * Set a new device token provider to be used by the SDK.
-     *
-     * @param deviceTokenProvider A device token provider.
-     */
-    public void setLiDeviceTokenProvider(@Nullable LiDeviceTokenProvider deviceTokenProvider) {
-        this.deviceTokenProvider = deviceTokenProvider;
-    }
-
-    /**
-     * Start SSO login.
-     *
-     * @param context             An Android context.
-     * @param ssoToken            Single SignOn token if the community uses its own identity provider.
-     * @param deviceTokenProvider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     */
-    public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider deviceTokenProvider) {
-        this.deviceTokenProvider = deviceTokenProvider;
-        if (!isUserLoggedIn()) {
-            new LiAuthServiceImpl(context, this).startLoginFlow(ssoToken);
-        }
-    }
-
-    /**
-     * Start SSO login.
+     * Start the login flow.
      *
      * @param context  An Android context.
      * @param ssoToken Single SignOn token if the community uses its own identity provider.
      */
-    public void initLoginFlow(Context context, String ssoToken) throws URISyntaxException {
-        initLoginFlow(context, ssoToken, null);
+    public void login(@NonNull Context context, @Nullable String ssoToken) {
+        if (!isUserLoggedIn()) {
+            new LiAuthServiceImpl(context, this).startLoginFlow(ssoToken);
+        } else {
+            Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "Sign out to login again.");
+        }
     }
 
     /**
-     * Start community login.
-     *
-     * @param context             An Android context.
-     * @param deviceTokenProvider Provider to get the device ID for push notifications. A Firebase or GCM token.
-     */
-    public void initLoginFlow(Context context, LiDeviceTokenProvider deviceTokenProvider) {
-        this.deviceTokenProvider = deviceTokenProvider;
-        initLoginFlow(context, null, deviceTokenProvider);
-    }
-
-    /**
-     * Start anonymous login.
+     * Start anonymous login flow.
      *
      * @param context An Android context object.
      */
-    public void initLoginFlow(Context context) {
-        initLoginFlow(context, null, null);
+    public void login(@NonNull Context context) {
+        login(context, null);
+    }
+
+    /**
+     * Logs out the user from the community for this device, clears all references of the current user for this device, at both backend and local storage
+     *
+     * @param context  instance of {@link Context} to access local cache and storage
+     * @param callback instance of {@link com.lithium.community.android.callback.Callback to inform about the state of the logout operation,
+     *                 success() will be called if everything goes well, a necessary exception will be returned in failure(..) if something isn't done.
+     */
+    public void logout(@NonNull Context context, @NonNull Callback<Void, Throwable, Throwable> callback) {
+        LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
+        LiCoreSDKUtils.checkNotNull(callback, MessageConstants.wasNull("callback"));
+        if (!isUserLoggedIn()) {
+            callback.abort(new IllegalAccessException(context.getString(R.string.li_error_logout_user_not_looged_in)));
+            return;
+        }
+        String deviceId = getFromSecuredPreferences(context, LI_RECEIVER_DEVICE_ID);
+        LiClientRequestParams.LiLogoutRequestParams params = new LiClientRequestParams.LiLogoutRequestParams(context, deviceId);
+        try {
+            LiClient client = LiClientManager.getLogoutClient(params);
+            client.processAsync(new LogoutRequestCallback(context, callback));
+        } catch (LiRestResponseException e) {
+            e.printStackTrace();
+            callback.abort(e);
+        }
     }
 
     /**
@@ -341,6 +330,149 @@ public final class LiSDKManager extends LiAuthManager {
                 }
             }
         });
+    }
+
+    /**
+     * Gets version name of the SDK.
+     *
+     * @return the version name of the SDK.
+     * @deprecated Use {@link #getVersion()} instead.
+     */
+    @Deprecated
+    @NonNull
+    public String getCoreSDKVersion() {
+        return getVersion();
+    }
+
+    /**
+     * Get the device token provider currently being used by the SDK.
+     *
+     * @return the device token provider.
+     * @deprecated Use {@link #getFirebaseTokenProvider()} instead.
+     */
+    @Deprecated
+    @Nullable
+    public LiDeviceTokenProvider getLiDeviceTokenProvider() {
+        return LiDeviceTokenProvider.Wrapper.getWrappedProvider(firebaseTokenProvider);
+
+    }
+
+    /**
+     * Set a new device token provider to be used by the SDK.
+     *
+     * @param provider A device token provider.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} instead.
+     */
+    @Deprecated
+    public void setLiDeviceTokenProvider(@Nullable LiDeviceTokenProvider provider) {
+        this.firebaseTokenProvider = new LiDeviceTokenProvider.Wrapper(provider);
+    }
+
+    /**
+     * Start SSO login.
+     *
+     * @param context  An Android context.
+     * @param ssoToken Single SignOn token if the community uses its own identity provider.
+     * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} and  {@link #login(Context, String)} instead.
+     */
+    @Deprecated
+    public void initLoginFlow(Context context, String ssoToken, LiDeviceTokenProvider provider) {
+        setFirebaseTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
+        login(context, ssoToken);
+    }
+
+    /**
+     * Start SSO login.
+     *
+     * @param context  An Android context.
+     * @param ssoToken Single SignOn token if the community uses its own identity provider.
+     * @deprecated Use {@link #login(Context, String)} )} instead.
+     */
+    @Deprecated
+    public void initLoginFlow(Context context, String ssoToken) {
+        login(context, ssoToken);
+    }
+
+    /**
+     * Start community login.
+     *
+     * @param context  An Android context.
+     * @param provider Provider to get the device ID for push notifications. A Firebase or GCM token.
+     * @deprecated Use {@link #setFirebaseTokenProvider(FirebaseTokenProvider)} and {@link #login(Context)} instead.
+     */
+    @Deprecated
+    public void initLoginFlow(Context context, LiDeviceTokenProvider provider) {
+        setFirebaseTokenProvider(new LiDeviceTokenProvider.Wrapper(provider));
+        login(context, null);
+    }
+
+    /**
+     * Start anonymous login.
+     *
+     * @param context An Android context object.
+     * @deprecated Use {@link #login(Context)} instead.
+     */
+    @Deprecated
+    public void initLoginFlow(Context context) {
+        login(context, null);
+    }
+
+    /**
+     * A callback on Logout rest API operation
+     */
+    public class LogoutRequestCallback implements LiAsyncRequestCallback<LiPostClientResponse> {
+
+        private Callback<Void, Throwable, Throwable> callback = null;
+        private Context context;
+
+        /**
+         * Initialize a callback for Logout rest operation
+         *
+         * @param context  - And android context {@link Context}
+         * @param callback - the generic SDK callback {@link Callback}, which is the feeder fort SDK clients.
+         */
+        public LogoutRequestCallback(Context context, Callback<Void, Throwable, Throwable> callback) {
+            this.callback = callback;
+            this.context = context;
+        }
+
+        /**
+         * API call succeeded, but doesn't necessarily mean operation succeeded. It has more internal meaning.
+         *
+         * @param request  {@link LiBaseRestRequest} actual request made with this callback
+         * @param response Generic success response.
+         * @throws LiRestResponseException response or request exception
+         */
+        @Override
+        public void onSuccess(LiBaseRestRequest request, LiPostClientResponse response) throws LiRestResponseException {
+            done();
+        }
+
+        /**
+         * API call itself failed
+         *
+         * @param exception {@link Exception}
+         */
+        @Override
+        public void onError(Exception exception) {
+            done();
+        }
+
+        private void done() {
+            if (getFirebaseTokenProvider() != null) {
+                try {
+                    getFirebaseTokenProvider().deleteDeviceToken();
+                } catch (IOException e) {
+                    Log.e(LI_ERROR_LOG_TAG, "Exception while deleting device token");
+                    e.printStackTrace();
+                }
+            }
+            logout(context);
+            if (callback != null) {
+                callback.success(null);
+            }
+        }
     }
 }
 

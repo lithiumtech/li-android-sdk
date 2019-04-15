@@ -38,11 +38,12 @@ import okhttp3.Response;
  * Base response object that encapsulates Lithium community json response
  */
 public class LiBaseResponse {
-    private static final String DATA = "data";
-    private static final String TYPE = "type";
-    private static final String ITEMS = "items";
-    private static final String ITEM = "item";
-    private static final String STATUS = "status";
+    public static final String DATA = "data";
+    public static final String TYPE = "type";
+    public static final String ITEMS = "items";
+    public static final String ITEM = "item";
+    public static final String ID = "id";
+    public static final String STATUS = "status";
     private String status;
     private String message;
     private int code;

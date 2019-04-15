@@ -296,5 +296,28 @@
         "operator": "or"
       }
     ]
+  },
+  "message_user_subscriptions":{
+    "liDataSource": "subscriptions",
+    "whereClauses":[
+      {
+        "clause": "equals",
+        "key": "subscriber.id",
+        "value": "'&&'",
+        "operator": "AND"
+      },
+      {
+        "clause": "equals",
+        "key": "target.id",
+        "value": "'##'",
+        "operator": "AND"
+      },
+      {
+        "clause": "equals",
+        "key": "target.type",
+        "value": "'message'",
+        "operator": "AND"
+      }
+    ]
   }
 }

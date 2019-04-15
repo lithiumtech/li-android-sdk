@@ -43,34 +43,16 @@ public class LiImage extends LiBaseModelImpl {
         return height;
     }
 
-    public void setHeight(LiBaseModelImpl.LiInteger result) {
-        this.height = result.getValue();
-    }
-
-    public LiBaseModelImpl.LiInteger getHeightAsLiInteger() {
-        final LiBaseModelImpl.LiInteger ret = new LiBaseModelImpl.LiInteger();
-        ret.setValue(getHeight());
-        return ret;
-    }
-
-    public LiBaseModelImpl.LiInteger getWidthAsLiInteger() {
-        final LiBaseModelImpl.LiInteger ret = new LiBaseModelImpl.LiInteger();
-        ret.setValue(getWidth());
-        return ret;
+    public void setHeight(Long result) {
+        this.height = result;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(LiBaseModelImpl.LiString result) {
-        url = result.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getUrlAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getUrl());
-        return ret;
+    public void setUrl(String result) {
+        url = result;
     }
 
     public String getViewHref() {
@@ -85,36 +67,25 @@ public class LiImage extends LiBaseModelImpl {
         return width;
     }
 
-    public void setWidth(LiBaseModelImpl.LiInteger result) {
-        this.width = result.getValue();
+    public void setWidth(Long result) {
+        this.width = result;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(LiBaseModelImpl.LiString title) {
-        this.title = title.getValue();
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LiBaseModelImpl.LiString getTitleAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getTitle());
-        return ret;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(LiBaseModelImpl.LiString description) {
-        this.description = description.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getDescriptionAsLiString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getDescription());
-        return ret;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LiImageMetaData getMetaData() {

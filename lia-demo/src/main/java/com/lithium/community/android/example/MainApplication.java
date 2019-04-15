@@ -17,12 +17,15 @@
 package com.lithium.community.android.example;
 
 import android.app.Application;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.lithium.community.android.auth.LiAppCredentials;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.notification.FirebaseTokenProvider;
 
 public class MainApplication extends Application {
 
@@ -33,15 +36,19 @@ public class MainApplication extends Application {
         try {
             if (MiscUtils.areCredentialsProvided(this)) {
                 LiAppCredentials credentials = new LiAppCredentials(
-                        getString(R.string.clientName),
-                        getString(R.string.clientId),
-                        getString(R.string.clientSecret),
-                        getString(R.string.tenantId),
-                        getString(R.string.communityUrl),
+                        getString(R.string.li_client_name),
+                        getString(R.string.li_client_id),
+                        getString(R.string.li_client_secret),
+                        getString(R.string.li_tenant_id),
+                        getString(R.string.li_community_url),
                         MiscUtils.getInstanceId(this)
                 );
                 LiSDKManager.initialize(this, credentials);
-                LiSDKManager.getInstance().syncWithCommunity(this);
+
+                LiSDKManager sdk = LiSDKManager.getInstance();
+                sdk.setFirebaseTokenProvider(getFirebaseTokenProvider());
+                sdk.syncWithCommunity(this);
+
                 Log.i(MainApplication.class.getSimpleName(), "Lithium SDK initialized successfully");
             } else {
                 Log.e(MainApplication.class.getSimpleName(), "Lithium SDK Credentials not set");
@@ -50,5 +57,14 @@ public class MainApplication extends Application {
             Log.e(MainApplication.class.getSimpleName(), "Lithium SDK initialization failed.");
             e.printStackTrace();
         }
+    }
+
+    @Nullable
+    protected FirebaseTokenProvider getFirebaseTokenProvider() {
+        final String senderId = getString(R.string.li_sender_id);
+        if (!TextUtils.isEmpty(senderId)) {
+            return new ReferenceFirebaseTokenProvider(senderId);
+        }
+        return null;
     }
 }

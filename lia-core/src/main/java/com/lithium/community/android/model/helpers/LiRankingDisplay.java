@@ -52,28 +52,16 @@ public class LiRankingDisplay extends LiBaseModelImpl {
         return color;
     }
 
-    public void setColor(LiBaseModelImpl.LiString color) {
-        this.color = color.getValue();
-    }
-
-    public LiBaseModelImpl.LiString getColorAsLithiumString() {
-        final LiBaseModelImpl.LiString ret = new LiBaseModelImpl.LiString();
-        ret.setValue(getColor());
-        return ret;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Boolean getBold() {
         return bold;
     }
 
-    public void setBold(LiBaseModelImpl.LiBoolean bold) {
-        this.bold = bold.getValue();
-    }
-
-    public LiBaseModelImpl.LiBoolean getBoldAsLithiumBoolean() {
-        final LiBaseModelImpl.LiBoolean ret = new LiBaseModelImpl.LiBoolean();
-        ret.setValue(getBold());
-        return ret;
+    public void setBold(boolean bold) {
+        this.bold = bold;
     }
 
     public LiImage getLeftImage() {

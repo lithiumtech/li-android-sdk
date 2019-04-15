@@ -95,10 +95,10 @@ public class LiMessageListFragment extends LiBaseFragment {
         }
         if (selectedBoardId == null) {
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessagesClientRequestParams(getActivity());
-            client = LiClientManager.getMessagesClient(liClientRequestParams);
+            super.client = LiClientManager.getMessagesClient(liClientRequestParams);
         } else {
             LiClientRequestParams liClientRequestParams = new LiClientRequestParams.LiMessagesByBoardIdClientRequestParams(getActivity(), selectedBoardId);
-            client = LiClientManager.getMessagesByBoardIdClient(liClientRequestParams);
+            super.client = LiClientManager.getMessagesByBoardIdClient(liClientRequestParams);
         }
         gson = client.getGson();
     }

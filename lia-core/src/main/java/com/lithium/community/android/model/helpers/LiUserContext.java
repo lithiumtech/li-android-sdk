@@ -39,6 +39,9 @@ public class LiUserContext extends LiBaseModelImpl {
     @SerializedName("can_delete")
     private boolean canDelete;
 
+    @SerializedName("is_subscribed")
+    private boolean isSubscribed;
+
     public boolean isCanDelete() {
         return canDelete;
     }
@@ -77,5 +80,13 @@ public class LiUserContext extends LiBaseModelImpl {
 
     public void setRead(Boolean read) {
         this.read = read;
+    }
+
+    public boolean isSubscribed() {
+        return isSubscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        isSubscribed = subscribed;
     }
 }

@@ -41,6 +41,7 @@ import com.lithium.community.android.model.post.LiMarkMessageModel;
 import com.lithium.community.android.model.post.LiMarkMessagesModel;
 import com.lithium.community.android.model.post.LiMarkTopicModel;
 import com.lithium.community.android.model.post.LiPostKudoModel;
+import com.lithium.community.android.model.post.LiPostLogoutModel;
 import com.lithium.community.android.model.post.LiPostMessageModel;
 import com.lithium.community.android.model.post.LiReplyMessageModel;
 import com.lithium.community.android.model.post.LiSubscriptionPostModel;
@@ -147,6 +148,27 @@ public class LiClientManager {
 
         return new LiBaseGetClient(params.getContext(), LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_BASE_LIQL, LiQueryConstant.LI_SUBSCRIPTIONS_CLIENT_TYPE,
                 LiQueryConstant.LI_SUBSCRIPTTION_QUERYSETTINGS_TYPE, LiSubscriptions.class);
+    }
+
+    /**
+     * Retains a Rest GET client which retrieves all subscriptions by a user to a message
+     * @param params - the client params an instance of
+     * {@link com.lithium.community.android.model.request.LiClientRequestParams.LiUserMessageSusbscriptionRequestParans}
+     * @return - a rest client
+     * @throws LiRestResponseException
+     */
+    public static LiClient getUserMessageSubscriptionsClient(LiClientRequestParams.LiUserMessageSusbscriptionRequestParans params)
+            throws LiRestResponseException {
+        params.validate(Client.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT);
+        LiQueryValueReplacer replacer = new LiQueryValueReplacer();
+        replacer.replaceAll("##", params.getMessageId());
+        replacer.replaceAll("&&", params.getUserId());
+        return new LiBaseGetClient(params.getContext(),
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_LIQL,
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT_TYPE,
+                LiQueryConstant.LI_USER_MESSAGE_SUBSCRIPTTION_QUERYSETTINGS_TYPE,
+                LiSubscriptions.class)
+                .setReplacer(replacer);
     }
 
     /**
@@ -356,9 +378,7 @@ public class LiClientManager {
 
         LiPostKudoModel liPostKudoModel = new LiPostKudoModel();
         LiMessage liMessage = new LiMessage();
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(Long.valueOf(messageId));
-        liMessage.setId(liInt);
+        liMessage.setId(Long.valueOf(messageId));
         liPostKudoModel.setType(LiQueryConstant.LI_KUDO_TYPE);
         liPostKudoModel.setMessage(liMessage);
         liBasePostClient.postModel = liPostKudoModel;
@@ -429,9 +449,7 @@ public class LiClientManager {
 
         LiPostMessageModel liPostMessageModel = new LiPostMessageModel();
         LiBoard liBoard = new LiBoard();
-        LiBaseModelImpl.LiString liString = new LiBaseModelImpl.LiString();
-        liString.setValue(boardId);
-        liBoard.setId(liString);
+        liBoard.setId(boardId);
         liPostMessageModel.setType(LiQueryConstant.LI_POST_QUESTION_TYPE);
         liPostMessageModel.setSubject(subject);
 
@@ -515,9 +533,7 @@ public class LiClientManager {
 
         final LiReplyMessageModel liReplyMessage = new LiReplyMessageModel();
         LiMessage parent = new LiMessage();
-        LiBaseModelImpl.LiInt liId = new LiBaseModelImpl.LiInt();
-        liId.setValue(Long.valueOf(messageId));
-        parent.setId(liId);
+        parent.setId(Long.valueOf(messageId));
 
         String body = ((LiClientRequestParams.LiCreateReplyClientRequestParams) params).getBody();
         body = embedImageTag(body, imageId, imageName);
@@ -592,9 +608,7 @@ public class LiClientManager {
 
         LiMessage liMessage = new LiMessage();
 
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(Long.valueOf(messageId));
-        liMessage.setId(liInt);
+        liMessage.setId(Long.valueOf(messageId));
 
         LiUser liUser = new LiUser();
         liUser.setId(Long.valueOf(userId));
@@ -1141,6 +1155,23 @@ public class LiClientManager {
         return getGenericQueryDeleteClient(deleteParams);
     }
 
+    /**
+     * Builds a POST client which logs out the current logged in user
+     *
+     * @param params - the {@link LiClientRequestParams.LiLogoutRequestParams} which contains parameters to the client for logout operation
+     * @return - LiClient essentially an instance of {@link LiBasePostClient}
+     * @throws LiRestResponseException
+     */
+    public static LiClient getLogoutClient(LiClientRequestParams.LiLogoutRequestParams params) throws LiRestResponseException {
+        params.validate(Client.LI_LOGOUT_CLIENT);
+
+        String path = String.format(API_PATH_PREFIX, LiSDKManager.getInstance().getTenantId(), "auth/signout");
+        final LiBasePostClient liBasePostClient = new LiBasePostClient(params.getContext(), path);
+        LiPostLogoutModel model = new LiPostLogoutModel(params.getDeviceId());
+        liBasePostClient.postModel = model;
+
+        return liBasePostClient;
+    }
 
     /**
      * Enum of all clients.
@@ -1151,6 +1182,7 @@ public class LiClientManager {
         LI_MESSAGES_BY_BOARD_ID_CLIENT,
         LI_SDK_SETTINGS_CLIENT,
         LI_USER_SUBSCRIPTIONS_CLIENT,
+        LI_USER_MESSAGE_SUBSCRIPTIONS_CLIENT,
         LI_CATEGORY_BOARDS_CLIENT,
         LI_BOARDS_BY_DEPTH_CLIENT,
         LI_REPLIES_CLIENT,
@@ -1191,7 +1223,8 @@ public class LiClientManager {
         LI_MARK_MESSAGE_POST_CLIENT,
         LI_MARK_MESSAGES_POST_CLIENT,
         LI_MARK_TOPIC_POST_CLIENT,
-        LI_UPDATE_MESSAGE_CLIENT
+        LI_UPDATE_MESSAGE_CLIENT,
+        LI_LOGOUT_CLIENT
     }
 
     /**

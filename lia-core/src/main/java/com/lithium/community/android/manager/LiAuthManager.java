@@ -59,7 +59,7 @@ class LiAuthManager {
 
     LiAuthManager(@NonNull Context context, @NonNull LiAppCredentials credentials) throws LiInitializationException {
         this.credentials = LiCoreSDKUtils.checkNotNull(credentials, MessageConstants.wasNull("credentials"));
-        LiSecuredPrefManager.initialize(credentials.getClientSecret() + credentials.getDeviceId());
+        LiSecuredPrefManager.initialize(credentials.getClientSecret() + credentials.getEncryptionKey());
         LiDefaultQueryHelper.initialize(context);
         this.preferences = LiSecuredPrefManager.getInstance();
         this.state = restoreAuthState(LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context")));
@@ -212,12 +212,12 @@ class LiAuthManager {
      *
      * @param context {@link Context}
      */
-    public void logout(@NonNull Context context) {
+    protected void logout(@NonNull Context context) {
         Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthManager#logout() - logging out from SDK");
 
         LiCoreSDKUtils.checkNotNull(context, MessageConstants.wasNull("context"));
 
-        preferences.clear(context);
+        preferences.clearAuthState(context);
 
         // For clearing cookies, if the android OS is Lollipop (5.0) and above use new
         // way of using CookieManager else use the deprecate methods for older versions.

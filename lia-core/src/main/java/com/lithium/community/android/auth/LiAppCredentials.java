@@ -60,7 +60,7 @@ public final class LiAppCredentials {
     private final Uri communityUri;
 
     @NonNull
-    private final String deviceId;
+    private final String encryptionKey;
 
     @NonNull
     private final Uri authorizeUri;
@@ -76,23 +76,23 @@ public final class LiAppCredentials {
      * Default public constructor for Lia SDK Credentials.
      * </p>
      *
-     * @param clientName   The client name.
-     * @param clientKey    The client Id.
-     * @param clientSecret The client secret.
-     * @param tenantId     tenant ID of the community.
-     * @param communityURL The LIA community's URL.
-     * @param deviceId     A unique static identifier for this device. Use a GUID or Instance ID which is 'Single App' scoped with 'Install-reset' resettability
-     *                     and persistence. Example: <code>UUID.randomUUID().toString()</code> persisted in a Shared Preferences.
+     * @param clientName    The client name.
+     * @param clientKey     The client Id.
+     * @param clientSecret  The client secret.
+     * @param tenantId      tenant ID of the community.
+     * @param communityURL  The LIA community's URL.
+     * @param encryptionKey A unique static encryption key for this device. Use a GUID or Instance ID which is 'Single App' scoped with 'Install-reset'
+     *                      resettability and persistence. Example: <code>UUID.randomUUID().toString()</code> persisted in a Shared Preferences.
      */
     public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-            @NonNull String tenantId, @NonNull String communityURL, @NonNull String deviceId) {
+            @NonNull String tenantId, @NonNull String communityURL, @NonNull String encryptionKey) {
         this.clientName = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientName, MessageConstants.wasEmpty("clientName"));
         this.clientKey = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientKey, MessageConstants.wasEmpty("clientKey"));
         this.clientSecret = LiCoreSDKUtils.checkNotNullAndNotEmpty(clientSecret, MessageConstants.wasEmpty("clientSecret"));
         this.tenantId = LiCoreSDKUtils.checkNotNullAndNotEmpty(tenantId, MessageConstants.wasEmpty("tenantId"));
 
         this.communityUri = Uri.parse(LiCoreSDKUtils.checkNotNullAndNotEmpty(communityURL, MessageConstants.wasEmpty("communityURL")));
-        this.deviceId = LiCoreSDKUtils.checkNotNullAndNotEmpty(deviceId, MessageConstants.wasEmpty("deviceId"));
+        this.encryptionKey = LiCoreSDKUtils.checkNotNullAndNotEmpty(encryptionKey, MessageConstants.wasEmpty("encryptionKey"));
 
         this.redirectUri = buildRedirectUri(communityUri);
         this.ssoAuthorizeUri = communityURL + SSO_AUTH_END_POINT;
@@ -108,14 +108,15 @@ public final class LiAppCredentials {
      * @param tenantId       tenant ID of the community.
      * @param communityURL   The LIA community's URL. (scheme + host)
      * @param apiGatewayHost API gateway host. (host)
-     * @param deviceId       A unique static identifier for this device. Suggested Firebase instance id.
+     * @param encryptionKey  A unique static encryption key for this device. Use a GUID or Instance ID which is 'Single App' scoped with 'Install-reset'
+     *                       resettability and persistence. Example: <code>UUID.randomUUID().toString()</code> persisted in a Shared Preferences.
      * @deprecated Use {@link #LiAppCredentials(String, String, String, String, String, String)} instead.
      */
     @Deprecated
-    public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret,
-            @NonNull String tenantId, @NonNull String communityURL, @Deprecated @Nullable String apiGatewayHost,
-            @NonNull String deviceId) {
-        this(clientName, clientKey, clientSecret, tenantId, communityURL, deviceId);
+    public LiAppCredentials(@NonNull String clientName, @NonNull String clientKey, @NonNull String clientSecret, @NonNull String tenantId,
+            @NonNull String communityURL, @SuppressWarnings("unused") @Deprecated @Nullable String apiGatewayHost,
+            @NonNull String encryptionKey) {
+        this(clientName, clientKey, clientSecret, tenantId, communityURL, encryptionKey);
     }
 
     private static String buildRedirectUri(Uri communityUri) {
@@ -148,8 +149,8 @@ public final class LiAppCredentials {
     }
 
     @NonNull
-    public String getDeviceId() {
-        return deviceId;
+    public String getEncryptionKey() {
+        return encryptionKey;
     }
 
     @NonNull
@@ -175,6 +176,18 @@ public final class LiAppCredentials {
     @NonNull
     public String getClientAppName() {
         return clientName;
+    }
+
+    /**
+     * The encryption key used for local storage.
+     *
+     * @return The encryption key used for local storage.
+     * @deprecated use {@link #getEncryptionKey()} instead.
+     */
+    @NonNull
+    @Deprecated
+    public String getDeviceId() {
+        return getEncryptionKey();
     }
 
     /**
@@ -212,7 +225,7 @@ public final class LiAppCredentials {
         LiAppCredentials that = (LiAppCredentials) o;
 
         return clientName.equals(that.clientName) && tenantId.equals(that.tenantId) && clientKey.equals(that.clientKey)
-                && clientSecret.equals(that.clientSecret) && communityUri.equals(that.communityUri) && deviceId.equals(that.deviceId)
+                && clientSecret.equals(that.clientSecret) && communityUri.equals(that.communityUri) && encryptionKey.equals(that.encryptionKey)
                 && authorizeUri.equals(that.authorizeUri) && redirectUri.equals(that.redirectUri) && ssoAuthorizeUri.equals(that.ssoAuthorizeUri);
     }
 
@@ -223,7 +236,7 @@ public final class LiAppCredentials {
         result = 31 * result + clientKey.hashCode();
         result = 31 * result + clientSecret.hashCode();
         result = 31 * result + communityUri.hashCode();
-        result = 31 * result + deviceId.hashCode();
+        result = 31 * result + encryptionKey.hashCode();
         result = 31 * result + authorizeUri.hashCode();
         result = 31 * result + redirectUri.hashCode();
         result = 31 * result + ssoAuthorizeUri.hashCode();
@@ -369,7 +382,7 @@ public final class LiAppCredentials {
         @Deprecated
         @NonNull
         public LiAppCredentials build() {
-            return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, "deviceId");
+            return new LiAppCredentials(clientName, clientKey, clientSecret, tenantId, communityUri, "encryptionKey");
         }
     }
 }

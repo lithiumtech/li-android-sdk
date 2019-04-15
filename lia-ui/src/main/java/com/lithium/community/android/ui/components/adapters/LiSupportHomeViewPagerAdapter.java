@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.lithium.community.android.ui.R;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
@@ -48,25 +49,16 @@ public class LiSupportHomeViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = manager.findFragmentByTag(LiMessageListFragment.class.getName());
-                if (fragment == null) {
-                    fragment = LiMessageListFragment.newInstance(articleFragmentBundle);
-                }
-                break;
+                return LiMessageListFragment.newInstance(articleFragmentBundle);
+
             case 1:
-                fragment = manager.findFragmentByTag(LiUserActivityFragment.class.getName());
-                if (fragment == null) {
-                    fragment = LiUserActivityFragment.newInstance(questionFragmentBundle);
-                }
-                break;
+                return LiUserActivityFragment.newInstance(questionFragmentBundle);
+
             default:
-                //do nothing
-                break;
+                return null;
         }
-        return fragment;
     }
 
     @Override

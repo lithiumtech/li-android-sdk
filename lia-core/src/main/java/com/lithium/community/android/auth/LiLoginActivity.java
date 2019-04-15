@@ -35,11 +35,10 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lithium.community.android.R;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
-
-import com.lithium.community.android.R;
 
 /**
  * <p>

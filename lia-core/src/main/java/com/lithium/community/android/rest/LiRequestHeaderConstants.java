@@ -30,7 +30,6 @@ public class LiRequestHeaderConstants {
     public static final String LI_REQUEST_VISIT_LAST_ISSUE_TIME = "Visit-Last-Issue-Time";
     public static final String LI_REQUEST_CLIENT_ID = "client-id";
 
-    public static final String LI_REQUEST_AUTH_SERVICE_KEY = "Auth-Service-Authorization";
     public static final String LI_REQUEST_AUTH_SERVICE_VALUE = "default";
 
     /**

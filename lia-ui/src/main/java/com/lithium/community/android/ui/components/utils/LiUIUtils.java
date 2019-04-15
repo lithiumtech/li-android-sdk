@@ -127,18 +127,12 @@ public class LiUIUtils {
      */
     public static LiMessage clone(LiMessage item) {
         LiMessage newLiMessage = new LiMessage();
-        LiBaseModelImpl.LiInt liInt = new LiBaseModelImpl.LiInt();
-        liInt.setValue(item.getId());
-        newLiMessage.setId(liInt);
+        newLiMessage.setId(item.getId());
         newLiMessage.setIsAcceptedSolution(item.isAcceptedSolution());
         newLiMessage.setAuthor(item.getAuthor());
         newLiMessage.setBoard(item.getBoard());
-        LiBaseModelImpl.LiString body = new LiBaseModelImpl.LiString();
-        body.setValue(item.getBody());
-        newLiMessage.setBody(body);
-        LiBaseModelImpl.LiString subject = new LiBaseModelImpl.LiString();
-        subject.setValue(item.getSubject());
-        newLiMessage.setSubject(subject);
+        newLiMessage.setBody(item.getBody());
+        newLiMessage.setSubject(item.getSubject());
         newLiMessage.setKudoMetrics(item.getKudoMetrics());
         newLiMessage.setPostTime(item.getPostTime());
         newLiMessage.setLiConversation(item.getLiConversation());

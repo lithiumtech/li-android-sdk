@@ -51,8 +51,8 @@ public class LiBoard extends LiBaseModelImpl {
         return blog;
     }
 
-    public void setBlog(LiBaseModelImpl.LiBoolean result) {
-        blog = result.getValue();
+    public void setBlog(boolean result) {
+        blog = result;
     }
 
     public String getHref() {
@@ -67,40 +67,40 @@ public class LiBoard extends LiBaseModelImpl {
         return id;
     }
 
-    public void setId(LiBaseModelImpl.LiString result) {
-        this.id = result.getValue();
+    public void setId(String result) {
+        this.id = result;
     }
 
     public String getInteractionStyle() {
         return interactionStyle;
     }
 
-    public void setInteractionStyle(LiBaseModelImpl.LiString result) {
-        this.interactionStyle = result.getValue();
+    public void setInteractionStyle(String result) {
+        this.interactionStyle = result;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(LiBaseModelImpl.LiString result) {
-        title = result.getValue();
+    public void setTitle(String result) {
+        title = result;
     }
 
     public String getShortTitle() {
         return shortTitle;
     }
 
-    public void setShortTitle(LiBaseModelImpl.LiString result) {
-        shortTitle = result.getValue();
+    public void setShortTitle(String result) {
+        shortTitle = result;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(LiBaseModelImpl.LiString result) {
-        description = result.getValue() == null ? "N/A" : result.getValue();
+    public void setDescription(String result) {
+        description = result == null ? "N/A" : result;
     }
 
 }

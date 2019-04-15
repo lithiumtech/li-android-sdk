@@ -19,15 +19,6 @@ package com.lithium.community.android.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.lithium.community.android.manager.LiSDKManager;
-import com.lithium.community.android.manager.LiSecuredPrefManager;
 import com.lithium.community.android.TestHelper;
 import com.lithium.community.android.exception.LiInitializationException;
 import com.lithium.community.android.model.LiBaseModelImpl;
@@ -35,6 +26,13 @@ import com.lithium.community.android.model.helpers.LiAvatar;
 import com.lithium.community.android.model.helpers.LiImage;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -85,13 +83,10 @@ public class LiAuthManagerTest {
         liAvatar.setMessage(AVATAR_MESSAGE);
         liUser.setAvatar(liAvatar);
 
-        LiBaseModelImpl.LiString email = new LiBaseModelImpl.LiString();
-        email.setValue(EMAIL);
+        String email = EMAIL;
         liUser.setEmail(email);
 
-        LiBaseModelImpl.LiString login = new LiBaseModelImpl.LiString();
-        login.setValue(LOGIN);
-        liUser.setLogin(login);
+        liUser.setLogin(LOGIN);
         liUser.setHref(HREF);
         liUser.setProfilePageUrl(PROFILE_PAGE_URL);
 
@@ -105,4 +100,5 @@ public class LiAuthManagerTest {
         Assert.assertEquals(NEW_REFRESH_TOKEN, LiSDKManager.getInstance().getRefreshToken());
         Assert.assertTrue(LiSDKManager.getInstance().isUserLoggedIn());
     }
+
 }

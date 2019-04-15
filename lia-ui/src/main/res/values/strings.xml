@@ -33,7 +33,7 @@
     <string name="li_askAQuestion_all_caps">ASK A QUESTION</string>
     <string name="li_browse_all">Browse all</string>
     <string name="li_temp_dot_divider">.</string>
-    <string name="li_support_activity_title">Help &amp; Support</string>
+    <string name="li_support_activity_title">Community</string>
     <string name="li_post_reply_txt">REPLY</string>
     <string name="li_post_accept_txt">ACCEPT</string>
     <string name="li_post_unaccept_txt">UNACCEPT</string>
@@ -123,4 +123,22 @@
     <string name="li_action_delete_successful">Successfully deleted.</string>
     <string name="li_reply_subject_prepender">Re:&#160;</string>
     <string name="li_select_image_source">Select Image Source</string>
+    <string name="li_subscribe">Subscribe</string>
+    <string name="li_unsubscribe">Unsubscribe</string>
+    <string name="li_action_subscribe_successful">Subscribed Successfully</string>
+    <string name="li_action_subscribe_unsuccessful">Could not Subscribe to the message. Please try again later</string>
+    <string name="li_action_unsubscribe_successful">Un-Subscribed Successfully</string>
+    <string name="li_action_unsubscribe_unsuccessful">Could not Un-Subscribe from the message. Please try again later</string>
+    <string name="li_main_navigation_menu_my_activity">My Activity</string>
+    <string name="li_main_navigation_menu_logout">Logout</string>
+    <string name="li_main_navigation_menu_login">Login</string>
+    <string name="li_main_navigation_drawer_open">Open</string>
+    <string name="li_main_navigation_drawer_close">Close</string>
+    <string name="li_main_navigation_header_title">Anonymous User</string>
+    <string name="li_main_navigation_header_img_desc">icon</string>
+    <string name="li_warning_logout_failed">Logout Failed!</string>
+    <string name="li_warning_logout_cancelled">Logout Cancelled!</string>
+    <string name="li_info_logout_succeeded">Logout Success!</string>
+    <string name="li_logout_progress_title">Logout</string>
+    <string name="li_logout_progress_message">Logging out...</string>
 </resources>

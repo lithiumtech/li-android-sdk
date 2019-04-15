@@ -35,13 +35,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.lithium.community.android.auth.LiDeviceTokenProvider;
+import com.lithium.community.android.callback.Callback;
 import com.lithium.community.android.example.utils.MiscUtils;
 import com.lithium.community.android.example.utils.ToastUtils;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.ui.components.activities.LiSupportHomeActivity;
+import com.lithium.community.android.ui.components.utils.LiUIUtils;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -52,11 +52,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editSsoToken = null;
     private ProgressBar progressLogin = null;
     private CheckBox checkboxSsoLogin = null;
+    private boolean isLoginReceiverRegistered = false;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean result = intent.getBooleanExtra(LiCoreSDKConstants.LOGIN_RESULT, false);
+            unregisterReceiver(receiver);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -113,16 +115,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
-        registerReceiver(receiver, filter);
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        isLoginReceiverRegistered = true;
+        return super.registerReceiver(receiver, filter);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        isLoginReceiverRegistered = false;
+        super.unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isLoginReceiverRegistered) {
+            unregisterReceiver(receiver);
+        }
     }
 
     private void reset() {
@@ -176,8 +185,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (id == R.id.li_action_logout) {
             boolean isUserLoggedIn = LiSDKManager.isInitialized() && LiSDKManager.getInstance().isUserLoggedIn();
             if (isUserLoggedIn) {
-                LiSDKManager.getInstance().logout(this);
-                reset();
+                LiSDKManager.getInstance().logout(this, new LogoutCallback());
+                blockUiForLogout();
             }
 
             return true;
@@ -187,19 +196,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void blockUiForLogout() {
+        btnLogin.setEnabled(false);
+        progressLogin.setVisibility(View.VISIBLE);
+    }
+
     protected boolean areCredentialsProvided() {
         return MiscUtils.areCredentialsProvided(this);
     }
 
     private void login() {
+        IntentFilter filter = new IntentFilter(getString(R.string.li_login_complete_broadcast_intent));
+        registerReceiver(receiver, filter);
         String ssoToken = checkboxSsoLogin.isChecked() ? editSsoToken.getText().toString() : null;
-        LiSDKManager.getInstance().initLoginFlow(this, ssoToken, new LiDeviceTokenProvider() {
-            @Override
-            public String getDeviceId() {
-
-                return FirebaseInstanceId.getInstance().getToken();
-            }
-        });
+        LiSDKManager.getInstance().login(this, ssoToken);
     }
 
     private void start() {
@@ -236,6 +246,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.checkbox_sso_login) {
             editSsoToken.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
+    private class LogoutCallback implements Callback<Void, Throwable, Throwable> {
+
+        @Override
+        public void success(Void v) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    reset();
+                }
+            });
+        }
+
+        @Override
+        public void failure(Throwable t) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LiUIUtils.showInAppNotification(LoginActivity.this, R.string.error_logout_failed);
+                    reset();
+                }
+            });
+        }
+
+        @Override
+        public void abort(Throwable throwable) {
+
         }
     }
 }
