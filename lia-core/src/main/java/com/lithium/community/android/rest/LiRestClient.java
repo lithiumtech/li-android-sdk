@@ -348,7 +348,6 @@ public abstract class LiRestClient {
                 request.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        request.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
         OkHttpClient clientBuilder = new OkHttpClient.Builder().connectTimeout(SERVER_TIMEOUT, TimeUnit.SECONDS).build();
         currentNetworkCall = clientBuilder.newCall(request.build());
         currentNetworkCall.enqueue(new Callback() {
@@ -438,7 +437,6 @@ public abstract class LiRestClient {
     private Request.Builder buildRequestHeaders(Context context, Request.Builder requestBuilder) {
 
         if (!TextUtils.isEmpty(sdkManager.getAuthToken())) {
-            requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_KEY, LiRequestHeaderConstants.LI_REQUEST_AUTH_SERVICE_VALUE);
             requestBuilder.header(LiAuthConstants.AUTHORIZATION, LiAuthConstants.BEARER + sdkManager.getAuthToken());
         }
         requestBuilder.header(LiRequestHeaderConstants.LI_REQUEST_CONTENT_TYPE, "application/json");
