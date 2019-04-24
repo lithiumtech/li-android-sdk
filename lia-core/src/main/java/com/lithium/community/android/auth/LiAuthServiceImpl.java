@@ -23,10 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -353,22 +349,20 @@ public class LiAuthServiceImpl implements LiAuthService {
                         Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "LiAuthServiceImpl - API returned invalid response for SDK settings");
                     }
 
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (!task.isSuccessful()) {
-                                return;
-                            }
-                            try {
-                                String deviceId = task.getResult().getToken();
-                                new LiNotificationProviderImpl().onIdRefresh(deviceId, context);
-                            } catch (LiRestResponseException e) {
-                                Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in generating device token");
-                                e.printStackTrace();
-                                e.printStackTrace();
-                            }
+                    try {
+                        FirebaseTokenProvider tokenProvider = sdkManager.getFirebaseTokenProvider();
+                        if (tokenProvider != null) {
+                            String deviceId = tokenProvider.getDeviceToken();
+                            new LiNotificationProviderImpl().onIdRefresh(deviceId, context);
                         }
-                    });
+                    } catch (LiRestResponseException e) {
+                        Log.e(LiCoreSDKConstants.LI_ERROR_LOG_TAG, "Exception in generating device token");
+                        e.printStackTrace();
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
 
                     Log.d(LiCoreSDKConstants.LI_DEBUG_LOG_TAG, "LiAuthServiceImpl - successfully fetched user and settings.");
                     callBack.onLoginComplete(null, true);

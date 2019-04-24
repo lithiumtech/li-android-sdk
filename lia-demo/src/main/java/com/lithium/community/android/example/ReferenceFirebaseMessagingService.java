@@ -127,7 +127,7 @@ public class ReferenceFirebaseMessagingService extends FirebaseMessagingService 
         try {
             if (LiSDKManager.isInitialized()) {
                 LiSDKManager sdk = LiSDKManager.getInstance();
-                if (sdk.getFirebaseTokenProvider() != null) {
+                if (sdk.getFirebaseTokenProvider() != null && sdk.isUserLoggedIn()) {
                     String token = sdk.getFirebaseTokenProvider().getDeviceToken();
                     new LiNotificationProviderImpl().onIdRefresh(token, this);
                 }
