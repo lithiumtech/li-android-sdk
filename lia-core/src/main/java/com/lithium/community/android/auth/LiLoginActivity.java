@@ -117,6 +117,7 @@ public class LiLoginActivity extends LiBaseAuthActivity {
                 webSettings.setJavaScriptEnabled(true);
                 webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
                 webSettings.setAppCacheEnabled(false);
+                webSettings.setUserAgentString(String.format("%s : %s", getString(R.string.app_name), System.getProperty("http.agent")));
 
                 //load the url of the oAuth login page
                 webViewOauth.loadUrl(url);
