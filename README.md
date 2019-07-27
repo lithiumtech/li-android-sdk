@@ -49,7 +49,7 @@ Visit the [Developers Discussion forum](https://community.lithium.com/t5/Develop
 ### Next steps
 
 * Review our [providers and models documentation](https://github.com/lithiumtech/lia-sdk-android/wiki/API-Reference#about-the-api-providers)
-* Review the [lia-core Javadoc](https://lithiumtech.github.io/lia-sdk-android/)
+* Review the [li-android-sdk Javadoc](https://lithiumtech.github.io/li-android-sdk/)
 * Run through our [tutorials](https://github.com/lithiumtech/lia-sdk-android/wiki/Tutorials)
 * Read about our [Support UI components](https://github.com/lithiumtech/lia-sdk-android/wiki/Support-UI-Components)
 * Learn about [authentication options](https://github.com/lithiumtech/lia-sdk-android/wiki/Authenticating-a-user)
