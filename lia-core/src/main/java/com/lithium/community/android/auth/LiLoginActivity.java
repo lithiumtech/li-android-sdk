@@ -23,12 +23,19 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ClientCertRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -117,6 +124,14 @@ public class LiLoginActivity extends LiBaseAuthActivity {
                 webSettings.setJavaScriptEnabled(true);
                 webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
                 webSettings.setAppCacheEnabled(false);
+                webSettings.setAllowContentAccess(true);
+                webSettings.setAllowFileAccess(true);
+                webSettings.setAllowFileAccessFromFileURLs(true);
+                webSettings.setAllowUniversalAccessFromFileURLs(true);
+                webSettings.setBuiltInZoomControls(true);
+                webSettings.setDomStorageEnabled(true);
+                webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+                webSettings.setSupportZoom(true);
                 webSettings.setUserAgentString(String.format("%s : %s", getString(R.string.app_name), System.getProperty("http.agent")));
 
                 //load the url of the oAuth login page
