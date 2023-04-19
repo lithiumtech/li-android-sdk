@@ -17,8 +17,8 @@
 package com.lithium.community.android.rest;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.gson.Gson;

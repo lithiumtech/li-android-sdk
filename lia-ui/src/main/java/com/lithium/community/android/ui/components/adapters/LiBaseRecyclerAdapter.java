@@ -17,7 +17,7 @@
 package com.lithium.community.android.ui.components.adapters;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lithium.community.android.model.LiBaseModel;
 import com.lithium.community.android.ui.components.fragments.LiOnMessageRowClickListener;

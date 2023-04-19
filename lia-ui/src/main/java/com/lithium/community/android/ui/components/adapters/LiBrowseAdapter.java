@@ -18,7 +18,7 @@ package com.lithium.community.android.ui.components.adapters;
 
 import android.app.Activity;
 import android.content.res.TypedArray;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

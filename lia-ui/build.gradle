@@ -105,6 +105,10 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$project.ext.firebaseMessagingVersion"
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation "com.android.support:support-annotations:$project.ext.supportLibraryVersion"
+    annotationProcessor "com.android.support:support-annotations:$project.ext.supportLibraryVersion"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.annotation:annotation:1.0.2'
     implementation project(':lia-core')
 }
 

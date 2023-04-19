@@ -20,9 +20,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +61,7 @@ import java.util.Stack;
  * One is two fetch all the Categories and Subcategories present in a particular community.
  * Second call is for the boards that are present inside a Category or Subcategory.
  * <p>
- * This fragment can be used as a full screen as well as a {@link android.support.v4.app.DialogFragment}
+ * This fragment can be used as a full screen as well as a {@link androidx.fragment.app.DialogFragment}
  * <p>
  * For using it as a dialog this flag needs to be set: {@link LiSDKConstants}.DISPLAY_AS_DIALOG in the bundle.
  * Default is false i.e. the browse screen will be full screen

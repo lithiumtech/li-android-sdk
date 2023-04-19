@@ -63,7 +63,7 @@
             android:layout_toStartOf="@id/li_ask_question_select_category_btn"
             android:textAlignment="gravity"/>
     </RelativeLayout>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/li_ask_q_recycler"
         android:name="lithium.community.android.sdk.ui.components.fragments.LiAskQuestionFragment"
         android:layout_width="match_parent"

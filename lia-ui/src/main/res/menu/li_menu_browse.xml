@@ -22,5 +22,5 @@
         android:title="@string/li_search_title"
         android:icon="?attr/li_theme_searchIcon"
         app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>

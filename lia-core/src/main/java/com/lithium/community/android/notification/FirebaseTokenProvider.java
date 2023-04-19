@@ -1,7 +1,7 @@
 package com.lithium.community.android.notification;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
