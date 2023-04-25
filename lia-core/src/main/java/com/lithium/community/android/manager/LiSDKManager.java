@@ -39,6 +39,7 @@ import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.notification.FirebaseTokenProvider;
+import com.lithium.community.android.profile.LiProfileWebActivity;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
@@ -301,6 +302,7 @@ public final class LiSDKManager extends LiAuthManager {
             e.printStackTrace();
             callback.abort(e);
         }
+        LiSDKManager.getInstance().removeFromSecuredPreferences(context, LiProfileWebActivity.COMMUNITY_COOKIES);
     }
 
     /**
