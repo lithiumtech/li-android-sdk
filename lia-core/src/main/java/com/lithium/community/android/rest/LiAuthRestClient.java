@@ -26,19 +26,24 @@ import com.lithium.community.android.auth.LiRefreshTokenRequest;
 import com.lithium.community.android.auth.LiSSOAuthorizationRequest;
 import com.lithium.community.android.auth.LiSSOTokenRequest;
 import com.lithium.community.android.exception.LiRestResponseException;
+import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.profile.LiProfileWebActivity;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 
 import java.io.IOException;
 import java.net.URI;
 
+import okhttp3.Authenticator;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.Route;
 
 import static com.lithium.community.android.utils.LiCoreSDKConstants.LI_LOG_TAG;
 import static com.lithium.community.android.utils.LiCoreSDKUtils.addLSIRequestHeaders;
@@ -71,7 +76,7 @@ public class LiAuthRestClient {
         addLSIRequestHeaders(context, builder);
         Request request = builder.build();
 
-        OkHttpClient client = getOkHttpClient();
+        OkHttpClient client = getOkHttpClient(context);
 
         getCall(request, client).enqueue(new Callback() {
             @Override
@@ -123,8 +128,18 @@ public class LiAuthRestClient {
      */
     @NonNull
     @VisibleForTesting
-    OkHttpClient getOkHttpClient() {
-        return new OkHttpClient();
+    OkHttpClient getOkHttpClient(final Context context) {
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        builder.authenticator(new Authenticator() {
+            @Override
+            public Request authenticate(Route route, Response response) throws IOException {
+                String htaccessUsername = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiProfileWebActivity.HTACCESS_USERNAME);
+                String htaccessPassword = LiSDKManager.getInstance().getFromSecuredPreferences(context, LiProfileWebActivity.HTACCESS_PASSWORD);
+                String credential = Credentials.basic(htaccessUsername, htaccessPassword);
+                return response.request().newBuilder().header("Authorization", credential).build();
+            }
+        });
+        return builder.build();
     }
 
     /**
@@ -148,7 +163,7 @@ public class LiAuthRestClient {
         builder.addHeader("client-id", ssoTokenRequest.getClientId());
         Request request = builder.build();
 
-        OkHttpClient client = getOkHttpClient();
+        OkHttpClient client = getOkHttpClient(context);
 
         getCall(request, client).enqueue(new Callback() {
             @Override
@@ -188,7 +203,7 @@ public class LiAuthRestClient {
         builder.addHeader("client-id", refreshTokenRequest.getClientId());
         Request request = builder.build();
 
-        OkHttpClient client = getOkHttpClient();
+        OkHttpClient client = getOkHttpClient(context);
 
         getCall(request, client).enqueue(new Callback() {
             @Override
@@ -248,7 +263,7 @@ public class LiAuthRestClient {
         builder.addHeader("client-id", refreshTokenRequest.getClientId());
         Request request = builder.build();
 
-        OkHttpClient client = getOkHttpClient();
+        OkHttpClient client = getOkHttpClient(context);
 
         Response response = null;
 

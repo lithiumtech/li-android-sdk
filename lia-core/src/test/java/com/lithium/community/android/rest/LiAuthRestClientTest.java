@@ -116,7 +116,7 @@ public class LiAuthRestClientTest {
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         LiAuthRestClient liAuthRestClient = spy(new LiAuthRestClient());
         final Call call = mock(Call.class);
-        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient();
+        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient(mContext);
         doReturn(call).when(liAuthRestClient).getCall(isA(Request.class), isA(OkHttpClient.class));
         LiBaseResponse liBaseResponse = new LiBaseResponse();
         liBaseResponse.setMessage(ITS_A_TEST_MESSAGE);
@@ -180,7 +180,7 @@ public class LiAuthRestClientTest {
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         LiAuthRestClient liAuthRestClient = spy(new LiAuthRestClient());
         final Call call = mock(Call.class);
-        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient();
+        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient(mContext);
         doReturn(call).when(liAuthRestClient).getCall(isA(Request.class), isA(OkHttpClient.class));
         LiBaseResponse liBaseResponse = new LiBaseResponse();
         liBaseResponse.setMessage(ITS_A_TEST_MESSAGE);
@@ -242,7 +242,7 @@ public class LiAuthRestClientTest {
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         LiAuthRestClient liAuthRestClient = spy(new LiAuthRestClient());
         final Call call = mock(Call.class);
-        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient();
+        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient(mContext);
         doReturn(call).when(liAuthRestClient).getCall(isA(Request.class), isA(OkHttpClient.class));
         LiBaseResponse liBaseResponse = new LiBaseResponse();
         liBaseResponse.setMessage(ITS_A_TEST_MESSAGE);
@@ -288,7 +288,7 @@ public class LiAuthRestClientTest {
         OkHttpClient okHttpClient = mock(OkHttpClient.class);
         LiAuthRestClient liAuthRestClient = spy(new LiAuthRestClient());
         final Call call = mock(Call.class);
-        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient();
+        doReturn(okHttpClient).when(liAuthRestClient).getOkHttpClient(mContext);
         doReturn(call).when(liAuthRestClient).getCall(isA(Request.class), isA(OkHttpClient.class));
 
         LiBaseResponse liBaseResponse = new LiBaseResponse();

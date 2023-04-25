@@ -464,7 +464,10 @@ public final class LiSDKManager extends LiAuthManager {
                 try {
                     getFirebaseTokenProvider().deleteDeviceToken();
                 } catch (IOException e) {
-                    Log.e(LI_ERROR_LOG_TAG, "Exception while deleting device token");
+                    Log.e(LI_ERROR_LOG_TAG, "IOException while deleting device token");
+                    e.printStackTrace();
+                } catch (UnsupportedOperationException e) {
+                    Log.e(LI_ERROR_LOG_TAG, "UnsupportedOperationException while deleting device token");
                     e.printStackTrace();
                 }
             }

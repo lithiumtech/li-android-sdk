@@ -49,7 +49,7 @@ public abstract class FirebaseTokenProvider {
 
     @WorkerThread
     @NonNull
-    public String getDeviceToken() throws IOException {
+    public String getDeviceToken() throws IOException, UnsupportedOperationException {
         return getFirebaseInstanceId().getToken(getAuthorizedEntity(), getScope());
     }
 
@@ -58,7 +58,7 @@ public abstract class FirebaseTokenProvider {
      * register the device again to receive push notifications.
      */
     @WorkerThread
-    public void deleteDeviceToken() throws IOException {
+    public void deleteDeviceToken() throws IOException, UnsupportedOperationException {
         getFirebaseInstanceId().deleteToken(getAuthorizedEntity(), getScope());
     }
 }
