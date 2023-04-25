@@ -26,7 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.lithium.community.android.R;
 import com.lithium.community.android.manager.LiSDKManager;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
-import com.lithium.community.android.utils.LiCoreSDKUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -180,6 +179,7 @@ public class LiProfileWebActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.putExtra(CLOSE_ACCOUNT_KEY, "success");
                     setResult(Activity.RESULT_OK, intent);
+                    LiSDKManager.getInstance().removeFromSecuredPreferences(getApplicationContext(), LiProfileWebActivity.COMMUNITY_COOKIES);
                     finish();
                 }
             }
