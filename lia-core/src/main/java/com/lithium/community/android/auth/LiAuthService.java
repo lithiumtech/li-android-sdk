@@ -16,9 +16,9 @@
 
 package com.lithium.community.android.auth;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.lithium.community.android.exception.LiRestResponseException;
 import com.lithium.community.android.rest.LiAuthRestClient;

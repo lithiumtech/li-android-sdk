@@ -50,7 +50,7 @@
             android:text="@string/li_choose_category_txt"
             android:layout_toEndOf="@id/li_browse_dialog_title_back_img"/>
     </RelativeLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/li_swipeable_items_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -58,12 +58,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/li_main_content_container">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/li_supportFragmentRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="LinearLayoutManager"/>
             <include layout="@layout/li_user_not_logged_in" />
         </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

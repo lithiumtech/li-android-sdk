@@ -16,7 +16,7 @@
 
 package com.lithium.community.android.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * This class hosts all messages and message templates. The value

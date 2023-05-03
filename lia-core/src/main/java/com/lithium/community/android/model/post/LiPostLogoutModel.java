@@ -1,6 +1,6 @@
 package com.lithium.community.android.model.post;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * A Data model to hold post request object for logout operation

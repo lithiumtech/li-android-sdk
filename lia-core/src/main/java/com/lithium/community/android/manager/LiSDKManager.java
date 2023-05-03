@@ -17,8 +17,8 @@
 package com.lithium.community.android.manager;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -39,6 +39,7 @@ import com.lithium.community.android.model.request.LiClientRequestParams;
 import com.lithium.community.android.model.response.LiAppSdkSettings;
 import com.lithium.community.android.model.response.LiUser;
 import com.lithium.community.android.notification.FirebaseTokenProvider;
+import com.lithium.community.android.profile.LiProfileWebActivity;
 import com.lithium.community.android.rest.LiAsyncRequestCallback;
 import com.lithium.community.android.rest.LiBaseRestRequest;
 import com.lithium.community.android.rest.LiGetClientResponse;
@@ -301,6 +302,7 @@ public final class LiSDKManager extends LiAuthManager {
             e.printStackTrace();
             callback.abort(e);
         }
+        LiSDKManager.getInstance().removeFromSecuredPreferences(context, LiProfileWebActivity.COMMUNITY_COOKIES);
     }
 
     /**
@@ -464,7 +466,10 @@ public final class LiSDKManager extends LiAuthManager {
                 try {
                     getFirebaseTokenProvider().deleteDeviceToken();
                 } catch (IOException e) {
-                    Log.e(LI_ERROR_LOG_TAG, "Exception while deleting device token");
+                    Log.e(LI_ERROR_LOG_TAG, "IOException while deleting device token");
+                    e.printStackTrace();
+                } catch (UnsupportedOperationException e) {
+                    Log.e(LI_ERROR_LOG_TAG, "UnsupportedOperationException while deleting device token");
                     e.printStackTrace();
                 }
             }

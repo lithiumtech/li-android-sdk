@@ -22,11 +22,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +58,7 @@ import java.util.List;
  * This is to reuse the views that are present in most of the fragments
  * There are abstract methods which need to be implemented by the concrete Fragment for poplulating the data, getting respective API Providers and adapters.
  * The base fragment also consists of the {@link BroadcastReceiver} which receives the login complete event broadcasted by coreSDK
- * Implements {@link android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener} to handle refresh listener
+ * Implements {@link androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener} to handle refresh listener
  * which takes care of updating the main content after the user has been logged in successfully.
  */
 public abstract class LiBaseFragment extends DialogFragment

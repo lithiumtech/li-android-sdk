@@ -24,13 +24,15 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ClientCertRequest;
+import android.webkit.CookieManager;
+import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -44,6 +46,7 @@ import android.widget.TextView;
 
 import com.lithium.community.android.R;
 import com.lithium.community.android.manager.LiSDKManager;
+import com.lithium.community.android.profile.LiProfileWebActivity;
 import com.lithium.community.android.utils.LiCoreSDKConstants;
 import com.lithium.community.android.utils.LiCoreSDKUtils;
 
@@ -143,6 +146,17 @@ public class LiLoginActivity extends LiBaseAuthActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        Uri communityUri = LiSDKManager.getInstance().getCredentials().getCommunityUri();
+        if (communityUri != null) {
+            String communityDomain = communityUri.toString();
+            String communityCookies = CookieManager.getInstance().getCookie(communityDomain);
+            LiSDKManager.getInstance().putInSecuredPreferences(this, LiProfileWebActivity.COMMUNITY_COOKIES, communityCookies);
+        }
+        super.onDestroy();
+    }
+
     private class LoginWebChromeClient extends WebChromeClient {
         public void onProgressChanged(WebView view, int progress) {
             progressBar.setProgress(progress);
@@ -189,6 +203,18 @@ public class LiLoginActivity extends LiBaseAuthActivity {
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
             progressBar.setProgress(0);
+        }
+
+        @Override
+        public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+            Uri communityUri = LiSDKManager.getInstance().getCredentials().getCommunityUri();
+            if(communityUri != null && host.equalsIgnoreCase(communityUri.getHost())) {
+                String htaccessUsername = LiSDKManager.getInstance().getFromSecuredPreferences(getApplicationContext(), LiProfileWebActivity.HTACCESS_USERNAME);
+                String htaccessPassword = LiSDKManager.getInstance().getFromSecuredPreferences(getApplicationContext(), LiProfileWebActivity.HTACCESS_PASSWORD);
+                handler.proceed(htaccessUsername, htaccessPassword);
+            } else {
+                super.onReceivedHttpAuthRequest(view, handler, host, realm);
+            }
         }
     }
 }

@@ -41,7 +41,7 @@
             android:text="@string/li_add_a_reply_txt"/>
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/li_swipeable_items_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/li_main_content_container">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/li_supportFragmentRecycler"
                 android:name="lithium.community.lithosphere.QuestionsFragment"
                 android:layout_width="match_parent"
@@ -58,5 +58,5 @@
                 app:layoutManager="LinearLayoutManager"/>
             <include layout="@layout/li_user_not_logged_in" />
         </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>
